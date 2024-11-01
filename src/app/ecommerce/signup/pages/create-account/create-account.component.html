@@ -1,0 +1,195 @@
+<app-step [step]="stepEnum.USER_DATA" />
+
+<div class="mx-auto text-left mt-10 mb-10 max-w-3xl">
+    <dl class="mx-auto grid w-fit grid-cols-1 gap-x-4 gap-y-4">
+        <div class="relative pl-2">
+            <dt>
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                    Recibe 10 soles de crédito de compra cada mes.
+                </p>
+            </dt>
+        </div>
+        <div class="relative pl-2">
+            <dt>
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                    Acumula automáticamente, sin costo adicional.
+                </p>
+            </dt>
+        </div>
+        <div class="relative pl-2">
+            <dt>
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                    Canjea tus créditos por artículos exclusivos.
+                </p>
+            </dt>
+        </div>
+    </dl>
+    <div class="relative z-10 mx-auto ">
+        <div class="text-gray-600 mb-10 md:mb-0">
+            <div class="relative mt-7 lg:mt-9" show-back-button="true">
+                <h1 data-qa="signup-step-3-title"
+                    class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                    Tus datos para tu creatina gratuita.</h1>
+            </div>
+            <p class="mb-7 text-sm mt-4">¿Tienes una cuenta? Inicia sesión aquí <a
+                    class="underline font-bold antialiased" href="/login">Iniciar sesión</a></p>
+
+            <form [formGroup]="form">
+                <div class="space-y-12">
+                    <div class="pb-4">
+                        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="first-name"
+                                    class="block text-sm font-medium leading-6 text-gray-900">Nombres *</label>
+                                <div class="mt-2">
+                                    <input type="text" name="first-name" id="first-name" autocomplete="given-name"
+                                        formControlName="firtName"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('firtName')) {
+                                    <small class="text-xs text-red-500">*Nombres es obligatorio</small>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="last-name"
+                                    class="block text-sm font-medium leading-6 text-gray-900">Apellidos *</label>
+                                <div class="mt-2">
+                                    <input type="text" name="last-name" id="last-name" autocomplete="family-name"
+                                        formControlName="lastName"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('lastName')) {
+                                    <small class="text-xs text-red-500">*Apellidos es obligatorio</small>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="cellphone" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Celular *
+                                </label>
+                                <div class="mt-2 flex items-center text-gray-400">
+                                    <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
+                                        +51
+                                    </div>
+                                    <input id="cellphone" name="cellphone" type="number" placeholder="987654321" 
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone()}"
+                                        class="appearance-none w-full p-2.5 outline-none
+                                         block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
+                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        formControlName="cellphone" />
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('cellphone')) {
+                                    <p class="text-xs text-red-500">*El número de celular es obligatorio</p>
+                                    }
+                                    @if(hasExistCellphone()) {
+                                    <p class="text-xs text-red-500">
+                                        *El número de celular ya está registrado
+                                    </p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="cellphone" class="block text-sm font-medium leading-6 text-gray-900">
+                                    N° de Documento *
+                                </label>
+                                <div class="mt-2 flex items-center">
+                                    <div class="flex items-center">
+                                        <select formControlName="typeDocument"
+                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+                                            <option value="1">DNI</option>
+                                            <option value="2">Carnet Ext.</option>
+                                        </select>
+                                    </div>
+                                    <input type="number" placeholder="87654321" class="appearance-none w-full p-2.5 outline-none
+                                         block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
+                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument()}"
+                                        formControlName="nroDocument" />
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('nroDocument')) {
+                                    <p class="text-xs text-red-500"> *Número de documento es obligatorio</p>
+                                    }
+                                    @if(hasExistDocument()) {
+                                    <p class="text-xs text-red-500">
+                                        *El documento ya está registrado
+                                    </p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Correo *</label>
+                                <div class="mt-2">
+                                    <input formControlName="email" id="email" name="email" type="email"
+                                        autocomplete="email" placeholder="tu@example.com"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail()}"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('email')) {
+                                    <p class="text-xs text-red-500">*Correo es obligatorio</p>
+                                    }
+                                    @if(hasExistEmail()) {
+                                    <p class="text-xs text-red-500">
+                                        *El correo ya está registrado
+                                    </p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-3 max-sm:mb-16">
+                                <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Contraseña *</label>
+                                <div class="mt-2">
+                                    <input formControlName="password" name="password" type="password"
+                                        placeholder="••••••••"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password')}"
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                                <div class="p-2">
+                                    @if(hasRequiredError('password')) {
+                                    <small class="text-xs text-red-500">*Contraseña es obligatorio</small>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="max-sm:hidden mt-6">
+                    <ml-button name="Continuar"></ml-button>
+                </div>
+                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50 ">
+                    <button type="submit"
+                        class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        Continuar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

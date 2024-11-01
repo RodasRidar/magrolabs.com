@@ -1,0 +1,13 @@
+<app-header/>
+<section class="body-font relative flex flex-col justify-center items-center">
+    <div class="container sm:px-8 sm:py-12 justify-center self-center flex sm:flex-nowrap flex-wrap">
+      <div class="sm:w-[70%] shadow-xl mx-auto sm:rounded-s-3xl bg-[#f6f6f6]  overflow-hidden sm:p-16 max-sm:pt-16 max-sm:px-4  flex items-end justify-center relative">
+        <div class="w-full">
+          <router-outlet/>
+        </div>
+      </div>
+      <div class="max-sm:hidden shadow-xl sm:w-[30%] rounded-e-3xl bg-[#f7f7f7] flex flex-col md:ml-auto w-full mt-8 md:mt-0">
+        <app-summary class="w-full h-full"></app-summary>
+      </div>
+    </div>
+</section>

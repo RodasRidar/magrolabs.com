@@ -1,0 +1,31 @@
+<div class="max-w-[40rem] sm:mx-auto mx-5">
+    <h2 class="sr-only bg-blue-600">Paso a paso de registro</h2>
+    <p class="sr-only bg-gray-300">Haz clic en los pasos para continuar</p>
+    <div class="after:mt-4 after:block after:h-1 after:w-full after:rounded-lg after:bg-gray-200">
+        <ol class="grid grid-cols-5 text-sm font-medium text-gray-500">
+            <!-- Elegir plan -->
+            <li class="relative flex justify-start">
+                <app-step-item [step]="stepEnum.CHOSE_PLAN" [isCompleted]="stepChosePlan"/>
+            </li>
+            <!-- Tus Datos de registro -->
+            <li class="relative flex justify-center">
+                <app-step-item [step]="stepEnum.USER_DATA" [isCompleted]="stepUserData"/>
+            </li>
+
+            <!-- Direccion de envio -->
+            <li class="relative flex justify-center">
+                <app-step-item [step]="stepEnum.ADDRESS" [isCompleted]="stepAddress"/>
+            </li>
+
+            <!-- Validar Tarjeta -->
+            <li class="relative flex justify-center">
+                <app-step-item [step]="stepEnum.CARD_VALIDATION" [isCompleted]="stepCardValidation"/>
+            </li>
+
+            <!-- Confirmación de Pago y detalle de subscripción -->
+            <li class="relative flex justify-end">
+                <app-step-item [step]="stepEnum.CONFIRMATION" [isCompleted]="stepConfirmation" [flag]="'Gratis'"/>
+            </li>
+        </ol>
+    </div>
+</div>

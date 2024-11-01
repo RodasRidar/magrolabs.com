@@ -1,0 +1,33 @@
+ .badge,.badge:before {
+    --bg-opacity: 1;
+    background-color: #314971;
+    background-color: rgba(249, 169, 30, var(--bg-opacity));
+    position: absolute;
+}
+.badge {
+    --text-opacity: 1;
+    color: #fff;
+    color: rgba(255, 255, 255, var(--text-opacity));
+    border-radius: .375rem;
+    top: -2.6rem;
+    padding: .35rem 0.9rem;
+}
+.badge:before {
+    height: .8rem;
+    width: .8rem;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: .1rem;
+    transform: rotate(45deg);
+    content: "";
+    bottom: -.4rem;
+}
+ .badge, .badge:before {
+    --bg-opacity: 1;
+    background-color: #314971;
+    background-color: rgba(249, 169, 30, var(--bg-opacity));
+    position: absolute;
+}
+

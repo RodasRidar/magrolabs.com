@@ -1,4 +1,5 @@
 @if(summaryState$ | async ; as summary){
+@if(summary.chosePlan || summary.userData || summary.address){
 <div class="mt-6">
     <div class="mx-4 mb-8">
         <div class="mb-4">
@@ -14,9 +15,10 @@
             <span class="font-bold text-sm">{{summary.chosePlan.selection}}</span>
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
-                <span class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a (click)="changeChoose()"
+                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Cambiar
-                </span>
+                </a>
             </a>
         </div>
         <div class="text-gray-600 text-xs text">
@@ -28,17 +30,19 @@
             </p>
         </div>
     </div>
-    }@else {
+    }
+    <!-- @else {
     <div class="mx-4 mb-8">
         <div class="flex items-center ">
             <a>
-                <span class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a [routerLink]="['/registro/']"
+                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Seleccionar
-                </span>
+                </a>
             </a>
         </div>
     </div>
-    }
+    } -->
 
     <div class="border-b border-gray-200"></div>
 
@@ -49,14 +53,14 @@
             <span class="font-bold text-sm">Datos</span>
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
-                <span class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a (click)="changeUserData()" class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Cambiar
-                </span>
+                </a>
             </a>
         </div>
         <div class="text-gray-600 text-xs text">
             <p class="mt-3 mb-1 text-pretty">
-                <span>{{summary.userData.nombreApellido}}</span>
+                <span>{{summary.userData.nombre}} {{summary.userData.apellido}}</span>
             </p>
             <p class="mb-1 text-pretty">
                 <span> {{summary.userData.email}}</span>
@@ -93,9 +97,9 @@
             <span class="font-bold text-sm">Dirección</span>
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
-                <span class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a (click)="changeAddress()" class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Cambiar
-                </span>
+                </a>
             </a>
         </div>
         <div class="text-gray-600 text-xs text">
@@ -135,4 +139,6 @@
     <img src="https://www.wildnutrition.com/cdn/shop/files/All_Organic_Protein_Superfood_Powder_PDP_Benefits_Desktop_1000x1333_81ae5601-700c-4d77-b439-bf2b3fbe2489.jpg?v=1713796726&width=1440"
         alt="" class="h-full object-cover object-center">
 </div>
+}
+
 }

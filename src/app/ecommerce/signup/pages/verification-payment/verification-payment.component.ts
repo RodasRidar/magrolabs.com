@@ -15,12 +15,6 @@ import { Information, InformationComponent } from '../../components/information/
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
-verifyPayment() {
-throw new Error('Method not implemented.');
-}
-togglePromoCodeInput() {
-throw new Error('Method not implemented.');
-}
 
   isPaymentVerified = false;
   promotionIsShow = false;
@@ -41,18 +35,45 @@ throw new Error('Method not implemented.');
 
   stepEnum = StepEnum;
 
-  promoForm = this._formBuilder.group({
+  form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
+    cardNumber: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern( /^[0-9]{15,16}|(([0-9]{4}\s){3}[0-9]{3,4})$/)]),
+    cardName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[A-Z\s]{3,}$/)]),
+    cardExpiration: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{4}$/)]),
+    cardCvv: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]),
   })
 
   applyPromoCode() {
-    if (this.promoForm.valid) {
-      const promoCode = this.promoForm.get('promoCode')?.value;
-      console.log('Código promocional aplicado:', promoCode);
+    if (this.form.get('promoCode')?.valid) {
+      const promoCode = this.form.get('promoCode')?.value;
+      if(promoCode === 'FREE') {
+        this.isPaymentVerified = true;
+      }
     }
   }
 
   nextStep(): void {
     this._router.navigate(['registro/confirmacion']);
   }
+
+  verifyPayment() {
+    if(!this.form.valid){
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.isPaymentVerified = true;
+  }
+
+  hasRequiredError(field: string) {
+    const control = this.form.get(field);
+    return control?.hasError('required') && control.touched;
+  }
+
+  formatCardNumber(): void {
+    let cardNumber = this.form.get('cardNumber')?.value || '';
+    cardNumber = cardNumber.replace(/\D/g, '');
+    cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+    this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
+  }
+
 }

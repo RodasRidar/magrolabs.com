@@ -4,11 +4,12 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
 import { Information, InformationComponent } from '../../components/information/information.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-confirmation',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, CommonModule, InformationComponent],
+  imports: [StepComponent, ButtonComponent, CommonModule, InformationComponent, RouterLink],
   templateUrl: './confirmation.component.html',
   styleUrl: './confirmation.component.css'
 })

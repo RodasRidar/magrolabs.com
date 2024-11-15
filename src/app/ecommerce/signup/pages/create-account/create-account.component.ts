@@ -10,6 +10,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
+import { Router, RouterLink } from '@angular/router';
+import { SummaryService } from '../../../../shared/services/summary-service.service';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -29,11 +31,14 @@ export enum TypeDocumentEnum {
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, RouterLink],
   templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent {
   private _formBuilder = inject(FormBuilder)
+  private _router = inject(Router)
+  private _sumaryService = inject(SummaryService)
+
   stepEnum = StepEnum;
 
   form = this._formBuilder.group<SignUp>({
@@ -66,19 +71,36 @@ export class CreateAccountComponent {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return true;
+    return false;
     // return control?.hasError('nroDocumentExists') && control.dirty;
   }
 
   hasExistEmail() {
     const control = this.form.get('email');
-    return true;
+    return false;
     // return control?.hasError('emailExists') && control.dirty;
   }
 
   hasExistCellphone() {
     const control = this.form.get('cellphone');
-    return true;
+    return false;
     // return control?.hasError('cellphoneExists') && control.dirty;
+  }
+
+  nextStep() {
+    if(!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this._sumaryService.setUserData({
+      nombre: this.form.get('firtName')?.value ?? '',
+      apellido: this.form.get('lastName')?.value ?? '',
+      dni: this.form.get('nroDocument')?.value ?? '',
+      email: this.form.get('email')?.value ?? ''
+    })
+
+    
+    this._router.navigate(['/registro/direccion']);
   }
 }

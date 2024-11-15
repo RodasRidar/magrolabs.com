@@ -14,7 +14,7 @@
                     Tus datos para tu creatina gratuita.</h1>
             </div>
             <p class="mb-7 text-sm mt-4">¿Tienes una cuenta? Inicia sesión aquí <a
-                    class="underline font-bold antialiased" href="/login">Iniciar sesión</a></p>
+                    class="underline font-bold antialiased" [routerLink]="['/login']" >Iniciar sesión</a></p>
 
             <form [formGroup]="form">
                 <div class="space-y-12">
@@ -151,13 +151,10 @@
                     </div>
                 </div>
                 <div class="max-sm:hidden mt-6">
-                    <ml-button name="Continuar"></ml-button>
+                    <ml-button name="Continuar" (click)="nextStep()"></ml-button>
                 </div>
                 <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50 ">
-                    <button type="submit"
-                        class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                        Continuar
-                    </button>
+                    <ml-button name="Continuar" (click)="nextStep()"></ml-button>
                 </div>
             </form>
         </div>

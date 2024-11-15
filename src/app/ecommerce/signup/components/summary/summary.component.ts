@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { Summary } from '../../../../shared/models/summary.model';
-import { SummaryServiceService } from '../../../../shared/services/summary-service.service';
+import { AddressSummary, ChosePlanSummary, Summary, UserDataSummary } from '../../../../shared/models/summary.model';
+import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-summary',
@@ -10,31 +11,29 @@ import { CommonModule } from '@angular/common';
   templateUrl: './summary.component.html'
 })
 export class SummaryComponent {
-  summaryService = inject(SummaryServiceService);
-  summaryState$ = this.summaryService.summaryState$;
-  summary : Summary = 
-    {
-      // chosePlan: {
-      //   selection: 'Creatina 250g',
-      //   descriptionOne: '100% Creatina monohidratada',
-      //   descriptionTwo: 'Cobro anual recurrente de S/399'
-      // },
-    //   userData: {
-    //     email: 'JHlPQ@example.com',
-    //     nombreApellido: 'Carlos Lozano',
-    //     dni: '12345678',
-    // },
-      // address: {
-      //   tipoVia: 'Calle',
-      //   nombreVia: 'Calle 1',
-      //   numero: '123',
-      //   codigoPostal: '15002',
-      //   distrito: 'Lima',
-      //   provincia: 'Lima'
-      // }
-  }
+  _summaryService = inject(SummaryService);
+  _router = inject(Router);
+
+  summaryState$ = this._summaryService.summaryState$;
+  summary: Summary = <Summary>{}
+
   ngOnInit(): void {
-    this.summaryService.setSummary(this.summary);
+    this._summaryService.setSummary(this.summary);
+  }
+
+  changeChoose() {
+    this._summaryService.setChoosePlan(<ChosePlanSummary>{})
+    this._router.navigate(['registro/'])
+  }
+
+  changeUserData() {
+    this._summaryService.setUserData(<UserDataSummary>{})
+    this._router.navigate(['/registro/crear-cuenta'])
+  }
+
+  changeAddress() {
+    this._summaryService.setAddress(<AddressSummary>{})
+    this._router.navigate(['/registro/direccion'])
   }
 }
 

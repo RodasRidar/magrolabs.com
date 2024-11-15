@@ -80,7 +80,7 @@
                 <h5 class="text-left text-xs mt-1"> S/1.00 de verificación</h5>
             </div>
 
-            <form class="p-4">
+            <form class="p-4" [formGroup]="form">
                 <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
                     <div class="col-span-full">
@@ -88,6 +88,8 @@
                             tarjeta</label>
                         <div class="mt-1">
                             <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
+                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
+                                formControlName="cardNumber"  (input)="formatCardNumber()"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
@@ -98,6 +100,8 @@
                         <div class="mt-1">
                             <input type="text" name="expiration-date" id="expiration-date" autocomplete="cc-exp"
                                 placeholder="MM / AAAA"
+                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardExpiration')}"
+                                formControlName="cardExpiration"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
@@ -106,6 +110,8 @@
                         <label for="cvc" class="block text-sm font-medium text-gray-700">CVV</label>
                         <div class="mt-1">
                             <input type="text" name="cvc" id="cvc" autocomplete="csc"
+                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardCvv')}"
+                                formControlName="cardCvv"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
@@ -115,6 +121,8 @@
                             titular</label>
                         <div class="mt-1">
                             <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
+                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardName')}"
+                                formControlName="cardName"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
@@ -123,12 +131,17 @@
 
                 <ml-button name="Continuar" type="secondary" (click)="verifyPayment()"></ml-button>
 
-                <!-- <p class="flex justify-center text-sm font-medium text-gray-500 mt-6">
-                  <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                  </svg>
-                  Payment details stored in plain text
-                </p> -->
+                <p class="flex justify-center text-sm font-medium text-gray-500 mt-6">
+                    <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Pago seguro con <a href="https://www.niubiz.com.pe/" class="ml-2 hover:underline text-gray-800"
+                        target="_blank"> Niubiz</a>
+                </p>
+
             </form>
         </div>
 
@@ -139,7 +152,7 @@
         <!-- CODIGO PROMOCIONAL -->
         <hr class="mb-3">
 
-        <form [formGroup]="promoForm">
+        <form [formGroup]="form">
             <div class="space-y-12">
                 <div class="pb-4 grid grid-cols-6 gap-x-4 gap-y-2">
                     <div class="sm:col-span-6 col-span-4 cursor-pointer" (click)="promotionIsShow = true">
@@ -161,7 +174,7 @@
                                 class="block w-full rounded-md border-0 py-[0.56rem] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                 formControlName="promoCode" placeholder="Ingresa tu código">
                             <!-- Mensaje de error si el código es inválido -->
-                            <div *ngIf="promoForm.get('promoCode')?.invalid && promoForm.get('promoCode')?.touched">
+                            <div *ngIf="form.get('promoCode')?.invalid && form.get('promoCode')?.touched">
                                 <small style="color: red;">Código inválido. Inténtalo nuevamente.</small>
                             </div>
                         </div>

@@ -7,7 +7,7 @@
                 ¡Felicidades {{clientName}}!
             </h1>
             <p class="text-base font-bold mt-5">¡Tu registro se ha completado con éxito!</p>
-            <p class="text-base">El email de confirmacion ésta en camino.</p>
+            <p class="text-base">El email de confirmación está en camino.</p>
 
             <p class="text-base mt-5">Ten en cuenta que:</p>
         </div>
@@ -17,5 +17,5 @@
 <app-information [information]="informationList" class="mt-5" />
 
 <div  class="mt-5 w-fit ml-5">
-    <ml-button type='primary' name="Iniciar sesión" />
+    <ml-button type='primary' name="Iniciar sesión" [routerLink]="['/login']" />
 </div>

@@ -8,6 +8,7 @@ import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/ad
 import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { state } from '@angular/animations';
 import { Router } from '@angular/router';
+import { SummaryService } from '../../../../shared/services/summary-service.service';
 
 export interface Address {
   searchAddress: FormControl<string>,
@@ -32,6 +33,7 @@ export class AddressComponent {
   private _formBuilder = inject(FormBuilder)
   private _addressService = inject(AddressService)
   private _router = inject(Router)
+  private _summaryService = inject(SummaryService)
 
   stepEnum = StepEnum;
   addressList: PlaceAPI[] = [];
@@ -145,6 +147,17 @@ export class AddressComponent {
       this.form.markAllAsTouched();
       return;
     }
+    this._summaryService.setAddress(
+      {
+        tipoVia :'',
+        nombreVia :this.form.get('streetAddress')?.value ?? '',
+        numero :this.form.get('number')?.value ?? '',
+        codigoPostal :this.form.get('postalCode')?.value ?? '',
+        distrito :this.form.get('district')?.value ?? '',
+        provincia :this.form.get('province')?.value ?? ''
+
+      }
+    );
     this._router.navigate(['registro/verificacion']);
   }
 }

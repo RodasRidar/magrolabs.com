@@ -5,13 +5,14 @@ export interface Summary {
 }
 
 export interface ChosePlanSummary {
-    selection: 'Creatina 3kg' | 'Creatina 250g'
+    selection: 'Creatina 3kg' | 'Creatina 250g' | '',
     descriptionOne: string
     descriptionTwo: string
 }
 
 export interface UserDataSummary {
-    nombreApellido: string,
+    nombre: string,
+    apellido : string,
     dni: string,
     email: string
 }

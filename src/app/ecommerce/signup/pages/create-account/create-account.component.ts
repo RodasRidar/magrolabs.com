@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Information, InformationComponent } from '../../components/information/information.component';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -28,7 +29,7 @@ export enum TypeDocumentEnum {
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [StepComponent,ButtonComponent,ReactiveFormsModule, CommonModule],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent],
   templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent {
@@ -36,14 +37,27 @@ export class CreateAccountComponent {
   stepEnum = StepEnum;
 
   form = this._formBuilder.group<SignUp>({
-    firtName: this._formBuilder.nonNullable.control('', [Validators.required ,Validators.minLength(3)]),
+    firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9)]),
-    nroDocument: this._formBuilder.nonNullable.control('', [Validators.required , Validators.minLength(8)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocumentEnum> '1', [Validators.required]),
+    nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
+    typeDocument: this._formBuilder.nonNullable.control(<TypeDocumentEnum>'1', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
   });
+
+
+  informationList: Information[] = [
+    {
+      name: 'Recibe 10 soles de crédito de compra cada mes.',
+    },
+    {
+      name: ' Acumula automáticamente, sin costo adicional.',
+    },
+    {
+      name: 'Canjea tus créditos por artículos exclusivos.',
+    }
+  ]
 
   hasRequiredError(field: string) {
     const control = this.form.get(field);

@@ -5,6 +5,7 @@ import { CreateAccountComponent } from './ecommerce/signup/pages/create-account/
 import { AddressComponent } from './ecommerce/signup/pages/address/address.component';
 import { ConfirmationComponent } from './ecommerce/signup/pages/confirmation/confirmation.component';
 import { PlansComponent } from './ecommerce/signup/pages/plans/plans.component';
+import { VerificationPaymentComponent } from './ecommerce/signup/pages/verification-payment/verification-payment.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,10 @@ export const routes: Routes = [
       {
         path: 'direccion', 
         component: AddressComponent
+      },
+      {
+        path: 'verificacion', 
+        component: VerificationPaymentComponent
       },
       {
         path: 'confirmacion', 

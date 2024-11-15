@@ -1,0 +1,17 @@
+<div class="m-5">
+    <dl class="p-4 grid w-full grid-cols-1 gap-x-4 gap-y-4 max-lg:gap-y-2 bg-[#e9e9e9] rounded-sm">
+        @for (item of information(); track $index) {
+        <div class="relative pl-2 text-pretty">
+            <dt>
+                <svg class="absolute h-6 w-4 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-6 text-base max-lg:text-xs leading-6 font-medium text-gray-600">
+                    {{item.name}}
+                </p>
+            </dt>
+        </div>
+        }
+    </dl>
+</div>

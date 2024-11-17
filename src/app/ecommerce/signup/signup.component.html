@@ -1,13 +1,26 @@
-<app-header/>
+<app-header />
+
 <section class="body-font relative flex flex-col justify-center items-center">
-    <div class="container sm:px-8 sm:py-12 justify-center self-center flex sm:flex-nowrap flex-wrap">
-      <div class="sm:w-[70%] shadow-xl mx-auto sm:rounded-s-3xl bg-[#f6f6f6]  overflow-hidden sm:p-16 max-sm:pt-16 max-sm:px-4  flex items-end justify-center relative">
-        <div class="w-full">
-          <router-outlet/>
-        </div>
-      </div>
-      <div class="max-sm:hidden shadow-xl sm:w-[30%] rounded-e-3xl bg-[#f7f7f7] flex flex-col md:ml-auto w-full mt-8 md:mt-0">
-        <app-summary class="w-full h-full"></app-summary>
+  <div class="container sm:px-8 sm:py-12 justify-center self-center flex sm:flex-nowrap flex-wrap">
+    <div class="w-full absolute">
+      <button (click)="goBack()" class=" absolute px-4  pt-2 flex items-center text-gray-500 focus:outline-none md:hidden z-50">
+        <svg viewBox="0 0 34 34" fill="#FFF" xmlns="http://www.w3.org/2000/svg" class="fill-gray-500 w-3 mt-1">
+          <path
+            d="M12.6.2c.8 0 1.5.3 2.1.8 1.4 1.2 1.5 3.2.3 4.6L7.6 14l7.5 8.4c1.2 1.4 1 3.4-.3 4.6-1.4 1.2-3.4 1.1-4.6-.3L1 16.2C-.1 15-.1 13.1 1 11.9l9.2-10.6C10.8.6 11.7.2 12.6.2z">
+          </path>
+        </svg>
+        <span class="ota-p14">Anterior</span>
+      </button>
+    </div>
+    <div
+      class="sm:w-[70%] shadow-xl mx-auto sm:rounded-s-3xl bg-[#f6f6f6]  overflow-hidden sm:p-16 max-sm:pt-16 max-sm:px-4  flex items-end justify-center relative">
+      <div class="w-full">
+        <router-outlet />
       </div>
     </div>
+    <div
+      class="max-sm:hidden shadow-xl sm:w-[30%] rounded-e-3xl bg-[#f7f7f7] flex flex-col md:ml-auto w-full mt-8 md:mt-0">
+      <app-summary class="w-full h-full"></app-summary>
+    </div>
+  </div>
 </section>

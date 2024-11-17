@@ -15,7 +15,6 @@
     <app-information [information]="informationList" />
 </div>
 
-
 <div class="mx-auto text-pretty max-w-3xl mt-2 pb-12 sm:mt-2 sm:pb-16 lg:mt-2 lg:pb-24">
     <div class="relative text-gray-600 px-5">
         <div class="pb-4 lg:px-0 text-pretty">
@@ -89,7 +88,7 @@
                         <div class="mt-1">
                             <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
-                                formControlName="cardNumber"  (input)="formatCardNumber()"
+                                formControlName="cardNumber" (input)="formatCardNumber()"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
@@ -138,7 +137,7 @@
                             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                             clip-rule="evenodd" />
                     </svg>
-                    Pago seguro con <a href="https://www.niubiz.com.pe/" class="ml-2 hover:underline text-gray-800"
+                    Pago seguro con <a href="https://www.niubiz.com.pe/" class="ml-1 hover:underline text-gray-800"
                         target="_blank"> Niubiz</a>
                 </p>
 

@@ -1,9 +1,15 @@
 @if(summaryState$ | async ; as summary){
-@if(summary.chosePlan || summary.userData || summary.address){
+@if(!summary.chosePlan || isChooseDisable){
+<div class="max-height w-full h-full flex rounded-tr-3xl rounded-br-3xl overflow-hidden">
+    <img src="https://www.wildnutrition.com/cdn/shop/files/All_Organic_Protein_Superfood_Powder_PDP_Benefits_Desktop_1000x1333_81ae5601-700c-4d77-b439-bf2b3fbe2489.jpg?v=1713796726&width=1440"
+        alt="" class="h-full object-cover object-center">
+</div>
+}
+@else {
 <div class="mt-6">
     <div class="mx-4 mb-8">
         <div class="mb-4">
-            <h2 class="text-3xl font-bold tracking-wide">Resumen.</h2>
+            <h2 class="text-3xl font-extrabold tracking-wide">Resumen.</h2>
             <p>Tu selección.</p>
         </div>
     </div>
@@ -12,7 +18,7 @@
     @if(summary.chosePlan){
     <div class="mx-4 mb-8">
         <div class="flex items-center">
-            <span class="font-bold text-sm">{{summary.chosePlan.selection}}</span>
+            <span class="font-extrabold text-sm">{{summary.chosePlan.selection}}</span>
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
                 <a (click)="changeChoose()"
@@ -21,44 +27,37 @@
                 </a>
             </a>
         </div>
-        <div class="text-gray-600 text-xs text">
+        <div class=" text-xs text">
             <p class="mt-3 mb-1 text-pretty">
                 <span>{{summary.chosePlan.descriptionOne}}</span>
             </p>
             <p class="mb-1 text-pretty">
                 <span> {{summary.chosePlan.descriptionTwo}}</span>
             </p>
+            <p class="mb-1 text-pretty">
+                <span> Creatina 100g (gratis)</span>
+            </p>
         </div>
     </div>
     }
-    <!-- @else {
-    <div class="mx-4 mb-8">
-        <div class="flex items-center ">
-            <a>
-                <a [routerLink]="['/registro/']"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
-                    Seleccionar
-                </a>
-            </a>
-        </div>
-    </div>
-    } -->
-
     <div class="border-b border-gray-200"></div>
 
     <!-- Datos -->
     @if(summary.userData){
-    <div class="mx-4 mb-8 mt-8">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable}">
         <div class="flex items-center">
-            <span class="font-bold text-sm">Datos</span>
+            <span class="font-extrabold text-sm">Datos</span>
+            @if(!isUserDataDisable) {
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
-                <a (click)="changeUserData()" class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a (click)="changeUserData()"
+                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
+            }
         </div>
-        <div class="text-gray-600 text-xs text">
+        <div class="text-xs text">
             <p class="mt-3 mb-1 text-pretty">
                 <span>{{summary.userData.nombre}} {{summary.userData.apellido}}</span>
             </p>
@@ -73,7 +72,7 @@
     }@else {
     <div class="mx-4 mb-8 mt-8 text-gray-300">
         <div class="flex items-center">
-            <span class="font-bold text-sm">Datos</span>
+            <span class="font-extrabold text-sm">Datos</span>
         </div>
         <div class="text-xs text">
             <p class="mt-3 mb-1 text-pretty">
@@ -92,53 +91,49 @@
 
     <!-- Dirección de entrega -->
     @if(summary.address){
-    <div class="mx-4 mb-8 mt-8">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable}">
         <div class="flex items-center">
-            <span class="font-bold text-sm">Dirección</span>
+            <span class="font-extrabold text-sm">Dirección</span>
+            @if(!isAddressDisable) {
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a>
-                <a (click)="changeAddress()" class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                <a (click)="changeAddress()"
+                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
+            }
         </div>
-        <div class="text-gray-600 text-xs text">
+        <div class="text-xs text">
             <p class="mt-3 mb-1 text-pretty">
-                <span>{{summary.address.tipoVia}} {{summary.address.nombreVia}} {{summary.address.numero}}</span>
+                <span>{{summary.address.tipoVia}} {{summary.address.nombreVia}} - {{summary.address.numero}}.</span>
             </p>
             <p class="mb-1 text-pretty">
-                <span> {{summary.address.codigoPostal}} {{summary.address.distrito}}</span>
+                <span> {{summary.address.codigoPostal}}, {{districtName()}}.</span>
             </p>
             <p class="mb-1 text-pretty">
-                <span> {{summary.address.provincia}} Perú</span>
+                <span> {{provinceName()}}, Perú.</span>
             </p>
         </div>
     </div>
     }@else {
     <div class="mx-4 mb-8 mt-8 text-gray-300">
         <div class="flex items-center">
-            <span class="font-bold text-sm">Dirección</span>
+            <span class="font-extrabold text-sm">Dirección</span>
         </div>
         <div class="text-xs text">
             <p class="mt-3 mb-1 text-pretty">
-                <span>Tipo de vía, Nombre de vía, Número</span>
+                <span>Tipo de vía, Nombre de vía, Número.</span>
             </p>
             <p class="mb-1 text-pretty">
-                <span> Código postal, Distrito</span>
+                <span> Código postal, Distrito.</span>
             </p>
             <p class="mb-1 text-pretty">
-                <span> Provincia Perú</span>
+                <span> Provincia, Perú.</span>
             </p>
         </div>
     </div>
     }
 </div>
 }
-@else {
-<div class="max-height w-full h-full flex rounded-tr-3xl rounded-br-3xl overflow-hidden">
-    <img src="https://www.wildnutrition.com/cdn/shop/files/All_Organic_Protein_Superfood_Powder_PDP_Benefits_Desktop_1000x1333_81ae5601-700c-4d77-b439-bf2b3fbe2489.jpg?v=1713796726&width=1440"
-        alt="" class="h-full object-cover object-center">
-</div>
-}
-
 }

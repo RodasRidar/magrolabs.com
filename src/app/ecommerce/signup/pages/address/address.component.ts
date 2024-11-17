@@ -7,7 +7,7 @@ import { StepEnum } from '../../models/step.model';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { state } from '@angular/animations';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 
 export interface Address {
@@ -34,7 +34,9 @@ export class AddressComponent {
   private _addressService = inject(AddressService)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
+  private _route = inject(ActivatedRoute)
 
+  private nextUrl = '';
   stepEnum = StepEnum;
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
@@ -43,6 +45,7 @@ export class AddressComponent {
   hideSearching = false;
   departmentEmpty = true;
   provinceEmpty = true;
+  isSaving = false;
 
   departmentUbigeo = '';
   provinceUbigeo = '';
@@ -53,7 +56,7 @@ export class AddressComponent {
   districts$: Observable<Ubigeo[]> = this._addressService.getDistricts(this.provinceUbigeo);
 
   form = this._formBuilder.group<Address>({
-    searchAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
+    searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
     streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
     department: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
     province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
@@ -64,13 +67,63 @@ export class AddressComponent {
   });
 
   ngOnInit(): void {
+    this._route.queryParams.subscribe(params => {
+      this.nextUrl = params['next'] || '';
+    });
+
+    let summary = this._summaryService.getSummary()
+    
+    if (!summary?.userData) {
+      this._router.navigate(['registro/crear-cuenta']);
+    }
+
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
       switchMap(value => this._addressService.searchAddress(value))
     ).subscribe((results: PlaceAPI[]) => {
-      console.log(results);
       this.addressList = results;
     });
+
+    if (summary && summary?.address?.nombreVia) {
+      this.hideSearching = true;
+      this.isSearched = true;
+
+      this._addressService.getDepartments().pipe(
+        map((departments) => {
+          this.departmentUbigeo = summary.address?.department ?? '';
+          this.provinces$ = this._addressService.getProvinces(this.departmentUbigeo);
+          return this.departmentUbigeo ?? '3926';
+        }),
+        switchMap((departmentUbigeo) =>
+          this._addressService.getProvinces(departmentUbigeo).pipe(
+            map((provinces) => {
+              this.provinceUbigeo = summary.address?.provincia ?? '';
+              this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
+              return this.provinceUbigeo ?? '3927';
+            })
+          )
+        ),
+        switchMap((provinceUbigeo) =>
+          this._addressService.getDistricts(provinceUbigeo).pipe(
+            map((districts) => {
+              this.districtUbigeo = summary.address?.distrito ?? '';
+              console.log(this.districtUbigeo)
+              return this.districtUbigeo ?? '3949';
+            })
+          )
+        )
+      ).subscribe(() => {
+        this.form.get('streetAddress')?.setValue(summary.address?.nombreVia ?? '');
+        this.form.get('number')?.setValue(summary.address?.numero ?? 'S/N');
+        this.form.get('postalCode')?.setValue(summary.address?.codigoPostal ?? '');
+        this.form.get('district')?.setValue(summary.address?.distrito ?? '');
+        this.form.get('province')?.setValue(summary.address?.provincia ?? '');
+        this.form.get('department')?.setValue(summary.address?.department ?? '');
+        this.form.get('reference')?.setValue(summary.address?.reference ?? '');
+        this.form.get('district')?.enable();
+        this.form.get('province')?.enable();
+      });
+    }
   }
 
   selectAddress(address: PlaceAPI): void {
@@ -96,7 +149,7 @@ export class AddressComponent {
         this._addressService.getDistricts(provinceUbigeo).pipe(
           map((districts) => {
             this.districtUbigeo = this.findIdUbigeo(address.address.suburb, districts);
-            console.log(this.districtUbigeo) 
+            console.log(this.districtUbigeo)
             return this.districtUbigeo ?? '3949';
           })
         )
@@ -111,8 +164,6 @@ export class AddressComponent {
       this.form.get('district')?.enable();
       this.form.get('province')?.enable();
     });
-
-
   }
 
   hasRequiredError(field: string) {
@@ -143,21 +194,44 @@ export class AddressComponent {
   }
 
   nextStep(): void {
-    if(this.form.invalid) {
+    this.isSaving = true;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    if (!this.isAddressRegistered()) {
       this.form.markAllAsTouched();
       return;
     }
     this._summaryService.setAddress(
       {
-        tipoVia :'',
-        nombreVia :this.form.get('streetAddress')?.value ?? '',
-        numero :this.form.get('number')?.value ?? '',
-        codigoPostal :this.form.get('postalCode')?.value ?? '',
-        distrito :this.form.get('district')?.value ?? '',
-        provincia :this.form.get('province')?.value ?? ''
-
+        tipoVia: '',
+        nombreVia: this.form.get('streetAddress')?.value ?? '',
+        numero: this.form.get('number')?.value ?? '',
+        codigoPostal: this.form.get('postalCode')?.value ?? '',
+        distrito: this.form.get('district')?.value ?? '',
+        provincia: this.form.get('province')?.value ?? '',
+        department: this.form.get('department')?.value ?? '',
+        reference: this.form.get('reference')?.value ?? '',
       }
     );
-    this._router.navigate(['registro/verificacion']);
+
+    if (this.nextUrl !== '') {
+      this._router.navigate(['/registro/verificacion' + this.nextUrl]);
+    }
+    else{
+      this._router.navigate(['/registro/verificacion']);
+    }
+    
+
+    this.isSaving = false;
+  }
+
+  isAddressRegistered() {
+
+   setTimeout(() => {
+   }, 10000);
+
+   return true
   }
 }

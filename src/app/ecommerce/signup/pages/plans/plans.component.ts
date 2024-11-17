@@ -5,7 +5,7 @@ import { StepEnum } from "../../models/step.model";
 import { Information, InformationComponent } from "../../components/information/information.component";
 import { SummaryService } from "../../../../shared/services/summary-service.service";
 import { ChosePlanSummary } from "../../../../shared/models/summary.model";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 
 @Component({
@@ -17,6 +17,15 @@ import { Router } from "@angular/router";
 export class PlansComponent {
   private _summaryService = inject(SummaryService);
   private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+
+  private nextUrl = '';
+
+  ngOnInit(): void {
+    this._route.queryParams.subscribe(params => {
+      this.nextUrl = params['next'] || ''; 
+    });
+  }
 
   stepEnum = StepEnum
   informationList: Information[] = [
@@ -32,10 +41,13 @@ export class PlansComponent {
   ]
 
   chosePlan(chosePlan: ChosePlanSummary) {
-    this._summaryService.setSummary({
-      chosePlan: chosePlan
-    })
-    this._router.navigate(['registro/crear-cuenta'])
+    this._summaryService.setChoosePlan(chosePlan)
+    if(this.nextUrl !== '') {
+      this._router.navigate(['registro/' + this.nextUrl]);
+    }
+    else{
+      this._router.navigate(['registro/crear-cuenta'])
+    }
   }
 
 }

@@ -1,3 +1,5 @@
+import { TypeDocumentEnum } from "../../ecommerce/signup/pages/create-account/create-account.component"
+
 export interface Summary {
     chosePlan?: ChosePlanSummary,
     userData?: UserDataSummary,
@@ -15,6 +17,9 @@ export interface UserDataSummary {
     apellido : string,
     dni: string,
     email: string
+    cellphone: string,
+    typeDocument: TypeDocumentEnum,
+    password: string
 }
 
 export interface AddressSummary {
@@ -24,6 +29,8 @@ export interface AddressSummary {
     codigoPostal :string
     distrito :string
     provincia :string
+    department: string
+    reference: string
 }
 
 export enum SummaryEnum {

@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 
 export interface SignUp {
@@ -37,8 +37,10 @@ export enum TypeDocumentEnum {
 export class CreateAccountComponent {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
-  private _sumaryService = inject(SummaryService)
+  private _summaryService = inject(SummaryService)
+  private _route = inject(ActivatedRoute)
 
+  private nextUrl = '';
   stepEnum = StepEnum;
 
   form = this._formBuilder.group<SignUp>({
@@ -51,6 +53,28 @@ export class CreateAccountComponent {
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
   });
 
+
+
+
+  ngOnInit(): void {
+    let summary = this._summaryService.getSummary()
+    if (!summary?.chosePlan) {
+      this._router.navigate(['registro/']);
+    }
+
+    this._route.queryParams.subscribe(params => {
+      this.nextUrl = params['next'] || '';
+    });
+
+    this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
+    this.form.get('lastName')?.setValue(summary?.userData?.apellido ?? '');
+    this.form.get('cellphone')?.setValue(summary?.userData?.cellphone ?? '');
+    this.form.get('nroDocument')?.setValue(summary?.userData?.dni ?? '');
+    this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? TypeDocumentEnum.DNI);
+    this.form.get('email')?.setValue(summary?.userData?.email ?? '');
+    this.form.get('password')?.setValue(summary?.userData?.password ?? '');
+
+  }
 
   informationList: Information[] = [
     {
@@ -88,19 +112,27 @@ export class CreateAccountComponent {
   }
 
   nextStep() {
-    if(!this.form.valid) {
+    console.log(this.nextUrl);
+    if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    this._sumaryService.setUserData({
+    this._summaryService.setUserData({
       nombre: this.form.get('firtName')?.value ?? '',
       apellido: this.form.get('lastName')?.value ?? '',
       dni: this.form.get('nroDocument')?.value ?? '',
-      email: this.form.get('email')?.value ?? ''
+      email: this.form.get('email')?.value ?? '',
+      cellphone: this.form.get('cellphone')?.value ?? '',
+      typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+      password: this.form.get('password')?.value ?? '',
     })
 
-    
-    this._router.navigate(['/registro/direccion']);
+    if (this.nextUrl !== '') {
+      this._router.navigate(['/registro/' + this.nextUrl]);
+    }
+    else {
+      this._router.navigate(['/registro/direccion']);
+    }
   }
 }

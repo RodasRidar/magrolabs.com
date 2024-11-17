@@ -2,7 +2,9 @@ import { Component, inject } from '@angular/core';
 import { AddressSummary, ChosePlanSummary, Summary, UserDataSummary } from '../../../../shared/models/summary.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import e from 'express';
+import { AddressService, Ubigeo } from '../../../../shared/services/address-service.service';
 
 @Component({
   selector: 'app-summary',
@@ -11,29 +13,103 @@ import { Router } from '@angular/router';
   templateUrl: './summary.component.html'
 })
 export class SummaryComponent {
-  _summaryService = inject(SummaryService);
-  _router = inject(Router);
+
+  private _addressService = inject(AddressService);
+  private _summaryService = inject(SummaryService);
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
 
   summaryState$ = this._summaryService.summaryState$;
   summary: Summary = <Summary>{}
 
+  nextUrl = '';
+
+  isUserDataDisable = false;
+  isAddressDisable = false;
+  isChooseDisable = false;
+
+  districts: Ubigeo[] = [];
+  provinces: Ubigeo[] = [];
+
   ngOnInit(): void {
-    this._summaryService.setSummary(this.summary);
+
+    this.summary = this._summaryService.getSummary() ?? <Summary>{};
+
+    this._route.queryParams.subscribe(params => {
+      this.nextUrl = params['next'] || '';
+
+      if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
+        this.isChooseDisable = true;
+      } else {
+        this.isChooseDisable = false;
+      }
+
+      if (this._router.url.split('/').pop()?.split('?').shift() === 'crear-cuenta') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = true;
+        this.isAddressDisable = true;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'direccion') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = false;
+        this.isAddressDisable = true;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'verificacion') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = false;
+        this.isAddressDisable = false;
+      }
+
+      const provincia = this.summary.address?.provincia ?? '';
+      if (provincia) {
+        this._addressService.getDistricts(provincia).subscribe((data) => {
+          this.districts = data;
+        });
+      }
+
+      const departamento = this.summary.address?.department ?? '';
+      if (departamento) {
+        this._addressService.getProvinces(departamento).subscribe((data) => {
+          this.provinces = data;
+        });
+      }
+    });
+
   }
 
   changeChoose() {
-    this._summaryService.setChoosePlan(<ChosePlanSummary>{})
-    this._router.navigate(['registro/'])
+    if (this.nextUrl !== '') {
+      this._router.navigate(['registro'], { queryParams: { next: this._router.url.split('/').pop()?.split('?').shift() } });
+    }
+    else {
+      this._router.navigate(['registro'], { queryParams: { next: this._router.url.split('/').pop() } });
+    }
   }
 
   changeUserData() {
-    this._summaryService.setUserData(<UserDataSummary>{})
-    this._router.navigate(['/registro/crear-cuenta'])
+    if (this.nextUrl !== '') {
+      this._router.navigate(['/registro/crear-cuenta'], { queryParams: { next: this._router.url.split('/').pop()?.split('?').shift() } });
+    }
+    else {
+      this._router.navigate(['/registro/crear-cuenta'], { queryParams: { next: this._router.url.split('/').pop() } });
+    }
   }
 
   changeAddress() {
-    this._summaryService.setAddress(<AddressSummary>{})
-    this._router.navigate(['/registro/direccion'])
+    if (this.nextUrl !== '') {
+      this._router.navigate(['/registro/direccion'], { queryParams: { next: this._router.url.split('/').pop()?.split('?').shift() } });
+    }
+    else {
+      this._router.navigate(['/registro/direccion'], { queryParams: { next: this._router.url.split('/').pop() } });
+    }
+  }
+
+  districtName() {
+    return this.districts.filter(x => x.id_ubigeo == this.summary.address?.distrito)[0]?.nombre_ubigeo ?? '';
+  }
+
+  provinceName() {
+    return this.provinces.find(x => x.id_ubigeo == this.summary.address?.provincia)?.nombre_ubigeo ?? '';
   }
 }
 

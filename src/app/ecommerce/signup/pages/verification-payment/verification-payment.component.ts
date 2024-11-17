@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { Router } from '@angular/router';
 import { Information, InformationComponent } from '../../components/information/information.component';
+import { SummaryService } from '../../../../shared/services/summary-service.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -32,6 +33,7 @@ export class VerificationPaymentComponent {
   private _formBuilder = inject(FormBuilder)
   private _addressService = inject(AddressService)
   private _router = inject(Router)
+  private _summaryService = inject(SummaryService)
 
   stepEnum = StepEnum;
 
@@ -43,6 +45,13 @@ export class VerificationPaymentComponent {
     cardCvv: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]),
   })
 
+  ngOnInit(): void {
+    let summary = this._summaryService.getSummary()
+    if(!summary?.address) {
+      this._router.navigate(['registro/direccion']);
+    }
+  }
+  
   applyPromoCode() {
     if (this.form.get('promoCode')?.valid) {
       const promoCode = this.form.get('promoCode')?.value;

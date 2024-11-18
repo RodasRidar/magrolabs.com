@@ -57,13 +57,17 @@
                                         *</label>
                                     <div class="mt-2">
                                         <input type="text" autocomplete="street-address"
+                                            (input)="limitDigits(70, 'streetAddress')"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress')}"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress') || hasValidatorError('streetAddress')}"
                                             formControlName="streetAddress">
 
                                         <div class="p-2">
                                             @if(hasRequiredError('streetAddress')) {
-                                            <small class="text-xs text-red-500">*Campo obligatorio</small>
+                                            <p class="text-xs text-red-500">*Campo obligatorio</p>
+                                            }
+                                            @if(hasValidatorError('streetAddress')) {
+                                            <p class="text-xs text-red-500">*Solo se permite más de 3 caracteres</p>
                                             }
                                         </div>
                                     </div>
@@ -138,35 +142,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="sm:col-span-3">
-                                    <label for="region" class="block text-sm/6 font-medium text-gray-900">Distrito
-                                        *</label>
-                                    <div class="mt-2">
-                                        <input type="text" [value]="userAddress?.address?.suburb"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
-                                            formControlName="district">
-
-                                        <div class="p-2">
-                                            @if(hasRequiredError('district')) {
-                                            <small class="text-xs text-red-500">*Distrito es obligatorio</small>
-                                            }
-                                        </div>
-                                    </div>
-                                </div> -->
 
                                 <div class="sm:col-span-3">
                                     <label for="region" class="block text-sm/6 font-medium text-gray-900">Código Postal
                                         *</label>
                                     <div class="mt-2">
-                                        <input type="text"
+                                        <input type="text" (input)="limitDigits(5, 'postalCode')"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('postalCode')}"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('postalCode') || hasValidatorError('postalCode')}"
                                             formControlName="postalCode">
                                     </div>
                                     <div class="p-2">
                                         @if(hasRequiredError('postalCode')) {
-                                        <small class="text-xs text-red-500">*Código Postal es obligatorio</small>
+                                        <p class="text-xs text-red-500">*Código Postal es obligatorio</p>
+                                        }
+                                        @if(hasValidatorError('postalCode')) {
+                                        <p class="text-xs text-red-500">*Solo se permite 5 dígitos</p>
                                         }
                                     </div>
                                 </div>
@@ -175,9 +166,15 @@
                                     <label for="postal-code"
                                         class="block text-sm/6 font-medium text-gray-900">Número</label>
                                     <div class="mt-2">
-                                        <input type="text"
+                                        <input type="text" (input)="limitDigits(6, 'number')"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            formControlName="number">
+                                            formControlName="number"
+                                            [ngClass]="{'ring-red-500 ring-2': hasValidatorError('number')}">
+                                    </div>
+                                    <div class="p-2">
+                                        @if(hasValidatorError('number')) {
+                                        <p class="text-xs text-red-500">*Se permite de 1 a 6 dígitos</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -187,7 +184,13 @@
                                         class="block text-sm/6 font-medium text-gray-900">Referencia</label>
                                     <div class="mt-2">
                                         <input type="text" formControlName="reference"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('reference')}"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
+                                    </div>
+                                    <div class="p-2">
+                                        @if(hasValidatorError('reference')) {
+                                        <p class="text-xs text-red-500">*Se permite de 3 a 250 caracteres</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -205,7 +208,8 @@
                 <hr class="mb-64 max-sm:mb-20" [ngClass]="hideSearching ? 'hidden' : ''">
 
                 <div class="max-sm:hidden mt-6" [ngClass]="isSearched ? '' : 'hidden'">
-                    <ml-button name="Continuar" (click)="nextStep()" [ngClass]="{isSaving:'cursor-progress disabled'}"></ml-button>
+                    <ml-button name="Continuar" (click)="nextStep()"
+                        [ngClass]="{isSaving:'cursor-progress disabled'}"></ml-button>
                 </div>
                 <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50"
                     [ngClass]="isSearched ? '' : 'hidden'" [ngClass]="{isSaving:'cursor-progress disabled'}">

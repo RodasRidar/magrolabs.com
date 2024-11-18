@@ -27,6 +27,7 @@ export class SummaryComponent {
   isUserDataDisable = false;
   isAddressDisable = false;
   isChooseDisable = false;
+  isConfirmation = false;
 
   districts: Ubigeo[] = [];
   provinces: Ubigeo[] = [];
@@ -58,6 +59,11 @@ export class SummaryComponent {
         this.isChooseDisable = false;
         this.isUserDataDisable = false;
         this.isAddressDisable = false;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'confirmacion') {
+        this.isConfirmation = true;
+        this.isAddressDisable = true;
+        this.isUserDataDisable = true;
       }
 
       const provincia = this.summary.address?.provincia ?? '';

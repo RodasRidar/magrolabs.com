@@ -57,13 +57,13 @@ export class AddressComponent {
 
   form = this._formBuilder.group<Address>({
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
-    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
-    department: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
-    province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
-    district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
-    number: this._formBuilder.nonNullable.control('', [Validators.minLength(1)]),
-    reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
-    postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5)]),
+    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[a-zA-Z0-9\.\-\(\)#, ]{3,70}$/)]),
+    department: this._formBuilder.nonNullable.control('', [Validators.required]),
+    province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
+    district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
+    number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{3,6}$/)]),
+    reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[a-zA-Z0-9\.\-\(\)#, ]{3,250}$/)]),
+    postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
 
   ngOnInit(): void {
@@ -72,7 +72,7 @@ export class AddressComponent {
     });
 
     let summary = this._summaryService.getSummary()
-    
+
     if (!summary?.userData) {
       this._router.navigate(['registro/crear-cuenta']);
     }
@@ -217,21 +217,31 @@ export class AddressComponent {
     );
 
     if (this.nextUrl !== '') {
-      this._router.navigate(['/registro/verificacion' + this.nextUrl]);
+      this._router.navigate(['/registro/' + this.nextUrl]);
     }
-    else{
+    else {
       this._router.navigate(['/registro/verificacion']);
     }
-    
+
 
     this.isSaving = false;
   }
 
+  hasValidatorError(field: string) {
+    const control = this.form.get(field);
+    return control?.invalid && control?.touched;
+  }
+
   isAddressRegistered() {
 
-   setTimeout(() => {
-   }, 10000);
+    setTimeout(() => {
+    }, 10000);
 
-   return true
+    return true
+  }
+
+  limitDigits(nroDigits: number, field: string) {
+    const control = this.form.get(field);
+    control?.setValue(control.value.toString().slice(0, nroDigits));
   }
 }

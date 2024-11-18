@@ -16,16 +16,17 @@
 
     <!-- Plan seleccionado -->
     @if(summary.chosePlan){
-    <div class="mx-4 mb-8">
+    <div class="mx-4 mb-8" [ngClass]="{'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">{{summary.chosePlan.selection}}</span>
+            @if (!isConfirmation) {
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
-            <a>
-                <a (click)="changeChoose()"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
-                    Cambiar
-                </a>
+            <a (click)="changeChoose()"
+                class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                Cambiar
             </a>
+            }
+
         </div>
         <div class=" text-xs text">
             <p class="mt-3 mb-1 text-pretty">
@@ -44,7 +45,8 @@
 
     <!-- Datos -->
     @if(summary.userData){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable}">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation}"
+        [ngClass]="{'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
             @if(!isUserDataDisable) {
@@ -91,7 +93,8 @@
 
     <!-- Dirección de entrega -->
     @if(summary.address){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable}">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation}"
+        [ngClass]="{'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
             @if(!isAddressDisable) {

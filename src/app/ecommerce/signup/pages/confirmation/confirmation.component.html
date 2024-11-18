@@ -6,16 +6,31 @@
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¡Felicidades {{clientName}}!
             </h1>
-            <p class="text-base font-bold mt-5">¡Tu registro se ha completado con éxito!</p>
-            <p class="text-base">El email de confirmación está en camino.</p>
+            @if (isSuccess) {
+            <p class="text-xl font-extrabold mt-5">{{parrafoExito.parrafo1}}</p>
+            <p class="text-base">{{parrafoExito.parrafo2}}</p>
 
-            <p class="text-base mt-5">Ten en cuenta que:</p>
+            <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
+            }
+            @else {
+            <p class="text-xl font-extrabold mt-5">{{parrafoError.parrafo1}}</p>
+            <p class="text-base">{{parrafoError.parrafo2}}</p>
+
+            <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
+            }
+
         </div>
     </div>
 </div>
-
-<app-information [information]="informationList" class="mt-5" />
-
-<div  class="mt-5 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Iniciar sesión" [routerLink]="['/login']" />
+@if (isSuccess) {
+<app-information [information]="informationExitoList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
 </div>
+}
+@else {
+<app-information [information]="informationErrorList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Mira tu suscripción" [routerLink]="['/login']" />
+</div>
+}

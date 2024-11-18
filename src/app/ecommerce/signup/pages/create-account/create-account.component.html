@@ -32,7 +32,10 @@
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('firtName')) {
-                                    <small class="text-xs text-red-500">*Nombres es obligatorio</small>
+                                    <p class="text-xs text-red-500">*Nombres es obligatorio</p>
+                                    }
+                                    @if(hasValidatorError('firtName')) {
+                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
                                     }
                                 </div>
                             </div>
@@ -48,7 +51,10 @@
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('lastName')) {
-                                    <small class="text-xs text-red-500">*Apellidos es obligatorio</small>
+                                    <p class="text-xs text-red-500">*Apellidos es obligatorio</p>
+                                    }
+                                    @if(hasValidatorError('lastName')) {
+                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
                                     }
                                 </div>
                             </div>
@@ -61,8 +67,8 @@
                                     <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
                                         +51
                                     </div>
-                                    <input id="cellphone" name="cellphone" type="number" placeholder="987654321"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone()}"
+                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
                                         class="appearance-none w-full p-2.5 outline-none
                                          block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
                                          text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -71,6 +77,9 @@
                                 <div class="p-2">
                                     @if(hasRequiredError('cellphone')) {
                                     <p class="text-xs text-red-500">*El número de celular es obligatorio</p>
+                                    }
+                                    @if(hasValidatorError('cellphone')) {
+                                    <p class="text-xs text-red-500">*Solo se permite 9 dígitos</p>
                                     }
                                     @if(hasExistCellphone()) {
                                     <p class="text-xs text-red-500">
@@ -92,16 +101,24 @@
                                             <option value="2">Carnet Ext.</option>
                                         </select>
                                     </div>
-                                    <input type="number" placeholder="87654321"
+                                    <input [type]="form.get('typeDocument')?.value == '1' ? 'number' : 'text'"
+                                        placeholder="87654321"
+                                        (input)="limitDigits(form.get('typeDocument')?.value == '1' ? 8 : 12, 'nroDocument')"
                                         class="appearance-none w-full p-2.5 outline-none
                                          block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
                                          text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument()}"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
                                         formControlName="nroDocument" />
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('nroDocument')) {
                                     <p class="text-xs text-red-500"> *Número de documento es obligatorio</p>
+                                    }
+                                    @if(hasValidatorError('nroDocument') && form.get('typeDocument')?.value == '1') {
+                                    <p class="text-xs text-red-500">*DNI permite 8 dígitos</p>
+                                    }
+                                    @if(hasValidatorError('nroDocument') && form.get('typeDocument')?.value == '2') {
+                                    <p class="text-xs text-red-500">*Carnet Ext. permite 12 alfanuméricos</p>
                                     }
                                     @if(hasExistDocument()) {
                                     <p class="text-xs text-red-500">
@@ -117,7 +134,7 @@
                                 <div class="mt-2">
                                     <input formControlName="email" id="email" name="email" type="email"
                                         autocomplete="email" placeholder="tu@example.com"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail()}"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                                 <div class="p-2">
@@ -129,6 +146,9 @@
                                         *El correo ya está registrado
                                     </p>
                                     }
+                                    @if(hasValidatorError('email')) {
+                                    <p class="text-xs text-red-500">*Correo inválido</p>
+                                    }
                                 </div>
                             </div>
 
@@ -138,12 +158,18 @@
                                 <div class="mt-2">
                                     <input formControlName="password" name="password" type="password"
                                         placeholder="••••••••"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password')}"
+                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('password')) {
-                                    <small class="text-xs text-red-500">*Contraseña es obligatorio</small>
+                                    <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
+                                    }
+                                    @if(hasValidatorError('password')) {
+                                    <p class="text-xs text-red-500">*Debe contener mínimo 8 caracteres</p>
+                                    <!-- <p class="text-xs text-red-500">*Contener al menos una letra mayúscula</p>
+                                    <p class="text-xs text-red-500">*Contener al menos una número</p>
+                                    <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
                                     }
                                 </div>
                             </div>

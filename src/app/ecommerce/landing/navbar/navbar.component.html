@@ -23,21 +23,21 @@
                 </button>
             </div>
             <nav class="hidden md:flex space-x-10">
-                <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/como-funciona' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
                     ¿Cómo funciona?
                 </a>
-                <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/atencion-cliente' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
                     Atención al Cliente
                 </a>
-                <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/productos' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
                     Productos
                 </a>
             </nav>
             <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                <a href="#" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/login' ]" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                     Iniciar sesión
                 </a>
-                <ml-button class="ml-8" name="Regístrate"/>
+                <ml-button class="ml-8" name="Regístrate" [routerLink]="[ '/registro' ]"/>
             </div>
         </div>
     </div>
@@ -67,20 +67,20 @@
                 </div>
                 <div class="py-6 px-5 space-y-6">
                     <div class="grid grid-cols-1 gap-y-8 gap-x-8">
-                        <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/como-funciona' ]" class="text-base font-medium text-gray-900 hover:text-gray-700">
                             ¿Cómo funciona?
                         </a>
-                        <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/atencion-cliente' ]" class="text-base font-medium text-gray-900 hover:text-gray-700">
                             Atención al Cliente
                         </a>
-                        <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/productos' ]" class="text-base font-medium text-gray-900 hover:text-gray-700">
                             Productos
                         </a>
                     </div>
                     <div>
-                        <ml-button name="Regístrate"/>
+                        <ml-button name="Regístrate" [routerLink]="[ '/registro' ]"/>
                         <p class="mt-6 text-center text-base font-medium text-gray-500">
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500">
+                            <a [routerLink]="[ '/iniciar-sesion' ]" class="text-indigo-600 hover:text-indigo-500">
                                 Iniciar Sesión
                             </a>
                         </p>

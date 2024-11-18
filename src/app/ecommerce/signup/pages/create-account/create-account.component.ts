@@ -128,7 +128,6 @@ export class CreateAccountComponent {
   }
 
   nextStep() {
-    console.log(this.nextUrl);
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;

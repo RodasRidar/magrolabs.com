@@ -45,8 +45,7 @@
 
     <!-- Datos -->
     @if(summary.userData){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation}"
-        [ngClass]="{'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
             @if(!isUserDataDisable) {
@@ -93,8 +92,7 @@
 
     <!-- Dirección de entrega -->
     @if(summary.address){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation}"
-        [ngClass]="{'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
             @if(!isAddressDisable) {

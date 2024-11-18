@@ -19,6 +19,7 @@ export class SummaryComponent {
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
 
+
   summaryState$ = this._summaryService.summaryState$;
   summary: Summary = <Summary>{}
 
@@ -36,8 +37,12 @@ export class SummaryComponent {
 
     this.summary = this._summaryService.getSummary() ?? <Summary>{};
 
-    this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || '';
+    // this._route.url.subscribe((x) => {
+    //   console.log(x);
+    // });
+
+    this._route.queryParams.subscribe(param => {
+      this.nextUrl = param['next'] || '';
 
       if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
         this.isChooseDisable = true;

@@ -64,9 +64,11 @@ export class ConfirmationComponent {
     this._route.queryParams.subscribe(params => {
       let status = params['status'] || '';
       if (status === '1') {
+        this._summaryService.clearSummary();
         this.isSuccess = true;
       }
       else if (status === '0') {
+        this._summaryService.clearSummary();
         this.isSuccess = false;
       }
       else {

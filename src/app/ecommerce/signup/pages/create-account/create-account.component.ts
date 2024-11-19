@@ -122,9 +122,12 @@ export class CreateAccountComponent {
     // return control?.hasError('cellphoneExists') && control.dirty;
   }
 
-  limitDigits(nroDigits: number, field: string) {
+  limitDigits(nroDigits: number, field: string): void {
     const control = this.form.get(field);
-    control?.setValue(control.value.toString().slice(0, nroDigits));
+    if (control) {
+      const value = control.value?.toString() || ''; 
+      control.setValue(value.slice(0, nroDigits));  
+    }
   }
 
   nextStep() {

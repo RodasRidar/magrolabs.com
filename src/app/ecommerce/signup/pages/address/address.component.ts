@@ -57,12 +57,12 @@ export class AddressComponent {
 
   form = this._formBuilder.group<Address>({
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
-    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[a-zA-Z0-9\.\-\(\)#, ]{3,70}$/)]),
+    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]),
     department: this._formBuilder.nonNullable.control('', [Validators.required]),
     province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
     district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
-    number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{3,6}$/)]),
-    reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[a-zA-Z0-9\.\-\(\)#, ]{3,250}$/)]),
+    number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]),
+    reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
 
@@ -239,8 +239,11 @@ export class AddressComponent {
     return true
   }
 
-  limitDigits(nroDigits: number, field: string) {
+  limitDigits(nroDigits: number, field: string): void {
     const control = this.form.get(field);
-    control?.setValue(control.value.toString().slice(0, nroDigits));
+    if (control) {
+      const value = control.value?.toString() || ''; 
+      control.setValue(value.slice(0, nroDigits));  
+    }
   }
 }

@@ -55,15 +55,20 @@ export class VerificationPaymentComponent {
   applyPromoCode() {
     if (this.form.get('promoCode')?.valid) {
       const promoCode = this.form.get('promoCode')?.value;
-      if (promoCode === 'FREE') {
+      if (promoCode === 'FREE' || promoCode === 'ERROR') {
         this.isPaymentVerified = true;
       }
     }
   }
 
   nextStep(): void {
-    //Setear el estado si la direccion es valida para el envio o aplica para la creatina gratis
-    this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+    const promoCode = this.form.get('promoCode')?.value;
+    if (promoCode === 'FREE') {
+      this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+    }
+    else{
+      this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
+    }
   }
 
   verifyPayment() {

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AddressSummary, ChosePlanSummary, Summary, UserDataSummary } from '../../../../shared/models/summary.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import e from 'express';
 import { AddressService, Ubigeo } from '../../../../shared/services/address-service.service';
 
@@ -24,6 +24,7 @@ export class SummaryComponent {
   summary: Summary = <Summary>{}
 
   nextUrl = '';
+  currentUrl = '';
 
   isUserDataDisable = false;
   isAddressDisable = false;
@@ -36,10 +37,7 @@ export class SummaryComponent {
   ngOnInit(): void {
 
     this.summary = this._summaryService.getSummary() ?? <Summary>{};
-
-    // this._route.url.subscribe((x) => {
-    //   console.log(x);
-    // });
+    this.setAddress();
 
     this._route.queryParams.subscribe(param => {
       this.nextUrl = param['next'] || '';
@@ -47,45 +45,43 @@ export class SummaryComponent {
       if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
         this.isChooseDisable = true;
       } else {
-        this.isChooseDisable = false;
-      }
-
-      if (this._router.url.split('/').pop()?.split('?').shift() === 'crear-cuenta') {
-        this.isChooseDisable = false;
-        this.isUserDataDisable = true;
-        this.isAddressDisable = true;
-      }
-      else if (this._router.url.split('/').pop()?.split('?').shift() === 'direccion') {
-        this.isChooseDisable = false;
-        this.isUserDataDisable = false;
-        this.isAddressDisable = true;
-      }
-      else if (this._router.url.split('/').pop()?.split('?').shift() === 'verificacion') {
-        this.isChooseDisable = false;
-        this.isUserDataDisable = false;
-        this.isAddressDisable = false;
-      }
-      else if (this._router.url.split('/').pop()?.split('?').shift() === 'confirmacion') {
-        this.isConfirmation = true;
-        this.isAddressDisable = true;
-        this.isUserDataDisable = true;
-      }
-
-      const provincia = this.summary.address?.provincia ?? '';
-      if (provincia) {
-        this._addressService.getDistricts(provincia).subscribe((data) => {
-          this.districts = data;
-        });
-      }
-
-      const departamento = this.summary.address?.department ?? '';
-      if (departamento) {
-        this._addressService.getProvinces(departamento).subscribe((data) => {
-          this.provinces = data;
-        });
+        this.isChooseDisable = true;
       }
     });
 
+    this._router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
+
+        if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
+          this.isChooseDisable = true;
+        } else {
+          this.isChooseDisable = false;
+        }
+
+        if (this._router.url.split('/').pop()?.split('?').shift() === 'crear-cuenta') {
+          this.isChooseDisable = false;
+          this.isUserDataDisable = true;
+          this.isAddressDisable = true;
+        }
+        else if (this._router.url.split('/').pop()?.split('?').shift() === 'direccion') {
+          this.isChooseDisable = false;
+          this.isUserDataDisable = false;
+          this.isAddressDisable = true;
+        }
+        else if (this._router.url.split('/').pop()?.split('?').shift() === 'verificacion') {
+          this.isChooseDisable = false;
+          this.isUserDataDisable = false;
+          this.isAddressDisable = false;
+        }
+        else if (this._router.url.split('/').pop()?.split('?').shift() === 'confirmacion') {
+          this.isConfirmation = true;
+          this.isAddressDisable = true;
+          this.isUserDataDisable = true;
+        }
+        this.setAddress();
+      }
+    });
   }
 
   changeChoose() {
@@ -121,6 +117,22 @@ export class SummaryComponent {
 
   provinceName() {
     return this.provinces.find(x => x.id_ubigeo == this.summary.address?.provincia)?.nombre_ubigeo ?? '';
+  }
+
+  setAddress() {
+    const provincia = this.summary.address?.provincia ?? '';
+    if (provincia) {
+      this._addressService.getDistricts(provincia).subscribe((data) => {
+        this.districts = data;
+      });
+    }
+
+    const departamento = this.summary.address?.department ?? '';
+    if (departamento) {
+      this._addressService.getProvinces(departamento).subscribe((data) => {
+        this.provinces = data;
+      });
+    }
   }
 }
 

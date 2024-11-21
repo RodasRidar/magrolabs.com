@@ -6,6 +6,8 @@ import { StepEnum } from '../../models/step.model';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
 
 @Component({
   selector: 'app-confirmation',
@@ -18,6 +20,7 @@ export class ConfirmationComponent {
   private _summaryService = inject(SummaryService)
   private _router = inject(Router)
   private _route = inject(ActivatedRoute)
+  private _dialog = inject(MatDialog)
 
   stepEnum = StepEnum;
   clientName = '';
@@ -33,7 +36,7 @@ export class ConfirmationComponent {
   informationErrorList: Information[] = [
     { name: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.' },
     { name: 'Tu periodo de reflexión comienza despues de recibir tu creatina.' },
-    { name: 'En las proximas 48 horas nos pondremos en contacto via Whatsapp.' },
+    { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
     { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
   ]
 
@@ -45,7 +48,7 @@ export class ConfirmationComponent {
 
   parrafoError = {
     parrafo1: '¡El registro se ha completado con éxito, aunque tenemos noticias!',
-    parrafo2: 'Revisamos que tu domicilio no esta dentro de la zona de cobertura, pronto estaremos por tu ciudad. Por el momento no es posible enviarte tu creatina gratis.' +
+    parrafo2: 'Revisamos que tu domicilio no esta dentro de la zona de cobertura, pronto estaremos por tu ciudad. Por el momento no es posible enviarte tu creatina gratis. ' +
     'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio.',
     parrafo3: 'Ten en cuenta que:',
   }
@@ -63,10 +66,12 @@ export class ConfirmationComponent {
     this._route.queryParams.subscribe(params => {
       let status = params['status'] || '';
       if (status === '1') {
+        this.openModal();
         this._summaryService.clearSummary();
         this.isSuccess = true;
       }
-      else if (status === '0') {
+      //Fuere de covertura
+      else if (status === '0') { 
         this._summaryService.clearSummary();
         this.isSuccess = false;
       }
@@ -75,4 +80,22 @@ export class ConfirmationComponent {
       }
     });
   }
+
+  openModal(){
+    const modalData :ModalData = {
+      type: ModalTypeEnum.WELCOME,
+      tittle: 'titulo',
+      message: 'mensaje',
+      afiliateCode: 'KOSDJ1',
+    }
+
+    const dialogRef = this._dialog.open(ModalComponent, {
+      width: '500px',
+      disableClose: true,
+      data: modalData
+    });
+    
+    dialogRef.componentInstance.activate();
+  }
+
 }

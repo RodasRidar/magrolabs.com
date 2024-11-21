@@ -7,13 +7,13 @@ import { SummaryService } from "../../../../shared/services/summary-service.serv
 import { ChosePlanSummary } from "../../../../shared/models/summary.model";
 import { ActivatedRoute, Router } from "@angular/router";
 
-
 @Component({
   selector: 'app-plans',
   standalone: true,
   imports: [StepComponent, PricingComponent, InformationComponent],
   templateUrl: './plans.component.html',
 })
+
 export class PlansComponent {
   private _summaryService = inject(SummaryService);
   private _router = inject(Router);
@@ -49,5 +49,4 @@ export class PlansComponent {
       this._router.navigate(['registro/crear-cuenta'])
     }
   }
-
 }

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { AddressSummary, ChosePlanSummary, Summary, UserDataSummary } from '../../../../shared/models/summary.model';
+import { Summary } from '../../../../shared/models/summary.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -46,6 +46,33 @@ export class SummaryComponent {
         this.isChooseDisable = true;
       } else {
         this.isChooseDisable = true;
+      }
+
+      if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
+        this.isChooseDisable = true;
+      } else {
+        this.isChooseDisable = false;
+      }
+
+      if (this._router.url.split('/').pop()?.split('?').shift() === 'crear-cuenta') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = true;
+        this.isAddressDisable = true;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'direccion') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = false;
+        this.isAddressDisable = true;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'verificacion') {
+        this.isChooseDisable = false;
+        this.isUserDataDisable = false;
+        this.isAddressDisable = false;
+      }
+      else if (this._router.url.split('/').pop()?.split('?').shift() === 'confirmacion') {
+        this.isConfirmation = true;
+        this.isAddressDisable = true;
+        this.isUserDataDisable = true;
       }
     });
 

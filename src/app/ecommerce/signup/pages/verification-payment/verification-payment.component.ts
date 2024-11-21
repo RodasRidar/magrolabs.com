@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AddressService } from '../../../../shared/services/address-service.service';
 import { StepEnum } from '../../models/step.model';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -31,7 +30,6 @@ export class VerificationPaymentComponent {
     }
   ]
   private _formBuilder = inject(FormBuilder)
-  private _addressService = inject(AddressService)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
 

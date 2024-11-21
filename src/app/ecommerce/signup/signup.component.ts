@@ -3,7 +3,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { ActivatedRoute, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { platformBrowser } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-signup',
@@ -33,7 +32,6 @@ export class SignupComponent {
     }
 
   }
-
 
   goBack() {
     switch (this.currentUrl) {

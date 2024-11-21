@@ -7,6 +7,7 @@ import { StepComponent } from '../../components/step/step.component';
 import { Router } from '@angular/router';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -32,6 +33,7 @@ export class VerificationPaymentComponent {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
+  private _seo = inject(SeoService)
 
   stepEnum = StepEnum;
 
@@ -43,7 +45,11 @@ export class VerificationPaymentComponent {
     cardCvv: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]),
   })
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this._seo.title.setTitle('Magrolabs | Verificación de pago');
+    this._seo.setCanonicalURL('magrolabs.com/registro/verificacion');
+    this._seo.setIndexFollow(false);
+
     let summary = this._summaryService.getSummary()
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);

@@ -9,6 +9,7 @@ import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { state } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 export interface Address {
   searchAddress: FormControl<string>,
@@ -35,6 +36,7 @@ export class AddressComponent {
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
   private _route = inject(ActivatedRoute)
+  private _seo = inject(SeoService)
 
   private nextUrl = '';
   stepEnum = StepEnum;
@@ -66,7 +68,10 @@ export class AddressComponent {
     postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this._seo.title.setTitle('Registro | Dirección de envío');
+    this._seo.setCanonicalURL('magrolabs.com/registro/direccion');
+    this._seo.setIndexFollow(false);
     this._route.queryParams.subscribe(params => {
       this.nextUrl = params['next'] || '';
     });

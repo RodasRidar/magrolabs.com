@@ -8,6 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -21,6 +22,7 @@ export class ConfirmationComponent {
   private _router = inject(Router)
   private _route = inject(ActivatedRoute)
   private _dialog = inject(MatDialog)
+  private _seo = inject(SeoService)
 
   stepEnum = StepEnum;
   clientName = '';
@@ -54,6 +56,10 @@ export class ConfirmationComponent {
   }
 
   ngOnInit() {
+    this._seo.title.setTitle('Magrolabs | Bienvenido');
+    this._seo.setCanonicalURL('magrolabs.com/registro/confirmacion');
+    this._seo.setIndexFollow(false);
+
     let summary = this._summaryService.getSummary()
 
     if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
@@ -84,7 +90,7 @@ export class ConfirmationComponent {
   openModal(){
     const modalData :ModalData = {
       type: ModalTypeEnum.WELCOME,
-      tittle: 'titulo',
+      title: 'titulo',
       message: 'mensaje',
       afiliateCode: 'KOSDJ1',
     }

@@ -1,4 +1,4 @@
-const production = false;
+const production = true;
 const APP_URL = 'develop.magrolabs.com';
 const secretKey = '<<LLAVE PRIVADA>>';
 const publicKey = '<<LLAVE PÚBLICA>>';

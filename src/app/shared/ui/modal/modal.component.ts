@@ -80,7 +80,7 @@ export enum ModalTypeEnum {
 }
 
 export interface ModalData {
-  tittle: string;
+  title: string;
   message: string;
   afiliateCode?: string;
   type: ModalTypeEnum;

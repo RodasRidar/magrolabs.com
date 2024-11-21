@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -39,6 +40,7 @@ export class CreateAccountComponent {
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
   private _route = inject(ActivatedRoute)
+  private _seo = inject(SeoService)
 
   private nextUrl = '';
   stepEnum = StepEnum;
@@ -56,7 +58,11 @@ export class CreateAccountComponent {
 
 
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this._seo.title.setTitle('Registro | Datos de registro');
+    this._seo.setCanonicalURL('magrolabs.com/registro/crear-cuenta');
+    this._seo.setIndexFollow(false);
+    
     let summary = this._summaryService.getSummary()
     if (!summary?.chosePlan) {
       this._router.navigate(['registro/']);

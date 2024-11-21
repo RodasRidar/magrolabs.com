@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /login/
+Disallow: /cart/
+Sitemap: https://magrolabs.com/sitemap.xml

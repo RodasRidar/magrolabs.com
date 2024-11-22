@@ -57,7 +57,6 @@ export class PlansComponent {
     const description = 'Escoge tu plan de suscripción a tu medidad y comienza a disfrutar de la mejor creatina con envió gratis.';
     const title = 'Registro | Escoge tu plan';
     const URL = 'https://magrolabs.com/registro';
-    // const image = 'https://i.ibb.co/cN8Xncy/Imagen-meta-optimized.png';
     const image = 'https://magrolabs.com/image-meta.png';
 
 

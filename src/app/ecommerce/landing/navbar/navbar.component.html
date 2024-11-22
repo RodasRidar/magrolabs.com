@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
             <div class="flex justify-start lg:w-0 lg:flex-1">
-                <a href="#">
+                <a [routerLink]="[ '/' ]">
                     <span class="sr-only">Workflow</span>
                     <img class="h-8 w-auto sm:h-10" src="https://m.media-amazon.com/images/G/01/sell/navigation/amazon-logo-squid-menu.svg"
                         alt="" />
@@ -80,7 +80,7 @@
                     <div>
                         <ml-button name="Regístrate" [routerLink]="[ '/registro' ]"/>
                         <p class="mt-6 text-center text-base font-medium text-gray-500">
-                            <a [routerLink]="[ '/iniciar-sesion' ]" class="text-indigo-600 hover:text-indigo-500">
+                            <a [routerLink]="[ '/login' ]" class="text-indigo-600 hover:text-indigo-500">
                                 Iniciar Sesión
                             </a>
                         </p>

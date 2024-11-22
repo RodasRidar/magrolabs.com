@@ -1,14 +1,13 @@
 <div class="relative bg-white shadow">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
+        <div class="flex justify-between items-center py-4 lg:justify-start md:space-x-10">
             <div class="flex justify-start lg:w-0 lg:flex-1">
                 <a [routerLink]="[ '/' ]">
-                    <span class="sr-only">Workflow</span>
-                    <img class="h-8 w-auto sm:h-10" src="https://m.media-amazon.com/images/G/01/sell/navigation/amazon-logo-squid-menu.svg"
-                        alt="" />
+                    <span class="sr-only">Magrolabs</span>
+                    <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" class="h-12 w-auto"/>
                 </a>
             </div>
-            <div class="-mr-2 -my-2 md:hidden">
+            <div class="-mr-2 -my-2 lg:hidden">
                 <button type="button"
                     (click)="toggleNavbar()"
                     class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -22,7 +21,7 @@
                     </svg>
                 </button>
             </div>
-            <nav class="hidden md:flex space-x-10">
+            <nav class="hidden lg:flex space-x-10">
                 <a [routerLink]="[ '/como-funciona' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
                     ¿Cómo funciona?
                 </a>
@@ -33,7 +32,7 @@
                     Productos
                 </a>
             </nav>
-            <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+            <div class="hidden lg:flex items-center justify-end md:flex-1 lg:w-0">
                 <a [routerLink]="[ '/login' ]" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                     Iniciar sesión
                 </a>
@@ -42,14 +41,13 @@
         </div>
     </div>
 
-    <div [@fadeInOut]="state" class="sm:hidden fixed inset-0 overflow-hidden z-30">
-        <div class="absolute top-0 inset-x-0 z-10 p-2 origin-top-right md:hidden">
+    <div [@fadeInOut]="state" class="lg:hidden fixed inset-0 overflow-hidden z-30">
+        <div class="absolute top-0 inset-x-0 z-10 p-2 origin-top-right lg:hidden">
             <div  class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
                 <div class="pt-5 pb-6 px-5">
                     <div class="flex items-center justify-between">
                         <div>
-                            <img class="h-8 w-auto" src="https://m.media-amazon.com/images/G/01/sell/navigation/amazon-logo-squid-menu.svg"
-                                alt="icon magrolabs" />
+                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"/>
                         </div>
                         <div class="-mr-2">
                             <button type="button"

@@ -5,9 +5,10 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 import apicache from 'apicache';
+import { SitemapStream } from 'sitemap';
 // import { createGzip } from 'zlib';
 
-const { SitemapStream } = require('sitemap')
+// const { SitemapStream } = require('sitemap')
 let cache = apicache.middleware
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {

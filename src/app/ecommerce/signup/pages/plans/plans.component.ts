@@ -95,3 +95,11 @@ export class PlansComponent {
     ]);
   }
 }
+
+const routes = [
+  {
+    path: '',
+    component: PlansComponent,
+    loadChildren: () => import('./plans.component').then(m => m.PlansComponent)
+  }
+];

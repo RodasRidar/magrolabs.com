@@ -51,4 +51,8 @@ export const routes: Routes = [
 //     pathMatch: 'full',
 //     component: LandingComponent,
 //   },
+{
+  path:'**',
+  loadComponent: () => import('./shared/pages/not-found/not-found.component')
+}
 ];

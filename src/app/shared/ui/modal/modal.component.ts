@@ -44,7 +44,6 @@ export class ModalComponent {
   modalType = ModalTypeEnum;
 
   ngOnInit(): void {
-    console.log(this.data);
     if (this.data.type === ModalTypeEnum.WELCOME) {
       const nombre = this._summaryService.getSummary()?.userData?.nombre || 'Tu amigo';
       const codigo = this.data.afiliateCode || '';
@@ -64,10 +63,10 @@ export class ModalComponent {
   copyShareUrl() {
     navigator.clipboard.writeText(this.urlShared).then(
       () => {
-        alert('¡Código copiado al portapapeles!');
+        alert('¡Enlace copiado al portapapeles!');
       },
       (err) => {
-        console.error('Error al copiar el texto: ', err)
+        // console.error('Error al copiar el texto: ', err)
       }
     );
   }

@@ -21,12 +21,12 @@ export class SignupComponent {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.currentUrl = window.location.pathname.split('/').pop()?.split('?').shift() || '';
-      this.isChoosePlanView = this.currentUrl === 'registro'
+      this.isChoosePlanView = this.currentUrl === 'registro' || this.currentUrl ==='confirmacion'
 
       this._router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
           this.currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
-          this.isChoosePlanView = this.currentUrl === 'registro';
+          this.isChoosePlanView = this.currentUrl === 'registro' || this.currentUrl ==='confirmacion';
         }
       });
     }

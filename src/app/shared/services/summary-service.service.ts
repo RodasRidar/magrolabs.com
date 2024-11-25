@@ -62,7 +62,7 @@ export class SummaryService {
       try {
         return JSON.parse(json) as Summary;
       } catch (error) {
-        console.error('Failed to parse summary from cookies:', error);
+        // console.error('Failed to parse summary from cookies:', error);
         return <Summary>{};
       }
     }

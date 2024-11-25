@@ -112,7 +112,7 @@ export class AddressComponent {
           this._addressService.getDistricts(provinceUbigeo).pipe(
             map((districts) => {
               this.districtUbigeo = summary.address?.distrito ?? '';
-              console.log(this.districtUbigeo)
+              // console.log(this.districtUbigeo)
               return this.districtUbigeo ?? '3949';
             })
           )

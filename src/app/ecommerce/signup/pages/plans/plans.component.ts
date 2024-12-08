@@ -1,21 +1,24 @@
-import { Component, inject } from "@angular/core";
-import { PricingComponent } from "../../components/pricing/pricing.component";
+import { Component, ElementRef, inject, ViewChild } from "@angular/core";
 import { StepComponent } from "../../components/step/step.component";
 import { StepEnum } from "../../models/step.model";
-import { Information, InformationComponent } from "../../components/information/information.component";
+import { Information } from "../../components/information/information.component";
 import { SummaryService } from "../../../../shared/services/summary-service.service";
-import { ChosePlanSummary } from "../../../../shared/models/summary.model";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary.model";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
+import { ButtonComponent } from "../../../../shared/ui/button/button.component";
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [StepComponent, PricingComponent, InformationComponent],
+  imports: [StepComponent, RouterLink, ButtonComponent],
   templateUrl: './plans.component.html',
 })
 
 export class PlansComponent {
+  @ViewChild('Subscription', { static: false }) subscriptionElement!: ElementRef<HTMLDetailsElement>;
+  @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
+
   private _summaryService = inject(SummaryService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
@@ -23,13 +26,8 @@ export class PlansComponent {
 
   private nextUrl = '';
 
-  ngOnInit(): void {
-    this.loadSEO();
-    this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || ''; 
-    });
-  }
-
+  isSelectSubscription = false;
+  isSelectOnePurchase = false;
   stepEnum = StepEnum
   informationList: Information[] = [
     {
@@ -43,6 +41,49 @@ export class PlansComponent {
     }
   ]
 
+  ngOnInit(): void {
+    let summary = this._summaryService.getSummary()
+    this.loadSEO();
+    this._route.queryParams.subscribe(params => {
+      this.nextUrl = params['next'] || ''; 
+    });
+
+    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      this.isSelectSubscription = true;
+    }
+    else if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+      this.isSelectOnePurchase = true;
+    }else{
+      this.isSelectSubscription = true;
+    }
+  }
+
+  selectSubscription($event: any) {
+    if (this.isSelectSubscription) {
+      $event.preventDefault();
+    }
+
+    this.isSelectSubscription = true;
+    this.isSelectOnePurchase = false;
+
+    if (this.onePurchaseElement) {
+      this.onePurchaseElement.nativeElement.open = false;
+    }
+  }
+
+  selectOnePurchase($event: any) {
+    if (this.isSelectOnePurchase) {
+      $event.preventDefault();
+    }
+
+    this.isSelectSubscription = false;
+    this.isSelectOnePurchase = true;
+
+    if (this.subscriptionElement) {
+      this.subscriptionElement.nativeElement.open = false;
+    }
+  }
+
   chosePlan(chosePlan: ChosePlanSummary) {
     this._summaryService.setChoosePlan(chosePlan)
     if(this.nextUrl !== '') {
@@ -50,6 +91,31 @@ export class PlansComponent {
     }
     else{
       this._router.navigate(['registro/crear-cuenta'])
+    }
+  }
+
+  nextStep() {
+    if (this.isSelectSubscription) {
+
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+        descriptionOne: 'Monohidratada 100%',
+        descriptionTwo: 'Plan mensual de S/47',
+        descrptionThree: 'Creatina 100g (gratis)',
+        quantity: 1
+      })
+
+      this._router.navigate(['registro/verificacion']);
+    }
+    else if (this.isSelectOnePurchase) {
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
+        descriptionOne: 'Monohidratada 100%',
+        descriptionTwo: 'Compra única de S/59',
+        quantity: 1
+      })
+
+      this._router.navigate(['registro/verificacion']);
     }
   }
 
@@ -93,12 +159,21 @@ export class PlansComponent {
       { lang: 'x-default', url: URL },
     ]);
   }
-}
 
-const routes = [
-  {
-    path: '',
-    component: PlansComponent,
-    loadChildren: () => import('./plans.component').then(m => m.PlansComponent)
+  isButtonDisabled() {
+    return !this.isSelectSubscription && !this.isSelectOnePurchase;
   }
-];
+
+  ngAfterViewInit(): void {
+    let summary = this._summaryService.getSummary()
+    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      this.subscriptionElement.nativeElement.open = true;
+    }
+    else if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+      this.onePurchaseElement.nativeElement.open = true;
+    }
+    else{
+      this.subscriptionElement.nativeElement.open = true;
+    }
+  }
+}

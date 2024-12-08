@@ -18,7 +18,7 @@
     @if(summary.chosePlan){
     <div class="mx-4 mb-8" [ngClass]="{'text-gray-700': isConfirmation}">
         <div class="flex items-center">
-            <span class="font-extrabold text-sm">{{summary.chosePlan.selection}}</span>
+            <span class="font-extrabold text-sm">{{summary.chosePlan.quantity}} {{summary.chosePlan.selection}}</span>
             @if (!isConfirmation) {
             <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
             <a (click)="changeChoose()"
@@ -36,7 +36,7 @@
                 <span> {{summary.chosePlan.descriptionTwo}}</span>
             </p>
             <p class="mb-1 text-pretty">
-                <span> Creatina 100g (gratis)</span>
+                <span> {{summary.chosePlan.descrptionThree}}</span>
             </p>
         </div>
     </div>

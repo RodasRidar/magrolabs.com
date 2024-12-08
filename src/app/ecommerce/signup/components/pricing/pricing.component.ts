@@ -18,7 +18,8 @@ export class PricingComponent {
     this.chosePlan.emit({    
       selection: 'Creatina 3kg' ,
       descriptionOne: 'Monohidratada 100%',
-      descriptionTwo: 'Plan anual de S/399'
+      descriptionTwo: 'Plan anual de S/399',
+      quantity: 1
     })
   }
 
@@ -26,7 +27,8 @@ export class PricingComponent {
     this.chosePlan.emit({    
       selection: 'Creatina 250g' ,
       descriptionOne: 'Monohidratada 100%',
-      descriptionTwo: 'Plan mensual de S/39'
+      descriptionTwo: 'Plan mensual de S/39',
+      quantity: 1
     })
   }
 }

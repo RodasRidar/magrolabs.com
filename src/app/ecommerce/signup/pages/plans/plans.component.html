@@ -6,13 +6,252 @@
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¿Cuál eliges?
             </h1>
-            <p class="text-sm font-semibold mb-3 mt-5">Elige aquí tu plan de creatina. Registrate para recibir tu primera creatina 100% gratis.</p>            
+            <p class="text-sm font-semibold mb-3 mt-5">Elige aquí tu plan de creatina. Registrate para recibir tu
+                primera creatina 100% gratis.</p>
         </div>
     </div>
 </div>
 
-<div class="mx-auto text-left mb-4 max-w-3xl">
+<!-- <div class="mx-auto text-left mb-4 max-w-3xl">
     <app-information [information]="informationList" />
-</div>
+</div> -->
 
-<app-pricing (chosePlan) = "chosePlan($event)"></app-pricing>
+<!-- <app-pricing (chosePlan) = "chosePlan($event)"></app-pricing> -->
+
+<div class="bg-white rounded-lg shadow-lg ">
+    <div class="max-w-2xl mx-auto lg:max-w-7xl max-sm:px-2  max-sm:py-1 max-lg:px-6 max-lg:py-4 px-16 py-9">
+        <!-- Product details -->
+        <div class=" lg:self-end">
+
+            <div class="mt-2">
+                <h2 class="sr-only">Reviews</h2>
+                <div class="flex items-center">
+                    <div>
+                        <div class="flex items-center">
+
+                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+
+                            <!-- Heroicon name: solid/star -->
+                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+
+                            <!-- Heroicon name: solid/star -->
+                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+
+                            <!-- Heroicon name: solid/star -->
+                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+
+                            <!-- Heroicon name: solid/star -->
+                            <svg class="text-gray-300 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        </div>
+                        <p class="sr-only">4 out of 5 stars</p>
+                    </div>
+                    <a [routerLink]="'/productos/creatinas/creatina-250g'" [fragment]="'reseñas'"  class="ml-2 text-sm font-light text-gray-500 hover:text-indigo-500 w-fit hover:underline">(17 reviews)</a>
+                </div>
+            </div>
+
+            <div class="mt-1">
+                <h1 class="text-3xl font-light tracking-tight text-gray-900 sm:text-3xl">Creatina Magrolabs®</h1>
+            </div>
+
+            <section aria-labelledby="information-heading" class="mt-4">
+                <h2 id="information-heading" class="sr-only">Product information</h2>
+
+                <div class="flex items-center">
+                    <div class="flex justify-center items-center font-extralight">
+                        <p class="text-base text-gray-500 sm:text-lg line-through">S/59.00</p>
+                        <p class="text-lg text-gray-900 sm:text-xl ml-2">S/47.00</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="mt-2 lg:col-start-1 lg:row-start-2 lg:self-start">
+            <section aria-labelledby="options-heading">
+                <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">100% Monohidratada</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Regeneración muscular</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Certificada de alta calidad</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Fácil digestión</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza + resistenciar</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Aumenta la testosterona + densidad ósea</p>
+                    </div>
+                </div>
+                <h2 class="text-gray-500 text-[12px] font-extralight">250g. 30 servicios.</h2>
+                <h2 id="options-heading" class="sr-only">Product options</h2>
+
+                <div class="mx-auto py-6">
+                    <div class="space-y-4">
+
+                        <details #Subscription (click)="selectSubscription($event)" class="rounded-lg overflow-hidden group border border-gray-900 p-3 [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                                <div class="flex items-center">
+                                    <span class="relative size-5 shrink-0 mr-2">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
+                                            fill="#000000">
+                                            <path
+                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                        </svg>
+    
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                                            width="24px" fill="#434343">
+                                            <path
+                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                        </svg>
+                                    </span>
+
+                                    <h2 class="font-light mr-2 max-lg:text-sm">Subscribir</h2>
+                                    <div class="p-[0.35rem]  bg-[#b37967] rounded-2xl">
+                                        <p class="max-lg:text-[10px] text-xs text-white font-extralight">Ahorra 20%</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center">
+                                    <div class="flex justify-center items-center font-extralight">
+                                        <p class="text-xs text-gray-500  line-through">S/59.00</p>
+                                        <p class="text-sm text-gray-900  ml-2">S/47.00</p>
+                                    </div>
+                                </div>
+
+                            </summary>
+
+                            <div class="mt-3">
+                                <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
+                                    <span class="text-sm text-left text-gray-900 font-light">
+                                      Así es como funciona la subscripción:
+                                    </span>
+                                    <div class="flex flex-row items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#434343"><path d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z"/></svg>
+                                      <p class="text-pretty text-xs text-gray-500 ml-3">
+                                        Entrega cada 30 días
+                                      </p>
+                                    </div>
+                                    <div class="flex flex-row items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#434343"><path d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z"/></svg>
+                                      <p class="text-pretty text-xs text-gray-500 ml-3">
+                                        Cancela en cualquier momento
+                                      </p>
+                                    </div>
+                                    <div class="flex flex-row items-center">
+                                      <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"
+                                        fill="#434343">
+                                        <path
+                                          d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
+                                      </svg>
+                                      <p class="text-pretty text-xs text-gray-500 ml-3">
+                                        Recibes 1 creatina gratis + S/10
+                                      </p>
+                                    </div>
+                                  </div>
+                            </div>
+                        </details>
+
+                        <details #OnePurchase (click)="selectOnePurchase($event)" class="rounded-lg overflow-hidden group border border-gray-900 p-3 [&_summary::-webkit-details-marker]:hidden">
+                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                                <div class="flex items-center">
+                                    <span class="relative size-5 shrink-0 mr-2">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
+                                            fill="#000000">
+                                            <path
+                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                        </svg>
+    
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                                            width="24px" fill="#434343">
+                                            <path
+                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                        </svg>
+                                    </span>
+                                    <h2 class="font-light mr-2 max-lg:text-sm">Compra única</h2>
+                                </div>
+
+                                <div class="flex items-center">
+                                    <div class="flex justify-center items-center font-extralight">
+                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">S/59.00</p>
+                                    </div>
+                                </div>
+
+                            </summary>
+                        </details>                
+                    </div>
+                </div>
+                <div class="my-4">
+                    <ml-button name="Lo quiero" (click)="nextStep()" [isDisabled]="isButtonDisabled()"></ml-button>
+                </div>
+             </section>
+        </div>
+
+    </div>
+</div>

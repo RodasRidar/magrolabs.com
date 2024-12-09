@@ -13,6 +13,7 @@ import { Information, InformationComponent } from '../../components/information/
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { environment } from '../../../../../environments/env';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -44,6 +45,7 @@ export class CreateAccountComponent {
 
   private nextUrl = '';
   stepEnum = StepEnum;
+  ENV = environment
 
   form = this._formBuilder.group<SignUp>({
     firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
@@ -84,7 +86,7 @@ export class CreateAccountComponent {
 
   informationList: Information[] = [
     {
-      name: 'Recibe 10 soles de crédito de compra cada mes.',
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes +' soles de crédito de compra cada mes.',
     },
     {
       name: ' Acumula automáticamente, sin costo adicional.',

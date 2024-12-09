@@ -25,7 +25,7 @@ export class VerificationPaymentComponent {
       name: 'Tu creatina gratis se enviara inmediatamente después de completar el registro',
     },
     {
-      name: 'periodo de prueba de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días',
+      name: 'Periodo de prueba de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días',
     },
     {
       name: 'Cancela cuando quieras',

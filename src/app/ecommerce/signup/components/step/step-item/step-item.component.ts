@@ -16,7 +16,7 @@ export class StepItemComponent {
   isCompleted = input.required<boolean>();
 
   get bgColor() : string  { 
-    return this.isCompleted() ? 'bg-blue-600' : 'bg-gray-300'
+    return this.isCompleted() ? 'bg-gray-900' : 'bg-gray-300'
   }
   get iconColor() : string  { 
     return this.isCompleted() ? '#ffffff' : '#828282'

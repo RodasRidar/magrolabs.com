@@ -1,19 +1,13 @@
 @if(summaryState$ | async ; as summary){
 @if(!summary.chosePlan || isChooseDisable){
 <div class="max-height w-full h-full flex rounded-tr-3xl rounded-br-3xl overflow-hidden">
-    <!-- <img src="https://www.wildnutrition.com/cdn/shop/files/All_Organic_Protein_Superfood_Powder_PDP_Benefits_Desktop_1000x1333_81ae5601-700c-4d77-b439-bf2b3fbe2489.jpg?v=1713796726&width=1440"
-        alt="" class="h-full object-cover object-center"> -->
-    <iframe
-        src="https://www.pacdora.com/es/share?filter_url=psvqtr66r2"
-        class="h-full w-full object-cover object-center"
-        frameborder="0"
-        allowfullscreen
-        loading="lazy">
+    <iframe src="https://www.pacdora.com/es/share?filter_url=psvqtr66r2"
+        class="h-full w-full object-cover object-center" frameborder="0" allowfullscreen loading="lazy">
     </iframe>
 </div>
 }
 @else {
-<div class="mt-6">
+<div class="h-full mt-6 relative">
     <div class="mx-4 mb-8">
         <div class="mb-4">
             <h2 class="text-3xl font-extrabold tracking-wide">Resumen.</h2>
@@ -52,7 +46,8 @@
 
     <!-- Datos -->
     @if(summary.userData){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8 mt-8"
+        [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
             @if(!isUserDataDisable) {
@@ -99,7 +94,8 @@
 
     <!-- Dirección de entrega -->
     @if(summary.address){
-    <div class="mx-4 mb-8 mt-8" [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8 mt-8"
+        [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
             @if(!isAddressDisable) {
@@ -142,6 +138,9 @@
         </div>
     </div>
     }
+    <div class="px-11 absolute bottom-6">
+        <img src="mitad-package-image.png" alt="creatina Magrolabs" class="mx-auto object-cover" width="348">
+    </div>
 </div>
 }
 }

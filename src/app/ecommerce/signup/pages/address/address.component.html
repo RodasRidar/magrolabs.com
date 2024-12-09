@@ -27,7 +27,7 @@
                                         </svg>
                                     </div>
                                     <input
-                                        class="py-3 ps-10 pe-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                        class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
                                         type="text" role="combobox" aria-expanded="false"
                                         placeholder="Encuentra tu dirección de entrega" value=""
                                         formControlName="searchAddress">
@@ -35,7 +35,7 @@
 
                                 @if (addressList.length > 0) {
                                 <div
-                                    class="relative z-50 w-full bg-white border border-gray-200 rounded-lg max-h-48 overflow-auto overflow-y-scroll">
+                                    class="relative z-50 w-full bg-white border ring-1 ring-gray-300 rounded-lg max-h-48 overflow-auto overflow-y-scroll focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6">
                                     <ul>
                                         @for (item of addressList; track $index) {
                                         <li (click)="selectAddress(item)"
@@ -58,7 +58,7 @@
                                     <div class="mt-2">
                                         <input type="text" autocomplete="street-address"
                                             (input)="limitDigits(70, 'streetAddress')"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress') || hasValidatorError('streetAddress')}"
                                             formControlName="streetAddress">
 
@@ -80,7 +80,7 @@
                                         <select [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('department')}"
                                             (change)="selectDepartment($event)" formControlName="department"
                                             [value]="departmentUbigeo"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm/6">
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
                                             @if (departments$ | async; as departmentsList) {
                                             @for (item of departmentsList; track $index) {
                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
@@ -105,7 +105,7 @@
                                         <select [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('province')}"
                                             (change)="selectProvince($event)" formControlName="province"
                                             [value]="provinceUbigeo"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm/6">
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
                                             @if (provinces$ | async; as provincesList) {
                                             @for (item of provincesList; track $index) {
                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
@@ -127,7 +127,7 @@
 
                                         <select [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
                                             formControlName="district" [value]="districtUbigeo"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  sm:text-sm/6">
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
                                             @if (districts$ | async; as districtsList) {
                                             @for (item of districtsList; track $index) {
                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
@@ -148,7 +148,7 @@
                                         *</label>
                                     <div class="mt-2">
                                         <input type="text" (input)="limitDigits(5, 'postalCode')"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('postalCode') || hasValidatorError('postalCode')}"
                                             formControlName="postalCode">
                                     </div>
@@ -167,7 +167,7 @@
                                         class="block text-sm/6 font-medium text-gray-900">Número</label>
                                     <div class="mt-2">
                                         <input type="text" (input)="limitDigits(6, 'number')"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
                                             formControlName="number"
                                             [ngClass]="{'ring-red-500 ring-2': hasValidatorError('number')}">
                                     </div>
@@ -185,7 +185,7 @@
                                     <div class="mt-2">
                                         <input type="text" formControlName="reference"
                                             [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('reference')}"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6">
                                     </div>
                                     <div class="p-2">
                                         @if(hasValidatorError('reference')) {
@@ -214,7 +214,7 @@
                 @if (isSearched) {
                     <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50" [ngClass]="{isSaving:'cursor-progress disabled', isSearched: 'hidden'}">
                         <button (click)="nextStep()" type="button"
-                            class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                            class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
                             Continuar
                         </button>
                     </div>

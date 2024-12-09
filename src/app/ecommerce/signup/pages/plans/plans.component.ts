@@ -33,7 +33,7 @@ export class PlansComponent {
   stepEnum = StepEnum
   informationList: Information[] = [
     {
-      name: 'Recibe 10 soles de crédito de compra cada mes.'
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes +' soles de crédito de compra cada mes.'
     },
     {
       name: 'Acumula automáticamente, sin costo adicional.'

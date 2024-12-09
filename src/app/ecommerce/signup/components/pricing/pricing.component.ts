@@ -1,6 +1,7 @@
 import { Component, output } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { ChosePlanSummary } from '../../../../shared/models/summary.model';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-pricing',
@@ -12,6 +13,7 @@ import { ChosePlanSummary } from '../../../../shared/models/summary.model';
 export class PricingComponent {
 
 
+  ENV = environment
   chosePlan = output<ChosePlanSummary>()
   
   chooseYearly() {

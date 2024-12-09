@@ -89,7 +89,7 @@
                             <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
                                 formControlName="cardNumber" (input)="formatCardNumber()"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
                         </div>
                     </div>
 
@@ -101,7 +101,7 @@
                                 placeholder="MM / AAAA"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardExpiration')}"
                                 formControlName="cardExpiration"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                             <input type="text" name="cvc" id="cvc" autocomplete="csc"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardCvv')}"
                                 formControlName="cardCvv"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
                         </div>
                     </div>
 
@@ -122,7 +122,7 @@
                             <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardName')}"
                                 formControlName="cardName"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
                         </div>
                     </div>
 
@@ -170,7 +170,7 @@
                     <div class="col-span-2 max-lg:col-span-3">
                         <div class="mt-2">
                             <input type="text"
-                                class="block w-full rounded-md border-0 py-[0.56rem] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                class="block w-full rounded-md border-0 py-[0.56rem] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
                                 formControlName="promoCode" placeholder="Ingresa tu código">
                             <!-- Mensaje de error si el código es inválido -->
                             <div *ngIf="form.get('promoCode')?.invalid && form.get('promoCode')?.touched">
@@ -190,29 +190,26 @@
 
         <hr class="mb-4">
 
-        <div class="custom-padding">
-            <ul class="list-disc list-outside mb-7">
-                <li class="mb-rem"><span class="ota-p14 text-gray-600">Al completar tu pedido, declaras que eres mayor
+        <div class="text-pretty">
+            <ul class="list-disc list-outside text-sm mb-7">
+                <li class="mb-1"><span class=" text-gray-600">Al completar tu pedido, declaras que eres mayor
                         de 18 años y
                         aceptas las <a class="underline cursor-pointer">Términos y
                             condiciones</a>, <a class="underline cursor-pointer">Términos de uso</a> y la <a
                             class="underline cursor-pointer">Declaración de privacidad</a> y además
                         declaras que has comprobado que tu pedido y tus datos son correctos.</span></li>
-                <li class="mb-rem"><span class="ota-p14 text-gray-600">Después de registrarte, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de período
-                        de reflexión. Si
-                        cancelas durante este período, no pagarás nada. Luego, pagarás solo al mes por la suscripción de
-                        calzoncillos elegida.</span></li>
+                <li class="mb-1m"><span class="ota-p14 text-gray-600">Después de registrarte, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de período
+                        de prueba. Si
+                        cancelas durante este período, no pagarás nada. Luego, pagarás solo al mes por la suscripción elegida.</span></li>
             </ul>
         </div>
 
-        <div class="bg-[#e9e9e9] py-5 px-10 mb-7">
-            <p class="ota-p16 font-semibold">¿Cómo funciona la suscripción?</p>
-            <p class="ota-p14">Después de realizar el pago de verificación,
-                enviaremos tu creatina gratis de inmediato y comenzará el período de reflexión de tu suscripción. ¡Usa,
-                lava y prueba el creatina tanto como quieras! Durante tu período de reflexión de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, puedes
-                cancelar
-                tu suscripción de inmediato y no pagarás nada. Después de estos {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, tu suscripción se convertirá
-                automáticamente en una suscripción de pago y recibirás los mejores calzoncillos mensualmente.</p>
+        <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
+            <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
+            <p class="text-pretty text-sm">Después de realizar el pago de verificación,
+                enviaremos tu creatina gratis de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala y
+                disfruta la creatina tanto como quieras! Durante tu período de prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días. Después de estos {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, tu suscripción se convertirá
+                automáticamente en una suscripción de pago y recibirás la mejor creatina mensualmente.</p>
         </div>
 
 
@@ -226,12 +223,12 @@
                     <!-- Testimonio 1 -->
                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                         <div class="flex items-center gap-4">
-                            <img alt=""
-                                src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                class="size-14 rounded-full object-cover" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
+                            </svg>
 
                             <div>
-                                <div class="flex justify-center gap-0.5 text-yellow-400">
+                                <div class="flex justify-center gap-0.5 text-black">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path
@@ -271,12 +268,12 @@
                     <!-- Testimonio 2 -->
                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                         <div class="flex items-center gap-4">
-                            <img alt=""
-                                src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                class="size-14 rounded-full object-cover" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
+                            </svg>
 
                             <div>
-                                <div class="flex justify-center gap-0.5 text-yellow-400">
+                                <div class="flex justify-center gap-0.5 text-black">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path
@@ -318,7 +315,7 @@
                     </blockquote>
                 </div>
                 <div class="text-center">
-                    <a href="#" class="text-indigo-600 hover:text-indigo-500 w-fit hover:underline">
+                    <a href="#" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
                         Mira todas las reseñas →
                     </a>
                 </div>
@@ -404,8 +401,8 @@
 
                     <p class="mt-4 leading-relaxed text-gray-700">
                         Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla,
-                        este es tu período de reflexión.
-                        Si cancelas durante el período de reflexión, no pagarás nada y se cancelará tu suscripción.
+                        este es tu período de prueba.
+                        Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
                         Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un período de cancelación mensual.
                         ¿Cancelas antes del día 20 del mes? Entonces habrá un pago y una entrega más.
                     </p>

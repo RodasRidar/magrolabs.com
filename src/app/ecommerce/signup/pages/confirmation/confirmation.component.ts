@@ -27,7 +27,7 @@ export class ConfirmationComponent {
   stepEnum = StepEnum;
   clientName = '';
   isSuccess = true;
-  creditos = 'S/10';
+  creditos = 'S/{{ENV.creditoRegaloPorCompraMes}}';
 
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
@@ -66,7 +66,7 @@ export class ConfirmationComponent {
       this._router.navigate(['registro/verificacion']);
     }
 
-    this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/10';
+    this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/{{ENV.creditoRegaloPorCompraMes}}';
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {

@@ -7,6 +7,7 @@ import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
 import { ButtonComponent } from "../../../../shared/ui/button/button.component";
+import { environment } from "../../../../../environments/env";
 
 @Component({
   selector: 'app-plans',
@@ -25,7 +26,8 @@ export class PlansComponent {
   private _seo = inject(SeoService);
 
   private nextUrl = '';
-
+  
+  ENV = environment
   isSelectSubscription = false;
   isSelectOnePurchase = false;
   stepEnum = StepEnum
@@ -101,7 +103,7 @@ export class PlansComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Monohidratada 100%',
         descriptionTwo: 'Plan mensual de S/47',
-        descrptionThree: 'Creatina 250g (gratis)',
+        descrptionThree: 'Creatina 100g (gratis)',
         quantity: 1
       })
 

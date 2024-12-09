@@ -22,7 +22,7 @@ export class SummaryComponent {
 
   summaryState$ = this._summaryService.summaryState$;
   summary: Summary = <Summary>{}
-
+  iframeReady = false
   nextUrl = '';
   currentUrl = '';
 
@@ -160,6 +160,13 @@ export class SummaryComponent {
         this.provinces = data;
       });
     }
+  }
+
+  onIframeLoad() {
+    // Retrasa la visibilidad del iframe por 3 segundos
+    setTimeout(() => {
+      this.iframeReady = true;
+    }, 3000); // 3 segundos
   }
 }
 

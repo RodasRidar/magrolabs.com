@@ -1,6 +1,6 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
-import { ActivatedRoute, RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 

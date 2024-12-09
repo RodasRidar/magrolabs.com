@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-verification-payment',
@@ -16,7 +17,7 @@ import { SeoService } from '../../../../shared/services/seo.service';
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
-
+  ENV = environment
   isPaymentVerified = false;
   promotionIsShow = false;
   informationList: Information[] = [
@@ -24,7 +25,7 @@ export class VerificationPaymentComponent {
       name: 'Tu creatina gratis se enviara inmediatamente después de completar el registro',
     },
     {
-      name: 'periodo de prueba de 14 días',
+      name: 'periodo de prueba de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días',
     },
     {
       name: 'Cancela cuando quieras',

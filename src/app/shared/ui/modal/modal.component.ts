@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ButtonComponent } from '../button/button.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SummaryService } from '../../services/summary-service.service';
+import { environment } from '../../../../environments/env';
 
 @Component({
   selector: 'app-modal',
@@ -32,6 +33,7 @@ import { SummaryService } from '../../services/summary-service.service';
 })
 
 export class ModalComponent {
+  ENV = environment
   urlShared = ''
   private _dialogRef = inject(MatDialogRef<ModalComponent>)
   private _summaryService = inject(SummaryService);

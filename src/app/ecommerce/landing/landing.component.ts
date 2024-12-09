@@ -3,6 +3,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HeroComponent } from './hero/hero.component';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../shared/services/seo.service';
+import { environment } from '../../../environments/env';
 
 @Component({
   selector: 'app-landing',
@@ -12,12 +13,14 @@ import { SeoService } from '../../shared/services/seo.service';
 })
 export class LandingComponent {
   private _seo = inject(SeoService)
+  ENV = environment
+  
   ngOnInit(): void {
     this.loadSEO();
   }
 
   private loadSEO() {
-    const description = '¿Por qué Magrolabs? S/33 por mes. La primera creatina es gratis - 14 días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.';
+    const description = '¿Por qué Magrolabs? S/'+this.ENV.precioCreatinaSubscription+'por mes. La primera creatina es gratis - '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.';
     const title = 'Magrolabs Creatina 100% Monohidratada';
     const URL = 'https://magrolabs.com';
     const image = 'https://magrolabs.com/image-meta.png';

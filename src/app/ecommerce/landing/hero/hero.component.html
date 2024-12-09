@@ -1,44 +1,39 @@
 <main class="lg:relative">
-  <div
-    class="mx-auto max-w-7xl w-full pt-16 pb-20 text-center lg:py-48 lg:text-left"
-  >
+  <div class="mx-auto max-w-7xl w-full pt-16 pb-20 text-center lg:py-48 lg:text-left">
     <div class="px-4 lg:w-1/2 sm:px-8 xl:pr-16">
-      <h1
-        class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl"
-      >
+      <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
         <span class="block text-indigo-600 xl:inline">Creatina</span>
         <span class="block xl:inline"> de la más alta calidad</span>
       </h1>
-      <h2
-        class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl"
-      >
+      <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
         Con una suscripción de creatina Magrolabs recibe en tu
-        casa un paquete de creatina por solo <strong>S/33,33</strong> al mes* ¡Regístrate ahora y recibe tu primera creatina gratis!
+        casa un paquete de creatina por solo <strong>S/{{ENV.precioCreatinaSubscription}}</strong> al mes** ¡Regístrate
+        ahora y recibe tu primera creatina gratis*!
       </h2>
 
       <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
         <div class="rounded-md shadow">
-          <a
-            [routerLink]="'/registro'"
-            class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-          >
+          <a [routerLink]="'/registro'"
+            class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
             La quiero!
           </a>
         </div>
       </div>
       <p class="mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
-        * Precio mensual de S/33,33 corresponde al plan anual de 3kg de
+        ** Precio de S/{{ENV.precioCreatinaSubscription}} corresponde al plan mensual de
+        {{ENV.creatinaSubscription250}}g de
         creatina.
+      </p>
+      <p class="mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+        * Creatina gratis es de {{ENV.creatinaFreeGramos}}g y se entrega en tu casa en un plazo de
+        {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}}-{{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días
+        hábiles.
       </p>
     </div>
   </div>
-  <div
-    class="relative w-full h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full"
-  >
-    <img
-      class="absolute inset-0 w-full h-full object-cover"
+  <div class="relative w-full h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full">
+    <img class="absolute inset-0 w-full h-full object-cover"
       src="https://images.pexels.com/photos/6475108/pexels-photo-6475108.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      alt=""
-    />
+      alt="" />
   </div>
 </main>

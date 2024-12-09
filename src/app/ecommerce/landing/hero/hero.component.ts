@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../environments/env';
 
 @Component({
   selector: 'app-hero',
@@ -8,5 +9,5 @@ import { RouterLink } from '@angular/router';
   templateUrl: './hero.component.html'
 })
 export class HeroComponent {
-
+ ENV = environment
 }

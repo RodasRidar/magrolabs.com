@@ -18,7 +18,7 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    Siempre envío gratis a tu casa.
+                                    Siempre envío gratis a tu casa*.
                                 </p>
                             </dt>
                         </div>
@@ -65,6 +65,9 @@
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
                         Registrate ahora
                     </button>
+                    <p class="mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+                        * Envío gratis solo para {{ENV.envioGratisA.LIMA_METRO}}.
+                      </p>
                 </div>
             </div>
             <img src="https://tailwindui.com/plus/img/component-images/dark-project-app-screenshot.png"
@@ -80,11 +83,11 @@
     <div class="mx-auto text-center max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl lg:text-center">
             <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Recibe S/10 de credito cada mes.
+                Recibe S/{{ENV.creditoRegaloPorCompraMes}} de credito cada mes.
             </p>
             <p class="text-center mt-10 text-lg leading-6 text-gray-600">
                 Como miembro, eres automáticamente parte de nuestro Programa Loyalty.
-                Cada mes recibes 10 soles de crédito, con el que acumulas para artículos
+                Cada mes recibes {{ENV.creditoRegaloPorCompraMes}}  soles de crédito, con el que acumulas para artículos
                 exclusivos de Magrolabs. ¿Quieres saber qué tenemos para ti? Mira
                 algunos de nuestros productos más vendidos a continuación.
             </p>
@@ -98,7 +101,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                         <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                            Recibe 10 soles de crédito de compra cada mes.
+                            Recibe {{ENV.creditoRegaloPorCompraMes}} soles de crédito de compra cada mes.
                         </p>
                     </dt>
                 </div>
@@ -455,7 +458,7 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    Te regalamos 10 soles de crédito cada mes.
+                                    Te regalamos {{ENV.creditoRegaloPorCompraMes}} soles de crédito cada mes.
                                 </p>
                             </dt>
                         </div>
@@ -479,7 +482,7 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    Siempre envío gratis a tu casa.
+                                    Siempre envío gratis a tu casa*.
                                 </p>
                             </dt>
                         </div>
@@ -490,6 +493,9 @@
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
                         Lo quiero!
                     </button>
+                    <p class="mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+                        * Envío gratis solo para {{ENV.envioGratisA.LIMA_METRO}}.
+                      </p>
                 </div>
             </div>
         </div>
@@ -546,7 +552,7 @@
             </summary>
 
             <p class="mt-4 leading-relaxed text-gray-700">
-                Después de registrarte, tu creatina gratis estará en tu casa en un plazo de 6-9 días hábiles.
+                Después de registrarte, tu creatina gratis estará en tu casa en un plazo de {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}}-{{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles.
             </p>
         </details>
 
@@ -570,10 +576,10 @@
             </summary>
 
             <p class="mt-4 leading-relaxed text-gray-700">
-                Después de recibir tu creatina gratis, tienes 14 días para probarla,
+                Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla,
                 este es tu período de reflexión.
                 Si cancelas durante el período de reflexión, no pagarás nada y se cancelará tu suscripción.
-                Después de tus primeros 14 días, aplicamos un período de cancelación mensual.
+                Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un período de cancelación mensual.
                 ¿Cancelas antes del día 20 del mes? Entonces habrá un pago y una entrega más.
             </p>
         </details>
@@ -597,7 +603,7 @@
             </div>
 
             <div class="px-5 py-2">
-                <a [routerLink]="'/politicas/refiere-y-gana'" class="text-base text-gray-500 hover:text-gray-900"> Refiere y gana S/10 </a>
+                <a [routerLink]="'/politicas/refiere-y-gana'" class="text-base text-gray-500 hover:text-gray-900"> Refiere y gana S/{{ENV.creditoRegaloPorCompraMes}} </a>
             </div>
 
             <div class="px-5 py-2">

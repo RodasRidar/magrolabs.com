@@ -5,6 +5,18 @@ const publicKey = '<<LLAVE PÚBLICA>>';
 const rsaId = '<<LLAVE PÚBLICA RSA ID>>';
 const rsaPublickKey = '<<LLAVE PÚBLICA RSA>>';
 const encrypt = false;
+const precioCreatinaOnePurchase = 59;
+const precioCreatinaSubscription = 47;
+const creatinaFreeGramos = 100;
+const creatinaSubscription250 = 250;
+const creatinaOnePurchase250 = 250;
+const creditoRegaloPorCompraMes = 10;
+const creditoRegaloPorAmigoReferido = creditoRegaloPorCompraMes;
+const plazoDeEntregaDiasHabiles = { min: 1, max: 4};
+const plazoDeEntregaDiasHabilesCreatinaFree = { min: 6, max: 9};
+const diasNormalesDePruebaOperiodoDeReflexion = 7;
+const envioGratisA = {LIMA_METRO: 'Lima Metropolitana'};
+
 
 export const environment = {
     APP_URL,
@@ -14,4 +26,15 @@ export const environment = {
     rsaId,
     rsaPublickKey,
     encrypt,
+    precioCreatinaOnePurchase,
+    precioCreatinaSubscription,
+    creatinaFreeGramos,
+    creatinaSubscription250,
+    creatinaOnePurchase250,
+    creditoRegaloPorCompraMes,
+    creditoRegaloPorAmigoReferido,
+    plazoDeEntregaDiasHabiles,
+    diasNormalesDePruebaOperiodoDeReflexion,
+    envioGratisA,
+    plazoDeEntregaDiasHabilesCreatinaFree
 };

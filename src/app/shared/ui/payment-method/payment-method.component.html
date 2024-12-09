@@ -1,0 +1,54 @@
+<div class="max-w-md">
+    <ul class="mx-2 space-y-4">
+        @for (item of radios; track $index) {
+        <li>
+            <label [for]="item.name" class="block relative">
+                <input (click)="selectPaymentMethod(item.name)" [id]="item.name" type="radio" [checked]="$index === 0" name="payment" class="sr-only peer" />
+                <div
+                    class="w-full flex gap-x-3 items-start p-4 cursor-pointer rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 duration-200">
+                    <div class="flex-none">
+                        @if (item.icon == 'CARD') {
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
+                        </svg>
+                        } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M200-280v-280h80v280h-80Zm240 0v-280h80v280h-80ZM80-120v-80h800v80H80Zm600-160v-280h80v280h-80ZM80-640v-80l400-200 400 200v80H80Zm178-80h444-444Zm0 0h444L480-830 258-720Z" />
+                        </svg>
+                        }
+                    </div>
+                    <div>
+                        <h3 class="leading-none text-gray-800 font-medium pr-3">
+                            {{ item.name }}
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ item.description }}
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="absolute top-4 right-4 flex-none flex items-center justify-center w-4 h-4 rounded-full border peer-checked:bg-[#D7816A] text-white peer-checked:text-white duration-200">
+                    <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
+                        <polyline fill="none" stroke-width="2px" stroke="currentColor" stroke-dasharray="16px"
+                            points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </div>
+            </label>
+        </li>
+        }
+        <p class="flex justify-start text-sm font-medium text-gray-500 mt-6">
+            <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clip-rule="evenodd" />
+            </svg>
+            Pago seguro con <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800"
+                target="_blank"> Flow</a>
+        </p>
+    </ul>
+</div>

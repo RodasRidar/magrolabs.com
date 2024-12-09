@@ -36,7 +36,7 @@
 @if(stepNumber === StepEnum.CONFIRMATION){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem] end-0 rounded-full text-white w-10 h-10 flex items-center justify-center">
-    @if(flag()){
+    @if(flag()!=""){
         <span class="badge max-sm:text-xs">{{flag()}}</span>
     }
     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor">

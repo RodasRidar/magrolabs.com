@@ -9,6 +9,7 @@ import { SummaryService } from '../../../../shared/services/summary-service.serv
 import { MatDialog } from '@angular/material/dialog';
 import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-confirmation',
@@ -24,6 +25,7 @@ export class ConfirmationComponent {
   private _dialog = inject(MatDialog)
   private _seo = inject(SeoService)
 
+  ENV = environment
   stepEnum = StepEnum;
   clientName = '';
   isSuccess = true;
@@ -32,7 +34,7 @@ export class ConfirmationComponent {
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
     { name: 'Te avisaremos cuando finalice tu periodo de prueba.' },
-    { name: 'Entrega estimada de la creatina gratis: 6 a 9 días hábiles.' },
+    { name: 'Entrega estimada de la creatina gratis: '+this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min+' a '+this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max+' días hábiles.' },
   ]
 
   informationErrorList: Information[] = [
@@ -66,7 +68,7 @@ export class ConfirmationComponent {
       this._router.navigate(['registro/verificacion']);
     }
 
-    this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/{{ENV.creditoRegaloPorCompraMes}}';
+    this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/'+this.ENV.creditoRegaloPorCompraMes;
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {

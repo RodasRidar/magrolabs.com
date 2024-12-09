@@ -46,6 +46,7 @@ export class CreateAccountComponent {
   private nextUrl = '';
   stepEnum = StepEnum;
   ENV = environment
+  isCreatinaGratis = false;
 
   form = this._formBuilder.group<SignUp>({
     firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
@@ -68,6 +69,10 @@ export class CreateAccountComponent {
     let summary = this._summaryService.getSummary()
     if (!summary?.chosePlan) {
       this._router.navigate(['registro/']);
+    }
+
+    if(summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
+      this.isCreatinaGratis = true;
     }
 
     this._route.queryParams.subscribe(params => {

@@ -9,14 +9,16 @@ import { Information, InformationComponent } from '../../components/information/
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
+import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 
 @Component({
   selector: 'app-verification-payment',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent],
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
+  paymentMethod = '';
   ENV = environment
   isPaymentVerified = false;
   promotionIsShow = false;
@@ -25,7 +27,7 @@ export class VerificationPaymentComponent {
       name: 'Tu creatina gratis se enviara inmediatamente después de completar el registro',
     },
     {
-      name: 'Periodo de prueba de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días',
+      name: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
     },
     {
       name: 'Cancela cuando quieras',
@@ -37,6 +39,7 @@ export class VerificationPaymentComponent {
   private _seo = inject(SeoService)
 
   stepEnum = StepEnum;
+  isCreatinaGratis = false;
 
   form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
@@ -55,6 +58,9 @@ export class VerificationPaymentComponent {
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);
     }
+    if (summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
+      this.isCreatinaGratis = true;
+    }
   }
 
   applyPromoCode() {
@@ -66,12 +72,12 @@ export class VerificationPaymentComponent {
     }
   }
 
-  nextStep(): void {
+  nextStep() {
     const promoCode = this.form.get('promoCode')?.value;
     if (promoCode === 'FREE') {
       this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
     }
-    else{
+    else {
       this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
     }
   }
@@ -95,5 +101,8 @@ export class VerificationPaymentComponent {
     cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
     this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
   }
-
+  selectPaymentMethod(paymentMethod: any) {
+    console.log(paymentMethod);
+    this.paymentMethod = paymentMethod;
+  }
 }

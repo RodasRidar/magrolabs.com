@@ -10,20 +10,29 @@
         </div>
     </div>
 </div>
-
+@if (isCreatinaGratis) {
 <div class="mx-auto text-pretty max-w-3xl">
     <app-information [information]="informationList" />
 </div>
+}
 
 <div class="mx-auto text-pretty max-w-3xl mt-2 pb-12 sm:mt-2 sm:pb-16 lg:mt-2 lg:pb-24">
     <div class="relative text-gray-600 px-5">
         <div class="pb-4 lg:px-0 text-pretty">
+
+
+            @if (isCreatinaGratis) {
             <p class="ota-p16 font-semibold mb-1 lg:ota-p18">Selecciona tu
                 método de verificación.</p>
             <p class="ota-p14 mb-6">Para activar tu cuenta y evitar el abuso,
                 te pedimos que realices un pago de verificación. </p>
+            }
+            @else {
+            <p class="ota-p16 font-semibold mb-1 lg:ota-p18">Elige tu método de pago.</p>
+            }
         </div>
 
+        @if (isCreatinaGratis) {
         <!-- VERIFICAR PAGO -->
         <div class="lg:w-2/3 border border-gray-300 rounded-sm mb-4">
             <div class=" bg-[#e9e9e9]  p-4">
@@ -80,7 +89,7 @@
             </div>
 
             <form class="p-4" [formGroup]="form">
-                <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
+                <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
                     <div class="col-span-full">
                         <label for="card-number" class="block text-sm font-medium text-gray-700">Número de la
@@ -126,7 +135,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
 
                 <ml-button name="Continuar" type="secondary" (click)="verifyPayment()"></ml-button>
 
@@ -137,17 +146,23 @@
                             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                             clip-rule="evenodd" />
                     </svg>
-                    Pago seguro con <a href="https://www.niubiz.com.pe/" class="ml-1 hover:underline text-gray-800"
-                        target="_blank"> Niubiz</a>
+                    Operación segura con <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800"
+                        target="_blank"> Flow</a>
                 </p>
 
             </form>
         </div>
-
         <div class="my-6 lg:w-72">
             <ml-button name="Suscríbete y paga" (click)="nextStep()" [isDisabled]="!isPaymentVerified"></ml-button>
         </div>
+        }@else {
+            
+        <app-payment-method (paymentMethod)="selectPaymentMethod($event)"/>
 
+        <div class="my-6 lg:w-72">
+            <ml-button name="Pagar" (click)="nextStep()" [isDisabled]="paymentMethod == ''"></ml-button>
+        </div>
+        }
         <!-- CODIGO PROMOCIONAL -->
         <hr class="mb-3">
 
@@ -192,25 +207,38 @@
 
         <div class="text-pretty">
             <ul class="list-disc list-outside text-sm mb-7">
-                <li class="mb-1"><span class=" text-gray-600">Al completar tu pedido, declaras que eres mayor
+                <li class="mb-1">
+                    <span class=" text-gray-600">Al completar tu pedido, declaras que eres mayor
                         de 18 años y
                         aceptas las <a class="underline cursor-pointer">Términos y
                             condiciones</a>, <a class="underline cursor-pointer">Términos de uso</a> y la <a
                             class="underline cursor-pointer">Declaración de privacidad</a> y además
-                        declaras que has comprobado que tu pedido y tus datos son correctos.</span></li>
-                <li class="mb-1m"><span class="ota-p14 text-gray-600">Después de registrarte, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de período
+                        declaras que has comprobado que tu pedido y tus datos son correctos.</span>
+                </li>
+                @if (isCreatinaGratis) {
+                <li class="mb-1m">
+                    <span class="ota-p14 text-gray-600">
+                        Después de registrarte, tienes
+                        {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de período
                         de prueba. Si
-                        cancelas durante este período, no pagarás nada. Luego, pagarás solo al mes por la suscripción elegida.</span></li>
+                        cancelas durante este período, no pagarás nada. Luego, pagarás solo al mes por la suscripción
+                        elegida.</span>
+                </li>
+                }
             </ul>
         </div>
-
+        @if (isCreatinaGratis) {
         <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
             <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
             <p class="text-pretty text-sm">Después de realizar el pago de verificación,
-                enviaremos tu creatina gratis de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala y
-                disfruta la creatina tanto como quieras! Durante tu período de prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días. Después de estos {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, tu suscripción se convertirá
+                enviaremos tu creatina gratis de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala
+                y
+                disfruta la creatina tanto como quieras! Durante tu período de prueba de
+                {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días. Después de estos
+                {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, tu suscripción se convertirá
                 automáticamente en una suscripción de pago y recibirás la mejor creatina mensualmente.</p>
         </div>
+        }
 
 
         <!-- Testiminios -->
@@ -223,8 +251,10 @@
                     <!-- Testimonio 1 -->
                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                         <div class="flex items-center gap-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
-                                <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover"
+                                height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                <path
+                                    d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z" />
                             </svg>
 
                             <div>
@@ -268,8 +298,10 @@
                     <!-- Testimonio 2 -->
                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                         <div class="flex items-center gap-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
-                                <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover"
+                                height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                <path
+                                    d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z" />
                             </svg>
 
                             <div>
@@ -322,6 +354,7 @@
             </div>
         </section>
 
+        @if (isCreatinaGratis) {
         <!-- FAQs -->
         <div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10">
             <div class="space-y-4">
@@ -400,14 +433,17 @@
                     </summary>
 
                     <p class="mt-4 leading-relaxed text-gray-700">
-                        Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla,
+                        Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
+                        días para probarla,
                         este es tu período de prueba.
                         Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
-                        Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un período de cancelación mensual.
+                        Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un
+                        período de cancelación mensual.
                         ¿Cancelas antes del día 20 del mes? Entonces habrá un pago y una entrega más.
                     </p>
                 </details>
             </div>
         </div>
+        }
     </div>
 </div>

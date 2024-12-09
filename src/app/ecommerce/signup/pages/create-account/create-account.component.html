@@ -2,16 +2,25 @@
 
 <div class="mx-auto text-left mt-10 mb-10 max-w-3xl">
 
-    <div class="mx-auto text-left mb-4 max-w-3xl">
-        <app-information [information]="informationList" />
-    </div>
-
+    @if (isCreatinaGratis) {
+        <div class="mx-auto text-left mb-4 max-w-3xl">
+            <app-information [information]="informationList" />
+        </div>
+    }
     <div class="relative z-10 mx-auto ">
         <div class="text-gray-600 mb-10 md:mb-0">
             <div class="relative mt-7 lg:mt-9" show-back-button="true">
-                <h1 data-qa="signup-step-3-title"
+                @if (isCreatinaGratis) {
+                    <h1 data-qa="signup-step-3-title"
                     class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                     Tus datos para tu creatina gratuita.</h1>
+                }
+                @else {
+                    <h1 data-qa="signup-step-3-title"
+                    class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                    Tus datos.</h1>
+                }
+
             </div>
             <p class="mb-7 text-sm mt-4">¿Tienes una cuenta? Inicia sesión aquí <a
                     class="underline font-bold antialiased" [routerLink]="['/login']">Iniciar sesión</a></p>

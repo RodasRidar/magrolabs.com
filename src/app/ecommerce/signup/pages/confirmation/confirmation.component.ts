@@ -30,14 +30,14 @@ export class ConfirmationComponent {
   creditos = 'S/10';
 
   informationExitoList: Information[] = [
-    { name: 'Tu periodo de reflexión comienza despues de recibir tu creatina.' },
-    { name: 'Te avisaremos cuando finalice tu periodo de reflexión.' },
+    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
+    { name: 'Te avisaremos cuando finalice tu periodo de prueba.' },
     { name: 'Entrega estimada de la creatina gratis: 6 a 9 días hábiles.' },
   ]
 
   informationErrorList: Information[] = [
     { name: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.' },
-    { name: 'Tu periodo de reflexión comienza despues de recibir tu creatina.' },
+    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
     { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
     { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
   ]

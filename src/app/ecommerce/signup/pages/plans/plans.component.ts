@@ -101,7 +101,7 @@ export class PlansComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Monohidratada 100%',
         descriptionTwo: 'Plan mensual de S/47',
-        descrptionThree: 'Creatina 100g (gratis)',
+        descrptionThree: 'Creatina 250g (gratis)',
         quantity: 1
       })
 

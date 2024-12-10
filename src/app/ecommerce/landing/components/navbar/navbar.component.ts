@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-navbar',

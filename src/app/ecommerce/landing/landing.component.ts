@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { NavbarComponent } from './navbar/navbar.component';
-import { HeroComponent } from './hero/hero.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HeroComponent } from '././components/hero/hero.component';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../shared/services/seo.service';
 import { environment } from '../../../environments/env';

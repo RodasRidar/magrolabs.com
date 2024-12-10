@@ -16,6 +16,9 @@ const plazoDeEntregaDiasHabiles = { min: 1, max: 4};
 const plazoDeEntregaDiasHabilesCreatinaFree = { min: 6, max: 9};
 const diasNormalesDePruebaOperiodoDeReflexion = 7;
 const envioGratisA = {LIMA_METRO: 'Lima Metropolitana'};
+const nroServicios250g = 60;
+const nroServicios3kg = 720;
+const nroServicios100g = 24;
 
 
 export const environment = {
@@ -36,5 +39,8 @@ export const environment = {
     plazoDeEntregaDiasHabiles,
     diasNormalesDePruebaOperiodoDeReflexion,
     envioGratisA,
-    plazoDeEntregaDiasHabilesCreatinaFree
+    plazoDeEntregaDiasHabilesCreatinaFree,
+    nroServicios250g,
+    nroServicios3kg,
+    nroServicios100g
 };

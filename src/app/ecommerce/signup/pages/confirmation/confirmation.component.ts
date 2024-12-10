@@ -66,6 +66,7 @@ export class ConfirmationComponent {
 
     if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
       this._router.navigate(['registro/verificacion']);
+      return;
     }
 
     this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/'+this.ENV.creditoRegaloPorCompraMes;

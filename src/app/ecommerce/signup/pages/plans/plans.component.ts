@@ -8,11 +8,12 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
 import { ButtonComponent } from "../../../../shared/ui/button/button.component";
 import { environment } from "../../../../../environments/env";
+import { CurrencyPipe } from "@angular/common";
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [StepComponent, RouterLink, ButtonComponent],
+  imports: [StepComponent, RouterLink, ButtonComponent, CurrencyPipe],
   templateUrl: './plans.component.html',
 })
 

@@ -33,6 +33,7 @@ export class SummaryComponent {
 
   districts: Ubigeo[] = [];
   provinces: Ubigeo[] = [];
+  showFinalSummary = false
 
   ngOnInit(): void {
 
@@ -41,12 +42,7 @@ export class SummaryComponent {
 
     this._route.queryParams.subscribe(param => {
       this.nextUrl = param['next'] || '';
-
-      if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
-        this.isChooseDisable = true;
-      } else {
-        this.isChooseDisable = true;
-      }
+      this.showFinalSummary = false;
 
       if (this._router.url.split('/').pop()?.split('?').shift() === 'registro' && this.nextUrl !== '') {
         this.isChooseDisable = true;
@@ -73,10 +69,12 @@ export class SummaryComponent {
         this.isConfirmation = true;
         this.isAddressDisable = true;
         this.isUserDataDisable = true;
+        this.showFinalSummary = true;
       }
     });
 
     this._router.events.subscribe(event => {
+      this.showFinalSummary = false;
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
 
@@ -105,6 +103,7 @@ export class SummaryComponent {
           this.isConfirmation = true;
           this.isAddressDisable = true;
           this.isUserDataDisable = true;
+          this.showFinalSummary = true;
         }
         this.setAddress();
       }

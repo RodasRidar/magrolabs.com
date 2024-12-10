@@ -41,7 +41,6 @@ export class ProductQuantityComponent {
   onQuantityChange(event: Event){
     const inputElement = event.target as HTMLInputElement;
     let value = Number(inputElement.value);
-    console.log(value);
 
     if (value > this.MAX_QUANTITY) {
       value = this.MAX_QUANTITY;

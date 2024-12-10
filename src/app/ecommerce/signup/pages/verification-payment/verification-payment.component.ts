@@ -101,8 +101,7 @@ export class VerificationPaymentComponent {
     cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
     this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
   }
-  selectPaymentMethod(paymentMethod: any) {
-    console.log(paymentMethod);
+  selectPaymentMethod(paymentMethod: string) {
     this.paymentMethod = paymentMethod;
   }
 }

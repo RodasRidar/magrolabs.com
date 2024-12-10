@@ -78,8 +78,8 @@
 
                 <div class="flex items-center">
                     <div class="flex justify-center items-center font-extralight">
-                        <p class="text-base text-gray-500 sm:text-lg line-through">S/59.00</p>
-                        <p class="text-lg text-gray-900 sm:text-xl ml-2">S/47.00</p>
+                        <p class="text-base text-gray-500 sm:text-lg line-through">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
+                        <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaSubscription | currency : 'S/'}}</p>
                     </div>
                 </div>
             </section>
@@ -131,7 +131,7 @@
                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza + resistenciar</p>
+                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza + resistencia</p>
                     </div>
                     <div class="flex items-center">
                         <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +143,7 @@
                         <p class="ml-1 text-sm text-gray-700 font-light">Aumenta la testosterona + densidad ósea</p>
                     </div>
                 </div>
-                <h2 class="text-gray-500 text-[12px] font-extralight">250g. 30 servicios.</h2>
+                <h2 class="text-gray-500 text-[12px] font-extralight">{{ENV.creatinaSubscription250}}g. {{ENV.nroServicios250g}} servicios.</h2>
                 <h2 id="options-heading" class="sr-only">Product options</h2>
 
                 <div class="mx-auto py-6">
@@ -177,8 +177,8 @@
 
                                 <div class="flex items-center">
                                     <div class="flex justify-center items-center font-extralight">
-                                        <p class="text-xs text-gray-500  line-through">S/59.00</p>
-                                        <p class="text-sm text-gray-900  ml-2">S/47.00</p>
+                                        <p class="text-xs text-gray-500  line-through">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
+                                        <p class="text-sm text-gray-900  ml-2">{{ENV.precioCreatinaSubscription | currency : 'S/'}}</p>
                                     </div>
                                 </div>
 
@@ -239,7 +239,7 @@
 
                                 <div class="flex items-center">
                                     <div class="flex justify-center items-center font-extralight">
-                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">S/59.00</p>
+                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
                                     </div>
                                 </div>
 

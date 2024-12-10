@@ -184,7 +184,6 @@ export class AddressComponent {
   }
 
   selectProvince(event: any): void {
-    console.log(event.target.value);
     this.provinceUbigeo = event.target.value;
     this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
     this.form.get('district')?.enable();

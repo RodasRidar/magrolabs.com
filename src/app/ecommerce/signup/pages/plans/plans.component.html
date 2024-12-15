@@ -6,7 +6,7 @@
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¿Cuál eliges?
             </h1>
-            <p class="text-sm font-semibold mb-3 mt-5">Elige aquí tu creatina. Registrate eligiendo la opción de subscripción para recibir tu
+            <p class="text-sm font-semibold mb-3 mt-5 text-pretty">Elige aquí tu creatina. Registrate eligiendo la opción de subscripción para recibir tu
                 primera creatina gratis y ahorrar hasta un 20%.</p>
         </div>
     </div>
@@ -77,10 +77,17 @@
                 <h2 id="information-heading" class="sr-only">Product information</h2>
 
                 <div class="flex items-center">
-                    <div class="flex justify-center items-center font-extralight">
-                        <p class="text-base text-gray-500 sm:text-lg line-through">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
-                        <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaSubscription | currency : 'S/'}}</p>
-                    </div>
+                    @if (isSelectSubscription) {
+                        <div class="flex justify-center items-center font-extralight">
+                            <p class="text-base text-gray-500 sm:text-lg line-through">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
+                            <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaSubscription | currency : 'S/'}}</p>
+                        </div>
+                    }
+                    @if(isSelectOnePurchase) {
+                        <div class="flex justify-center items-center font-extralight">
+                            <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
+                        </div>
+                    }
                 </div>
             </section>
         </div>
@@ -146,7 +153,7 @@
                 <h2 class="text-gray-500 text-[12px] font-extralight">{{ENV.creatinaSubscription250}}g. {{ENV.nroServicios250g}} servicios.</h2>
                 <h2 id="options-heading" class="sr-only">Product options</h2>
 
-                <div class="mx-auto py-6">
+                <div class="mx-auto pt-6 pb-2 max-sm:mb-20">
                     <div class="space-y-4">
 
                         <details #Subscription (click)="selectSubscription($event)" class="rounded-lg overflow-hidden group border border-gray-900 p-3 [&_summary::-webkit-details-marker]:hidden">
@@ -247,8 +254,14 @@
                         </details>                
                     </div>
                 </div>
-                <div class="my-4">
-                    <ml-button name="Lo quiero" (click)="nextStep()" [isDisabled]="isButtonDisabled()"></ml-button>
+                <div class="max-sm:hidden my-2">
+                    <ml-button name="Continuar →" (click)="nextStep()" [isDisabled]="isButtonDisabled()"></ml-button>
+                </div>
+                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50">
+                    <button (click)="nextStep()" type="button"
+                        class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                        Continuar →
+                    </button>
                 </div>
              </section>
         </div>

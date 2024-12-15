@@ -49,6 +49,16 @@ export const routes: Routes = [
   },
   {
     path: 'loyalty-webshop',
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/pages/index/index.component').then(m => m.IndexComponent)
+      },
+      {
+        path: 'articulos/:slug',
+        loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/pages/clothing/clothing.component').then(m => m.ClothingComponent),
+      },
+    ],
     loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/loyalty-webshop.component').then(m => m.LoyaltyWebshopComponent)
   },
   {

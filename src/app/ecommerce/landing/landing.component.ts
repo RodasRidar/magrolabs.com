@@ -1,19 +1,21 @@
 import { Component, inject } from '@angular/core';
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavbarComponent, NavbarTypeEnum } from './components/navbar/navbar.component';
 import { HeroComponent } from '././components/hero/hero.component';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../shared/services/seo.service';
 import { environment } from '../../../environments/env';
+import { FooterComponent } from "./components/footer/footer.component";
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink],
+  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {
   private _seo = inject(SeoService)
   ENV = environment
+  navbarTypeEnum = NavbarTypeEnum
   
   ngOnInit(): void {
     this.loadSEO();

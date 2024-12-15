@@ -1,1 +1,16 @@
-<p>loyalty-webshop works!</p>
+<app-navbar [type]="navbarTypeEnum.ECOMMERCE"></app-navbar>
+
+<section class="body-font relative flex flex-col justify-center items-center">
+  <div class="container sm:px-8 sm:py-12 justify-center self-center flex sm:flex-nowrap flex-wrap">
+    <div class="w-full absolute">
+    </div>
+    <div
+      class=" shadow-xl mx-auto sm:rounded-3xl bg-[#f6f6f6]  overflow-hidden flex items-end justify-center relative">
+      <div class="w-full h-full">
+        <router-outlet />
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer />

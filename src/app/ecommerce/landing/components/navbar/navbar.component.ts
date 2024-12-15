@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -33,8 +33,15 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 export class NavbarComponent {
 
   state = 'inactive';
+  type = input.required<NavbarTypeEnum.ECOMMERCE | NavbarTypeEnum.LANDING>()
+  navbarTypeEnum = NavbarTypeEnum;
 
   toggleNavbar(): void {
     this.state = this.state === 'active' ? 'inactive' : 'active';
   }
+}
+
+export enum NavbarTypeEnum {
+  ECOMMERCE = 'ecommerce',
+  LANDING = 'landing'
 }

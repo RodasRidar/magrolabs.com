@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, PLATFORM_ID, ViewChild } from "@angular/core";
 import { StepComponent } from "../../components/step/step.component";
 import { StepEnum } from "../../models/step.model";
 import { Information } from "../../components/information/information.component";
@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
 import { ButtonComponent } from "../../../../shared/ui/button/button.component";
 import { environment } from "../../../../../environments/env";
-import { CurrencyPipe } from "@angular/common";
+import { CurrencyPipe, isPlatformBrowser } from "@angular/common";
 
 @Component({
   selector: 'app-plans',
@@ -25,16 +25,17 @@ export class PlansComponent {
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _seo = inject(SeoService);
+  private platformId = inject(PLATFORM_ID);
 
   private nextUrl = '';
-  
+
   ENV = environment
   isSelectSubscription = false;
   isSelectOnePurchase = false;
   stepEnum = StepEnum
   informationList: Information[] = [
     {
-      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes +' soles de crédito de compra cada mes.'
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' soles de crédito de compra cada mes.'
     },
     {
       name: 'Acumula automáticamente, sin costo adicional.'
@@ -48,16 +49,19 @@ export class PlansComponent {
     let summary = this._summaryService.getSummary()
     this.loadSEO();
     this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || ''; 
+      this.nextUrl = params['next'] || '';
     });
 
-    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+    if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isSelectSubscription = true;
+      this.isSelectOnePurchase = false;
     }
-    else if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+    else if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+      this.isSelectSubscription = false;
       this.isSelectOnePurchase = true;
-    }else{
+    } else {
       this.isSelectSubscription = true;
+      this.isSelectOnePurchase = false;
     }
   }
 
@@ -89,10 +93,10 @@ export class PlansComponent {
 
   chosePlan(chosePlan: ChosePlanSummary) {
     this._summaryService.setChoosePlan(chosePlan)
-    if(this.nextUrl !== '') {
+    if (this.nextUrl !== '') {
       this._router.navigate(['registro/' + this.nextUrl]);
     }
-    else{
+    else {
       this._router.navigate(['registro/crear-cuenta'])
     }
   }
@@ -168,15 +172,17 @@ export class PlansComponent {
   }
 
   ngAfterViewInit(): void {
-    let summary = this._summaryService.getSummary()
-    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      this.subscriptionElement.nativeElement.open = true;
-    }
-    else if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
-      this.onePurchaseElement.nativeElement.open = true;
-    }
-    else{
-      this.subscriptionElement.nativeElement.open = true;
+    if (isPlatformBrowser(this.platformId)) {
+      let summary = this._summaryService.getSummary()
+      if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+        this.subscriptionElement.nativeElement.open = true;
+      }
+      else if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+        this.onePurchaseElement.nativeElement.open = true;
+      }
+      else {
+        this.subscriptionElement.nativeElement.open = true;
+      }
     }
   }
 }

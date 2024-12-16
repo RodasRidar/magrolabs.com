@@ -1,1 +1,14 @@
-<p>productos works!</p>
+<app-navbar [type]="navbarTypeEnum.LANDING"></app-navbar>
+
+<section class="body-font relative flex flex-col justify-center items-center">
+    <div class="sm:px-2 sm:py-4 justify-center self-center flex sm:flex-nowrap flex-wrap">
+        <div
+            class=" shadow-xl mx-auto sm:rounded-3xl bg-[#f6f6f6] overflow-hidden flex items-end justify-center relative">
+            <div class="w-full h-full">
+                <router-outlet />
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer />

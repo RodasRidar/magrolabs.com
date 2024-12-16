@@ -67,6 +67,16 @@ export const routes: Routes = [
   },
   {
     path: 'productos',
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./ecommerce/landing/pages/productos/pages/index/index.component').then(m => m.IndexComponent)
+      },
+      {
+        path: 'creatinas/:slug',
+        loadComponent: () => import('./ecommerce/landing/pages/productos/pages/creatinas/creatinas.component').then(m => m.CreatinasComponent),
+      },
+    ],
     loadComponent: () => import('./ecommerce/landing/pages/productos/productos.component').then(m => m.ProductosComponent)
   },
   {

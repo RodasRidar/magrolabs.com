@@ -23,6 +23,7 @@ const envioGratisA = {LIMA_METRO: 'Lima Metropolitana'};
 const nroServicios250g = 60;
 const nroServicios3kg = 720;
 const nroServicios100g = 24;
+const isEncuestaActive = true;
 
 
 export const environment = {
@@ -50,5 +51,6 @@ export const environment = {
     precioCreatina3kgOnePurchase,
     precioCreatina3kgSubscription,
     creditoRegaloPorCompraAño,
-    creatina3kg
+    creatina3kg,
+    isEncuestaActive
 };

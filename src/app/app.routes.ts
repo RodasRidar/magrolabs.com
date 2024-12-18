@@ -83,6 +83,10 @@ export const routes: Routes = [
     path: 'recuperar-password',
     loadComponent: () => import('./ecommerce/landing/pages/recuperar-password/recuperar-password.component').then(m => m.RecuperarPasswordComponent)
   },
+  {
+    path: 'encuesta',
+    loadComponent: () => import('./ecommerce/landing/pages/encuesta/encuesta.component').then(m => m.EncuestaComponent)
+  },
   //   {
   //     path: '',
   //     redirectTo: '/home',

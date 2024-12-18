@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { refLinkGuard } from './shared/guards/ref-link.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./ecommerce/landing/landing.component').then(m => m.LandingComponent)
+    loadComponent: () => import('./ecommerce/landing/landing.component').then(m => m.LandingComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'registro',
@@ -29,41 +31,48 @@ export const routes: Routes = [
         loadComponent: () => import('./ecommerce/signup/pages/confirmation/confirmation.component').then(m => m.ConfirmationComponent)
       },
     ],
-    loadComponent: () => import('./ecommerce/signup/signup.component').then(m => m.SignupComponent)
+    loadComponent: () => import('./ecommerce/signup/signup.component').then(m => m.SignupComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'login',
-    loadComponent: () => import('./ecommerce/landing/pages/login/login.component').then(m => m.LoginComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/login/login.component').then(m => m.LoginComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'politicas',
-    loadComponent: () => import('./ecommerce/landing/pages/politicas/politicas.component').then(m => m.PoliticasComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/politicas/politicas.component').then(m => m.PoliticasComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'atencion-cliente',
-    loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/atencion-cliente.component').then(m => m.AtencionClienteComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/atencion-cliente.component').then(m => m.AtencionClienteComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'como-funciona',
-    loadComponent: () => import('./ecommerce/landing/pages/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'loyalty-webshop',
     children: [
       {
         path: '',
-        loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/pages/index/index.component').then(m => m.IndexComponent)
+        loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/pages/index/index.component').then(m => m.IndexComponent),
       },
       {
         path: 'articulos/:slug',
         loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/pages/clothing/clothing.component').then(m => m.ClothingComponent),
       },
     ],
-    loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/loyalty-webshop.component').then(m => m.LoyaltyWebshopComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/loyalty-webshop/loyalty-webshop.component').then(m => m.LoyaltyWebshopComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'referido-por-amigo',
-    loadComponent: () => import('./ecommerce/landing/pages/referido-por-amigo/referido-por-amigo.component').then(m => m.ReferidoPorAmigoComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/referido-por-amigo/referido-por-amigo.component').then(m => m.ReferidoPorAmigoComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'productos',
@@ -77,15 +86,18 @@ export const routes: Routes = [
         loadComponent: () => import('./ecommerce/landing/pages/productos/pages/creatinas/creatinas.component').then(m => m.CreatinasComponent),
       },
     ],
-    loadComponent: () => import('./ecommerce/landing/pages/productos/productos.component').then(m => m.ProductosComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/productos/productos.component').then(m => m.ProductosComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'recuperar-password',
-    loadComponent: () => import('./ecommerce/landing/pages/recuperar-password/recuperar-password.component').then(m => m.RecuperarPasswordComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/recuperar-password/recuperar-password.component').then(m => m.RecuperarPasswordComponent),
+    canActivate: [refLinkGuard]
   },
   {
     path: 'encuesta',
-    loadComponent: () => import('./ecommerce/landing/pages/encuesta/encuesta.component').then(m => m.EncuestaComponent)
+    loadComponent: () => import('./ecommerce/landing/pages/encuesta/encuesta.component').then(m => m.EncuestaComponent),
+    canActivate: [refLinkGuard]
   },
   //   {
   //     path: '',

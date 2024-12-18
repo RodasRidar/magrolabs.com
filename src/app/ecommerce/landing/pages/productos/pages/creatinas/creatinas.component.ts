@@ -102,7 +102,7 @@ export class CreatinasComponent {
   onLoadmodel3dUrl() {
     setTimeout(() => {
       this.isLoading = false;
-    }, 1500);
+    }, 900);
   }
 
   selectSubscription($event: any) {

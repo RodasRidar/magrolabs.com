@@ -62,7 +62,6 @@
                     <!-- Tab panel, show/hide based on tab state. -->
                     <div id="tabs-2-panel-1" aria-labelledby="tabs-2-tab-1" role="tabpanel" tabindex="0"
                         [ngClass]="{'hidden': tapSelected !== 1}">
-
                         <div class="mx-auto flex overflow-hidden lg:h-[500px] lg:w-[500px] h-96 sm:rounded-lg">
                             <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}" role="status"
                                 class="max-sm:absolute max-sm:top-[13%] max-sm:right-[50%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
@@ -93,11 +92,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-[#eeeae7] sm:rounded-lg" id="tabs-2-panel-2" aria-labelledby="tabs-2-tab-2"
+                    <div class="bg-[#eeeae7] sm:rounded-lg  max-h-[500px] max-w-[500px]" id="tabs-2-panel-2" aria-labelledby="tabs-2-tab-2"
                         role="tabpanel" tabindex="0" [ngClass]="{'hidden': tapSelected !== 2}">
                         <img [ngSrc]="principalImgFront" priority lazyLoad
                             [alt]="productName"
-                            class="w-auto h-fit object-center object-cover sm:rounded-lg  max-h-[500px] max-w-[500px] mx-auto" height="60" width="96">
+                            class="w-auto h-fit object-center object-cover sm:rounded-lg  mx-auto" height="60" width="96">
                     </div>
                 </div>
             </div>

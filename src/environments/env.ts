@@ -24,6 +24,8 @@ const nroServicios250g = 60;
 const nroServicios3kg = 720;
 const nroServicios100g = 24;
 const isEncuestaActive = true;
+const emailAtencionClientes = 'hola@magrolabs.com';
+const telefonoAtencionClientes = '51974680428';
 
 
 export const environment = {
@@ -52,5 +54,7 @@ export const environment = {
     precioCreatina3kgSubscription,
     creditoRegaloPorCompraAño,
     creatina3kg,
-    isEncuestaActive
+    isEncuestaActive,
+    emailAtencionClientes,
+    telefonoAtencionClientes
 };

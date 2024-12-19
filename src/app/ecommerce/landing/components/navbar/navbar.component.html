@@ -147,19 +147,21 @@
             </div>
 
             <nav class="hidden lg:flex space-x-10">
-                <a [routerLink]="[ '/como-funciona' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/como-funciona' ]" routerLinkActive="text-gray-900"
+                    class="text-base font-medium text-gray-500 hover:text-gray-900">
                     ¿Cómo funciona?
                 </a>
-                <a [routerLink]="[ '/atencion-cliente' ]"
+                <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-gray-900"
                     class="text-base font-medium text-gray-500 hover:text-gray-900">
                     Atención al Cliente
                 </a>
-                <a [routerLink]="[ '/productos' ]" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                <a [routerLink]="[ '/productos' ]" routerLinkActive="text-gray-900"
+                    class="text-base font-medium text-gray-500 hover:text-gray-900">
                     Productos
                 </a>
             </nav>
             <div class="hidden lg:flex items-center justify-end md:flex-1 lg:w-0">
-                <a [routerLink]="[ '/login' ]"
+                <a [routerLink]="[ '/login' ]" routerLinkActive="text-gray-900"
                     class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                     Iniciar sesión
                 </a>
@@ -211,16 +213,16 @@
                 </div>
                 <div class="py-6 px-5 space-y-6">
                     <div class="grid grid-cols-1 gap-y-8 gap-x-8">
-                        <a [routerLink]="[ '/como-funciona' ]"
-                            class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/como-funciona' ]" routerLinkActive="text-gray-900"
+                            class="text-base font-medium text-gray-500 hover:text-gray-900">
                             ¿Cómo funciona?
                         </a>
-                        <a [routerLink]="[ '/atencion-cliente' ]"
-                            class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-gray-900"
+                            class="text-base font-medium text-gray-500 hover:text-gray-900">
                             Atención al Cliente
                         </a>
-                        <a [routerLink]="[ '/productos' ]"
-                            class="text-base font-medium text-gray-900 hover:text-gray-700">
+                        <a [routerLink]="[ '/productos' ]" routerLinkActive="text-gray-900"
+                            class="text-base font-medium text-gray-500 hover:text-gray-900">
                             Productos
                         </a>
                     </div>
@@ -238,4 +240,4 @@
     </div>
 </div>
 }
-<app-cart/>
+<app-cart />

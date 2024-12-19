@@ -1,7 +1,7 @@
 import { Component, inject, input, InputSignal } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { CartComponent } from '../../../../shared/ui/cart/cart.component';
@@ -9,8 +9,9 @@ import { CartComponent } from '../../../../shared/ui/cart/cart.component';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule,ButtonComponent, RouterLink, NgOptimizedImage, CartComponent],
+  imports: [CommonModule,ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive],
   templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
   animations: [
     trigger('fadeInOut', [
       state('inactive', style({
@@ -54,6 +55,7 @@ export class NavbarComponent {
   state = 'inactive';
   type = input.required<NavbarTypeEnum.ECOMMERCE | NavbarTypeEnum.LANDING>()
   navbarTypeEnum = NavbarTypeEnum;
+  static navbarTypeEnum: any;
 
   ngOnInit(): void {
 

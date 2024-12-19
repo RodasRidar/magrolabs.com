@@ -398,11 +398,11 @@
                                 @if(!isFreeCreatine){
                                 <div class="max-sm:hidden my-2">
                                     <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
-                                        (click)="nextStep()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                        (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
                                 </div>
                                 <div
-                                    class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-50">
-                                    <button (click)="nextStep()" type="button"
+                                    class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                    <button (click)="agregarCarrito()" type="button"
                                         class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
                                         {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
                                     </button>

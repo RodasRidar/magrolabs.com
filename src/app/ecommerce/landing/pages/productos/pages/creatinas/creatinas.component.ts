@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/summary.model';
+import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
 
 @Component({
   selector: 'app-creatinas',
@@ -19,6 +20,8 @@ export class CreatinasComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
+  private _shoppingCartService = inject(ShoppingCartService);
+  
 
   ENV = environment
   productName = '';
@@ -102,7 +105,7 @@ export class CreatinasComponent {
   onLoadmodel3dUrl() {
     setTimeout(() => {
       this.isLoading = false;
-    }, 900);
+    }, 800);
   }
 
   selectSubscription($event: any) {
@@ -135,9 +138,23 @@ export class CreatinasComponent {
     console.log(chosePlan);
   }
 
-  nextStep() {
+  agregarCarrito() {
     if (this.isSelectSubscription) {
-
+      this._shoppingCartService.addProductToCart({
+        product: {
+          id: '1',
+          name: 'Subscripcion mensual de ' + this.productName,
+          price: this.productPriceSubscription,
+          imageUrl: this.principalImgFront,
+          slug: this.slug,
+          // discountPercentage: 20,
+          // is_on_sale: true
+        },
+        quantity: 1
+      });
+      setTimeout(() => {
+        this._shoppingCartService.openCart();
+      }, 500); 
       // this._summaryService.setChoosePlan({
       //   selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
       //   descriptionOne: 'Monohidratada 100%',
@@ -149,6 +166,19 @@ export class CreatinasComponent {
       // this._router.navigate(['registro/verificacion']);
     }
     else if (this.isSelectOnePurchase) {
+      this._shoppingCartService.addProductToCart({
+        product: {
+          id: '2',
+          name: this.productName,
+          price: this.productPriceOnePurchase,
+          imageUrl: this.principalImgFront,
+          slug: this.slug
+        },
+        quantity: 1
+      });
+      setTimeout(() => {
+        this._shoppingCartService.openCart();
+      }, 500); 
       // this._summaryService.setChoosePlan({
       //   selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       //   descriptionOne: 'Monohidratada 100%',

@@ -11,4 +11,9 @@ import { environment } from '../../../../../environments/env';
 })
 export class FooterComponent {
  ENV = environment
+
+ //get current year in format YYYY
+  get Year() {
+    return new Date().getFullYear();
+  }
 }

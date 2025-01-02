@@ -10,6 +10,8 @@ import { SummaryService } from '../../../../shared/services/summary-service.serv
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -37,6 +39,8 @@ export class VerificationPaymentComponent {
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
   private _seo = inject(SeoService)
+  private _toastService = inject(ToastService)
+  private _cookieService = inject(CookieService)
 
   stepEnum = StepEnum;
   isCreatinaGratis = false;
@@ -61,13 +65,25 @@ export class VerificationPaymentComponent {
     if (summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
       this.isCreatinaGratis = true;
     }
+    if(this._cookieService.get('promoCode')) {
+      this.isPaymentVerified = true;
+      this.promotionIsShow = true;
+      this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
+      this.form.get('promoCode')?.disable();
+    }
   }
 
   applyPromoCode() {
-    if (this.form.get('promoCode')?.valid) {
+    if (this.form.get('promoCode')?.valid || !this.isPaymentVerified) {
       const promoCode = this.form.get('promoCode')?.value;
       if (promoCode === 'FREE' || promoCode === 'ERROR') {
         this.isPaymentVerified = true;
+        this._toastService.success('¡Genial!', 'Código de promoción aplicado correctamente.');
+        this._cookieService.set('promoCode', promoCode);
+        this.form.get('promoCode')?.disable();
+      } 
+      else {
+        this._toastService.warning('Código inválido', 'El código de promoción no existe o a caducado.');
       }
     }
   }

@@ -1,14 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, input, Input } from '@angular/core';
 
 @Component({
   selector: 'ml-button',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './button.component.html',
 })
 export class ButtonComponent {
-  @Input() name = '';
-  @Input() type: 'primary' | 'secondary' = 'primary';
-  @Input() isDisabled: boolean = false;
+  name = input.required<string>();
+  type = input<'primary' | 'secondary'>('primary');
+  isDisabled = input(false);
+  isProcessing = input(false);
 
 }

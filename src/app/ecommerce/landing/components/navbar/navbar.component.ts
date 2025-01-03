@@ -53,7 +53,7 @@ export class NavbarComponent {
   cartState = 'start';
 
   state = 'inactive';
-  type = input.required<NavbarTypeEnum.ECOMMERCE | NavbarTypeEnum.LANDING>()
+  type = input.required<NavbarTypeEnum.ECOMMERCE | NavbarTypeEnum.LANDING | NavbarTypeEnum.BOLSA>()
   navbarTypeEnum = NavbarTypeEnum;
   static navbarTypeEnum: any;
 
@@ -81,5 +81,6 @@ export class NavbarComponent {
 
 export enum NavbarTypeEnum {
   ECOMMERCE = 'ecommerce',
-  LANDING = 'landing'
+  LANDING = 'landing',
+  BOLSA = 'bolsa'
 }

@@ -99,6 +99,16 @@ export const routes: Routes = [
     loadComponent: () => import('./ecommerce/landing/pages/encuesta/encuesta.component').then(m => m.EncuestaComponent),
     canActivate: [refLinkGuard]
   },
+  {
+    path: 'bolsa',
+    loadComponent: () => import('./ecommerce/landing/pages/bolsa/bolsa.component').then(m => m.BolsaComponent),
+    canActivate: [refLinkGuard]
+  },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./ecommerce/landing/pages/checkout/checkout.component').then(m => m.CheckoutComponent),
+    canActivate: [refLinkGuard]
+  },
   //   {
   //     path: '',
   //     redirectTo: '/home',

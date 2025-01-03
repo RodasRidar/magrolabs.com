@@ -10,15 +10,15 @@ export class ProductQuantityComponent {
   readonly MAX_QUANTITY = 20;
   readonly MIN_QUANTITY = 0;
   @Output() quantityValue = new EventEmitter<number>();
-  @Input() predeterminedQuantity = 0;
+  @Input() predeterminedQuantity = 1;
   currentQuantity = 0;
-  ngOnInit() {
-    if (this.predeterminedQuantity === 0) {
-      this.currentQuantity = 1
-    } else {
-      this.currentQuantity = this.predeterminedQuantity
-    }
-  }
+  // ngOnInit() {
+  //   if (this.predeterminedQuantity === 0) {
+  //     this.currentQuantity = 1
+  //   } else {
+  //     this.currentQuantity = this.predeterminedQuantity
+  //   }
+  // }
 
   ngOnChanges() {
     this.currentQuantity = this.predeterminedQuantity

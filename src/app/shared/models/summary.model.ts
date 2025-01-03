@@ -7,7 +7,7 @@ export interface Summary {
 }
 
 export interface ChosePlanSummary {
-    selection: 'Creatina 3kg' | 'Creatina 250g' | 'Subscripción de Creatina 250g',
+    selection: SummaryEnum,
     descriptionOne: string
     descriptionTwo: string
     descrptionThree?: string

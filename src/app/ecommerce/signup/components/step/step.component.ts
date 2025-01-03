@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { StepItemComponent } from './step-item/step-item.component';
 import { StepEnum } from '../../models/step.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { SummaryEnum } from '../../../../shared/models/summary.model';
 
 @Component({
   selector: 'app-step',
@@ -23,9 +24,10 @@ export class StepComponent {
 
 
   ngOnInit(): void {
-    let summary = this._summaryService.getSummary()
-    if (summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
-      this.flag = "Gratis"
+    const summarySelection = this._summaryService.getSummary()?.chosePlan?.selection
+    this.flag = "Gratis"
+    if (summarySelection && summarySelection !== SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      this.flag = ""
     }
     switch (this.step()) {
       case StepEnum.CHOSE_PLAN:

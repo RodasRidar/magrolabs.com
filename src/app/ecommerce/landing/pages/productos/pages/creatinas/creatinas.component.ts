@@ -5,6 +5,7 @@ import { CommonModule, CurrencyPipe, isPlatformBrowser, NgOptimizedImage } from 
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/summary.model';
 import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
+import { SummaryService } from '../../../../../../shared/services/summary-service.service';
 
 @Component({
   selector: 'app-creatinas',
@@ -21,6 +22,7 @@ export class CreatinasComponent {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private _shoppingCartService = inject(ShoppingCartService);
+  private _summaryService = inject(SummaryService);
   
 
   ENV = environment
@@ -198,5 +200,38 @@ export class CreatinasComponent {
     if (isPlatformBrowser(this.platformId)){
       this.subscriptionElement.nativeElement.open = true;
     }
+  }
+
+  irRegistro() {
+    if(this.slug === 'creatina-250g') {
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+        descriptionOne: 'Monohidratada 100%',
+        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatinaSubscription,
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        quantity: 1
+      })
+    }
+    else if(this.slug === 'creatina-500g') {
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
+        descriptionOne: 'Monohidratada 100%',
+        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatina500gSubscription,
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        quantity: 1
+      })
+    }
+    else if(this.slug === 'creatina-3kg') {
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
+        descriptionOne: 'Monohidratada 100%',
+        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatina3kgSubscription,
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        quantity: 1
+      })
+    }
+
+    this.router.navigate(['registro/crear-cuenta']);
+
   }
 }

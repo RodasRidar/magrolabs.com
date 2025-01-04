@@ -412,17 +412,33 @@
                                 </div>
                                 }
                                 @if(!isFreeCreatine){
-                                <div class="max-sm:hidden my-2">
-                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
-                                        (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
-                                </div>
-                                <div
-                                    class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button (click)="agregarCarrito()" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
-                                        {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
-                                    </button>
-                                </div>
+                                    @if (isSelectSubscription) {
+                                        <div class="max-sm:hidden my-2">
+                                            <ml-button [name]="isOutOfStock ? 'Agotado' : 'Lo quiero →'"
+                                                (click)="irRegistro()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                        </div>
+                                        <div
+                                            class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                            <button (click)="irRegistro()" type="button"
+                                                class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                                                {{isOutOfStock ? 'Agotado' : 'Lo quiero →'}}
+                                            </button>
+                                        </div>
+                                    }
+                                    @if(isSelectOnePurchase) {
+                                        <div class="max-sm:hidden my-2">
+                                            <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
+                                                (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                        </div>
+                                        <div
+                                            class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                            <button (click)="agregarCarrito()" type="button"
+                                                class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                                                {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
+                                            </button>
+                                        </div>
+                                    }
+
                                 }
                                 @else {
                                 <div class="max-sm:hidden my-2">

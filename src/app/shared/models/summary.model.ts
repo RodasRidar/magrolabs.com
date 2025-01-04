@@ -37,7 +37,11 @@ export interface AddressSummary {
 
 export enum SummaryEnum {
     CREATINA_3KG = 'Creatina 3kg',
+    CREATINA_3KG_SUBSCRIPTION = 'Subscripción de Creatina 3kg',
     CREATINA_250G_ONE_PURCHASE = 'Creatina 250g',
-    CREATINA_250G_SUBSCRIPTION = 'Subscripción de Creatina 250g'
+    CREATINA_250G_SUBSCRIPTION = 'Subscripción de Creatina 250g',
+    CREATINA_500G = 'Creatina 500g',
+    CREATINA_500G_SUBSCRIPTION = 'Subscripción de Creatina 500g',
+
 }
 

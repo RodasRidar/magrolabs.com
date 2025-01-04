@@ -9,6 +9,7 @@ const precioCreatinaOnePurchase = 59;
 const precioCreatinaSubscription = 47;
 const precioCreatina3kgOnePurchase = 590;
 const precioCreatina3kgSubscription = 470;
+const precioCreatina500gSubscription = 67;
 const creatinaFreeGramos = 100;
 const creatinaSubscription250 = 250;
 const creatinaOnePurchase250 = 250;
@@ -58,5 +59,6 @@ export const environment = {
     isEncuestaActive,
     emailAtencionClientes,
     telefonoAtencionClientes,
-    rucEmpresa
+    rucEmpresa,
+    precioCreatina500gSubscription
 };

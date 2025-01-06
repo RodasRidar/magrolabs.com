@@ -394,19 +394,19 @@
                                 <div class="flex items-center">
                                     <input id="filter-size-0" name="size[]" value="2l" type="checkbox"
                                         class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-0" class="ml-3 text-sm text-gray-600"> 100g </label>
+                                    <label for="filter-size-0" class="ml-3 text-sm text-gray-600"> 100 gr </label>
                                 </div>
 
                                 <div class="flex items-center">
                                     <input id="filter-size-1" name="size[]" value="6l" type="checkbox"
                                         class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-1" class="ml-3 text-sm text-gray-600"> 250gr </label>
+                                    <label for="filter-size-1" class="ml-3 text-sm text-gray-600"> 250 gr </label>
                                 </div>
 
                                 <div class="flex items-center">
                                     <input id="filter-size-2" name="size[]" value="12l" type="checkbox"
                                         class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-2" class="ml-3 text-sm text-gray-600"> 3Kg </label>
+                                    <label for="filter-size-2" class="ml-3 text-sm text-gray-600"> 3 kg </label>
                                 </div>
                             </div>
                         </div>
@@ -414,37 +414,42 @@
                 </form>
 
                 <div class="mx-auto grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:col-span-3 lg:gap-x-8">
-                    <a routerLink="creatinas/creatina-100g" class="group text-sm">
+                    <a routerLink="creatinas/creatina-monohidratada-100-gr" class="group text-sm">
                         <div
                             class="w-[320px] h-[320px] px-20 pt-24 aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="package-image.png" alt="Creatina 100% monohidratada Magrolabs 250gr"
+                            <img ngSrc="package-image.png" alt="Creatina 100% monohidratada Gratis"
                                 class="object-center object-cover" width="1500" height="1500" priority>
                         </div>
-                        <h3 class="mt-4 font-light text-gray-900">Creatina 100% monohidratada Magrolabs</h3>
-                        <p class="text-gray-500">100g</p>
-                        <p class="mt-2 font-extralight text-[#d7816a] text-xs">Gratis</p>
+                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada Gratis</h3>
+                        <p class="text-gray-500">100 gr</p>
+                        <p class="mt-2 font-extralight text-xs"></p>
+                        <div class="flex items-center mt-2">
+                            <p class="font-extralight text-gray-900 text-xs line-through"> {{0 | currency:'S/'}}             
+                            </p>
+                            <span class="ml-2 font-extralight text-[#d7816a] text-sm">Gratis</span>
+                        </div>
                     </a>
 
-                    <a routerLink="creatinas/creatina-250g" class="group text-sm">
+                    <a routerLink="creatinas/creatina-monohidratada-250-gr" class="group text-sm">
                         <div
                             class="w-[320px] h-[320px] p-10 aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="package-image.png" alt="Creatina 100% monohidratada Magrolabs 250gr"
+                            <img ngSrc="package-image.png" alt="Creatina monohidratada Magrolabs 250 gr"
                                 class="object-center object-cover" width="1500" height="1500" priority>
                         </div>
-                        <h3 class="mt-4 font-light text-gray-900">Creatina 100% monohidratada Magrolabs</h3>
-                        <p class="text-gray-500">250g</p>
+                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada 250 gr</h3>
+                        <p class="text-gray-500">250 gr</p>
                         <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{ENV.precioCreatinaSubscription|
                             currency:'S/'}}</p>
                     </a>
 
-                    <a routerLink="creatinas/creatina-3kg" class="group text-sm">
+                    <a routerLink="creatinas/creatina-monohidratada-3-kg" class="group text-sm">
                         <div
                             class="w-[320px] h-[320px] px-14 pt-4 aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="package-image-3000.png" alt="Creatina 100% monohidratada Magrolabs 3kg"
+                            <img ngSrc="package-image-3000.png" alt="Creatina Monohidratada 3 kg"
                                 class="object-center object-cover" width="884" height="1186" priority>
                         </div>
-                        <h3 class="mt-4 font-medium text-gray-900">Creatina 100% monohidratada Magrolabs</h3>
-                        <p class="text-gray-500">3kg</p>
+                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada 3 kg</h3>
+                        <p class="text-gray-500">3 kg</p>
                         <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{ENV.precioCreatina3kgSubscription|
                             currency:'S/'}}</p>
                     </a>

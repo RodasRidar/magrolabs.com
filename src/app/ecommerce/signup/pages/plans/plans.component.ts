@@ -147,7 +147,7 @@ export class PlansComponent {
       description: description,
       image: image,
       url: URL,
-      locale: 'es_la',
+      locale: 'es_PE',
     });
 
     this._seo.setTwitterCard({

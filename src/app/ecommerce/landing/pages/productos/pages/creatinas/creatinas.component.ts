@@ -6,6 +6,7 @@ import { ButtonComponent } from '../../../../../../shared/ui/button/button.compo
 import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/summary.model';
 import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
 import { SummaryService } from '../../../../../../shared/services/summary-service.service';
+import { SeoService } from '../../../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-creatinas',
@@ -15,6 +16,9 @@ import { SummaryService } from '../../../../../../shared/services/summary-servic
   styleUrl: './creatinas.component.css'
 })
 export class CreatinasComponent {
+  writeReview() {
+    throw new Error('Method not implemented.');
+  }
   @ViewChild('Subscription', { static: false }) subscriptionElement!: ElementRef<HTMLDetailsElement>;
   @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
 
@@ -23,7 +27,9 @@ export class CreatinasComponent {
   private platformId = inject(PLATFORM_ID);
   private _shoppingCartService = inject(ShoppingCartService);
   private _summaryService = inject(SummaryService);
-  
+  private _seo = inject(SeoService)
+
+
 
   ENV = environment
   productName = '';
@@ -31,7 +37,7 @@ export class CreatinasComponent {
   productPriceSubscription = 0;
   productServicesAndWeight = '';
   credits = this.ENV.creditoRegaloPorCompraMes;
-  reviews = 17;
+  reviews = 6;
   recurrencia = '30 días';
   principalImgFront = ''
   principalImgBack = ''
@@ -47,57 +53,60 @@ export class CreatinasComponent {
   isSelectOnePurchase = false;
   isLoading = true;
 
-  ngOnInit() {    
+  ngOnInit() {
+
     this.isSelectSubscription = true;
     this.slug = this.route.snapshot.params['slug'];
     // this.productService.getProduct(slug).subscribe(product => {
     //   this.product = product;
     // });
-    if(this.slug === 'creatina-250g') {
+    if (this.slug === 'creatina-monohidratada-250-gr') {
       this.isFreeCreatine = false;
       this.isOutOfStock = false;
-      this.productName = 'Creatina Monohidratada 250g';
+      this.productName = 'Creatina Monohidratada 250 gr';
       this.productPriceOnePurchase = this.ENV.precioCreatinaOnePurchase;
       this.productPriceSubscription = this.ENV.precioCreatinaSubscription;
-      this.productServicesAndWeight = this.ENV.creatinaSubscription250+'g. '+this.ENV.nroServicios250g+' servicios.';
+      this.productServicesAndWeight = this.ENV.creatinaSubscription250 + ' gr. ' + this.ENV.nroServicios250g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraMes
-      this.reviews = 17;
+      this.reviews = 6;
       this.recurrencia = '30 días';
       this.principalImgFront = 'package-image.png';
       // this.principalImgBack = 'package-image-back.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
     }
-    else if(this.slug === 'creatina-100g') {
+    else if (this.slug === 'creatina-monohidratada-100-gr') {
       this.isFreeCreatine = true;
       this.isOutOfStock = false;
-      this.productName = 'Creatina Monohidratada 100g';
+      this.productName = 'Creatina Monohidratada 100 gr';
       this.productPriceOnePurchase = 0;
       this.productPriceSubscription = 0;
-      this.productServicesAndWeight = this.ENV.creatinaFreeGramos+'g. '+this.ENV.nroServicios100g+' servicios.';
+      this.productServicesAndWeight = this.ENV.creatinaFreeGramos + ' gr. ' + this.ENV.nroServicios100g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
-      this.reviews = 17;
+      this.reviews = 6;
       this.principalImgFront = 'package-image.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
     }
-    else if(this.slug === 'creatina-3kg') {
+    else if (this.slug === 'creatina-monohidratada-3-kg') {
       this.isFreeCreatine = false;
       this.isOutOfStock = true;
-      this.productName = 'Creatina Monohidratada 3kg';
+      this.productName = 'Creatina Monohidratada 3 kg';
       this.productPriceOnePurchase = this.ENV.precioCreatina3kgOnePurchase;
       this.productPriceSubscription = this.ENV.precioCreatina3kgSubscription;
-      this.productServicesAndWeight = this.ENV.creatina3kg+'kg. '+this.ENV.nroServicios3kg+' servicios.';
+      this.productServicesAndWeight = this.ENV.creatina3kg + ' kg. ' + this.ENV.nroServicios3kg + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
-      this.reviews = 17;
+      this.reviews = 6;
       this.recurrencia = 'año';
       this.model3dUrl = '3kg';
       this.principalImgFront = 'package-image-3000.png';
       this.previewmodel3d = 'preview-3d-image.png';
     }
-    else{
+    else {
       this.router.navigate(['./404']);
     }
+
+    this.loadSEO();
   }
 
   selectTap(tapNumber: number) {
@@ -156,7 +165,7 @@ export class CreatinasComponent {
       });
       setTimeout(() => {
         this._shoppingCartService.openCart();
-      }, 500); 
+      }, 500);
       // this._summaryService.setChoosePlan({
       //   selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
       //   descriptionOne: 'Monohidratada 100%',
@@ -180,7 +189,7 @@ export class CreatinasComponent {
       });
       setTimeout(() => {
         this._shoppingCartService.openCart();
-      }, 500); 
+      }, 500);
       // this._summaryService.setChoosePlan({
       //   selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       //   descriptionOne: 'Monohidratada 100%',
@@ -196,36 +205,36 @@ export class CreatinasComponent {
     return !this.isSelectSubscription && !this.isSelectOnePurchase || this.isOutOfStock;
   }
 
-  ngAfterViewInit(){
-    if (isPlatformBrowser(this.platformId)){
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId) && this.slug !== 'creatina-monohidratada-100-gr') {
       this.subscriptionElement.nativeElement.open = true;
     }
   }
 
   irRegistro() {
-    if(this.slug === 'creatina-250g') {
+    if (this.slug === 'creatina-monohidratada-250-gr') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatinaSubscription,
+        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription,
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         quantity: 1
       })
     }
-    else if(this.slug === 'creatina-500g') {
+    else if (this.slug === 'creatina-monohidratada-500-gr') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
         descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatina500gSubscription,
+        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatina500gSubscription,
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         quantity: 1
       })
     }
-    else if(this.slug === 'creatina-3kg') {
+    else if (this.slug === 'creatina-monohidratada-3-kg') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
         descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/'+this.ENV.precioCreatina3kgSubscription,
+        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatina3kgSubscription,
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         quantity: 1
       })
@@ -234,4 +243,58 @@ export class CreatinasComponent {
     this.router.navigate(['registro/crear-cuenta']);
 
   }
+
+  private loadSEO() {
+    const description = '¡Pruébala gratis! Experimenta una suplementación fácil y sostenible con nuestra creatina de alta calidad (envío gratis).';
+    const title = this.productName + ' Magrolabs.';
+    const URL = 'https://magrolabs.com//productos/creatinas/' + this.slug;
+    const image = 'https://magrolabs.com/' + this.principalImgFront;
+
+
+    this._seo.title.setTitle(title);
+    this._seo.setCanonicalURL(URL);
+    this._seo.meta.updateTag({ name: 'description', content: description });
+    this._seo.setIndexFollow();
+
+    this._seo.setKeywords('creatina monohidratada ' + this.ENV.creatinaSubscription250 + ' gr, suscripción, creatina');
+
+    this._seo.setOpenGraph({
+      type: 'product',
+      site_name: 'Magrolabs',
+      title: title,
+      description: description,
+      image: image,
+      url: URL,
+      locale: 'es_PE',
+    });
+    
+    // this._seo.meta.updateTag({ property: 'product:pretax_price:amount', content: '119.00' }, 'property="product:pretax_price:amount"');
+    // this._seo.meta.updateTag({ property: 'product:pretax_price:currency', content: 'PEN' }, 'property="product:pretax_price:currency"');
+    this._seo.meta.updateTag({ property: 'product:condition', content: 'new' }, 'property="product:condition"');
+    this._seo.meta.updateTag({ property: 'product:availability', content: this.isOutOfStock ? 'out of stock' : 'in stock' }, 'property="product:availability"');
+    this._seo.meta.updateTag({ property: 'product:brand', content: 'Magrolabs' }, 'property="product:brand"');
+    this._seo.meta.updateTag({ property: 'product:category', content: 'Suplementos' }, 'property="product:category"');
+    // this._seo.meta.updateTag({ property: 'product:retailer_item_id', content: '1' }, 'property="product:retailer_item_id"');
+
+    this._seo.meta.updateTag({ property: 'product:plural_title', content: title }, 'property="product:plural_title"');
+    this._seo.meta.updateTag({ property: 'product:price:amount', content: this.productPriceSubscription.toString() }, 'property="product:price:amount"');
+    this._seo.meta.updateTag({ property: 'product:price:currency', content: 'PEN' }, 'property="product:price:currency"');
+
+    this._seo.setTwitterCard({
+      'twitter:card': 'summary_large_image',
+      'twitter:url': URL,
+      'twitter:title': title,
+      'twitter:description': description,
+      'twitter:image': image,
+      'twitter:image:alt': 'Creatina Magrolabs - Alta Calidad',
+    });
+
+    this._seo.setHreflangs([
+      { lang: 'es', url: URL },
+      { lang: 'en', url: URL },
+      { lang: 'es-pe', url: URL },
+      { lang: 'x-default', url: URL },
+    ]);
+  }
+
 }

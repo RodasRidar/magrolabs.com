@@ -46,7 +46,7 @@
                     Iniciar sesión
                 </a>
 
-                <ml-button class="mx-6" name="Regístrate" [routerLink]="[ '/registro' ]" />
+                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'" />
 
                 @if (!isCheckout()) {
                 <button type="button"
@@ -90,7 +90,7 @@
                 </div>
                 <div class="py-6 px-5 space-y-6">
                     <nav>
-                        <ml-button name="Regístrate" [routerLink]="[ '/registro' ]" />
+                        <ml-button name="Regístrate" [routerLink]="'/registro'" />
                         <p class="mt-6 text-center text-base font-medium text-gray-500">
                             <a [routerLink]="[ '/login' ]" class="text-[#d07d66] hover:text-[#d7816a]">
                                 Iniciar Sesión
@@ -167,7 +167,7 @@
                     Iniciar sesión
                 </a>
 
-                <ml-button class="mx-6" name="Regístrate" [routerLink]="[ '/registro' ]" type="secondary" />
+                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"  type="secondary" />
 
                 @if (!isCheckout()) {
                 <button type="button"
@@ -228,7 +228,7 @@
                         </a>
                     </div>
                     <div>
-                        <ml-button name="Regístrate" [routerLink]="[ '/registro' ]" type="secondary" />
+                        <ml-button name="Regístrate" [routerLink]="'/registro'"  type="secondary" />
                         <p class="mt-6 text-center text-base font-medium text-gray-500">
                             <a [routerLink]="[ '/login' ]" class="text-[#d07d66] hover:text-[#d7816a]">
                                 Iniciar Sesión

@@ -247,7 +247,7 @@ export class CreatinasComponent {
   private loadSEO() {
     const description = '¡Pruébala gratis! Experimenta una suplementación fácil y sostenible con nuestra creatina de alta calidad (envío gratis).';
     const title = this.productName + ' Magrolabs.';
-    const URL = 'https://magrolabs.com//productos/creatinas/' + this.slug;
+    const URL = 'https://magrolabs.com/productos/creatinas/' + this.slug;
     const image = 'https://magrolabs.com/' + this.principalImgFront;
 
 

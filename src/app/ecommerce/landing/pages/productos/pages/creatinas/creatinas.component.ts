@@ -68,7 +68,7 @@ export class CreatinasComponent {
       this.productPriceSubscription = this.ENV.precioCreatinaSubscription;
       this.productServicesAndWeight = this.ENV.creatinaSubscription250 + ' gr. ' + this.ENV.nroServicios250g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraMes
-      this.reviews = 6;
+      this.reviews = this.ENV.nroReviews;
       this.recurrencia = '30 días';
       this.principalImgFront = 'package-image.png';
       // this.principalImgBack = 'package-image-back.png';
@@ -83,7 +83,7 @@ export class CreatinasComponent {
       this.productPriceSubscription = 0;
       this.productServicesAndWeight = this.ENV.creatinaFreeGramos + ' gr. ' + this.ENV.nroServicios100g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
-      this.reviews = 6;
+      this.reviews = this.ENV.nroReviews;
       this.principalImgFront = 'package-image.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
@@ -96,7 +96,7 @@ export class CreatinasComponent {
       this.productPriceSubscription = this.ENV.precioCreatina3kgSubscription;
       this.productServicesAndWeight = this.ENV.creatina3kg + ' kg. ' + this.ENV.nroServicios3kg + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
-      this.reviews = 6;
+      this.reviews = this.ENV.nroReviews;
       this.recurrencia = 'año';
       this.model3dUrl = '3kg';
       this.principalImgFront = 'package-image-3000.png';

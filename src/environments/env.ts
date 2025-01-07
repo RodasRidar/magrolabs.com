@@ -28,6 +28,7 @@ const isEncuestaActive = true;
 const emailAtencionClientes = 'hola@magrolabs.com';
 const telefonoAtencionClientes = '51974680428';
 const rucEmpresa = '20705878477';
+const nroReviews = 6;
 
 
 export const environment = {
@@ -60,5 +61,6 @@ export const environment = {
     emailAtencionClientes,
     telefonoAtencionClientes,
     rucEmpresa,
-    precioCreatina500gSubscription
+    precioCreatina500gSubscription,
+    nroReviews
 };

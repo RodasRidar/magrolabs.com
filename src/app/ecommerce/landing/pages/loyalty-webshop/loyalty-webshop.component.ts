@@ -28,7 +28,7 @@ export class LoyaltyWebshopComponent {
                         
     const title = 'Magrolabs | Loyalty Webshop';
     const URL = 'https://magrolabs.com/loyalty-webshop';
-    const image = 'https://magrolabs.com/loyalty-web-shop-banner_c.png';
+    const image = 'https://magrolabs.com/loyalty-web-shop-banner_c.webp';
 
 
     this._seo.title.setTitle(title);

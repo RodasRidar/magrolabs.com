@@ -8,7 +8,7 @@ import { TypeDocumentEnum } from '../../../signup/pages/create-account/create-ac
 import { CommonModule } from '@angular/common';
 import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 
@@ -24,6 +24,7 @@ export class CheckoutComponent {
   navbarTypeEnum = NavbarTypeEnum;
   private _shoppingCartService = inject(ShoppingCartService);
   private _formBuilder = inject(FormBuilder)
+  private _router = inject(Router)
 
   //
   private _addressService = inject(AddressService)
@@ -75,6 +76,9 @@ export class CheckoutComponent {
         this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
         this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
       }
+      else{
+        this._router.navigate(['/bolsa']);
+      }
     })
 
     this.form.get('searchAddress')?.valueChanges.pipe(
@@ -101,6 +105,9 @@ export class CheckoutComponent {
     this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
     this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
     this._shoppingCartService.setShoppingCart(this.shoppingCart);
+    if (this.shoppingCart.totalItems == 0) {
+      this._router.navigate(['/bolsa']);
+    }
   }
 
   hasValidatorError(field: string) {

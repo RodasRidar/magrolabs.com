@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ProductQuantityComponent {
   readonly MAX_QUANTITY = 20;
-  readonly MIN_QUANTITY = 0;
+  readonly MIN_QUANTITY = 1;
   @Output() quantityValue = new EventEmitter<number>();
   @Input() predeterminedQuantity = 1;
   currentQuantity = 0;

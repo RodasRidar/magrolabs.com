@@ -3,7 +3,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { Subscription } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductQuantityComponent } from '../product-quantity/product-quantity.component';
 import { DiscountPipe } from '../../pipes/discount.pipe';
 import { ShoppingCart, ItemShoppingCart } from '../../models/item-cart.model';
@@ -41,6 +41,7 @@ export class CartComponent {
   shoppingCart: ShoppingCart = <ShoppingCart>{};
   private configSubscription: Subscription | undefined;
   private _shoppingCartService = inject(ShoppingCartService);
+  private _router = inject(Router);
 
   ngOnInit() {
     this._shoppingCartService.cartState$.subscribe(state => {
@@ -129,6 +130,13 @@ export class CartComponent {
     this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
     this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
     this._shoppingCartService.setShoppingCart(this.shoppingCart);
+  }
+
+  goCheckout(){
+    this._shoppingCartService.toggleCart();
+    setTimeout(() => {
+      this._router.navigate(['/checkout']);
+    }, 300);
   }
 }
 

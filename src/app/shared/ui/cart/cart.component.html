@@ -8,9 +8,9 @@
           <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
 
             @if(shoppingCart.totalItems > 0) {
-            <div class="flex items-start justify-between">
+            <div class="flex items-start justify-between border-b border-gray-200">
               <h2 class="text-lg font-medium text-gray-900">Carrito de compras.</h2>
-              <div class="ml-3 flex h-7 items-center">
+              <div class="ml-3 flex h-7 items-center mb-4">
                 <button type="button" class="relative text-gray-400 hover:text-gray-500" (click)="toggle()">
                   <span class="absolute inset-0.5"></span>
                   <span class="sr-only">Close panel</span>
@@ -102,21 +102,20 @@
 
           </div>
 
-          <div class="border-t border-gray-200 px-2 py-6 sm:px-6">
+          <div class="border-t border-gray-200 px-2 py-2 sm:px-6 sm:py-6">
             @if(shoppingCart.totalItems > 0) {
             <div class="flex justify-between text-base font-medium text-gray-900">
               <p>Subtotal ({{shoppingCart.totalItems}})</p>
               <p>{{ shoppingCart.subTotal | currency : "S/ " }}</p>
             </div>
             <!-- <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> -->
-            <div class="mt-6 flex flex-row gap-2">
+            <div class="mt-6 flex flex-col gap-2">
               <!-- <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                   Ir al carro
                 </a> -->
-              <ml-button class="w-[30%]" name="Cerrar" type="secondary" (click)="toggle()"></ml-button>
-              <ml-button [routerLink]="['/bolsa']" (click)="toggle()" class="w-[70%]"
-                name="Ir al carro  &rarr;"></ml-button>
-
+              <ml-button [routerLink]="['/bolsa']" (click)="toggle()"
+                name="Ir al carro" type="secondary"></ml-button>
+              <ml-button name="Finalizar compra &rarr;"  (click)="goCheckout()"></ml-button>
             </div>
             }
             @else {

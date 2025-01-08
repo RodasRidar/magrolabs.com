@@ -64,7 +64,7 @@
                 <div class="mt-10 w-fit pl-2">
                     <button type="button" [routerLink]="'/registro'"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
-                        Registrate ahora
+                        Regístrate ahora
                     </button>
                     <p class="mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
                         * Envío gratis solo para {{ENV.envioGratisA.LIMA_METRO}}.
@@ -129,11 +129,12 @@
                     </dt>
                 </div>
             </dl>
-            <div class="mx-auto mt-5 w-fit pl-2 text-center">
-                <button type="button" [routerLink]="'/registro'"
+            <div class="mx-auto mt-10 w-fit pl-2 text-center">
+                <!-- <button type="button" [routerLink]="'/registro'"
                     class="mt-5 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
                     Obtenlo ya!
-                </button>
+                </button> -->
+                <ml-button [routerLink]="'/registro'" name="Obtenlo ya!" type="secondary-outlined"></ml-button>
             </div>
         </div>
         <div class="mt-2 mb-10 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">

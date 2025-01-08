@@ -9,8 +9,7 @@ import { Component, input, Input } from '@angular/core';
 })
 export class ButtonComponent {
   name = input.required<string>();
-  type = input<'primary' | 'secondary'>('primary');
+  type = input<'primary' | 'secondary' | 'secondary-outlined'>('primary');
   isDisabled = input(false);
   isProcessing = input(false);
-
 }

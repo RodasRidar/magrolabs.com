@@ -167,7 +167,7 @@
                     Iniciar sesión
                 </a>
 
-                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"  type="secondary" />
+                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"  type="secondary-outlined" />
 
                 @if (!isCheckout()) {
                 <button type="button"
@@ -228,12 +228,12 @@
                         </a>
                     </div>
                     <div>
-                        <ml-button name="Regístrate" [routerLink]="'/registro'"  type="secondary" />
-                        <p class="mt-6 text-center text-base font-medium text-gray-500">
-                            <a [routerLink]="'/login'" class="text-[#d07d66] hover:text-[#d7816a]">
+                        <p class="my-6 text-center text-base font-medium text-gray-500">
+                            <a [routerLink]="'/login'">
                                 Iniciar Sesión
                             </a>
                         </p>
+                        <ml-button name="Regístrate" [routerLink]="'/registro'"  type="secondary-outlined" />
                     </div>
                 </div>
             </div>

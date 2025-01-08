@@ -75,7 +75,7 @@
                 </dl>
                 }
                 @else{
-                  <h2 class="text-md font-medium text-gray-800">Tu carrito esta vacio.</h2>
+                <h2 class="text-md font-medium text-gray-800">Tu carrito esta vacio.</h2>
                 }
                 }
                 <div class="flex flex-col mt-6">
@@ -84,9 +84,10 @@
                   <ml-button [routerLink]="['/checkout']" class="w-full mb-2"
                     name="Finalizar compra  &rarr;"></ml-button>
                   }
-                  }
                   <ml-button [routerLink]="['/productos']" routerLinkActive="active" class="w-full"
-                    name="Seguir comprando" type="secondary"></ml-button>
+                    name="Seguir comprando" [type]="cart.totalItems !== 0 ? 'secondary-outlined' : 'secondary'">
+                  </ml-button>
+                  }
                 </div>
               </section>
             </form>

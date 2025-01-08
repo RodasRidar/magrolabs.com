@@ -6,7 +6,17 @@
 >
   {{ name() }}
 </button>
-}@else {
+}
+@else if (type() === 'secondary-outlined') {
+  <button
+    type="button" [ngClass]="{'cursor-progress': isProcessing()}"
+    class="w-full inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-base font-medium text-black border-gray-400 bg-white hover:bg-gray-50 disabled:bg-gray-500 disabled:text-gray-700 disabled:cursor-not-allowed"
+    [disabled]="isDisabled()"
+  >
+    {{ name() }}
+  </button>
+  }
+@else {
 <button
   type="button"  [ngClass]="{'cursor-progress': isProcessing()}"
   class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed"

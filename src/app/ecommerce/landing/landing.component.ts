@@ -23,7 +23,7 @@ export class LandingComponent {
 
   private loadSEO() {
     const description = '¿Por qué Magrolabs? S/'+this.ENV.precioCreatinaSubscription+' por mes. La primera creatina es gratis - '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.';
-    const title = 'Magrolabs Creatina 100% Monohidratada';
+    const title = 'Magrolabs Creatina';
     const URL = 'https://magrolabs.com';
     const image = 'https://magrolabs.com/image-meta-2.webp';
 

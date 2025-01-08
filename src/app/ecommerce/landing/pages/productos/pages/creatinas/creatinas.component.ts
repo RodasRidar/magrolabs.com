@@ -7,11 +7,12 @@ import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/s
 import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
 import { SummaryService } from '../../../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../../../shared/services/seo.service';
+import { SinceDatePipe } from '../../../../../../shared/pipes/since-date.pipe';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule],
+  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, SinceDatePipe],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
@@ -52,6 +53,13 @@ export class CreatinasComponent {
   isSelectSubscription = false;
   isSelectOnePurchase = false;
   isLoading = true;
+
+  reviewDate1 = new Date('2024-12-27')
+  reviewDate2 = new Date('2025-01-04')
+  reviewDate3 = new Date('2025-01-05')
+  reviewDate4 = new Date('2025-01-06')
+  reviewDate5 = new Date('2025-01-07')
+  reviewDate6 = new Date('2025-01-08')
 
   ngOnInit() {
 

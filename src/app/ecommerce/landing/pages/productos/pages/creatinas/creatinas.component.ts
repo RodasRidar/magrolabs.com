@@ -223,27 +223,30 @@ export class CreatinasComponent {
     if (this.slug === 'creatina-monohidratada-250-gr') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
-        descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription,
+        descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
+        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
     }
     else if (this.slug === 'creatina-monohidratada-500-gr') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
-        descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatina500gSubscription,
+        descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina500gSubscription + '.',
+        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
-        quantity: 1
+        descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
+        quantity: 1,
       })
     }
     else if (this.slug === 'creatina-monohidratada-3-kg') {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
-        descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/' + this.ENV.precioCreatina3kgSubscription,
+        descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina3kgSubscription + '.',
+        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraAño + ' de crédito.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
     }

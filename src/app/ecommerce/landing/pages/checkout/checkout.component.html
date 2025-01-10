@@ -31,8 +31,7 @@
                                 </ul>
 
                                 <form class="mt-10">
-                                    <label for="discount-code-mobile"
-                                        class="block text-sm font-medium text-gray-700">
+                                    <label for="discount-code-mobile" class="block text-sm font-medium text-gray-700">
                                         Código de descuento
                                     </label>
                                     <div class="flex space-x-4 mt-1">
@@ -40,7 +39,7 @@
                                             class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <button type="button"
                                             class="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
-                                        Aplicar
+                                            Aplicar
                                         </button>
                                     </div>
                                 </form>
@@ -56,7 +55,8 @@
                                             <span
                                                 class="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">CHEAPSKATE</span>
                                         </dt>
-                                        <dd class="text-gray-900">-{{this.shoppingCart.totalDiscount | currency : 'S/'}}</dd>
+                                        <dd class="text-gray-900">-{{this.shoppingCart.totalDiscount | currency : 'S/'}}
+                                        </dd>
                                     </div>
                                     <div class="flex justify-between">
                                         <dt>Impuestos</dt>
@@ -99,7 +99,7 @@
                                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <button type="button"
                                         class="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
-                                    Aplicar
+                                        Aplicar
                                     </button>
                                 </div>
                             </form>
@@ -295,10 +295,10 @@
                                                 <label class="inline-flex items-center mb-2 cursor-pointer">
                                                     <input type="checkbox" value="" class="sr-only peer">
                                                     <div
-                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-600">
+                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                     <span
-                                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Registrarme</span>
+                                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme</span>
                                                 </label>
                                             </div>
 
@@ -558,24 +558,44 @@
                                                 <h2
                                                     class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
                                                     Pago.</h2>
+
+                                                @if (cartHas250Creatine) {
+                                                <label class="inline-flex items-center mb-2 cursor-pointer mt-4 ml-2">
+                                                    <input type="checkbox" value="" class="sr-only peer">
+                                                    <span
+                                                        class="text-sm font-medium text-gray-900 dark:text-gray-900 mr-3">Ahorrar
+                                                        S/{{ENV.precioCreatinaOnePurchase -
+                                                        ENV.precioCreatinaSubscription}} con la subscripción
+                                                        mensual de 250 gr</span>
+                                                    <div
+                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                    </div>
+                                                </label>
+                                                }
                                             </div>
 
                                             <div class="col-span-6">
-                                                <app-payment-method (paymentMethod)="selectPaymentMethod($event)"/>
+                                                <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
                                                 <div class="my-6 lg:w-72">
-                                                    <ml-button name="Ir a Pagar →" (click)="Pay()" [isDisabled]="paymentMethod == ''"></ml-button>
+                                                    <ml-button name="Ir a Pagar →" (click)="Pay()"
+                                                        [isDisabled]="paymentMethod == ''"></ml-button>
                                                 </div>
 
                                                 <div class="text-pretty">
                                                     <ul class="text-sm mb-7">
                                                         <li class="mb-1">
-                                                            <span class=" text-gray-600">Al completar tu pedido, declaras que eres mayor
+                                                            <span class=" text-gray-600">Al completar tu pedido,
+                                                                declaras que eres mayor
                                                                 de 18 años y
-                                                                aceptas las <a class="underline cursor-pointer">Términos y
-                                                                    condiciones</a>, <a class="underline cursor-pointer">Términos de uso</a> y la <a
-                                                                    class="underline cursor-pointer">Declaración de privacidad</a> y además
-                                                                declaras que has comprobado que tu pedido y tus datos son correctos.</span>
+                                                                aceptas las <a class="underline cursor-pointer">Términos
+                                                                    y
+                                                                    condiciones</a>, <a
+                                                                    class="underline cursor-pointer">Términos de uso</a>
+                                                                y la <a class="underline cursor-pointer">Declaración de
+                                                                    privacidad</a> y además
+                                                                declaras que has comprobado que tu pedido y tus datos
+                                                                son correctos.</span>
                                                         </li>
                                                     </ul>
                                                 </div>

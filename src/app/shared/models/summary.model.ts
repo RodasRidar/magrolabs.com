@@ -11,6 +11,7 @@ export interface ChosePlanSummary {
     descriptionOne: string
     descriptionTwo: string
     descrptionThree?: string
+    descrptionFour?: string
     quantity: number
 }
 
@@ -36,12 +37,12 @@ export interface AddressSummary {
 }
 
 export enum SummaryEnum {
-    CREATINA_3KG = 'Creatina 3kg',
-    CREATINA_3KG_SUBSCRIPTION = 'Subscripción de Creatina 3kg',
-    CREATINA_250G_ONE_PURCHASE = 'Creatina 250g',
-    CREATINA_250G_SUBSCRIPTION = 'Subscripción de Creatina 250g',
-    CREATINA_500G = 'Creatina 500g',
-    CREATINA_500G_SUBSCRIPTION = 'Subscripción de Creatina 500g',
+    CREATINA_3KG = 'Creatina 3 kg',
+    CREATINA_3KG_SUBSCRIPTION = 'Subscripción de Creatina 3 kg',
+    CREATINA_250G_ONE_PURCHASE = 'Creatina 250 gr',
+    CREATINA_250G_SUBSCRIPTION = 'Subscripción de Creatina 250 gr',
+    CREATINA_500G = 'Creatina 500 gr',
+    CREATINA_500G_SUBSCRIPTION = 'Subscripción de Creatina 500 gr',
 
 }
 

@@ -14,6 +14,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
+import { SummaryEnum } from '../../../../shared/models/summary.model';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -71,7 +72,7 @@ export class CreateAccountComponent {
       this._router.navigate(['registro/']);
     }
 
-    if(summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
+    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaGratis = true;
     }
 

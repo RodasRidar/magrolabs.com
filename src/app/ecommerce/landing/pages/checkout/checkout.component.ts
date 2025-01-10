@@ -11,6 +11,7 @@ import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/ad
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-checkout',
@@ -22,6 +23,8 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 export class CheckoutComponent {
   paymentMethod = '';
   navbarTypeEnum = NavbarTypeEnum;
+  ENV = environment;
+  cartHas250Creatine = false;
   private _shoppingCartService = inject(ShoppingCartService);
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
@@ -75,6 +78,9 @@ export class CheckoutComponent {
         this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
         this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
         this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
+        if(shoppingCart.items.find(item => item.product.name === 'Creatina Monohidratada 250 gr')){
+          this.cartHas250Creatine = true;
+        }
       }
       else{
         this._router.navigate(['/bolsa']);

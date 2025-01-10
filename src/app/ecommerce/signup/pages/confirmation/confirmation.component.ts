@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
+import { SummaryEnum } from '../../../../shared/models/summary.model';
 
 @Component({
   selector: 'app-confirmation',
@@ -69,7 +70,7 @@ export class ConfirmationComponent {
       return;
     }
 
-    this.creditos = summary?.chosePlan?.selection == 'Creatina 3kg' ? 'S/120' : 'S/'+this.ENV.creditoRegaloPorCompraMes;
+    this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/'+this.ENV.creditoRegaloPorCompraAño : 'S/'+this.ENV.creditoRegaloPorCompraMes;
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {

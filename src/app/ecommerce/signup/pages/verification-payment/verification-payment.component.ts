@@ -12,6 +12,7 @@ import { environment } from '../../../../../environments/env';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
+import { SummaryEnum } from '../../../../shared/models/summary.model';
 
 @Component({
   selector: 'app-verification-payment',
@@ -62,7 +63,7 @@ export class VerificationPaymentComponent {
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);
     }
-    if (summary?.chosePlan?.selection === 'Subscripción de Creatina 250g') {
+    if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaGratis = true;
     }
     if(this._cookieService.get('promoCode')) {

@@ -106,9 +106,10 @@ export class PlansComponent {
 
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
-        descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Plan mensual de S/47',
+        descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
+        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
 
@@ -118,7 +119,7 @@ export class PlansComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
         descriptionOne: 'Monohidratada 100%',
-        descriptionTwo: 'Compra única de S/59',
+        descriptionTwo: 'Compra única de S/'+ this.ENV.precioCreatinaOnePurchase + '.',
         quantity: 1
       })
 
@@ -127,10 +128,10 @@ export class PlansComponent {
   }
 
   private loadSEO() {
-    const description = 'Escoge tu plan de suscripción a tu medidad y comienza a disfrutar de la mejor creatina con envió gratis.';
+    const description = 'Elige tu plan de suscripción a tu medida y comienza a disfrutar de la mejor creatina con envío gratis.';
     const title = 'Registro | Escoge tu plan';
     const URL = 'https://magrolabs.com/registro';
-    const image = 'https://magrolabs.com/image-meta-2.webp';
+    const image = 'https://magrolabs.com/image-meta-3.webp';
 
 
     this._seo.title.setTitle(title);

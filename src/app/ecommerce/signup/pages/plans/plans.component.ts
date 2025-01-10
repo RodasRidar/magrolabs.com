@@ -131,7 +131,7 @@ export class PlansComponent {
     const description = 'Elige tu plan de suscripción a tu medida y comienza a disfrutar de la mejor creatina con envío gratis.';
     const title = 'Registro | Escoge tu plan';
     const URL = 'https://magrolabs.com/registro';
-    const image = 'https://magrolabs.com/image-meta-3.webp';
+    const image = 'https://magrolabs.com/image-meta.webp';
 
 
     this._seo.title.setTitle(title);

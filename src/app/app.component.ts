@@ -21,7 +21,7 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
 
-        if (currentUrl === 'registro' || currentUrl === 'crear-cuenta' || currentUrl === 'direccion' || currentUrl === 'creatina-monohidratada-100-gr' || currentUrl === 'creatina-monohidratada-250-gr' || currentUrl === 'creatina-monohidratada-3-kg') {
+        if (currentUrl === 'registro' || currentUrl === 'crear-cuenta' || currentUrl === 'direccion' || currentUrl === 'creatina-monohidratada-100-gr' || currentUrl === 'creatina-monohidratada-250-gr' || currentUrl === 'creatina-monohidratada-3-kg' || currentUrl === 'creatina-monohidratada-250-gr#reviews') {
           this.isButtonVisible = true;
         } else {
           this.isButtonVisible = false;

@@ -17,9 +17,9 @@
   ```
 -->
 
-<main class="max-w-7xl mx-auto sm:pb-16 pt-4 sm:px-6 lg:px-8">
+<main class="max-w-7xl mx-auto sm:pb-16 sm:pt-4 sm:px-6 lg:px-8">
     <div class="max-w-2xl mx-auto lg:max-w-none">
-        <div class="sm:flex block mb-4 p-2 gap-1">
+        <div class="sm:flex block sm:mb-4 p-2 gap-1">
             <div class="flex items-center">
                 <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900"
                     routerLink="/" routerLinkActive="active">Inicio</a>
@@ -38,8 +38,8 @@
                     fill="#434343">
                     <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
                 </svg>
+                <span class="text-gray-700 text-sm font-extralight tracking-tighter">{{productName}}</span>
             </div>
-            <span class="text-gray-700 text-sm font-extralight">{{productName}}</span>
         </div>
         <!-- Product -->
         <div class="md:grid sm:grid-cols-2 sm:gap-x-2 sm:items-start mb-2">
@@ -87,7 +87,7 @@
                         [ngClass]="{'hidden': tapSelected !== 1}">
                         <div class="mx-auto flex overflow-hidden lg:h-[500px] lg:w-[500px] h-96 sm:rounded-lg">
                             <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}" role="status"
-                                class="max-sm:absolute max-sm:top-[13%] max-sm:right-[50%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+                                class="max-sm:absolute max-sm:top-[9%] max-sm:right-[44%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
                                 <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}"
                                     class="flex items-center justify-center w-full h-full rounded sm:w-96 ">
                                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
@@ -126,7 +126,7 @@
             </div>
 
             <!-- Product info -->
-            <div class="max-sm:mt-10 px-4 sm:px-0">
+            <div class="max-sm:mt-4 px-2 sm:px-0">
                 <div class="">
                     <div class="max-w-2xl mx-auto lg:max-w-7xl max-sm:px-2  max-sm:py-1 max-lg:px-2 max-lg:py-4 px-8">
                         <!-- Product details -->
@@ -185,7 +185,7 @@
                             </div>
 
                             <div class="mt-1">
-                                <h1 class="text-3xl font-light tracking-tight text-gray-900 sm:text-3xl product-name">
+                                <h1 class="text-3xl font-thin sm:font-light tracking-tighter sm:tracking-normal text-gray-900 sm:text-3xl product-name">
                                     {{productName}}
                                 </h1>
                             </div>
@@ -293,7 +293,7 @@
                                 @if(!isFreeCreatine){
                                 <h2 id="options-heading" class="sr-only">Product options</h2>
 
-                                <div class="mx-auto pt-6 pb-2 max-sm:mb-20">
+                                <div class="mx-auto pt-6 pb-2 max-sm:mb-4">
                                     <div class="space-y-4">
 
                                         <details #Subscription (click)="selectSubscription($event)"

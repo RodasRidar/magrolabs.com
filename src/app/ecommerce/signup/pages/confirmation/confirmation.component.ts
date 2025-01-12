@@ -76,7 +76,7 @@ export class ConfirmationComponent {
     this._route.queryParams.subscribe(params => {
       let status = params['status'] || '';
       if (status === '1') {
-        this.openModal();
+        this.openWelcomeModal();
         this._summaryService.clearSummary();
         this.isSuccess = true;
       }
@@ -91,12 +91,13 @@ export class ConfirmationComponent {
     });
   }
 
-  openModal(){
+  openWelcomeModal(){
     const modalData :ModalData = {
       type: ModalTypeEnum.WELCOME,
       title: 'titulo',
       message: 'mensaje',
       afiliateCode: 'KOSDJ1',
+      friendName: this.clientName
     }
 
     const dialogRef = this._dialog.open(ModalComponent, {

@@ -6,7 +6,7 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TypeDocumentEnum } from '../../../signup/pages/create-account/create-account.component';
 import { CommonModule } from '@angular/common';
-import { debounceTime, map, Observable, switchMap } from 'rxjs';
+import { debounceTime, map, Observable, switchMap, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
@@ -39,6 +39,7 @@ export class CheckoutComponent {
   departmentEmpty = true;
   provinceEmpty = true;
   isSaving = false;
+  isSearchingAddress = false;
 
   departmentUbigeo = '';
   provinceUbigeo = '';
@@ -89,9 +90,11 @@ export class CheckoutComponent {
 
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
+      tap(() => this.isSearchingAddress = true),
       switchMap(value => this._addressService.searchAddress(value))
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
+      this.isSearchingAddress = false;
     });
   }
 

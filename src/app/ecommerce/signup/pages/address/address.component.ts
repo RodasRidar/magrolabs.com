@@ -5,7 +5,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
-import { debounceTime, map, Observable, switchMap } from 'rxjs';
+import { debounceTime, map, Observable, switchMap, tap } from 'rxjs';
 import { state } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
@@ -48,6 +48,7 @@ export class AddressComponent {
   departmentEmpty = true;
   provinceEmpty = true;
   isSaving = false;
+  isSearchingAddress = false;
 
   departmentUbigeo = '';
   provinceUbigeo = '';
@@ -84,9 +85,11 @@ export class AddressComponent {
 
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
-      switchMap(value => this._addressService.searchAddress(value))
+      tap(() => this.isSearchingAddress = true),
+      switchMap(value => this._addressService.searchAddress(value)),
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
+      this.isSearchingAddress = false;
     });
 
     if (summary && summary?.address?.nombreVia) {

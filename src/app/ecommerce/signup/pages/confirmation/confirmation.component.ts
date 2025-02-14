@@ -35,7 +35,7 @@ export class ConfirmationComponent {
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
     { name: 'Te avisaremos cuando finalice tu periodo de prueba.' },
-    { name: 'Entrega estimada de la creatina gratis: '+this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min+' a '+this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max+' días hábiles.' },
+    { name: 'Entrega estimada de la creatina gratis: ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min + ' a ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + ' días hábiles.' },
   ]
 
   informationErrorList: Information[] = [
@@ -54,7 +54,7 @@ export class ConfirmationComponent {
   parrafoError = {
     parrafo1: '¡El registro se ha completado con éxito, aunque tenemos noticias!',
     parrafo2: 'Revisamos que tu domicilio no esta dentro de la zona de cobertura, pronto estaremos por tu ciudad. Por el momento no es posible enviarte tu creatina gratis. ' +
-    'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio.',
+      'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio.',
     parrafo3: 'Ten en cuenta que:',
   }
 
@@ -70,7 +70,7 @@ export class ConfirmationComponent {
       return;
     }
 
-    this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/'+this.ENV.creditoRegaloPorCompraAño : 'S/'+this.ENV.creditoRegaloPorCompraMes;
+    this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/' + this.ENV.creditoRegaloPorCompraAño : 'S/' + this.ENV.creditoRegaloPorCompraMes;
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {
@@ -81,7 +81,7 @@ export class ConfirmationComponent {
         this.isSuccess = true;
       }
       //Fuere de covertura
-      else if (status === '0') { 
+      else if (status === '0') {
         this._summaryService.clearSummary();
         this.isSuccess = false;
       }
@@ -91,8 +91,8 @@ export class ConfirmationComponent {
     });
   }
 
-  openWelcomeModal(){
-    const modalData :ModalData = {
+  openWelcomeModal() {
+    const modalData: ModalData = {
       type: ModalTypeEnum.WELCOME,
       title: 'titulo',
       message: 'mensaje',
@@ -105,7 +105,7 @@ export class ConfirmationComponent {
       disableClose: true,
       data: modalData
     });
-    
+
     dialogRef.componentInstance.activate();
   }
 

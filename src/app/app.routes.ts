@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { refLinkGuard } from './shared/guards/ref-link.guard';
-import { SanComponent } from './shared/ui/san-valentine/san-valentine.component';
 
 export const routes: Routes = [
   {
@@ -109,10 +108,6 @@ export const routes: Routes = [
     path: 'checkout',
     loadComponent: () => import('./ecommerce/landing/pages/checkout/checkout.component').then(m => m.CheckoutComponent),
     canActivate: [refLinkGuard]
-  },
-  {
-    path: 'magdiel',
-    component:SanComponent
   },
   //   {
   //     path: '',

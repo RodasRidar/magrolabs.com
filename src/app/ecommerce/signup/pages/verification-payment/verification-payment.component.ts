@@ -13,11 +13,12 @@ import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/pay
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
 import { SummaryEnum } from '../../../../shared/models/summary.model';
+import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 
 @Component({
   selector: 'app-verification-payment',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent],
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
@@ -27,7 +28,7 @@ export class VerificationPaymentComponent {
   promotionIsShow = false;
   informationList: Information[] = [
     {
-      name: 'Tu creatina gratis se enviara inmediatamente después de completar el registro',
+      name: 'Tu creatina gratis se enviará inmediatamente después de completar el registro',
     },
     {
       name: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
@@ -36,6 +37,7 @@ export class VerificationPaymentComponent {
       name: 'Cancela cuando quieras',
     }
   ]
+  flowToken = '07468613043E260DF1D6B60A84DE7D674245CECP'
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -95,7 +97,9 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
     }
     else {
-      this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
+     this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken 
+     : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+    // this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
     }
   }
 

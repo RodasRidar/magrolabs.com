@@ -1,4 +1,4 @@
-const production = true;
+const production = false;
 const APP_URL = 'develop.magrolabs.com';
 const secretKey = '<<LLAVE PRIVADA>>';
 const publicKey = '<<LLAVE PÚBLICA>>';
@@ -29,6 +29,8 @@ const emailAtencionClientes = 'hola@magrolabs.com';
 const telefonoAtencionClientes = '51974680428';
 const rucEmpresa = '20705878477';
 const nroReviews = 6;
+const urlPagosFlowProduction = 'https://www.flow.cl/api';
+const urlPagosFlowSandbox = 'https://sandbox.flow.cl/api';
 
 
 export const environment = {
@@ -62,5 +64,7 @@ export const environment = {
     telefonoAtencionClientes,
     rucEmpresa,
     precioCreatina500gSubscription,
-    nroReviews
+    nroReviews,
+    urlPagosFlowProduction,
+    urlPagosFlowSandbox
 };

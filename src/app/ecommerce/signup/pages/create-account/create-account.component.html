@@ -76,7 +76,7 @@
                                     <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
                                         +51
                                     </div>
-                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')" autocomplete="mobile"
+                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
                                          block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
@@ -111,7 +111,7 @@
                                         </select>
                                     </div>
                                     <input [type]="form.get('typeDocument')?.value == '1' ? 'number' : 'text'"
-                                        placeholder="87654321" autocomplete="cc-number"
+                                        placeholder="87654321" autocomplete="identity-card-number"
                                         (input)="limitDigits(form.get('typeDocument')?.value == '1' ? 8 : 12, 'nroDocument')"
                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
                                          block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300

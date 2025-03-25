@@ -88,14 +88,15 @@
                 <h5 class="text-left text-xs mt-1"> S/1.00 de verificación</h5>
             </div>
 
-            <form class="p-4" [formGroup]="form">
+            <form class="p-4 bg-[#f8f9fa]" [formGroup]="form">
+            <app-flow-widget-add-card [token]="flowToken"></app-flow-widget-add-card>
                 <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
                     <div class="col-span-full">
                         <label for="card-number" class="block text-sm font-medium text-gray-700">Número de la
                             tarjeta</label>
                         <div class="mt-1">
-                            <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
+                            <input type="text" id="card-number" name="card-number" autocomplete="identity-card-number"
                                 [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
                                 formControlName="cardNumber" (input)="formatCardNumber()"
                                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
@@ -137,7 +138,7 @@
 
                 </div> -->
 
-                <ml-button name="Continuar" type="secondary" (click)="verifyPayment()"></ml-button>
+                <!-- <ml-button name="Continuar" type="secondary" (click)="verifyPayment()"></ml-button> -->
 
                 <p class="flex justify-center text-sm font-medium text-gray-500 mt-6">
                     <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -160,7 +161,7 @@
         <app-payment-method (paymentMethod)="selectPaymentMethod($event)"/>
 
         <div class="my-6 lg:w-72">
-            <ml-button name="Pagar" (click)="nextStep()" [isDisabled]="paymentMethod == ''"></ml-button>
+            <ml-button name="Ir a Pagar →" (click)="nextStep()" [isDisabled]="paymentMethod == ''"></ml-button>
         </div>
         }
         <!-- CODIGO PROMOCIONAL -->
@@ -346,9 +347,10 @@
                     </blockquote>
                 </div>
                 <div class="text-center">
-                    <a href="#" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                    <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews" target="_blank" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
                         Mira todas las reseñas →
                     </a>
+                    
                 </div>
             </div>
         </section>

@@ -13,7 +13,7 @@ import { CurrencyPipe, isPlatformBrowser } from "@angular/common";
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [StepComponent, RouterLink, ButtonComponent, CurrencyPipe],
+  imports: [StepComponent, ButtonComponent, CurrencyPipe],
   templateUrl: './plans.component.html',
 })
 
@@ -112,8 +112,8 @@ export class PlansComponent {
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
-
-      this._router.navigate(['registro/verificacion']);
+      this._router.navigate(['registro/crear-cuenta']);
+      // this._router.navigate(['registro/verificacion']);
     }
     else if (this.isSelectOnePurchase) {
       this._summaryService.setChoosePlan({
@@ -122,8 +122,8 @@ export class PlansComponent {
         descriptionTwo: 'Compra única de S/'+ this.ENV.precioCreatinaOnePurchase + '.',
         quantity: 1
       })
-
-      this._router.navigate(['registro/verificacion']);
+      this._router.navigate(['registro/crear-cuenta']);
+      // this._router.navigate(['registro/verificacion']);
     }
   }
 

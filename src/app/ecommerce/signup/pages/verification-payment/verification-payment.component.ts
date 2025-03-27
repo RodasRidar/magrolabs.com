@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StepEnum } from '../../models/step.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { Router } from '@angular/router';
@@ -14,6 +14,9 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
 import { SummaryEnum } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
+import { FlowService } from '../../../../shared/services/flow.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CreateSubscriptionRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
 
 @Component({
   selector: 'app-verification-payment',
@@ -25,6 +28,7 @@ export class VerificationPaymentComponent {
   paymentMethod = '';
   ENV = environment
   isPaymentVerified = false;
+  isLoading = false;
   promotionIsShow = false;
   informationList: Information[] = [
     {
@@ -37,13 +41,16 @@ export class VerificationPaymentComponent {
       name: 'Cancela cuando quieras',
     }
   ]
-  flowToken = '07468613043E260DF1D6B60A84DE7D674245CECP'
+  flowToken = '';
+  private platformId = inject(PLATFORM_ID)
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
   private _seo = inject(SeoService)
   private _toastService = inject(ToastService)
   private _cookieService = inject(CookieService)
+  private _flowService = inject(FlowService)
+  private readonly destroy$ = takeUntilDestroyed();
 
   stepEnum = StepEnum;
   isCreatinaGratis = false;
@@ -74,6 +81,14 @@ export class VerificationPaymentComponent {
       this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
       this.form.get('promoCode')?.disable();
     }
+
+    if (isPlatformBrowser(this.platformId)) {
+      this._flowService.registerCard(summary?.userData?.customerId?? '')
+      // .pipe(this.destroy$)
+      .subscribe(response => {
+        this.flowToken = (response as RegisterCardResponse).token
+      });
+    }
   }
 
   applyPromoCode() {
@@ -97,8 +112,31 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
     }
     else {
-     this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken 
-     : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+      if (!this.isCreatinaGratis){
+        this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken 
+        : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+      }
+      else{
+        this.isLoading = true;
+        const subscription: CreateSubscriptionRequest = {
+          planId: this.ENV.flowCreatina250Gr2025PlanId,
+          customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
+          trial_period_days: this.ENV.diasNormalesDePruebaOperiodoDeReflexion
+        }
+        this._flowService.createSubscription(subscription).subscribe({
+          next: (response) => {
+            console.log('Subscription created: ', response);
+            this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+          },
+          error: (err) => {
+            console.error('Error creating subscription: ', err);
+            this._toastService.error('Ups!', 'Error al procesar la suscripción. Por favor, intenta nuevamente.');
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
     // this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
     }
   }
@@ -124,5 +162,14 @@ export class VerificationPaymentComponent {
   }
   selectPaymentMethod(paymentMethod: string) {
     this.paymentMethod = paymentMethod;
+  }
+
+  cardAddedSuccessfully($event: boolean) {
+    if ($event) {
+      this.isPaymentVerified = true;
+    }
+    else {
+      this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
+    }
   }
 }

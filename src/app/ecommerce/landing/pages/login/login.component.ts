@@ -18,9 +18,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class LoginComponent {
 
   private _formBuilder = inject(FormBuilder);
-  private _router = inject(Router);
+  // private _router = inject(Router);
   private _cookieService = inject(CookieService);
   private _toastService = inject(ToastService);
+  private readonly destroy$ = takeUntilDestroyed();
+
   ENV = environment;
   isProcessing = false;
   credentialsFailed = false;
@@ -39,9 +41,9 @@ export class LoginComponent {
     if (rememberMe === 'true' && rememberMeEmail) {
       this.form.get('email')?.setValue(rememberMeEmail);
       this.form.get('rememberMe')?.setValue(true);
-      this._toastService.onToastClosed().pipe(
-        takeUntilDestroyed(),
-      ).subscribe(() => {
+      this._toastService.onToastClosed()
+      // .pipe(this.destroy$)
+      .subscribe(() => {
         this.credentialsFailed = false;
       });
     }

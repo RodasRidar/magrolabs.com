@@ -147,7 +147,7 @@ export class AddressComponent {
       switchMap((departmentUbigeo) =>
         this._addressService.getProvinces(departmentUbigeo).pipe(
           map((provinces) => {
-            this.provinceUbigeo = this.findIdUbigeo(address.address.city === 'Lima Metropolitana' ? 'Lima' : address.address.city, provinces);
+            this.provinceUbigeo = this.findIdUbigeo(address.address.city == 'Lima Metropolitana' ? 'Lima' : address.address.city ?? address.address.state ?? '' , provinces);
             this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
             return this.provinceUbigeo ?? '3927';
           })
@@ -156,6 +156,8 @@ export class AddressComponent {
       switchMap((provinceUbigeo) =>
         this._addressService.getDistricts(provinceUbigeo).pipe(
           map((districts) => {
+            // console.log(districts)
+            // console.log(provinceUbigeo)
             this.districtUbigeo = this.findIdUbigeo(address.address.suburb, districts);
             return this.districtUbigeo ?? '3949';
           })

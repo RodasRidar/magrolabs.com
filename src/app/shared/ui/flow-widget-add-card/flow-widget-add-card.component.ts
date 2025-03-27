@@ -1,6 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, input, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Inject, input, OnDestroy, output, PLATFORM_ID } from '@angular/core';
 import { environment } from '../../../../environments/env';
+import { FlowService } from '../../services/flow.service';
+import { SummaryService } from '../../services/summary-service.service';
 
 @Component({
   selector: 'app-flow-widget-add-card',
@@ -10,10 +12,14 @@ import { environment } from '../../../../environments/env';
   styleUrl: './flow-widget-add-card.component.css'
 })
 export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
+  cardAddedSuccessfully = output<boolean>();
   ENV = environment;
   // token: string = '07468613043E260DF1D6B60A84DE7D674245CECP'; // Debes asignarlo dinámicamente según tu lógica
   token = input<string>('');
   private flowInstance: any;
+  private _flowService = inject(FlowService);
+  private _sumaryService = inject(SummaryService);
+
   constructor(
     private el: ElementRef,
     @Inject(PLATFORM_ID) private platformId: object
@@ -38,7 +44,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       const script = document.createElement('script');
       script.id = 'flow-script';
       this.ENV.production ? script.src = 'https://www.flow.cl/app/elements/flow-1.1.0.min.js?20241202' :
-      script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202';
+        script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202';
 
       script.onload = () => resolve();
       script.onerror = () => reject();
@@ -58,9 +64,18 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       this.flowInstance.handleCardSubscribed(subscribe)
         .then((data: any) => {
           console.log('Suscripción procesada correctamente:', data);
-          setTimeout(() => {
-            (this.el.nativeElement.querySelector('#formSubscribe') as HTMLFormElement).submit();
-          }, 3000);
+          const customerId = this._sumaryService.getSummary()?.userData?.customerId ?? '';
+          this._flowService.getCustomer(customerId).subscribe((customer) => {
+            if (customer.last4CardDigits !== '') {
+              this.cardAddedSuccessfully.emit(true);
+            }
+            else {
+              this.cardAddedSuccessfully.emit(false);
+            }
+            setTimeout(() => {
+              (this.el.nativeElement.querySelector('#formSubscribe') as HTMLFormElement).submit();
+            }, 3000);
+          });
         })
         .catch((error: any) => {
           console.error('Error en el pago:', error);

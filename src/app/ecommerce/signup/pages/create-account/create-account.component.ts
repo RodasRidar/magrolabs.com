@@ -15,6 +15,10 @@ import { SummaryService } from '../../../../shared/services/summary-service.serv
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { SummaryEnum } from '../../../../shared/models/summary.model';
+import { FlowService } from '../../../../shared/services/flow.service';
+import { CreateCustomerRequest, CreateCustomerResponse, EditCustomerRequest } from '../../../../shared/models/flow.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -43,11 +47,15 @@ export class CreateAccountComponent {
   private _summaryService = inject(SummaryService)
   private _route = inject(ActivatedRoute)
   private _seo = inject(SeoService)
+  private _flowService = inject(FlowService)
+  private readonly destroy$ = takeUntilDestroyed();
+  private _toastService = inject(ToastService)
 
   private nextUrl = '';
   stepEnum = StepEnum;
   ENV = environment
   isCreatinaGratis = false;
+  isProcessing = false;
 
   form = this._formBuilder.group<SignUp>({
     firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
@@ -66,13 +74,13 @@ export class CreateAccountComponent {
     this._seo.title.setTitle('Registro | Datos de registro');
     this._seo.setCanonicalURL('magrolabs.com/registro/crear-cuenta');
     this._seo.setIndexFollow(false);
-    
+
     let summary = this._summaryService.getSummary()
     if (!summary?.chosePlan) {
       this._router.navigate(['registro/']);
     }
 
-    if(summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+    if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaGratis = true;
     }
 
@@ -92,7 +100,7 @@ export class CreateAccountComponent {
 
   informationList: Information[] = [
     {
-      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes +' soles de crédito de compra cada mes.',
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' soles de crédito de compra cada mes.',
     },
     {
       name: ' Acumula automáticamente, sin costo adicional.',
@@ -120,14 +128,18 @@ export class CreateAccountComponent {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return false;
-    // return control?.hasError('nroDocumentExists') && control.dirty;
+    return control?.hasError('nroDocumentExists') && control.dirty;
   }
 
   hasExistEmail() {
     const control = this.form.get('email');
     return false;
     // return control?.hasError('emailExists') && control.dirty;
+  }
+
+  hasInvalidEmail() {
+    const control = this.form.get('email');
+    return control?.hasError('emailInvalid') && control.dirty;
   }
 
   hasExistCellphone() {
@@ -139,8 +151,8 @@ export class CreateAccountComponent {
   limitDigits(nroDigits: number, field: string): void {
     const control = this.form.get(field);
     if (control) {
-      const value = control.value?.toString() || ''; 
-      control.setValue(value.slice(0, nroDigits));  
+      const value = control.value?.toString() || '';
+      control.setValue(value.slice(0, nroDigits));
     }
   }
 
@@ -150,21 +162,106 @@ export class CreateAccountComponent {
       return;
     }
 
-    this._summaryService.setUserData({
-      nombre: this.form.get('firtName')?.value ?? '',
-      apellido: this.form.get('lastName')?.value ?? '',
-      dni: this.form.get('nroDocument')?.value ?? '',
-      email: this.form.get('email')?.value ?? '',
-      cellphone: this.form.get('cellphone')?.value ?? '',
-      typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
-      password: this.form.get('password')?.value ?? '',
-    })
+    this.isProcessing = true;
 
     if (this.nextUrl !== '') {
-      this._router.navigate(['/registro/' + this.nextUrl]);
+      
+      const customerRequest: EditCustomerRequest = {
+        name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
+        email: this.form.get('email')?.value ?? '',
+        externalId: this.form.get('nroDocument')?.value ?? '',
+        customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
+      }
+
+      this._flowService.editCustomer(customerRequest)
+      .subscribe({
+        next: (response) => { 
+          this._summaryService.setUserData({
+            nombre: this.form.get('firtName')?.value ?? '',
+            apellido: this.form.get('lastName')?.value ?? '',
+            dni: this.form.get('nroDocument')?.value ?? '',
+            email: this.form.get('email')?.value ?? '',
+            cellphone: this.form.get('cellphone')?.value ?? '',
+            typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+            password: this.form.get('password')?.value ?? '',
+            customerId: response.customerId
+          });
+          this.isProcessing = false;
+          if (this.nextUrl !== '') {
+            this._router.navigate(['/registro/' + this.nextUrl]);
+          }
+  
+          else {
+            this._router.navigate(['/registro/direccion']);
+          }
+        },
+        error: (err) => {
+          this.isProcessing = false;
+          if(err.error.code === 501 && err.error.message.includes('externalId')) {
+            this._toastService.error('Ups!','Ya existe una cuenta con el N° de documento ingresado.');
+            const control = this.form.get('nroDocument');
+            control?.setErrors({nroDocumentExists: true});
+          }
+          if(err.error.code === 501 && err.error.message.includes('email')) {
+            this._toastService.error('Ups!','El correo ingresado no existe o no es válido.');
+            const control = this.form.get('email');
+            control?.setErrors({emailInvalid: true});
+          }
+          else{
+            console.log(err);
+          }
+        }
+      });
+
     }
     else {
-      this._router.navigate(['/registro/direccion']);
+      const customerRequest: CreateCustomerRequest = {
+        name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
+        email: this.form.get('email')?.value ?? '',
+        externalId: this.form.get('nroDocument')?.value ?? '',
+      }
+      this._flowService.createCustomer(customerRequest)
+      .subscribe({
+        next: (response) => { 
+          this._summaryService.setUserData({
+            nombre: this.form.get('firtName')?.value ?? '',
+            apellido: this.form.get('lastName')?.value ?? '',
+            dni: this.form.get('nroDocument')?.value ?? '',
+            email: this.form.get('email')?.value ?? '',
+            cellphone: this.form.get('cellphone')?.value ?? '',
+            typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+            password: this.form.get('password')?.value ?? '',
+            customerId: response.customerId
+          });
+          this.isProcessing = false;
+          if (this.nextUrl !== '') {
+            this._router.navigate(['/registro/' + this.nextUrl]);
+          }
+  
+          else {
+            this._router.navigate(['/registro/direccion']);
+          }
+        },
+        error: (err) => {
+          this.isProcessing = false;
+          if(err.error.code === 501 && err.error.message.includes('externalId')) {
+            this._toastService.error('Ups!','Ya existe una cuenta con el N° de documento ingresado.');
+            const control = this.form.get('nroDocument');
+            control?.setErrors({nroDocumentExists: true});
+          }
+          if(err.error.code === 501 && err.error.message.includes('email')) {
+            this._toastService.error('Ups!','El correo ingresado no existe o no es válido.');
+            const control = this.form.get('email');
+            control?.setErrors({emailInvalid: true});
+          }
+          else{
+            console.log(err);
+          }
+        }
+      });
     }
+
+
+
   }
 }

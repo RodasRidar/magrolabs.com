@@ -22,7 +22,8 @@ export interface UserDataSummary {
     email: string
     cellphone: string,
     typeDocument: TypeDocumentEnum,
-    password: string
+    password: string,
+    customerId: string //Flow
 }
 
 export interface AddressSummary {

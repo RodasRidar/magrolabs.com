@@ -1,0 +1,9 @@
+{
+    "/api": {
+      "target": "https://sandbox.flow.cl",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+  }
+  

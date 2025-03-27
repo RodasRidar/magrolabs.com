@@ -29,8 +29,14 @@ const emailAtencionClientes = 'hola@magrolabs.com';
 const telefonoAtencionClientes = '51974680428';
 const rucEmpresa = '20705878477';
 const nroReviews = 6;
-const urlPagosFlowProduction = 'https://www.flow.cl/api';
-const urlPagosFlowSandbox = 'https://sandbox.flow.cl/api';
+// const urlApiFlow = 'https://www.flow.cl/api';
+// const flowApiKey= '1FA3CAF0-5D37-4BB6-81AA-902FFE13CL45';
+// const flowSecretKey = '5fba34ff032e132ee01cf82805d748709428d919';
+
+const urlApiFlow = 'https://sandbox.flow.cl/api';
+const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
+const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
+const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 
 
 export const environment = {
@@ -65,6 +71,8 @@ export const environment = {
     rucEmpresa,
     precioCreatina500gSubscription,
     nroReviews,
-    urlPagosFlowProduction,
-    urlPagosFlowSandbox
+    urlApiFlow,
+    flowApiKey,
+    flowSecretKey,
+    flowCreatina250Gr2025PlanId
 };

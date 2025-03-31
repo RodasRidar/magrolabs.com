@@ -10,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class FlowService {
   private apiUrlLocal = environment.urlApiFlow;
-  private apiUrl = `https://magrolabs.com/api/flow/`;
+  private apiUrl = `https://fuctions.magrolabs.com/api/flow/`;
   private apiKey = environment.flowApiKey;
 
   constructor(private http: HttpClient) { }

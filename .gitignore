@@ -400,3 +400,4 @@ FodyWeavers.xsd
 .angular
 .DS_Store
 dist/*
+.env

@@ -36,7 +36,7 @@
         <!-- VERIFICAR PAGO -->
         <div class="lg:w-2/3 border border-gray-300 rounded-sm mb-4">
             <div class=" bg-[#e9e9e9]  p-4">
-                <div class="flex items-center"><span class="font-semibold mr-3">Tarjeta de crédito</span>
+                <div class="flex items-center"><span class="font-semibold mr-3">Tarjeta</span>
                     <svg width="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"
                         class="inline h-5 w-auto mr-2">
                         <rect width="34" height="34" rx="3" fill="#FEF0D4"></rect>
@@ -85,6 +85,7 @@
                         </g>
                     </svg>
                 </div>
+                <h4 class="text-left text-sm mt-1"> {{labelCardRegisted}}</h4>
                 <h5 class="text-left text-xs mt-1"> S/0.00 de verificación</h5>
             </div>
             @if (flowToken !== '' && !isPaymentVerified) {
@@ -156,7 +157,7 @@
             }
         </div>
         <div class="my-6 lg:w-72">
-            <ml-button [name]="isPaymentVerified ? 'Suscríbete y paga →' : 'Suscríbete y paga'" (click)="nextStep()"
+            <ml-button [name]="isPaymentVerified ? 'Suscríbete →' : 'Suscríbete y paga'" (click)="nextStep()"
                 [isDisabled]="!isPaymentVerified"></ml-button>
         </div>
         }@else {

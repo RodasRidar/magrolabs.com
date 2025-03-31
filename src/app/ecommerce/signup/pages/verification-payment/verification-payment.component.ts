@@ -51,7 +51,7 @@ export class VerificationPaymentComponent {
   private _cookieService = inject(CookieService)
   private _flowService = inject(FlowService)
   private readonly destroy$ = takeUntilDestroyed();
-
+  labelCardRegisted = '**** **** **** ';
   stepEnum = StepEnum;
   isCreatinaGratis = false;
 
@@ -170,11 +170,10 @@ export class VerificationPaymentComponent {
 
   cardAddedSuccessfully($event: boolean) {
     if ($event) {
-      let labelCardRegisted= '**** **** **** ';
       this.isPaymentVerified = true;
       const card = this._summaryService.getSummary()?.userData?.last4CardDigits + ' (' + this._summaryService.getSummary()?.userData?.creditCardType+ ')';
-      labelCardRegisted += card;
-      this._toastService.success('Tarjeta registrada correctamente!', labelCardRegisted);
+      this.labelCardRegisted += card;
+      this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted);
     }
     else {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');

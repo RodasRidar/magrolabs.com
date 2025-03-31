@@ -87,59 +87,57 @@
                 </div>
                 <h5 class="text-left text-xs mt-1"> S/0.00 de verificación</h5>
             </div>
-
+            @if (flowToken !== '' && !isPaymentVerified) {
             <form class="p-4 bg-[#f8f9fa]" [formGroup]="form">
-                @if (flowToken !== '' && !isPaymentVerified) {
                 <app-flow-widget-add-card [token]="flowToken"
                     (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
-                }
                 <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
-                    <div class="col-span-full">
-                        <label for="card-number" class="block text-sm font-medium text-gray-700">Número de la
-                            tarjeta</label>
-                        <div class="mt-1">
-                            <input type="text" id="card-number" name="card-number" autocomplete="identity-card-number"
-                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
-                                formControlName="cardNumber" (input)="formatCardNumber()"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                        <div class="col-span-full">
+                            <label for="card-number" class="block text-sm font-medium text-gray-700">Número de la
+                                tarjeta</label>
+                            <div class="mt-1">
+                                <input type="text" id="card-number" name="card-number" autocomplete="identity-card-number"
+                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
+                                    formControlName="cardNumber" (input)="formatCardNumber()"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-span-8 sm:col-span-6">
-                        <label for="expiration-date" class="block text-sm font-medium text-gray-700">Fecha de
-                            expiración</label>
-                        <div class="mt-1">
-                            <input type="text" name="expiration-date" id="expiration-date" autocomplete="cc-exp"
-                                placeholder="MM / AAAA"
-                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardExpiration')}"
-                                formControlName="cardExpiration"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                        <div class="col-span-8 sm:col-span-6">
+                            <label for="expiration-date" class="block text-sm font-medium text-gray-700">Fecha de
+                                expiración</label>
+                            <div class="mt-1">
+                                <input type="text" name="expiration-date" id="expiration-date" autocomplete="cc-exp"
+                                    placeholder="MM / AAAA"
+                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardExpiration')}"
+                                    formControlName="cardExpiration"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-span-4 sm:col-span-6">
-                        <label for="cvc" class="block text-sm font-medium text-gray-700">CVV</label>
-                        <div class="mt-1">
-                            <input type="text" name="cvc" id="cvc" autocomplete="csc"
-                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardCvv')}"
-                                formControlName="cardCvv"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                        <div class="col-span-4 sm:col-span-6">
+                            <label for="cvc" class="block text-sm font-medium text-gray-700">CVV</label>
+                            <div class="mt-1">
+                                <input type="text" name="cvc" id="cvc" autocomplete="csc"
+                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardCvv')}"
+                                    formControlName="cardCvv"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-span-full">
-                        <label for="name-on-card" class="block text-sm font-medium text-gray-700">Nombre del
-                            titular</label>
-                        <div class="mt-1">
-                            <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
-                                [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardName')}"
-                                formControlName="cardName"
-                                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                        <div class="col-span-full">
+                            <label for="name-on-card" class="block text-sm font-medium text-gray-700">Nombre del
+                                titular</label>
+                            <div class="mt-1">
+                                <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
+                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardName')}"
+                                    formControlName="cardName"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                </div> -->
+                    </div> -->
 
                 <!-- <ml-button name="Continuar" type="secondary" (click)="verifyPayment()"></ml-button> -->
 
@@ -155,6 +153,7 @@
                 </p>
 
             </form>
+            }
         </div>
         <div class="my-6 lg:w-72">
             <ml-button [name]="isPaymentVerified ? 'Suscríbete y paga →' : 'Suscríbete y paga'" (click)="nextStep()"

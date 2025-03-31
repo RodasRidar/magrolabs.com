@@ -89,6 +89,7 @@ export class VerificationPaymentComponent {
           this.flowToken = (response as RegisterCardResponse).token
         });
     }
+    this.isPaymentVerified = summary?.userData?.isPaymentVerified ?? false;
   }
 
   applyPromoCode() {

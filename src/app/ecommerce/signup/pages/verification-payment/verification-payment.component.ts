@@ -75,7 +75,7 @@ export class VerificationPaymentComponent {
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaGratis = true;
     }
-    if(this._cookieService.get('promoCode')) {
+    if (this._cookieService.get('promoCode')) {
       this.isPaymentVerified = true;
       this.promotionIsShow = true;
       this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
@@ -83,11 +83,11 @@ export class VerificationPaymentComponent {
     }
 
     if (isPlatformBrowser(this.platformId)) {
-      this._flowService.registerCard(summary?.userData?.customerId?? '')
-      // .pipe(this.destroy$)
-      .subscribe(response => {
-        this.flowToken = (response as RegisterCardResponse).token
-      });
+      this._flowService.registerCard(summary?.userData?.customerId ?? '')
+        // .pipe(this.destroy$)
+        .subscribe(response => {
+          this.flowToken = (response as RegisterCardResponse).token
+        });
     }
   }
 
@@ -99,7 +99,7 @@ export class VerificationPaymentComponent {
         this._toastService.success('¡Genial!', 'Código de promoción aplicado correctamente.');
         this._cookieService.set('promoCode', promoCode);
         this.form.get('promoCode')?.disable();
-      } 
+      }
       else {
         this._toastService.warning('Código inválido', 'El código de promoción no existe o a caducado.');
       }
@@ -112,11 +112,11 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
     }
     else {
-      if (!this.isCreatinaGratis){
-        this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken 
-        : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+      if (!this.isCreatinaGratis) {
+        this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken
+          : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
       }
-      else{
+      else {
         this.isLoading = true;
         const subscription: CreateSubscriptionRequest = {
           planId: this.ENV.flowCreatina250Gr2025PlanId,
@@ -137,7 +137,7 @@ export class VerificationPaymentComponent {
           }
         });
       }
-    // this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
+      // this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
     }
   }
 

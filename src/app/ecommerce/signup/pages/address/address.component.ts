@@ -147,7 +147,7 @@ export class AddressComponent {
       switchMap((departmentUbigeo) =>
         this._addressService.getProvinces(departmentUbigeo).pipe(
           map((provinces) => {
-            this.provinceUbigeo = this.findIdUbigeo(address.address.city == 'Lima Metropolitana' ? 'Lima' : address.address.city ?? address.address.state ?? '' , provinces);
+            this.provinceUbigeo = this.findIdUbigeo(address.address.city == 'Lima Metropolitana' ? 'Lima' : address.address.city ?? address.address.state ?? '', provinces);
             this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
             return this.provinceUbigeo ?? '3927';
           })
@@ -251,8 +251,8 @@ export class AddressComponent {
   limitDigits(nroDigits: number, field: string): void {
     const control = this.form.get(field);
     if (control) {
-      const value = control.value?.toString() || ''; 
-      control.setValue(value.slice(0, nroDigits));  
+      const value = control.value?.toString() || '';
+      control.setValue(value.slice(0, nroDigits));
     }
   }
 }

@@ -90,6 +90,9 @@ export class VerificationPaymentComponent {
         });
     }
     this.isPaymentVerified = summary?.userData?.isPaymentVerified ?? false;
+    if (this.isPaymentVerified) {
+      this.cardAddedSuccessfully(true);
+    }
   }
 
   applyPromoCode() {

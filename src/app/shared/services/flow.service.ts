@@ -10,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class FlowService {
   private apiUrlLocal = environment.urlApiFlow;
-  private apiUrl = `https://fuctions-magrolabs-com.vercel.app/api/flow/`;
+  private apiUrl = environment.flowApiUrl;
   private apiKey = environment.flowApiKey;
 
   constructor(private http: HttpClient) { }
@@ -119,18 +119,18 @@ export class FlowService {
         .set('customerId', subscriptionData.customerId)
         .set('s', this.getFlowSignature(toSign));
 
-      if (subscriptionData.subscription_start) {
-        body.set('subscription_start', subscriptionData.subscription_start);
-      }
-      if (subscriptionData.couponId) {
-        body.set('couponId', subscriptionData.couponId.toString());
-      }
+      // if (subscriptionData.subscription_start) {
+      //   body.set('subscription_start', subscriptionData.subscription_start);
+      // }
+      // if (subscriptionData.couponId) {
+      //   body.set('couponId', subscriptionData.couponId.toString());
+      // }
       if (subscriptionData.trial_period_days) {
         body.set('trial_period_days', subscriptionData.trial_period_days.toString());
       }
-      if (subscriptionData.periods_number) {
-        body.set('periods_number', subscriptionData.periods_number.toString());
-      }
+      // if (subscriptionData.periods_number) {
+      //   body.set('periods_number', subscriptionData.periods_number.toString());
+      // }
 
       return this.http.post<CreateSubscriptionResponse>(url, body.toString(), { headers });
     }

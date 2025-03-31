@@ -37,6 +37,8 @@ const urlApiFlow = 'https://sandbox.flow.cl/api';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
 const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
+const flowApiUrl = 'https://function.magrolabs.com/api/flow/';
+
 
 
 export const environment = {
@@ -74,5 +76,6 @@ export const environment = {
     urlApiFlow,
     flowApiKey,
     flowSecretKey,
-    flowCreatina250Gr2025PlanId
+    flowCreatina250Gr2025PlanId,
+    flowApiUrl
 };

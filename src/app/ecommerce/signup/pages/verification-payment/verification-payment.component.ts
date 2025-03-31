@@ -170,7 +170,9 @@ export class VerificationPaymentComponent {
 
   cardAddedSuccessfully($event: boolean) {
     if ($event) {
-      this.isPaymentVerified = true;
+      setTimeout(() => {
+        this.isPaymentVerified = true;
+      }, 2000);
       const card = this._summaryService.getSummary()?.userData?.last4CardDigits + ' (' + this._summaryService.getSummary()?.userData?.creditCardType+ ')';
       this.labelCardRegisted += card;
       this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted);

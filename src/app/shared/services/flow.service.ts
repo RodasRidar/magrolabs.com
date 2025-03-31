@@ -60,7 +60,7 @@ export class FlowService {
   getCustomer(customerId: string): Observable<CreateCustomerResponse> {
     if (environment.production) {
       const url = `${this.apiUrl}customer/get.ts`;
-      return this.http.post<CreateCustomerResponse>(url, {customerId});
+      return this.http.get<CreateCustomerResponse>(url, { params: { customerId } });
     }
     else {
       const url = `${this.apiUrlLocal}/customer/get`;

@@ -117,8 +117,17 @@ export class VerificationPaymentComponent {
     }
     else {
       if (!this.isCreatinaGratis) {
-        this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken
+        if(this.isPaymentVerified) {
+          //Logica para hacer pago unico con el token de la tarjeta.
+          this._toastService.success('¡Genial!', 'Pago realizado con éxito.');
+          setTimeout(() => {
+            this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+          }, 2000);
+        }
+        else{
+          this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken
           : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+        }
       }
       else {
         this.isLoading = true;

@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import { getFlowSignature } from '../../utils/utils';
+import { getFlowSignature } from '../../../utils/utils';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', 'https://magrolabs.com');

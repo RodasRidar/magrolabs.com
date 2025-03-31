@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { getFlowSignature } from '../../utils/utils';
+import { getFlowSignature } from '../../../utils/utils';
 
 dotenv.config();
 
@@ -41,9 +41,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
-    res.status(200).json(response.data);
+    return res.status(200).json(response.data);
   } catch (error: any) {
     console.error('Error en la petición:', error);
-    res.status(500).json({ error: 'Error en el servidor', details: error.message });
+    return res.status(500).json({ error: 'Error en el servidor', details: error.message });
   }
 }

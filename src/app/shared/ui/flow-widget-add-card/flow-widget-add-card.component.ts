@@ -14,7 +14,6 @@ import { SummaryService } from '../../services/summary-service.service';
 export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
   cardAddedSuccessfully = output<boolean>();
   ENV = environment;
-  // token: string = '07468613043E260DF1D6B60A84DE7D674245CECP'; // Debes asignarlo dinámicamente según tu lógica
   token = input<string>('');
   private flowInstance: any;
   private _flowService = inject(FlowService);
@@ -45,7 +44,8 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       script.id = 'flow-script';
       this.ENV.production ? script.src = 'https://www.flow.cl/app/elements/flow-1.1.0.min.js?20241202' :
         script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202';
-
+        
+      script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202'
       script.onload = () => resolve();
       script.onerror = () => reject();
       document.body.appendChild(script);

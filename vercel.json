@@ -6,8 +6,19 @@
       "use": "@vercel/node"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build"
+      "src": "dist/magrolabs-app/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/flow/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/magrolabs-app/$1",
+      "headers": { "Cache-Control": "s-maxage=31536000, immutable" }
     }
   ]
 }

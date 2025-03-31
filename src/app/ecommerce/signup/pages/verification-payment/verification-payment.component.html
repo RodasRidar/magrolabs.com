@@ -89,9 +89,11 @@
             </div>
 
             <form class="p-4 bg-[#f8f9fa]" [formGroup]="form">
-                @if (flowToken !== '') {
+                @if (flowToken !== '' && !isPaymentVerified) {
                 <app-flow-widget-add-card [token]="flowToken"
                     (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
+                }@else {
+                    <span class="text-sm font-bold text-red-700">{{labelCardRegisted}}</span>
                 }
                 <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 

@@ -54,6 +54,7 @@ export class VerificationPaymentComponent {
 
   stepEnum = StepEnum;
   isCreatinaGratis = false;
+  labelCardRegisted= 'Tarjeta registrada: **** **** **** ';
 
   form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
@@ -167,6 +168,8 @@ export class VerificationPaymentComponent {
   cardAddedSuccessfully($event: boolean) {
     if ($event) {
       this.isPaymentVerified = true;
+      this.labelCardRegisted += this._summaryService.getSummary()?.userData?.last4CardDigits ?? '';
+      this.labelCardRegisted += ' ' + this._summaryService.getSummary()?.userData?.creditCardType ;
     }
     else {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');

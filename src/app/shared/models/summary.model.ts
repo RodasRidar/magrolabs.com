@@ -24,6 +24,9 @@ export interface UserDataSummary {
     typeDocument: TypeDocumentEnum,
     password: string,
     customerId: string //Flow
+    isPaymentVerified?: boolean,
+    last4CardDigits?: string,//Flow
+    creditCardType?: string,//Flow
 }
 
 export interface AddressSummary {

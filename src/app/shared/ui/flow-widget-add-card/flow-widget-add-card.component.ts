@@ -17,7 +17,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
   token = input<string>('');
   private flowInstance: any;
   private _flowService = inject(FlowService);
-  private _sumaryService = inject(SummaryService);
+  private _summaryService = inject(SummaryService);
 
   constructor(
     private el: ElementRef,
@@ -64,10 +64,17 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       this.flowInstance.handleCardSubscribed(subscribe)
         .then((data: any) => {
           console.log('Suscripción procesada correctamente:', data);
-          const customerId = this._sumaryService.getSummary()?.userData?.customerId ?? '';
+          const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
           this._flowService.getCustomer(customerId).subscribe((customer) => {
             if (customer.last4CardDigits !== '') {
               this.cardAddedSuccessfully.emit(true);
+              const usrData = this._summaryService.getSummary()?.userData;
+              if(usrData){
+                usrData.isPaymentVerified = true;
+                usrData.last4CardDigits = customer.last4CardDigits;
+                usrData.creditCardType = customer.creditCardType;
+                this._summaryService.setUserData(usrData);
+              }
             }
             else {
               this.cardAddedSuccessfully.emit(false);

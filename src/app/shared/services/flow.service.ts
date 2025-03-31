@@ -75,14 +75,14 @@ export class FlowService {
 
   // 📌 3. Registrar Tarjeta para Cliente
   registerCard(customerId: string): Observable<RegisterCardResponse> {
+    const url_return = 'http://magrolabs.com/registro/verificacion';
     if (environment.production) {
       const url = `${this.apiUrl}customer/register.ts`;
-      return this.http.post<RegisterCardResponse>(url, customerId);
+      return this.http.post<RegisterCardResponse>(url, { customerId, url_return });
     }
     else {
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const url = `${this.apiUrlLocal}/customer/register`;
-      const url_return = 'http://magrolabs.com/registro/verificacion';
       const toSign = { apiKey: environment.flowApiKey, customerId, url_return };
       const body = new HttpParams()
         .set('apiKey', environment.flowApiKey)

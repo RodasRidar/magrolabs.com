@@ -1,4 +1,13 @@
 {
   "version": 2,
-  "builds": [{ "src": "api/flow/*/*.ts", "use": "@vercel/node" }]
+  "builds": [
+    {
+      "src": "api/flow/*/*.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    }
+  ]
 }

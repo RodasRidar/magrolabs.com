@@ -1,4 +1,4 @@
 {
-    "version": 2
-  }
-  
+  "version": 2,
+  "builds": [{ "src": "api/flow/*/*.ts", "use": "@vercel/node" }]
+}

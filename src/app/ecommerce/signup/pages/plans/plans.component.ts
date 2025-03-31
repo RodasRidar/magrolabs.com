@@ -91,15 +91,15 @@ export class PlansComponent {
     }
   }
 
-  chosePlan(chosePlan: ChosePlanSummary) {
-    this._summaryService.setChoosePlan(chosePlan)
-    if (this.nextUrl !== '') {
-      this._router.navigate(['registro/' + this.nextUrl]);
-    }
-    else {
-      this._router.navigate(['registro/crear-cuenta'])
-    }
-  }
+  // chosePlan(chosePlan: ChosePlanSummary) {
+  //   this._summaryService.setChoosePlan(chosePlan)
+  //   if (this.nextUrl !== '') {
+  //     this._router.navigate(['registro/' + this.nextUrl]);
+  //   }
+  //   else {
+  //     this._router.navigate(['registro/crear-cuenta'])
+  //   }
+  // }
 
   nextStep() {
     if (this.isSelectSubscription) {
@@ -112,8 +112,6 @@ export class PlansComponent {
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
-      this._router.navigate(['registro/crear-cuenta']);
-      // this._router.navigate(['registro/verificacion']);
     }
     else if (this.isSelectOnePurchase) {
       this._summaryService.setChoosePlan({
@@ -122,8 +120,13 @@ export class PlansComponent {
         descriptionTwo: 'Compra única de S/'+ this.ENV.precioCreatinaOnePurchase + '.',
         quantity: 1
       })
-      this._router.navigate(['registro/crear-cuenta']);
-      // this._router.navigate(['registro/verificacion']);
+    }
+
+    if (this.nextUrl !== '') {
+      this._router.navigate(['registro/' + this.nextUrl]);
+    }
+    else {
+      this._router.navigate(['registro/crear-cuenta'])
     }
   }
 

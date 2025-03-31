@@ -157,6 +157,7 @@ export class CreateAccountComponent {
   }
 
   nextStep() {
+    const customerId = this._summaryService.getSummary()?.userData?.customerId;
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
@@ -164,7 +165,7 @@ export class CreateAccountComponent {
 
     this.isProcessing = true;
 
-    if (this.nextUrl !== '') {
+    if (customerId) {
       
       const customerRequest: EditCustomerRequest = {
         name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,

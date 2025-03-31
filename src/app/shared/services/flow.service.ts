@@ -10,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class FlowService {
   private apiUrlLocal = environment.urlApiFlow;
-  private apiUrl = `https://magrolabs.com/api/flow`;
+  private apiUrl = `https://magrolabs.com/api/flow/`;
   private apiKey = environment.flowApiKey;
 
   constructor(private http: HttpClient) { }
@@ -42,7 +42,7 @@ export class FlowService {
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
     else {
-      const url = `${this.apiUrlLocal}/customer/edit`;
+      const url = `${this.apiUrlLocal}customer/edit`;
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const toSign = { apiKey: this.apiKey, ...customerData };
       const body = new HttpParams()
@@ -76,7 +76,7 @@ export class FlowService {
   // 📌 3. Registrar Tarjeta para Cliente
   registerCard(customerId: string): Observable<RegisterCardResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}/customer/register`;
+      const url = `${this.apiUrl}customer/register`;
       return this.http.post<RegisterCardResponse>(url, customerId);
     }
     else {
@@ -106,7 +106,7 @@ export class FlowService {
 
   createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}/subscription/create`;
+      const url = `${this.apiUrl}subscription/create`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);
     }
     else {

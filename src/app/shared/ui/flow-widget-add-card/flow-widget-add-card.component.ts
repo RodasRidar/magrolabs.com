@@ -67,7 +67,6 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
           const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
           this._flowService.getCustomer(customerId).subscribe((customer) => {
             if (customer.last4CardDigits !== '') {
-              this.cardAddedSuccessfully.emit(true);
               const usrData = this._summaryService.getSummary()?.userData;
               if(usrData){
                 usrData.isPaymentVerified = true;
@@ -75,6 +74,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
                 usrData.creditCardType = customer.creditCardType;
                 this._summaryService.setUserData(usrData);
               }
+              this.cardAddedSuccessfully.emit(true);
             }
             else {
               this.cardAddedSuccessfully.emit(false);

@@ -255,6 +255,7 @@ export class CreateAccountComponent {
             control?.setErrors({emailInvalid: true});
           }
           else{
+            this._toastService.error('Ups!','Error al crear la cuenta. Por favor, intenta nuevamente.');
             console.log(err);
           }
         }

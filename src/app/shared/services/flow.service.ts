@@ -18,7 +18,7 @@ export class FlowService {
   createCustomer(customerData: CreateCustomerRequest): Observable<CreateCustomerResponse> {
 
     if (environment.production) {
-      const url = `${this.apiUrl}customer/create`;
+      const url = `${this.apiUrl}customer/create.ts`;
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
     else {
@@ -38,7 +38,7 @@ export class FlowService {
 
   editCustomer(customerData: EditCustomerRequest): Observable<EditCustomerResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}customer/edit`;
+      const url = `${this.apiUrl}customer/edit.ts`;
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
     else {
@@ -59,7 +59,7 @@ export class FlowService {
 
   getCustomer(customerId: string): Observable<CreateCustomerResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}customer/get`;
+      const url = `${this.apiUrl}customer/get.ts`;
       return this.http.post<CreateCustomerResponse>(url, customerId);
     }
     else {
@@ -76,7 +76,7 @@ export class FlowService {
   // 📌 3. Registrar Tarjeta para Cliente
   registerCard(customerId: string): Observable<RegisterCardResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}customer/register`;
+      const url = `${this.apiUrl}customer/register.ts`;
       return this.http.post<RegisterCardResponse>(url, customerId);
     }
     else {
@@ -106,7 +106,7 @@ export class FlowService {
 
   createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
     if (environment.production) {
-      const url = `${this.apiUrl}subscription/create`;
+      const url = `${this.apiUrl}subscription/create.ts`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);
     }
     else {

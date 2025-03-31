@@ -90,7 +90,8 @@
 
             <form class="p-4 bg-[#f8f9fa]" [formGroup]="form">
                 @if (flowToken !== '') {
-                    <app-flow-widget-add-card [token]="flowToken" (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
+                <app-flow-widget-add-card [token]="flowToken"
+                    (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
                 }
                 <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
@@ -156,11 +157,12 @@
             </form>
         </div>
         <div class="my-6 lg:w-72">
-            <ml-button [name]="isPaymentVerified ? 'Suscríbete y paga →' : 'Suscríbete y paga'" (click)="nextStep()" [isDisabled]="!isPaymentVerified"></ml-button>
+            <ml-button [name]="isPaymentVerified ? 'Suscríbete y paga →' : 'Suscríbete y paga'" (click)="nextStep()"
+                [isDisabled]="!isPaymentVerified"></ml-button>
         </div>
         }@else {
-            
-        <app-payment-method (paymentMethod)="selectPaymentMethod($event)"/>
+
+        <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
         <div class="my-6 lg:w-72">
             <ml-button name="Ir a Pagar →" (click)="nextStep()" [isDisabled]="paymentMethod == ''"></ml-button>
@@ -198,7 +200,8 @@
                     </div>
 
                     <div class="col-span-1 max-lg:col-span-2 mt-2">
-                        <ml-button name="Aplicar" (click)="applyPromoCode()" type="secondary" [isDisabled]="isPaymentVerified"></ml-button>
+                        <ml-button name="Aplicar" (click)="applyPromoCode()" type="secondary"
+                            [isDisabled]="isPaymentVerified"></ml-button>
                     </div>
                     }
 
@@ -294,7 +297,8 @@
                         </div>
 
                         <p class="mt-4 text-gray-700 text italic">
-                            “La creatina es un golazo, no cae pesada como otras. Me gusta mucho que me pueda suscribir una vez y olvidarme de comprarla cada tanto.”
+                            “La creatina es un golazo, no cae pesada como otras. Me gusta mucho que me pueda suscribir
+                            una vez y olvidarme de comprarla cada tanto.”
                         </p>
                     </blockquote>
                     <!-- Testimonio 2 -->
@@ -349,10 +353,11 @@
                     </blockquote>
                 </div>
                 <div class="text-center">
-                    <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews" target="_blank" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                    <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
+                        target="_blank" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
                         Mira todas las reseñas →
                     </a>
-                    
+
                 </div>
             </div>
         </section>

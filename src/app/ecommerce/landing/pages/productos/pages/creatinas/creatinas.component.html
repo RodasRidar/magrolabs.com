@@ -297,9 +297,10 @@
                                     <div class="space-y-4">
 
                                         <details #Subscription (click)="selectSubscription($event)"
-                                            class="rounded-lg overflow-hidden group border border-gray-900 p-3 [&_summary::-webkit-details-marker]:hidden">
+                                            [ngClass]="{'border-gray-800': isSelectSubscription,'border-gray-900': isSelectSubscription}"
+                                            class="rounded-lg overflow-hidden group border border-gray-900 [&_summary::-webkit-details-marker]:hidden">
                                             <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
                                                     <span class="relative size-5 shrink-0 mr-2">
 
@@ -339,7 +340,7 @@
 
                                             </summary>
 
-                                            <div class="mt-3">
+                                            <div class="m-3">
                                                 <div
                                                     class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
                                                     <span class="text-sm text-left text-gray-900 font-light">
@@ -381,9 +382,10 @@
                                         </details>
 
                                         <details #OnePurchase (click)="selectOnePurchase($event)"
-                                            class="rounded-lg overflow-hidden group border border-gray-900 p-3 [&_summary::-webkit-details-marker]:hidden">
+                                            [ngClass]="{'border-gray-800': isSelectOnePurchase}"
+                                            class="rounded-lg overflow-hidden group border [&_summary::-webkit-details-marker]:hidden">
                                             <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
                                                     <span class="relative size-5 shrink-0 mr-2">
 

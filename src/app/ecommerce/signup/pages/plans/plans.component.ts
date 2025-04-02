@@ -4,16 +4,16 @@ import { StepEnum } from "../../models/step.model";
 import { Information } from "../../components/information/information.component";
 import { SummaryService } from "../../../../shared/services/summary-service.service";
 import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary.model";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
 import { ButtonComponent } from "../../../../shared/ui/button/button.component";
 import { environment } from "../../../../../environments/env";
-import { CurrencyPipe, isPlatformBrowser } from "@angular/common";
+import { CommonModule, CurrencyPipe, isPlatformBrowser } from "@angular/common";
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, CurrencyPipe],
+  imports: [StepComponent, ButtonComponent, CurrencyPipe, CommonModule],
   templateUrl: './plans.component.html',
 })
 
@@ -52,6 +52,10 @@ export class PlansComponent {
       this.nextUrl = params['next'] || '';
     });
 
+    let aux = <ChosePlanSummary>{}
+    aux.selection = SummaryEnum.CREATINA_250G_SUBSCRIPTION
+    this._summaryService.setChoosePlan(aux)
+
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isSelectSubscription = true;
       this.isSelectOnePurchase = false;
@@ -63,10 +67,6 @@ export class PlansComponent {
       this.isSelectSubscription = true;
       this.isSelectOnePurchase = false;
     }
-
-    let aux = <ChosePlanSummary>{}
-    aux.selection = SummaryEnum.CREATINA_250G_SUBSCRIPTION
-    this._summaryService.setChoosePlan(aux)
   }
 
   selectSubscription($event: any) {

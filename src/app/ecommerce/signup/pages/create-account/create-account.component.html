@@ -167,7 +167,7 @@
                             </div>
 
                             <div class="sm:col-span-3"
-                                [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
+                                [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value && !isCreatinaGratis }">
                                 <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
                                     Contraseña *</label>
                                 <div class="mt-2">

@@ -128,7 +128,7 @@ export class FlowService {
 
     if (environment.production) {
       const url = `${this.apiUrl}payment/create.ts`;
-      return this.http.post<FlowPaymentResponse>(url, PaymentRequest);
+      return this.http.post<FlowPaymentResponse>(url, paymentRequest);
     }
     else {
       const url = `${this.apiUrlLocal}/payment/create`;

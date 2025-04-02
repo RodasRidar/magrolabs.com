@@ -47,7 +47,7 @@ export class RecuperarPasswordComponent {
     }
     this.isProcessing = true;
     this.isEmailSent = true;
-    console.log('Recover password');
+    alert('Recover password');
 
   }
 }

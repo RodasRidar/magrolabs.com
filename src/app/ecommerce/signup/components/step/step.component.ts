@@ -25,7 +25,6 @@ export class StepComponent {
 
   ngOnInit(): void {
     this._summaryService.summaryState$.subscribe((summary) => {
-      console.log("summary", summary?.chosePlan)
       const summarySelection = summary?.chosePlan?.selection
       this.flag = "Gratis"
       if (summarySelection && summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {

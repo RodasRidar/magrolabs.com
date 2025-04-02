@@ -227,7 +227,7 @@ export class CreateAccountComponent {
               control?.setErrors({ emailInvalid: true });
             }
             else {
-              console.log(err);
+              console.error(err);
             }
           }
         });
@@ -276,7 +276,7 @@ export class CreateAccountComponent {
             }
             else {
               this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
-              console.log(err);
+              console.error(err);
             }
           }
         });

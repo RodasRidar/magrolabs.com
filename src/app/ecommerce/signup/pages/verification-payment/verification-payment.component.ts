@@ -177,7 +177,7 @@ export class VerificationPaymentComponent {
         }
         this._flowService.createSubscription(subscription).subscribe({
           next: (response) => {
-            console.log('Subscription created: ', response);
+            // console.log('Subscription created: ', response);
             this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } });
           },
           error: (err) => {

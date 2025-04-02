@@ -39,7 +39,7 @@ const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowApiUrl = 'https://function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'https://magrolabs.com/registro/confirmacion';
-const flowUrlConfirmation = 'https://magrolabs.com/registro/confirmacion';
+const flowUrlConfirmation = 'https://merakiui.com/components/application-ui/cookies';
 const creatina2025Descuento = '20%'
 
 

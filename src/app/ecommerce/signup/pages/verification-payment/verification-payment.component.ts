@@ -149,7 +149,7 @@ export class VerificationPaymentComponent {
             email: this._summaryService.getSummary()?.userData?.email ?? '',
             paymentMethod: this.paymentMethod,
             urlReturn: this.ENV.flowUrlReturn,
-            urlConfirmation: this.ENV.flowUrlConfirmation + '?status='+ Number(status).toString()
+            urlConfirmation: this.ENV.flowUrlConfirmation
           }
 
           localStorage.setItem('status', status.toString());

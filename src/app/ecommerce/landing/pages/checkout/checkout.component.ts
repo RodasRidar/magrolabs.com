@@ -285,10 +285,11 @@ export class CheckoutComponent {
     const status = this.form.get('isSignUpAcepted')?.value ?? false ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
     localStorage.setItem('status', status.toString());
 
+    localStorage.setItem('commerceOrder', '#0000020');
     const paymentRequest: FlowPaymentRequest = {
       amount: this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
       currency: 'PEN',
-      commerceOrder: '#0000013',
+      commerceOrder: localStorage.getItem('commerceOrder') ?? '',
       subject: 'Creatina Monohidratada Magrolabs de 250g',
       email: this.form.get('email')?.value ?? '',
       paymentMethod: this.paymentMethod,

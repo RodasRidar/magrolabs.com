@@ -83,13 +83,13 @@ export class VerificationPaymentComponent {
       this.form.get('promoCode')?.disable();
     }
 
-    // if (isPlatformBrowser(this.platformId)) {
-    //   this._flowService.registerCard(summary?.userData?.customerId ?? '')
-    //     // .pipe(this.destroy$)
-    //     .subscribe(response => {
-    //       this.flowToken = (response as RegisterCardResponse).token
-    //     });
-    // }
+    if (isPlatformBrowser(this.platformId)) {
+      this._flowService.registerCard(summary?.userData?.customerId ?? '')
+        // .pipe(this.destroy$)
+        .subscribe(response => {
+          this.flowToken = (response as RegisterCardResponse).token
+        });
+    }
     this.isPaymentVerified = summary?.userData?.isPaymentVerified ?? false;
     if (this.isPaymentVerified) {
       this.cardAddedSuccessfully(true);

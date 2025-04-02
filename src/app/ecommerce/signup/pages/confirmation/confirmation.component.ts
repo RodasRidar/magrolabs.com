@@ -92,10 +92,10 @@ export class ConfirmationComponent {
 
     let summary = this._summaryService.getSummary()
 
-    // if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
-    //   this._router.navigate(['registro/verificacion']);
-    //   return;
-    // }
+    if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
+      this._router.navigate(['registro/verificacion']);
+      return;
+    }
 
     this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/' + this.ENV.creditoRegaloPorCompraAño : 'S/' + this.ENV.creditoRegaloPorCompraMes;
     this.clientName = summary?.userData?.nombre ?? '';

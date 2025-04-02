@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionRequest, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
+import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionRequest, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class FlowService {
   private apiKey = environment.flowApiKey;
 
   constructor(private http: HttpClient) { }
-  // 📌 2. Crear un Cliente
+
   createCustomer(customerData: CreateCustomerRequest): Observable<CreateCustomerResponse> {
 
     if (environment.production) {
@@ -42,7 +42,7 @@ export class FlowService {
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
     else {
-      const url = `${this.apiUrlLocal}customer/edit`;
+      const url = `${this.apiUrlLocal}/customer/edit`;
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const toSign = { apiKey: this.apiKey, ...customerData };
       const body = new HttpParams()
@@ -73,7 +73,6 @@ export class FlowService {
     }
   }
 
-  // 📌 3. Registrar Tarjeta para Cliente
   registerCard(customerId: string): Observable<RegisterCardResponse> {
     const url_return = 'http://magrolabs.com/registro/verificacion';
     if (environment.production) {
@@ -92,17 +91,6 @@ export class FlowService {
       return this.http.post<RegisterCardResponse>(url, body.toString(), { headers });
     }
   }
-
-  // 📌 4. Obtener estatus del registro
-  // getRegisterStatus(suscriptionToken: string): Observable<RegisterStatusResponse> {
-  //   const url = `${this.apiUrlLocal}/customer/getRegisterStatus`;
-  //   const toSign = { apiKey: environment.flowApiKey, token: suscriptionToken };
-  //   const params = new HttpParams()
-  //     .set('token', suscriptionToken)
-  //     .set('apiKey', environment.flowApiKey)
-  //     .set('s', this.getFlowSignature(toSign));
-  //   return this.http.get<RegisterStatusResponse>(url, { params });
-  // }
 
   createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
     if (environment.production) {
@@ -134,6 +122,32 @@ export class FlowService {
 
       return this.http.post<CreateSubscriptionResponse>(url, body.toString(), { headers });
     }
+  }
+
+  createPayment(paymentRequest: FlowPaymentRequest): Observable<FlowPaymentResponse> {
+
+    if (environment.production) {
+      const url = `${this.apiUrl}payment/create.ts`;
+      return this.http.post<FlowPaymentResponse>(url, PaymentRequest);
+    }
+    else {
+      const url = `${this.apiUrlLocal}/payment/create`;
+      const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      const toSign = { apiKey: this.apiKey, ...paymentRequest };
+      const body = new HttpParams()
+        .set('apiKey', this.apiKey)
+        .set('amount', paymentRequest.amount.toString())
+        .set('currency', paymentRequest.currency)
+        .set('commerceOrder', paymentRequest.commerceOrder)
+        .set('subject', paymentRequest.subject)
+        .set('email', paymentRequest.email)
+        .set('urlReturn', paymentRequest.urlReturn)
+        .set('urlConfirmation', paymentRequest.urlConfirmation)
+        .set('paymentMethod', paymentRequest.paymentMethod?.toString() ?? '9')
+        .set('s', this.getFlowSignature(toSign));
+      return this.http.post<FlowPaymentResponse>(url, body.toString(), { headers });
+    }
+
   }
 
   /**

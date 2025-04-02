@@ -3,20 +3,20 @@
 <div class="mx-auto text-left mt-10 mb-10 max-w-3xl">
 
     @if (isCreatinaGratis) {
-        <div class="mx-auto text-left mb-4 max-w-3xl">
-            <app-information [information]="informationList" />
-        </div>
+    <div class="mx-auto text-left mb-4 max-w-3xl">
+        <app-information [information]="informationList" />
+    </div>
     }
     <div class="relative z-10 mx-auto ">
         <div class="text-gray-600 mb-10 md:mb-0">
             <div class="relative mt-7 lg:mt-9" show-back-button="true">
                 @if (isCreatinaGratis) {
-                    <h1 data-qa="signup-step-3-title"
+                <h1 data-qa="signup-step-3-title"
                     class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                     Tus datos para tu creatina gratuita.</h1>
                 }
                 @else {
-                    <h1 data-qa="signup-step-3-title"
+                <h1 data-qa="signup-step-3-title"
                     class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                     Tus datos.</h1>
                 }
@@ -28,7 +28,7 @@
             <form [formGroup]="form" method="post">
                 <div class="space-y-12">
                     <div class="pb-4">
-                        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6">
+                        <div class="sm:mt-10 mt-5 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6">
                             <div class="sm:col-span-3">
                                 <label for="first-name"
                                     class="block text-sm font-medium leading-6 text-gray-900">Nombres *</label>
@@ -76,7 +76,8 @@
                                     <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
                                         +51
                                     </div>
-                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
+                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
+                                        autocomplete="tel"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
                                          block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
@@ -146,8 +147,9 @@
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                 </div>
-                                @if(hasRequiredError('email') || hasValidatorError('email')) {
                                 <div class="p-2">
+                                    @if(hasRequiredError('email') || hasValidatorError('email')) {
+
                                     @if(hasRequiredError('email')) {
                                     <p class="text-xs text-red-500">*Correo es obligatorio</p>
                                     }
@@ -159,11 +161,13 @@
                                     @if(hasValidatorError('email')) {
                                     <p class="text-xs text-red-500">*Correo inválido o no existente</p>
                                     }
+                                    }
+
                                 </div>
-                                }
                             </div>
 
-                            <div class="sm:col-span-3 max-sm:mb-16">
+                            <div class="sm:col-span-3"
+                                [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
                                 <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
                                     Contraseña *</label>
                                 <div class="mt-2">
@@ -185,6 +189,21 @@
                                 </div>
                             </div>
 
+                            @if(!isCreatinaGratis){
+                            <div class="sm:col-span-4 flex items-end max-sm:mb-16">
+                                <label class="inline-flex items-center my-2 cursor-pointer">
+                                    <input type="checkbox" formControlName="isSignUpAcepted" class="sr-only peer">
+                                    <div
+                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                    </div>
+                                    <span class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900">Registrarme
+                                        y rastrear mi pedido</span>
+                                </label>
+                            </div>
+                            }
+
+
+
                         </div>
                     </div>
                 </div>
@@ -193,7 +212,7 @@
                 </div>
                 <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button" [disabled]="isProcessing"
-                        class=" inline-flex w-full items-center justify-center px-4 py-6 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                         Continuar →
                     </button>
                 </div>

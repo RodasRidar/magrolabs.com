@@ -278,25 +278,6 @@
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                                 </div>
-                                            </div>
-
-                                            <div class="sm:col-span-3 col-span-6 flex items-end ">
-                                                <!-- <label class="inline-flex items-center me-5 cursor-pointer">
-                                                    <input type="checkbox" value="" class="sr-only peer">
-                                                    <div class="relative w-9 h-5  bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-                                                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Registrarme</span>
-                                                  </label> -->
-                                                <label class="inline-flex items-center mb-2 cursor-pointer">
-                                                    <input type="checkbox" value="" class="sr-only peer">
-                                                    <div
-                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
-                                                    </div>
-                                                    <span
-                                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme</span>
-                                                </label>
-                                            </div>
-
-                                            <div class="sm:col-span-6 col-span-6">
                                                 @if(hasRequiredError('email') || hasValidatorError('email')) {
                                                 <div class="p-2">
                                                     @if(hasRequiredError('email')) {
@@ -314,7 +295,11 @@
                                                 }
                                             </div>
 
-                                            <div class="sm:col-span-6 col-span-6 py-2">
+
+
+
+                                            <div class="sm:col-span-3 col-span-6"
+                                                [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
                                                 <label for="password"
                                                     class="block text-sm font-medium leading-6 text-gray-900">
                                                     Contraseña *</label>
@@ -324,7 +309,9 @@
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                                 </div>
+                                                @if(hasRequiredError('password') || hasValidatorError('password')) {
                                                 <div class="p-2">
+
                                                     @if(hasRequiredError('password')) {
                                                     <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
                                                     }
@@ -336,7 +323,32 @@
                                                     <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
                                                     }
                                                 </div>
+
+                                                }
                                             </div>
+                                            <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
+                                                <label class="inline-flex items-center my-2 cursor-pointer">
+                                                    <input #isSignUpAceptedInput type="checkbox" formControlName="isSignUpAcepted"
+                                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
+                                                        class="sr-only peer">
+                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
+                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                    </div>
+                                                    <span
+                                                        [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
+                                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900">Registrarme
+                                                        y rastrear mi pedido {{hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
+                                                </label>
+                                            </div>
+                                            @if(hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')) {
+                                                <div class="sm:col-span-3 col-span-6">
+                                                    <div class="p-2">
+                                                        @if(hasRequiredError('isSignUpAcepted')) {
+                                                        <p class="text-xs text-red-500">*Campo obligatorio para subscribirse</p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                }
 
                                             <!-- ENTREGA -->
 
@@ -547,7 +559,7 @@
                                                 </div>
 
 
-                                                <div class="sm:col-span-5 max-sm:mb-16">
+                                                <div class="sm:col-span-5 mb-2">
                                                     <label for="postal-code"
                                                         class="block text-sm/6 font-medium text-gray-900">Referencia</label>
                                                     <div class="mt-2">
@@ -571,7 +583,7 @@
                                                     class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
                                                     Pago.</h2>
 
-                                                @if (cartHas250Creatine) {
+                                                <!-- @if (cartHas250Creatine) {
                                                 <label class="inline-flex items-center mb-2 cursor-pointer mt-4 ml-2">
                                                     <input type="checkbox" value="" class="sr-only peer">
                                                     <span
@@ -583,15 +595,15 @@
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                 </label>
-                                                }
+                                                } -->
                                             </div>
 
                                             <div class="col-span-6">
                                                 <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
                                                 <div class="my-6 lg:w-72">
-                                                    <ml-button name="Ir a Pagar →" (click)="Pay()"
-                                                        [isDisabled]="paymentMethod == ''"></ml-button>
+                                                    <ml-button [name]="buttonName" [isDisabled]="isProcessing"
+                                                        (click)="nextStep()"></ml-button>
                                                 </div>
 
                                                 <div class="text-pretty">

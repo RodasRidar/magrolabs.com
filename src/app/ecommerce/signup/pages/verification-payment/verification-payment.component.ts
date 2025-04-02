@@ -12,11 +12,11 @@ import { environment } from '../../../../../environments/env';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
-import { SummaryEnum } from '../../../../shared/models/summary.model';
+import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateSubscriptionRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
+import { CreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
 
 @Component({
   selector: 'app-verification-payment',
@@ -25,7 +25,7 @@ import { CreateSubscriptionRequest, RegisterCardResponse } from '../../../../sha
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
-  paymentMethod = '';
+  paymentMethod:FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
   ENV = environment
   isPaymentVerified = false;
   isLoading = false;
@@ -42,6 +42,7 @@ export class VerificationPaymentComponent {
     }
   ]
   flowToken = '';
+  buttonName = 'Pagar →';
   private platformId = inject(PLATFORM_ID)
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
@@ -111,9 +112,22 @@ export class VerificationPaymentComponent {
   }
 
   nextStep() {
+    if(this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+        descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
+        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
+        quantity: 1
+      })
+      this.ngOnInit();
+      return
+    }
+
     const promoCode = this.form.get('promoCode')?.value;
     if (promoCode === 'FREE') {
-      this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+      this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA } });
     }
     else {
       if (!this.isCreatinaGratis) {
@@ -121,12 +135,37 @@ export class VerificationPaymentComponent {
           //Logica para hacer pago unico con el token de la tarjeta.
           this._toastService.success('¡Genial!', 'Pago realizado con éxito.');
           setTimeout(() => {
-            this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+            this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } });
           }, 2000);
         }
         else{
-          this.ENV.production ? window.location.href = 'https://www.flow.cl/app/web/pay.php?token=' + this.flowToken
-          : window.location.href = 'https://sandbox.flow.cl/app/web/pay.php?token=' + this.flowToken;
+          const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+
+          const paymentRequest: FlowPaymentRequest = {
+            amount: this.ENV.precioCreatinaOnePurchase,
+            currency: 'PEN',
+            commerceOrder: '#00000014',
+            subject: 'Creatina Monohidratada Magrolabs de 250g',
+            email: this._summaryService.getSummary()?.userData?.email ?? '',
+            paymentMethod: this.paymentMethod,
+            urlReturn: this.ENV.flowUrlReturn,
+            urlConfirmation: this.ENV.flowUrlConfirmation + '?status='+ Number(status).toString()
+          }
+
+          localStorage.setItem('status', status.toString());
+          
+          this._flowService.createPayment(paymentRequest).subscribe({
+            next: (response) => {
+              window.location.href = response.url+'?token=' + response.token;
+            },
+            error: (err) => {
+              console.error('Error creating payment: ', err);
+              this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
+            },
+            complete: () => {
+              this.isLoading = false;
+            }
+          })
         }
       }
       else {
@@ -139,7 +178,7 @@ export class VerificationPaymentComponent {
         this._flowService.createSubscription(subscription).subscribe({
           next: (response) => {
             console.log('Subscription created: ', response);
-            this._router.navigate(['registro/confirmacion'], { queryParams: { status: 1 } });
+            this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } });
           },
           error: (err) => {
             console.error('Error creating subscription: ', err);
@@ -173,8 +212,13 @@ export class VerificationPaymentComponent {
     cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
     this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
   }
-  selectPaymentMethod(paymentMethod: string) {
+  selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod = paymentMethod;
+    if(paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
+      this.buttonName = 'Continuar →';
+    }else{
+      this.buttonName = 'Pagar →';
+    }
   }
 
   cardAddedSuccessfully($event: boolean) {

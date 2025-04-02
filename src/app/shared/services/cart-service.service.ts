@@ -113,4 +113,8 @@ export class ShoppingCartService {
     this.cookieService.set(this.CART_COOKIE_NAME, JSON.stringify(shoppingCart));
   }
 
+  clearCart() {
+    this.$ShoppingCart.next(<ShoppingCart>{});
+    this.cookieService.delete(this.CART_COOKIE_NAME);
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, inject, output } from '@angular/core';
 import { SummaryService } from '../../services/summary-service.service';
-import { id } from 'apicache';
+import { FlowPaymentMethod } from '../../models/flow.model';
+import { environment } from '../../../../environments/env';
 
 @Component({
   selector: 'app-payment-method',
@@ -11,9 +12,10 @@ import { id } from 'apicache';
 })
 export class PaymentMethodComponent {
   private _summaryService = inject(SummaryService);
+  env = environment
 
   ngOnInit(): void {
-    this.paymentMethod.emit('Tarjeta');
+    this.paymentMethod.emit(FlowPaymentMethod.DEBIT_CREDIT_CARD);
 
     const last4CardDigits = this._summaryService.getSummary()?.userData?.last4CardDigits || '';
     const creditCardType = this._summaryService.getSummary()?.userData?.creditCardType || '';
@@ -22,44 +24,48 @@ export class PaymentMethodComponent {
       this.radios.unshift({
         name: '**** **** **** ' + last4CardDigits + ' (' + creditCardType + ')',
         description: 'Paga con tu tarjeta '+ creditCardType + 'que termina en ' + last4CardDigits + ' registrada en tu cuenta.',
-        icon: `CARD`,
-        id: '3',
+        icon: `CARD_ENROLLED`,
+        id: FlowPaymentMethod.CARD_ENROLLED,
       })
     }
   }
-  paymentMethod = output<'Tarjeta'| 'Trasnferencia'| 'Tarjeta Enrolada'>()
+  paymentMethod = output<FlowPaymentMethod>()
     
   radios = [
     {
-      name: 'Tarjetas, Yape y otras billeteras',
-      description: 'Paga con tarjeta de débito/crédito, escaneando el código QR desde tu billetera electrónica o con el código de aprobación de Yape.',
-      icon: `CARD`,
-      id: '1',
+      name: 'Tarjetas',
+      description: 'Paga con tu tarjeta de débito o crédito.',
+      icon: `DEBIT_CREDIT_CARD`,
+      id: FlowPaymentMethod.DEBIT_CREDIT_CARD,
     },
     {
       name: 'Transferencia bancaria',
-      description: 'Paga por transferencia bancaria de los principales bancos: BCP, Interbank, BBVA, Scotiabank.',
+      description: 'Paga a través de todos los bancos.',
       icon: ``,
-      id: '2',
+      id: FlowPaymentMethod.BANK_TRANSFER,
     },
+    {
+      name: 'Yape',
+      description: 'Paga con Yape y otras billeteras.',
+      icon: `YAPE`,
+      id: FlowPaymentMethod.YAPE,
+    },
+    {
+      name: 'Pago Efectivo',
+      description: 'Pagos vía banca móvil, agentes y bodegas.',
+      icon: `PAGO_EFECTIVO`,
+      id: FlowPaymentMethod.PAGO_EFECTIVO,
+    },
+    {
+      name: 'Subscripción mensual',
+      // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',
+      description: 'Ahorra '+ this.env.creatina2025Descuento +' y llevate una creatina gratis.',
+      icon: `RECURRENT_PAYMENT`,
+      id: FlowPaymentMethod.RECURRENT_PAYMENT,
+    }
   ];
 
-  selectPaymentMethod( id: string ) {
-    if ( id === 'Tarjetas, Yape y otras billeteras' ) {
-    } 
-    else {
-      this.paymentMethod.emit('Trasnferencia');
-    }
-    switch (id) {
-      case '1':
-        this.paymentMethod.emit('Tarjeta');
-        break;
-      case '2':
-        this.paymentMethod.emit('Trasnferencia');
-        break;
-      case '3':
-        this.paymentMethod.emit('Tarjeta Enrolada');
-        break;
-    }
+  selectPaymentMethod( id: FlowPaymentMethod ) {
+    this.paymentMethod.emit(id);
   }
 }

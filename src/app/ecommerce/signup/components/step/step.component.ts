@@ -24,39 +24,45 @@ export class StepComponent {
 
 
   ngOnInit(): void {
-    const summarySelection = this._summaryService.getSummary()?.chosePlan?.selection
-    this.flag = "Gratis"
-    if (summarySelection && summarySelection !== SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      this.flag = ""
-    }
-    switch (this.step()) {
-      case StepEnum.CHOSE_PLAN:
-        this.stepChosePlan = true;
-        break;
-      case StepEnum.USER_DATA:
-        this.stepChosePlan = true;
-        this.stepUserData = true;
-        break;
-      case StepEnum.ADDRESS:
-        this.stepChosePlan = true;
-        this.stepUserData = true;
-        this.stepAddress = true;
-        break;
-
-      case StepEnum.CARD_VALIDATION:
-        this.stepChosePlan = true;
-        this.stepUserData = true;
-        this.stepAddress = true;
-        this.stepCardValidation = true;
-        break;
-
-      case StepEnum.CONFIRMATION:
-        this.stepChosePlan = true;
-        this.stepUserData = true;
-        this.stepAddress = true;
-        this.stepCardValidation = true;
-        this.stepConfirmation = true;
-        break;
-    }
+    this._summaryService.summaryState$.subscribe((summary) => {
+      console.log("summary", summary?.chosePlan)
+      const summarySelection = summary?.chosePlan?.selection
+      this.flag = "Gratis"
+      if (summarySelection && summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+        this.flag = "Gratis"
+      }else{
+        this.flag = ""
+      }
+      switch (this.step()) {
+        case StepEnum.CHOSE_PLAN:
+          this.stepChosePlan = true;
+          break;
+        case StepEnum.USER_DATA:
+          this.stepChosePlan = true;
+          this.stepUserData = true;
+          break;
+        case StepEnum.ADDRESS:
+          this.stepChosePlan = true;
+          this.stepUserData = true;
+          this.stepAddress = true;
+          break;
+  
+        case StepEnum.CARD_VALIDATION:
+          this.stepChosePlan = true;
+          this.stepUserData = true;
+          this.stepAddress = true;
+          this.stepCardValidation = true;
+          break;
+  
+        case StepEnum.CONFIRMATION:
+          this.stepChosePlan = true;
+          this.stepUserData = true;
+          this.stepAddress = true;
+          this.stepCardValidation = true;
+          this.stepConfirmation = true;
+          break;
+      }
+    });
+   
   }
 }

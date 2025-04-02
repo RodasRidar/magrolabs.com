@@ -5,6 +5,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import {
   FormBuilder,
   FormControl,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -28,6 +29,7 @@ export interface SignUp {
   typeDocument: FormControl<TypeDocumentEnum>;
   email: FormControl<string>;
   password: FormControl<string>;
+  isSignUpAcepted: FormControl<boolean>;
 }
 
 export enum TypeDocumentEnum {
@@ -38,7 +40,7 @@ export enum TypeDocumentEnum {
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, RouterLink],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, RouterLink, FormsModule],
   templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent {
@@ -64,7 +66,8 @@ export class CreateAccountComponent {
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
     typeDocument: this._formBuilder.nonNullable.control(<TypeDocumentEnum>'1', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
-    password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
+    password: this._formBuilder.nonNullable.control('', [Validators.minLength(8)]),
+    isSignUpAcepted: this._formBuilder.nonNullable.control(false, []),
   });
 
 
@@ -95,7 +98,21 @@ export class CreateAccountComponent {
     this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? TypeDocumentEnum.DNI);
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
+    this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? false);
 
+    if (this.form.get('isSignUpAcepted')) {
+      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
+        const passwordControl = this.form.get('password');
+
+        if (signUp) {
+          passwordControl?.addValidators(Validators.required);
+        } else {
+          passwordControl?.clearValidators();
+        }
+
+        passwordControl?.updateValueAndValidity();
+      });
+    }
   }
 
   informationList: Information[] = [
@@ -166,7 +183,7 @@ export class CreateAccountComponent {
     this.isProcessing = true;
 
     if (customerId) {
-      
+
       const customerRequest: EditCustomerRequest = {
         name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
         email: this.form.get('email')?.value ?? '',
@@ -175,44 +192,45 @@ export class CreateAccountComponent {
       }
 
       this._flowService.editCustomer(customerRequest)
-      .subscribe({
-        next: (response) => { 
-          this._summaryService.setUserData({
-            nombre: this.form.get('firtName')?.value ?? '',
-            apellido: this.form.get('lastName')?.value ?? '',
-            dni: this.form.get('nroDocument')?.value ?? '',
-            email: this.form.get('email')?.value ?? '',
-            cellphone: this.form.get('cellphone')?.value ?? '',
-            typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
-            password: this.form.get('password')?.value ?? '',
-            customerId: response.customerId
-          });
-          this.isProcessing = false;
-          if (this.nextUrl !== '') {
-            this._router.navigate(['/registro/' + this.nextUrl]);
+        .subscribe({
+          next: (response) => {
+            this._summaryService.setUserData({
+              nombre: this.form.get('firtName')?.value ?? '',
+              apellido: this.form.get('lastName')?.value ?? '',
+              dni: this.form.get('nroDocument')?.value ?? '',
+              email: this.form.get('email')?.value ?? '',
+              cellphone: this.form.get('cellphone')?.value ?? '',
+              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              password: this.form.get('password')?.value ?? '',
+              customerId: response.customerId,
+              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+            });
+            this.isProcessing = false;
+            if (this.nextUrl !== '') {
+              this._router.navigate(['/registro/' + this.nextUrl]);
+            }
+
+            else {
+              this._router.navigate(['/registro/direccion']);
+            }
+          },
+          error: (err) => {
+            this.isProcessing = false;
+            if (err.error.code === 501 && err.error.message.includes('externalId')) {
+              this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+              const control = this.form.get('nroDocument');
+              control?.setErrors({ nroDocumentExists: true });
+            }
+            if (err.error.code === 501 && err.error.message.includes('email')) {
+              this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+              const control = this.form.get('email');
+              control?.setErrors({ emailInvalid: true });
+            }
+            else {
+              console.log(err);
+            }
           }
-  
-          else {
-            this._router.navigate(['/registro/direccion']);
-          }
-        },
-        error: (err) => {
-          this.isProcessing = false;
-          if(err.error.code === 501 && err.error.message.includes('externalId')) {
-            this._toastService.error('Ups!','Ya existe una cuenta con el N° de documento ingresado.');
-            const control = this.form.get('nroDocument');
-            control?.setErrors({nroDocumentExists: true});
-          }
-          if(err.error.code === 501 && err.error.message.includes('email')) {
-            this._toastService.error('Ups!','El correo ingresado no existe o no es válido.');
-            const control = this.form.get('email');
-            control?.setErrors({emailInvalid: true});
-          }
-          else{
-            console.log(err);
-          }
-        }
-      });
+        });
 
     }
     else {
@@ -222,45 +240,46 @@ export class CreateAccountComponent {
         externalId: this.form.get('nroDocument')?.value ?? '',
       }
       this._flowService.createCustomer(customerRequest)
-      .subscribe({
-        next: (response) => { 
-          this._summaryService.setUserData({
-            nombre: this.form.get('firtName')?.value ?? '',
-            apellido: this.form.get('lastName')?.value ?? '',
-            dni: this.form.get('nroDocument')?.value ?? '',
-            email: this.form.get('email')?.value ?? '',
-            cellphone: this.form.get('cellphone')?.value ?? '',
-            typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
-            password: this.form.get('password')?.value ?? '',
-            customerId: response.customerId
-          });
-          this.isProcessing = false;
-          if (this.nextUrl !== '') {
-            this._router.navigate(['/registro/' + this.nextUrl]);
+        .subscribe({
+          next: (response) => {
+            this._summaryService.setUserData({
+              nombre: this.form.get('firtName')?.value ?? '',
+              apellido: this.form.get('lastName')?.value ?? '',
+              dni: this.form.get('nroDocument')?.value ?? '',
+              email: this.form.get('email')?.value ?? '',
+              cellphone: this.form.get('cellphone')?.value ?? '',
+              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              password: this.form.get('password')?.value ?? '',
+              customerId: response.customerId,
+              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+            });
+            this.isProcessing = false;
+            if (this.nextUrl !== '') {
+              this._router.navigate(['/registro/' + this.nextUrl]);
+            }
+
+            else {
+              this._router.navigate(['/registro/direccion']);
+            }
+          },
+          error: (err) => {
+            this.isProcessing = false;
+            if (err.error.code === 501 && err.error.message.includes('externalId')) {
+              this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+              const control = this.form.get('nroDocument');
+              control?.setErrors({ nroDocumentExists: true });
+            }
+            if (err.error.code === 501 && err.error.message.includes('email')) {
+              this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+              const control = this.form.get('email');
+              control?.setErrors({ emailInvalid: true });
+            }
+            else {
+              this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
+              console.log(err);
+            }
           }
-  
-          else {
-            this._router.navigate(['/registro/direccion']);
-          }
-        },
-        error: (err) => {
-          this.isProcessing = false;
-          if(err.error.code === 501 && err.error.message.includes('externalId')) {
-            this._toastService.error('Ups!','Ya existe una cuenta con el N° de documento ingresado.');
-            const control = this.form.get('nroDocument');
-            control?.setErrors({nroDocumentExists: true});
-          }
-          if(err.error.code === 501 && err.error.message.includes('email')) {
-            this._toastService.error('Ups!','El correo ingresado no existe o no es válido.');
-            const control = this.form.get('email');
-            control?.setErrors({emailInvalid: true});
-          }
-          else{
-            this._toastService.error('Ups!','Error al crear la cuenta. Por favor, intenta nuevamente.');
-            console.log(err);
-          }
-        }
-      });
+        });
     }
 
 

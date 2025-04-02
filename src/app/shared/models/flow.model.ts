@@ -58,6 +58,35 @@ export interface RegisterCardRequest extends FlowModelRequest{
     periods_number?: number;
   }
   
+  export interface FlowPaymentRequest extends FlowModelRequest{
+    commerceOrder: string; // Orden del comercio
+    subject: string; // Descripción de la orden
+    currency: string; // Moneda de la orden
+    amount: number; // Monto de la orden
+    email: string; // Email del pagador
+    paymentMethod: FlowPaymentMethod; // Identificador del medio de pago (opcional)
+    urlConfirmation: string; // URL donde Flow confirmará el pago
+    urlReturn: string; // URL de retorno del comercio
+    optional?: string; // Datos opcionales en formato JSON
+    timeout?: number; // Tiempo en segundos antes de que expire la orden (opcional)
+    merchantId?: string; // ID del comercio asociado (opcional)
+    payment_currency?: string; // Moneda esperada de pago (opcional)
+  }
+  export enum FlowPaymentMethod {
+    CARD_ENROLLED = 0,
+    DEBIT_CREDIT_CARD = 11,
+    RECURRENT_PAYMENT = 158,
+    YAPE = 152,
+    BANK_TRANSFER = 153,
+    PAGO_EFECTIVO = 29,
+  }
+
+  export interface FlowPaymentResponse {
+    url: string; // URL de redirección para el pago
+    token: string; // Token único de la transacción
+    flowOrder: string; // Orden del comercio
+  }
+
   export interface CreateSubscriptionResponse {
     subscriptionId: string;
     planId: string;

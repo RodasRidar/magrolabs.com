@@ -63,6 +63,10 @@ export class PlansComponent {
       this.isSelectSubscription = true;
       this.isSelectOnePurchase = false;
     }
+
+    let aux = <ChosePlanSummary>{}
+    aux.selection = SummaryEnum.CREATINA_250G_SUBSCRIPTION
+    this._summaryService.setChoosePlan(aux)
   }
 
   selectSubscription($event: any) {

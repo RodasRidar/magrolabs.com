@@ -165,7 +165,7 @@
         <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
         <div class="my-6 lg:w-72">
-            <ml-button name="Pagar →" (click)="nextStep()" [isDisabled]="paymentMethod == '' || isLoading"></ml-button>
+            <ml-button [name]="buttonName" (click)="nextStep()" [isDisabled]="isLoading"></ml-button>
         </div>
         }
         <!-- CODIGO PROMOCIONAL -->

@@ -10,7 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
-import { SummaryEnum } from '../../../../shared/models/summary.model';
+import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
+import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -25,11 +26,13 @@ export class ConfirmationComponent {
   private _route = inject(ActivatedRoute)
   private _dialog = inject(MatDialog)
   private _seo = inject(SeoService)
+  private _shoppingCartService = inject(ShoppingCartService)
 
   ENV = environment
+  confirmationStatusEnum= ConfirmationStatus
   stepEnum = StepEnum;
   clientName = '';
-  isSuccess = true;
+  status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
   creditos = 'S/{{ENV.creditoRegaloPorCompraMes}}';
 
   informationExitoList: Information[] = [
@@ -43,6 +46,18 @@ export class ConfirmationComponent {
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
     { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
     { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
+  ]
+  
+  informationCompraExitoRegistroList: Information[] = [
+    { name: 'Puedes darle seguimiento a tu pedido en tu cuenta de Magrolabs.' },
+    { name: 'Enviaremos tu creatina lo antes posible.' },
+    { name: 'Fecha de entrega estimada: ' + this.getDatePlusDays(this.ENV.plazoDeEntregaDiasHabiles.max) },
+  ]
+
+  informationCompraExitoSinRegistroList: Information[] = [
+    { name: 'Te informaremos por correo cuando tu creatina este en camino.' },
+    { name: 'Enviaremos tu creatina lo antes posible.' },
+    { name: 'Fecha de entrega estimada: ' + this.getDatePlusDays(this.ENV.plazoDeEntregaDiasHabiles.max) },
   ]
 
   parrafoExito = {
@@ -58,6 +73,18 @@ export class ConfirmationComponent {
     parrafo3: 'Ten en cuenta que:',
   }
 
+  parrafoCompraConRegistroExito = {
+    parrafo1: '¡Tu compra y registro se ha completado con éxito!',
+    parrafo2: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.',
+    parrafo3: 'Ten en cuenta que:',
+  }
+
+  parrafoCompraSinRegistroExito = {
+    parrafo1: '¡Tu compra se ha completado con éxito!',
+    parrafo2: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.',
+    parrafo3: 'Ten en cuenta que:',
+  }
+
   ngOnInit() {
     this._seo.title.setTitle('Magrolabs | Bienvenido');
     this._seo.setCanonicalURL('magrolabs.com/registro/confirmacion');
@@ -65,25 +92,34 @@ export class ConfirmationComponent {
 
     let summary = this._summaryService.getSummary()
 
-    if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
-      this._router.navigate(['registro/verificacion']);
-      return;
-    }
+    // if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
+    //   this._router.navigate(['registro/verificacion']);
+    //   return;
+    // }
 
     this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/' + this.ENV.creditoRegaloPorCompraAño : 'S/' + this.ENV.creditoRegaloPorCompraMes;
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {
-      let status = params['status'] || '';
-      if (status === '1') {
+      let status = params['status'] ?? localStorage.getItem('status');
+      if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
         this.openWelcomeModal();
+        this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
         this._summaryService.clearSummary();
-        this.isSuccess = true;
       }
-      //Fuere de covertura
-      else if (status === '0') {
+      else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+        this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
         this._summaryService.clearSummary();
-        this.isSuccess = false;
+      }
+      else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+        this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
+        this._summaryService.clearSummary();
+        this._shoppingCartService.clearCart();
+      }
+      else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+        this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+        this._summaryService.clearSummary();
+        this._shoppingCartService.clearCart();
       }
       else {
         this._router.navigate(['registro/verificacion']);
@@ -107,6 +143,13 @@ export class ConfirmationComponent {
     });
 
     dialogRef.componentInstance.activate();
+  }
+
+  //get the date in string plus a number through the parameter int
+  getDatePlusDays(days: number): string {
+    let result = new Date();
+    result.setDate(result.getDate() + days);
+    return result.toLocaleDateString();
   }
 
 }

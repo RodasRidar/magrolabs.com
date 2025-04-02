@@ -22,11 +22,12 @@ export interface UserDataSummary {
     email: string
     cellphone: string,
     typeDocument: TypeDocumentEnum,
-    password: string,
+    password?: string,
     customerId: string //Flow
     isPaymentVerified?: boolean,
     last4CardDigits?: string,//Flow
     creditCardType?: string,//Flow
+    isSignUpAcepted?: boolean,
 }
 
 export interface AddressSummary {
@@ -50,3 +51,10 @@ export enum SummaryEnum {
 
 }
 
+export enum ConfirmationStatus {
+    SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA = 0,
+    SUBSCRIPTION_SUCCESS = 1,
+    ONE_PURCHASE_SUCCESS_WITH_REGISTRATION = 3,
+    ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION = 4
+    
+}

@@ -1,19 +1,49 @@
 <div class="max-w-md">
-    <ul class="mx-2 space-y-4">
+    <ul class="mx-2 lg:space-y-4 space-y-3">
         @for (item of radios; track $index) {
         <li>
             <label [for]="item.name" class="block relative">
-                <input (click)="selectPaymentMethod(item.name)" [id]="item.name" type="radio" [checked]="$index === 0" name="payment" class="sr-only peer" />
+                <input (click)="selectPaymentMethod(item.id)" [id]="item.name" type="radio" [checked]="$index === 0" name="payment" class="sr-only peer" />
                 <div
                     class="w-full flex gap-x-3 items-start p-4 cursor-pointer rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 duration-200">
                     <div class="flex-none">
-                        @if (item.icon == 'CARD') {
+                        @if (item.icon == 'DEBIT_CREDIT_CARD') {
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                             fill="#434343">
                             <path
                                 d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
                         </svg>
-                        } @else {
+                        }
+                        @else if (item.icon == 'RECURRENT_PAYMENT') {
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                <path d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z"/>
+                            </svg> -->
+                            <div class="h-6">
+                                <img src="https://cdn-icons-png.flaticon.com/512/13308/13308531.png" alt="pago efectivo" class="h-full">
+                            </div>
+                        }
+                        @else if (item.icon == 'YAPE') {
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                <path d="M80-680v-200h200v80H160v120H80Zm0 600v-200h80v120h120v80H80Zm600 0v-80h120v-120h80v200H680Zm120-600v-120H680v-80h200v200h-80ZM700-260h60v60h-60v-60Zm0-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm120-120h60v60h-60v-60Zm-60 60h60v60h-60v-60Zm-60-60h60v60h-60v-60Zm240-320v240H520v-240h240ZM440-440v240H200v-240h240Zm0-320v240H200v-240h240Zm-60 500v-120H260v120h120Zm0-320v-120H260v120h120Zm320 0v-120H580v120h120Z"/>
+                            </svg> -->
+                            <div class="h-6">
+                                <img src="https://flow.cl/img/logo_yape_60x60.png" alt="yape" class="h-full">
+                            </div>
+                        }
+                        @else if (item.icon == 'PAGO_EFECTIVO') {
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                <path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h560q33 0 56.5 23.5T920-720v320q0 33-23.5 56.5T840-320H280Zm80-80h400q0-33 23.5-56.5T840-480v-160q-33 0-56.5-23.5T760-720H360q0 33-23.5 56.5T280-640v160q33 0 56.5 23.5T360-400Zm440 240H120q-33 0-56.5-23.5T40-240v-440h80v440h680v80ZM280-400v-320 320Z"/>
+                            </svg> -->
+                            <div class="h-6">
+                                <img src="https://www.flow.cl/img/logo_pagoefectivo60.png" alt="pago efectivo" class="h-full">
+                            </div>
+                        }
+                        @else if (item.icon == 'CARD_ENROLLED') {
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                <path d="M160-640h640v-80H160v80Zm-80-80q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v240H160v240h164v80H160q-33 0-56.5-23.5T80-240v-480ZM598-80 428-250l56-56 114 112 226-226 56 58L598-80ZM160-720v480-180 113-413Z"/>
+                            </svg>
+                        }
+                        @else {
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                             fill="#434343">
                             <path

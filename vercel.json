@@ -1,6 +1,0 @@
-{
-    "rewrites": [
-      { "source": "/confirmation", "destination": "/index.html" }
-    ]
-  }
-  

@@ -66,7 +66,7 @@ export class AddressComponent {
     district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
     number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]),
     reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
-    postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
+    postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
 
   ngOnInit() {

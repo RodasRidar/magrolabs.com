@@ -236,7 +236,7 @@
                                                             <option value="2">Carnet Ext.</option>
                                                         </select>
                                                     </div>
-                                                    <input
+                                                    <input #nroDocInput
                                                         [type]="form.get('typeDocument')?.value == '1' ? 'number' : 'text'"
                                                         placeholder="87654321" autocomplete="identity-card-number"
                                                         (input)="limitDigits(form.get('typeDocument')?.value == '1' ? 8 : 12, 'nroDocument')"
@@ -273,8 +273,8 @@
                                                     class="block text-sm font-medium leading-6 text-gray-900">
                                                     Correo *</label>
                                                 <div class="mt-2">
-                                                    <input formControlName="email" id="email" name="email" type="email"
-                                                        autocomplete="email" placeholder="tu@example.com"
+                                                    <input formControlName="email" #emailInput id="email" name="email"
+                                                        type="email" autocomplete="email" placeholder="tu@example.com"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                                 </div>
@@ -289,7 +289,7 @@
                                                     </p>
                                                     }
                                                     @if(hasValidatorError('email')) {
-                                                    <p class="text-xs text-red-500">*Correo inválido</p>
+                                                    <p class="text-xs text-red-500">*Correo inválido o no existente</p>
                                                     }
                                                 </div>
                                                 }
@@ -328,8 +328,9 @@
                                             </div>
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
                                                 <label class="inline-flex items-center my-2 cursor-pointer">
-                                                    <input #isSignUpAceptedInput type="checkbox" formControlName="isSignUpAcepted"
-                                                    [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
+                                                    <input #isSignUpAceptedInput type="checkbox"
+                                                        formControlName="isSignUpAcepted"
+                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
                                                         class="sr-only peer">
                                                     <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
@@ -337,18 +338,21 @@
                                                     <span
                                                         [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
                                                         class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900">Registrarme
-                                                        y rastrear mi pedido {{hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
+                                                        y rastrear mi pedido {{hasRequiredError('isSignUpAcepted') ||
+                                                        hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
                                                 </label>
                                             </div>
-                                            @if(hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')) {
-                                                <div class="sm:col-span-3 col-span-6">
-                                                    <div class="p-2">
-                                                        @if(hasRequiredError('isSignUpAcepted')) {
-                                                        <p class="text-xs text-red-500">*Campo obligatorio para subscribirse</p>
-                                                        }
-                                                    </div>
+                                            @if(hasRequiredError('isSignUpAcepted') ||
+                                            hasValidatorError('isSignUpAcepted')) {
+                                            <div class="sm:col-span-3 col-span-6">
+                                                <div class="p-2">
+                                                    @if(hasRequiredError('isSignUpAcepted')) {
+                                                    <p class="text-xs text-red-500">*Campo obligatorio para subscribirse
+                                                    </p>
+                                                    }
                                                 </div>
-                                                }
+                                            </div>
+                                            }
 
                                             <!-- ENTREGA -->
 
@@ -523,19 +527,19 @@
 
                                                 <div class="sm:col-span-3">
                                                     <label for="region"
-                                                        class="block text-sm/6 font-medium text-gray-900">Código Postal
-                                                        *</label>
+                                                        class="block text-sm/6 font-medium text-gray-900">Código
+                                                        Postal</label>
                                                     <div class="mt-2">
                                                         <input type="text" (input)="limitDigits(5, 'postalCode')"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('postalCode') || hasValidatorError('postalCode')}"
+                                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('postalCode')}"
                                                             formControlName="postalCode">
                                                     </div>
                                                     <div class="p-2">
-                                                        @if(hasRequiredError('postalCode')) {
+                                                        <!-- @if(hasRequiredError('postalCode')) {
                                                         <p class="text-xs text-red-500">*Código Postal es obligatorio
                                                         </p>
-                                                        }
+                                                        } -->
                                                         @if(hasValidatorError('postalCode')) {
                                                         <p class="text-xs text-red-500">*Solo se permite 5 dígitos</p>
                                                         }
@@ -602,7 +606,8 @@
                                                 <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
                                                 <div class="my-6 lg:w-72">
-                                                    <ml-button [name]="buttonName" [isDisabled]="isProcessing"
+                                                    <ml-button [name]="buttonName"
+                                                        [isDisabled]="isProcessing || (!form.valid) "
                                                         (click)="nextStep()"></ml-button>
                                                 </div>
 

@@ -154,18 +154,17 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="region" class="block text-sm/6 font-medium text-gray-900">Código Postal
-                                        *</label>
+                                    <label for="region" class="block text-sm/6 font-medium text-gray-900">Código Postal</label>
                                     <div class="mt-2">
                                         <input type="text" (input)="limitDigits(5, 'postalCode')"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
-                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('postalCode') || hasValidatorError('postalCode')}"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('postalCode')}"
                                             formControlName="postalCode">
                                     </div>
                                     <div class="p-2">
-                                        @if(hasRequiredError('postalCode')) {
+                                        <!-- @if(hasRequiredError('postalCode')) {
                                         <p class="text-xs text-red-500">*Código Postal es obligatorio</p>
-                                        }
+                                        } -->
                                         @if(hasValidatorError('postalCode')) {
                                         <p class="text-xs text-red-500">*Solo se permite 5 dígitos</p>
                                         }

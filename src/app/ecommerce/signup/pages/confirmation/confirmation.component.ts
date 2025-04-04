@@ -105,25 +105,21 @@ export class ConfirmationComponent {
       if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
         this.openWelcomeModal();
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
-        this._summaryService.clearSummary();
       }
       else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
-        this._summaryService.clearSummary();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
-        this._summaryService.clearSummary();
-        this._shoppingCartService.clearCart();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
-        this._summaryService.clearSummary();
-        this._shoppingCartService.clearCart();
       }
       else {
         this._router.navigate(['registro/verificacion']);
       }
+      this._summaryService.clearSummary();
+      this._shoppingCartService.clearCart();
     });
   }
 

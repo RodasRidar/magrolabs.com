@@ -6,13 +6,13 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TypeDocumentEnum } from '../../../signup/pages/create-account/create-account.component';
 import { CommonModule } from '@angular/common';
-import { debounceTime, map, Observable, switchMap, tap } from 'rxjs';
+import { debounceTime, finalize, map, Observable, switchMap, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { environment } from '../../../../../environments/env';
-import { CreateCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
@@ -27,6 +27,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 })
 export class CheckoutComponent {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
   paymentMethod: FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
   navbarTypeEnum = NavbarTypeEnum;
   ENV = environment;
@@ -77,7 +79,7 @@ export class CheckoutComponent {
     district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
     number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]),
     reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
-    postalCode: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
+    postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(false, []),
   });
   buttonName = 'Pagar →';
@@ -165,14 +167,18 @@ export class CheckoutComponent {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return false;
-    // return control?.hasError('nroDocumentExists') && control.dirty;
+    return control?.hasError('nroDocumentExists') && control.dirty;
   }
 
   hasExistEmail() {
     const control = this.form.get('email');
     return false;
     // return control?.hasError('emailExists') && control.dirty;
+  }
+
+  hasInvalidEmail() {
+    const control = this.form.get('email');
+    return control?.hasError('emailInvalid') && control.dirty;
   }
 
   hasExistCellphone() {
@@ -289,11 +295,143 @@ export class CheckoutComponent {
       amount: this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
       currency: 'PEN',
       commerceOrder: localStorage.getItem('commerceOrder') ?? '0002',
-      subject: 'Creatina Monohidratada Magrolabs de 250g',
+      subject: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) + ' x Creatina Monohidratada Magrolabs de 250g.',
       email: this.form.get('email')?.value ?? '',
       paymentMethod: this.paymentMethod,
       urlReturn: this.ENV.flowUrlReturn,
       urlConfirmation: this.ENV.flowUrlConfirmation + '?status=' + Number(status).toString()
+    }
+
+    const isSignUpAcepted = this.form.get('isSignUpAcepted')?.value ?? false;
+    if (isSignUpAcepted) {
+      //VALIDAR DATOS CON API 
+      const customerId = this._summaryService.getSummary()?.userData?.customerId;
+      if (!customerId) {
+        const customerRequest: CreateCustomerRequest = {
+          name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
+          email: this.form.get('email')?.value ?? '',
+          externalId: this.form.get('nroDocument')?.value ?? '',
+        }
+        this._flowService.createCustomer(customerRequest).pipe(
+          switchMap((customerResponse) => {
+            this._summaryService.setUserData({
+              nombre: this.form.get('firtName')?.value ?? '',
+              apellido: this.form.get('lastName')?.value ?? '',
+              dni: this.form.get('nroDocument')?.value ?? '',
+              email: this.form.get('email')?.value ?? '',
+              cellphone: this.form.get('cellphone')?.value ?? '',
+              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              password: this.form.get('password')?.value ?? '',
+              customerId: customerResponse.customerId,
+              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+            });
+
+            this._summaryService.setAddress({
+              tipoVia: '',
+              nombreVia: this.form.get('streetAddress')?.value ?? '',
+              numero: this.form.get('number')?.value ?? '',
+              codigoPostal: this.form.get('postalCode')?.value ?? '',
+              distrito: this.form.get('district')?.value ?? '',
+              provincia: this.form.get('province')?.value ?? '',
+              department: this.form.get('department')?.value ?? '',
+              reference: this.form.get('reference')?.value ?? '',
+            });
+
+            this._summaryService.setChoosePlan({
+              selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
+              descriptionOne: 'Monohidratada 100%',
+              descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
+              quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
+            });
+            return this._flowService.createPayment(paymentRequest);
+          }),
+          finalize(() => {
+            this.isProcessing = false;
+          })
+        ).subscribe({
+          next: (paymentResponse) => {
+            window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
+          },
+          error: (err) => {
+            if (err.error?.code === 501) {
+              if (err.error.message.includes('externalId')) {
+                this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+                this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
+              } else if (err.error.message.includes('email')) {
+                this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+                this.focusAndErrorInput(this.emailInput, 'email');
+              }
+            } else {
+              this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+              console.error('Error:', err);
+            }
+          }
+        });
+      } else {
+        const customerRequest: EditCustomerRequest = {
+          name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
+          email: this.form.get('email')?.value ?? '',
+          externalId: this.form.get('nroDocument')?.value ?? '',
+          customerId,
+        }
+
+        this._flowService.editCustomer(customerRequest).pipe(
+          switchMap((customerResponse) => {
+            this._summaryService.setUserData({
+              nombre: this.form.get('firtName')?.value ?? '',
+              apellido: this.form.get('lastName')?.value ?? '',
+              dni: this.form.get('nroDocument')?.value ?? '',
+              email: this.form.get('email')?.value ?? '',
+              cellphone: this.form.get('cellphone')?.value ?? '',
+              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              password: this.form.get('password')?.value ?? '',
+              customerId: customerResponse.customerId,
+              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+            });
+
+            this._summaryService.setAddress({
+              tipoVia: '',
+              nombreVia: this.form.get('streetAddress')?.value ?? '',
+              numero: this.form.get('number')?.value ?? '',
+              codigoPostal: this.form.get('postalCode')?.value ?? '',
+              distrito: this.form.get('district')?.value ?? '',
+              provincia: this.form.get('province')?.value ?? '',
+              department: this.form.get('department')?.value ?? '',
+              reference: this.form.get('reference')?.value ?? '',
+            });
+
+            this._summaryService.setChoosePlan({
+              selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
+              descriptionOne: 'Monohidratada 100%',
+              descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
+              quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
+            });
+            return this._flowService.createPayment(paymentRequest);
+          }),
+          finalize(() => {
+            this.isProcessing = false;
+          })
+        ).subscribe({
+          next: (paymentResponse) => {
+            window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
+          },
+          error: (err) => {
+            if (err.error?.code === 501) {
+              if (err.error.message.includes('externalId')) {
+                this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+                this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
+              } else if (err.error.message.includes('email')) {
+                this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+                this.focusAndErrorInput(this.emailInput, 'email');
+              }
+            } else {
+              this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+              console.error('Error:', err);
+            }
+          }
+        });
+      }
+      return
     }
 
     this._flowService.createPayment(paymentRequest).subscribe({
@@ -306,17 +444,15 @@ export class CheckoutComponent {
           cellphone: this.form.get('cellphone')?.value ?? '',
           typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
           password: this.form.get('password')?.value ?? '',
-          customerId:'',
+          customerId: '',
           isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
         });
 
         this._summaryService.setChoosePlan({
-          selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
-          descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
-          descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
-          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
-          descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
-          quantity: 1
+          selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
+          descriptionOne: 'Monohidratada 100%',
+          descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
+          quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         })
 
         this._summaryService.setAddress(
@@ -331,6 +467,7 @@ export class CheckoutComponent {
             reference: this.form.get('reference')?.value ?? '',
           }
         );
+
         this.isProcessing = false;
         window.location.href = response.url + '?token=' + response.token;
       },
@@ -349,12 +486,7 @@ export class CheckoutComponent {
 
     //Validar si el checkbox de registro esta chequeado
     if (!this.form.get('isSignUpAcepted')?.value) {
-      const control = this.form.get('isSignUpAcepted');
-      control?.setErrors({ required: true });
-      setTimeout(() => {
-        this.isSignUpAceptedInput.nativeElement.focus();
-        this.isSignUpAceptedInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+      this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
       this.isProcessing = false;
       return;
     }
@@ -405,19 +537,17 @@ export class CheckoutComponent {
         },
         error: (err) => {
           this.isProcessing = false;
-          if (err.error.code === 501 && err.error.message.includes('externalId')) {
-            this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
-            const control = this.form.get('nroDocument');
-            control?.setErrors({ nroDocumentExists: true });
-          }
-          if (err.error.code === 501 && err.error.message.includes('email')) {
-            this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
-            const control = this.form.get('email');
-            control?.setErrors({ emailInvalid: true });
-          }
-          else {
-            this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
-            console.log(err);
+          if (err.error?.code === 501) {
+            if (err.error.message.includes('externalId')) {
+              this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+              this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
+            } else if (err.error.message.includes('email')) {
+              this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+              this.focusAndErrorInput(this.emailInput, 'email');
+            }
+          } else {
+            this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+            console.error('Error:', err);
           }
         }
       });
@@ -476,9 +606,18 @@ export class CheckoutComponent {
     }
 
   }
+
+  private focusAndErrorInput(input: ElementRef<HTMLInputElement>, controlName: string) {
+    const control = this.form.get(controlName);
+    if (controlName === 'nroDocument') {
+      control?.setErrors({ nroDocumentExists: true });
+    } else {
+      control?.setErrors({ required: true });
+    }
+    setTimeout(() => {
+      input.nativeElement.focus();
+      input.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+
+  }
 }
-
-
-//Si el flag isSignUpAcepted es true, se debe registrar el usuario en Flow tambien y validar sus datos,
-//Si una vez creado el usuario le da a pagar se le redirige pero vuelve y le da de nuevo a pagar, 
-// ya no se podra crear sino editar

@@ -23,7 +23,7 @@ export interface UserDataSummary {
     cellphone: string,
     typeDocument: TypeDocumentEnum,
     password?: string,
-    customerId: string //Flow
+    customerId?: string //Flow
     isPaymentVerified?: boolean,
     last4CardDigits?: string,//Flow
     creditCardType?: string,//Flow

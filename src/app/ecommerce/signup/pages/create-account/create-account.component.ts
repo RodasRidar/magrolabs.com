@@ -209,7 +209,6 @@ export class CreateAccountComponent {
             if (this.nextUrl !== '') {
               this._router.navigate(['/registro/' + this.nextUrl]);
             }
-
             else {
               this._router.navigate(['/registro/direccion']);
             }
@@ -234,10 +233,32 @@ export class CreateAccountComponent {
 
     }
     else {
+      const isSignUpAcepted = this.form.get('isSignUpAcepted')?.value ?? false;
       const customerRequest: CreateCustomerRequest = {
         name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
         email: this.form.get('email')?.value ?? '',
         externalId: this.form.get('nroDocument')?.value ?? '',
+      }
+      if(!isSignUpAcepted){
+        //VALIDAR DATOS CON API 
+        this._summaryService.setUserData({
+          nombre: this.form.get('firtName')?.value ?? '',
+          apellido: this.form.get('lastName')?.value ?? '',
+          dni: this.form.get('nroDocument')?.value ?? '',
+          email: this.form.get('email')?.value ?? '',
+          cellphone: this.form.get('cellphone')?.value ?? '',
+          typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+          password: this.form.get('password')?.value ?? '',
+          isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+        });
+        this.isProcessing = false;
+        if (this.nextUrl !== '') {
+          this._router.navigate(['/registro/' + this.nextUrl]);
+        }
+        else {
+          this._router.navigate(['/registro/direccion']);
+        }
+        return
       }
       this._flowService.createCustomer(customerRequest)
         .subscribe({
@@ -257,7 +278,6 @@ export class CreateAccountComponent {
             if (this.nextUrl !== '') {
               this._router.navigate(['/registro/' + this.nextUrl]);
             }
-
             else {
               this._router.navigate(['/registro/direccion']);
             }

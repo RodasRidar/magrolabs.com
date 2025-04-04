@@ -50,6 +50,10 @@ export class PlansComponent {
     this.loadSEO();
     this._route.queryParams.subscribe(params => {
       this.nextUrl = params['next'] || '';
+      // console.log('nextUrl', this.nextUrl);
+      // if (this.nextUrl == '') {
+      // this._router.navigate(['/registro'], { queryParams: { next: 'crear-cuenta' }});
+      // }
     });
 
     let aux = <ChosePlanSummary>{}

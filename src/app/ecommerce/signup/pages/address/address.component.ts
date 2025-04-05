@@ -140,7 +140,7 @@ export class AddressComponent {
     this.hideSearching = true;
     this._addressService.getDepartments().pipe(
       map((departments) => {
-        this.departmentUbigeo = this.findIdUbigeo(address.address.region, departments);
+        this.departmentUbigeo = this.findIdUbigeo(address.address.region == 'Province of Lima' ? 'Lima' : address.address.region, departments);
         this.provinces$ = this._addressService.getProvinces(this.departmentUbigeo);
         return this.departmentUbigeo ?? '3926';
       }),

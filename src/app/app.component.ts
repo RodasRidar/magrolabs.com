@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
+import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

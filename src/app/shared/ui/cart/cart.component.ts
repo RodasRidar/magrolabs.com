@@ -1,9 +1,9 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { Subscription } from 'rxjs';
-import { Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { ProductQuantityComponent } from '../product-quantity/product-quantity.component';
 import { DiscountPipe } from '../../pipes/discount.pipe';
 import { ShoppingCart, ItemShoppingCart } from '../../models/item-cart.model';
@@ -13,7 +13,7 @@ import { ShoppingCartService } from '../../services/cart-service.service';
   selector: 'app-cart',
   standalone: true,
   templateUrl: './cart.component.html',
-  imports: [CommonModule, ButtonComponent, RouterLink,ProductQuantityComponent,DiscountPipe,NgOptimizedImage],
+  imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
   animations: [
     trigger('fadeInOut', [
       state('inactive', style({
@@ -42,12 +42,14 @@ export class CartComponent {
   private configSubscription: Subscription | undefined;
   private _shoppingCartService = inject(ShoppingCartService);
   private _router = inject(Router);
+  private PLATAFORMID = inject(PLATFORM_ID)
+  isProductPage = false;
 
   ngOnInit() {
     this._shoppingCartService.cartState$.subscribe(state => {
-      state ? this.state = 'active' : this.state = 'inactive' ;
+      state ? this.state = 'active' : this.state = 'inactive';
     });
-    
+
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
       if (shoppingCart && shoppingCart.items.length > 0) {
         this.shoppingCart = shoppingCart;
@@ -57,12 +59,33 @@ export class CartComponent {
         this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
       }
     })
+
+    if(isPlatformBrowser(this.PLATAFORMID)) {
+      if (window.location.pathname == '/productos') {
+        this.isProductPage = true;
+      }
+      else {
+        this.isProductPage = false;
+      }
+    }
+
+    this._router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
+        if (currentUrl === 'productos' || window.location.pathname == 'productos') {
+          this.isProductPage = true;
+        }
+        else {
+          this.isProductPage = false;
+        }
+      }
+    });
   }
 
   toggle() {
-    if(this.state === 'active'){
+    if (this.state === 'active') {
       this.state = 'inactive';
-    }else{
+    } else {
       this.state = 'active';
     }
     this._shoppingCartService.toggleCart();
@@ -113,8 +136,8 @@ export class CartComponent {
       this.configSubscription.unsubscribe();
     }
   }
-  
-  quantityValue(value: number , product: ItemShoppingCart) {
+
+  quantityValue(value: number, product: ItemShoppingCart) {
     product.quantity = value
     this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
     this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
@@ -132,7 +155,7 @@ export class CartComponent {
     this._shoppingCartService.setShoppingCart(this.shoppingCart);
   }
 
-  goCheckout(){
+  goCheckout() {
     this._shoppingCartService.toggleCart();
     setTimeout(() => {
       this._router.navigate(['/checkout']);

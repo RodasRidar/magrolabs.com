@@ -119,7 +119,12 @@
             </div>
             }
             @else {
-            <ml-button type="secondary" class="w-[30%]" name="Cerrar" (click)="toggle()"></ml-button>
+              <div class="flex flex-col gap-2">
+                @if (!isProductPage) {
+                  <ml-button type="primary" [routerLink]="['/productos']"  name="Ir a comprar &rarr;" (click)="toggle()"></ml-button>
+                }
+                <ml-button [type]="isProductPage ? 'secondary' : 'secondary-outlined'" class="w-[100%]" name="Cerrar" (click)="toggle()"></ml-button>
+              </div>
             }
           </div>
         </div>

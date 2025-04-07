@@ -46,14 +46,57 @@ export const routes: Routes = [
   },
   {
     path: 'atencion-cliente',
+    children: [
+      {
+        path: '',
+        redirectTo: 'preguntas-frecuentes',
+        pathMatch: 'full',
+      },
+      {
+        path: 'preguntas-frecuentes',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/preguntas-frecuentes/preguntas-frecuentes.component').then(m => m.PreguntasFrecuentesComponent),
+      },
+      {
+        path: 'contactanos',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/contactanos/contactanos.component').then(m => m.ContactanosComponent),
+      },
+      {
+        path: 'como-funciona',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent),
+      },
+      {
+        path: 'envio-y-entrega',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/envio-entrega/envio-entrega.component').then(m => m.EnvioEntregaComponent),
+      },
+      {
+        path: 'cambio',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/cambio/cambio.component').then(m => m.CambioComponent),
+      },
+      {
+        path: 'pausar-cancelar',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/pausar-cancelar/pausar-cancelar.component').then(m => m.PausarCancelarComponent),
+      },
+      {
+        path: 'pago',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/pago/pago.component').then(m => m.PagoComponent),
+      },
+      {
+        path: 'programa-loyalty',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/programa-loyalty/programa-loyalty.component').then(m => m.ProgramaLoyaltyComponent),
+      },
+      {
+        path: 'promociones',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/promociones/promociones.component').then(m => m.PromocionesComponent),
+      }
+    ],
     loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/atencion-cliente.component').then(m => m.AtencionClienteComponent),
     canActivate: [refLinkGuard]
   },
-  {
-    path: 'como-funciona',
-    loadComponent: () => import('./ecommerce/landing/pages/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent),
-    canActivate: [refLinkGuard]
-  },
+  // {
+  //   path: 'como-funciona',
+  //   loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent),
+  //   canActivate: [refLinkGuard]
+  // },
   {
     path: 'loyalty-webshop',
     children: [

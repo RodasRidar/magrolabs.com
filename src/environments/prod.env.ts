@@ -40,8 +40,10 @@ const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowApiUrl = 'https://function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'https://magrolabs.com/registro/confirmacion/invalido';
 const flowUrlConfirmation = 'https://function.magrolabs.com/api/flow/help/confirmation.ts';
-const creatina2025Descuento = '20%'
-
+const creatina2025Descuento = '20%';
+const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
+const garantíaDeSatisfacción = 90;
+const diaDeCobroSubscripcion = 27;
 
 export const environment = {
     APP_URL,
@@ -83,4 +85,7 @@ export const environment = {
     flowUrlReturn,
     flowUrlConfirmation,
     creatina2025Descuento,
+    plazoDeEntregaMensualesCreatina,
+    garantíaDeSatisfacción,
+    diaDeCobroSubscripcion,
 };

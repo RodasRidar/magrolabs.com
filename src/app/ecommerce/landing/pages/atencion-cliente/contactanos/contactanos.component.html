@@ -1,0 +1,11 @@
+
+<h2 class="text-2xl text-gray-900 mb-6 max-lg:hidden">Contáctanos</h2>
+
+<p class="text-base">Si tienes alguna otra duda, puedes escribirnos a
+    <a [href]="'mailto:' + ENV.emailAtencionClientes"
+        class=" underline hover:text-blue-500">{{ENV.emailAtencionClientes}}</a>.
+</p>
+<p>O puedes escribirnos a nuestro whatsapp
+    <a [href]="'https://api.whatsapp.com/send?phone='+ENV.telefonoAtencionClientes+'&text=Buen%20d%C3%ADa%2C%20necesito%20ayuda%20con%20'"
+        class="text-base underline hover:text-blue-500">+{{ENV.telefonoAtencionClientes}}</a>.
+</p>

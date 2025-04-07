@@ -3,111 +3,74 @@
     <div class="sm:px-2 sm:py-4 justify-center self-center flex sm:flex-nowrap flex-wrap">
         <div class=" shadow-xl mx-auto sm:rounded-3xl bg-[#f6f6f6] overflow-hidden flex relative">
             <div class="w-full h-full">
-                <div class="flex flex-col  items-start h-screen px-16 py-8">
+                <div class="flex flex-col items-start h-fit px-4 sm:px-16  py-8">
                     <h1 class="text-4xl font-bold mb-4">Atención al cliente.</h1>
                     <p class="text-lg">Aquí encontrarás información sobre cómo contactar con nosotros, las respuestas a
                         las preguntas más frecuentes en un solo clic.</p>
-                    <p class="text-lg">Si tienes alguna otra duda, puedes escribirnos a
-                        <a [href]="'mailto:' + ENV.emailAtencionClientes"
-                            class="text-blue-500">{{ENV.emailAtencionClientes}}</a>.
-                    </p>
-                    <p>O puedes escribirnos a nuestro whatsapp
-                        <a [href]="'https://api.whatsapp.com/send?phone='+ENV.telefonoAtencionClientes+'&text=Buen%20d%C3%ADa%2C%20necesito%20ayuda%20con%20'"
-                            class="text-blue-500">+{{ENV.telefonoAtencionClientes}}</a>.
-                    </p>
-
-
-                    <!-- FAQs -->
-                    <div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10 ">
-                        <div class="space-y-4">
-                            <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-                                <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                                    <h2 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h2>
-                                    <span class="relative size-5 shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </span>
-                                </summary>
-
-                                <p class="mt-4 leading-relaxed text-gray-700">
-                                    Te regalamos la primera creatina.
-                                    ¿Por qué? Queremos mostrarte y hacerte sentir que estás tomando la mejor decisión.
-                                    ¡Estamos tan
-                                    convencidos de nuestra creatina!
-                                </p>
-                            </details>
-
-                            <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-                                <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                                    <h2 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h2>
-
-                                    <span class="relative size-5 shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 opacity-100 group-open:opacity-0" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 opacity-0 group-open:opacity-100" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </span>
-                                </summary>
-
-                                <p class="mt-4 leading-relaxed text-gray-700">
-                                    Después de registrarte, tu creatina gratis estará en tu casa en un plazo de
-                                    {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}}-{{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}}
-                                    días hábiles.
-                                </p>
-                            </details>
-
-                            <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-                                <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                                    <h2 class="font-semibold">¿Hay un periodo de cancelación?</h2>
-
-                                    <span class="relative size-5 shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 opacity-100 group-open:opacity-0" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="absolute inset-0 opacity-0 group-open:opacity-100" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </span>
-                                </summary>
-
-                                <p class="mt-4 leading-relaxed text-gray-700">
-                                    Después de recibir tu creatina gratis, tienes
-                                    {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla,
-                                    este es tu período de prueba.
-                                    Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu
-                                    suscripción.
-                                    Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días,
-                                    aplicamos un período de cancelación mensual.
-                                    ¿Cancelas antes del día 20 del mes? Entonces habrá un pago y una entrega más.
-                                </p>
-                            </details>
+                    <div class="pt-12 md:pt-10">
+                        <div class="px-3 md:container">
+                            <div class="lg:flex">
+                                <div class="items-center lg:hidden">
+                                    <select
+                                    (change)="onSelectOption($event)" [(ngModel)]="selectedOption"
+                                    class="mx-2 mb-8 px-4.5 py-2.5 rounded-md border-gray-300 h-full w-[-webkit-fill-available] text-xl focus:ring-2 focus:ring-inset focus:ring-[#d07d66]   block  border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300  ">
+                                    <option class="text-base" value="/atencion-cliente/preguntas-frecuentes">Preguntas frecuentes</option>
+                                    <option value="/atencion-cliente/contactanos">Contáctanos</option>
+                                    <option value="/atencion-cliente/como-funciona">Cómo funciona</option>
+                                    <option value="/atencion-cliente/envio-y-entrega">Envío y Entrega</option>
+                                    <option value="/atencion-cliente/cambio">Solicitud de cambio</option>
+                                    <option value="/atencion-cliente/pausar-cancelar">Pausar y cancelar</option>
+                                    <option value="/atencion-cliente/pago">Pago</option>
+                                    <option value="/atencion-cliente/programa-loyalty">Programa Loyalty</option>
+                                    <option value="/atencion-cliente/promociones">Promociones</option>
+                                  </select>
+                                  </div>                                  
+                                <div class="left-flex hidden lg:block mr-10 mb-10">
+                                    <div class="mt-3 px-6"><a routerLink="preguntas-frecuentes" routerLinkActive="font-bold text-[#d07d66]" aria-current="page"
+                                            class="ota-body-light nuxt-link-exact-active nuxt-link-active">
+                                            Preguntas frecuentes
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="contactanos" routerLinkActive="font-semibold text-[#d07d66]" class="ota-body-light">
+                                            Contáctanos
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="/atencion-cliente/como-funciona"routerLinkActive="font-semibold text-[#d07d66]" class="ota-body-light">
+                                            Cómo funciona
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="envio-y-entrega" routerLinkActive="font-semibold text-[#d07d66]" class="ota-body-light">
+                                            Envío y Entrega
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="cambio" aria-current="page"
+                                            class="ota-body-light nuxt-link-exact-active nuxt-link-active" routerLinkActive="font-semibold text-[#d07d66]">
+                                            Solicitud de cambio
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="pausar-cancelar" class="ota-body-light" routerLinkActive="font-semibold text-[#d07d66]">
+                                            Pausar y cancelar
+                                        </a></div>
+                                    <!-- <div class="mt-3 px-6"><a routerLink="es-es/men/customer-service/change-details" class="ota-body-light">
+                                            Cambiar datos
+                                        </a></div> -->
+                                    <div class="mt-3 px-6"><a routerLink="pago" class="ota-body-light" routerLinkActive="font-semibold text-[#d07d66]">
+                                            Pago
+                                        </a></div>
+                                    <!-- <div class="mt-3 px-6"><a routerLink="es-es/men/customer-service/boxershorts" class="ota-body-light">
+                                            Información del producto
+                                        </a></div> -->
+                                    <!-- <div class="mt-3 px-6"><a routerLink="es-es/men/customer-service/extra" class="ota-body-light">
+                                            Adicional
+                                        </a></div> -->
+                                    <div class="mt-3 px-6"><a routerLink="programa-loyalty" class="ota-body-light" routerLinkActive="font-semibold text-[#d07d66]">
+                                            Programa Loyalty
+                                        </a></div>
+                                    <div class="mt-3 px-6"><a routerLink="promociones" class="ota-body-light" routerLinkActive="font-semibold text-[#d07d66]">
+                                            Promociones
+                                        </a></div>
+                                </div>
+                                <div class="flex">
+                                    <div class="mx-auto sm:max-w-2xl px-2 lg:px-8">
+                                        <router-outlet></router-outlet>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

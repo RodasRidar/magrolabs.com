@@ -11,5 +11,14 @@ import { AppComponent } from '../../../app.component';
   styleUrl: './cookies-banner.component.css'
 })
 export class CookiesBannerComponent {
-  isCookieClose = false;
+  isCookieClose = true;
+
+  ngOnInit(): void {
+    this.isCookieClose = localStorage.getItem('cookieBannerReaded') === 'true' ? true : false;
+  }
+  
+  closeCookieBanner() {
+    this.isCookieClose = true
+    localStorage.setItem('cookieBannerReaded', 'true');
+  }
 }

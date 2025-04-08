@@ -42,6 +42,29 @@ export const routes: Routes = [
   {
     path: 'politicas',
     loadComponent: () => import('./ecommerce/landing/pages/politicas/politicas.component').then(m => m.PoliticasComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'terminos-y-condiciones',
+        pathMatch: 'full',
+      },
+      {
+        path: 'terminos-y-condiciones',
+        loadComponent: () => import('./ecommerce/landing/pages/politicas/terminos-y-condiciones/terminos-y-condiciones.component').then(m => m.TerminosYCondicionesComponent)
+      },
+      {
+        path: 'condiciones-de-uso',
+        loadComponent: () => import('./ecommerce/landing/pages/politicas/condiciones-de-uso/condiciones-de-uso.component').then(m => m.CondicionesDeUsoComponent)
+      },
+      {
+        path: 'privacidad',
+        loadComponent: () => import('./ecommerce/landing/pages/politicas/privacidad/privacidad.component').then(m => m.PrivacidadComponent)
+      },
+      {
+        path: 'cookies',
+        loadComponent: () => import('./ecommerce/landing/pages/politicas/cookies/cookies.component').then(m => m.CookiesComponent)
+      }
+    ],
     canActivate: [refLinkGuard]
   },
   {
@@ -92,11 +115,6 @@ export const routes: Routes = [
     loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/atencion-cliente.component').then(m => m.AtencionClienteComponent),
     canActivate: [refLinkGuard]
   },
-  // {
-  //   path: 'como-funciona',
-  //   loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent),
-  //   canActivate: [refLinkGuard]
-  // },
   {
     path: 'loyalty-webshop',
     children: [
@@ -152,12 +170,6 @@ export const routes: Routes = [
     loadComponent: () => import('./ecommerce/landing/pages/checkout/checkout.component').then(m => m.CheckoutComponent),
     canActivate: [refLinkGuard]
   },
-  //   {
-  //     path: '',
-  //     redirectTo: '/home',
-  //     pathMatch: 'full',
-  //     component: LandingComponent,
-  //   },
   {
     path: '**',
     loadComponent: () => import('./shared/pages/not-found/not-found.component')

@@ -1,5 +1,11 @@
-<h2 class="text-2xl text-gray-900 mb-6 max-lg:hidden">Pausar y Cancelar</h2>
-<div class="space-y-4">
+<h2 class="text-2xl text-gray-900 mb-6 max-lg:hidden">Declaración de Privacidad</h2>
+<p class="text-gray-700 text-base mb-6 md:w-[40rem]">
+    Los Datos Personales que serán objeto de tratamiento por parte de Magrolabs serán almacenados en el banco de datos de 
+    titularidad de Magrolabs inscrito con el código RNPDP-PJP N° 3835 
+    en el Registro Nacional de Protección de Datos Personales bajo la denominación “Clientes”.
+     Magrolabs declara que cualquier tratamiento de los Datos Personales se ajusta en las normativas de 
+     protección de datos personales vigentes y aplicables dentro del territorio peruano.
+<div class="space-y-2">
     @for (item of list; track $index) {
     <details class="group rounded-lg bg-[#dcdcdc]  [&_summary::-webkit-details-marker]:hidden md:w-[40rem]">
         <summary class="flex cursor-pointer items-center p-4 justify-between gap-1.5 text-gray-900">
@@ -19,9 +25,14 @@
             </span>
         </summary>
 
+        @for (description of item.description; track $index){
         <p class="leading-relaxed text-gray-700 px-6 pb-6">
-            {{item.description}}
+            {{description}}
         </p>
+        }
     </details>
     }
+</div>
+<div class="flex items-center justify-start mt-4">
+    <span class="text-sm font-medium text-gray-900">Última actualización: {{fechaUltimaActualizacion}}</span>
 </div>

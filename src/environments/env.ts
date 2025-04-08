@@ -40,6 +40,11 @@ const creatina2025Descuento = '20%'
 const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
 const garantíaDeSatisfacción = 90;
 const diaDeCobroSubscripcion = 27;
+const fechaUltimaActualizacionCondicionesUso = '01/12/2024';
+const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
+const fechaUltimaActualizacionPrivacidad = '03/12/2024';
+const fechaUltimaActualizacionCookies = '04/12/2024';
+
 
 export const environment = {
     APP_URL,
@@ -84,4 +89,8 @@ export const environment = {
     plazoDeEntregaMensualesCreatina,
     garantíaDeSatisfacción,
     diaDeCobroSubscripcion,
+    fechaUltimaActualizacionCondicionesUso,
+    fechaUltimaActualizacionTerminosCondiciones,
+    fechaUltimaActualizacionPrivacidad,
+    fechaUltimaActualizacionCookies
 };

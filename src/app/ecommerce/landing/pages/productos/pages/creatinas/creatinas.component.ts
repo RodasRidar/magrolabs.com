@@ -61,6 +61,87 @@ export class CreatinasComponent {
   reviewDate5 = new Date('2025-01-07')
   reviewDate6 = new Date('2025-01-08')
 
+  jsonLD_250Gr = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "Creatina Monohidratada 250 gr",
+    "image": [
+      "https://magrolabs.com/package-image.png"
+    ],
+    "description": "Creatina Monohidratada de 250 gr ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "sku": "CREATINA250GR",
+    "brand": {
+      "@type": "Brand",
+      "name": "Magrolabs"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4",
+      "reviewCount": "6"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr",
+      "priceCurrency": "PEN",
+      "price": this.ENV.precioCreatinaSubscription,
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
+  jsonLD_100Gr = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "Creatina Monohidratada 100 gr",
+    "image": [
+      "https://magrolabs.com/package-image.png"
+    ],
+    "description": "Creatina Monohidratada de 100 gr ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "sku": "CREATINA100GR",
+    "brand": {
+      "@type": "Brand",
+      "name": "Magrolabs"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4",
+      "reviewCount": "6"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://magrolabs.com/productos/creatinas/creatina-monohidratada-100-gr",
+      "priceCurrency": "PEN",
+      "price": "0.00",
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
+  jsonLD_3Kg = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "Creatina Monohidratada 3 kg",
+    "image": [
+      "https://magrolabs.com/package-image.png"
+    ],
+    "description": "Creatina Monohidratada de 3 kg ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "sku": "CREATINA3GR",
+    "brand": {
+      "@type": "Brand",
+      "name": "Magrolabs"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4",
+      "reviewCount": "6"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://magrolabs.com/productos/creatinas/creatina-monohidratada-3-kg",
+      "priceCurrency": "PEN",
+      "price": this.ENV.precioCreatina3kgSubscription,
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
   ngOnInit() {
 
     this.isSelectSubscription = true;
@@ -82,6 +163,7 @@ export class CreatinasComponent {
       // this.principalImgBack = 'package-image-back.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
+      this._seo.setStructuredData(this.jsonLD_250Gr);
     }
     else if (this.slug === 'creatina-monohidratada-100-gr') {
       this.isFreeCreatine = true;
@@ -95,6 +177,7 @@ export class CreatinasComponent {
       this.principalImgFront = 'package-image.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
+      this._seo.setStructuredData(this.jsonLD_100Gr);
     }
     else if (this.slug === 'creatina-monohidratada-3-kg') {
       this.isFreeCreatine = false;
@@ -109,6 +192,7 @@ export class CreatinasComponent {
       this.model3dUrl = '3kg';
       this.principalImgFront = 'package-image-3000.png';
       this.previewmodel3d = 'preview-3d-image.png';
+      this._seo.setStructuredData(this.jsonLD_3Kg);
     }
     else {
       this.router.navigate(['./404']);

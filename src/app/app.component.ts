@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { afterNextRender, afterRender, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,15 @@ export class AppComponent {
   title = 'Magrolabs';
   ENV = environment;
   isButtonVisible = false;
+  wasScroll = signal(false);
+
+  constructor(){
+    afterNextRender(() => {
+      window.addEventListener('scroll', () => {
+        this.wasScroll.set(true);
+      });
+    })
+  }
 
   ngOnInit() {
     this._router.events.subscribe(event => {
@@ -29,6 +38,5 @@ export class AppComponent {
         }
       }
     });
-
   }
 }

@@ -44,7 +44,7 @@ const fechaUltimaActualizacionCondicionesUso = '01/12/2024';
 const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
 const fechaUltimaActualizacionPrivacidad = '03/12/2024';
 const fechaUltimaActualizacionCookies = '04/12/2024';
-
+const creatinaFreePrecio = 35;
 
 export const environment = {
     APP_URL,
@@ -92,5 +92,6 @@ export const environment = {
     fechaUltimaActualizacionCondicionesUso,
     fechaUltimaActualizacionTerminosCondiciones,
     fechaUltimaActualizacionPrivacidad,
-    fechaUltimaActualizacionCookies
+    fechaUltimaActualizacionCookies,
+    creatinaFreePrecio
 };

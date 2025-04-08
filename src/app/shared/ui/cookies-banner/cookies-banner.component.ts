@@ -1,7 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
-import { AppComponent } from '../../../app.component';
+import { afterRender, Component } from '@angular/core';
 
 @Component({
   selector: 'app-cookies-banner',
@@ -12,11 +9,12 @@ import { AppComponent } from '../../../app.component';
 })
 export class CookiesBannerComponent {
   isCookieClose = true;
-
-  ngOnInit(): void {
-    this.isCookieClose = localStorage.getItem('cookieBannerReaded') === 'true' ? true : false;
+  constructor() {
+    afterRender(() => {
+      this.isCookieClose = localStorage.getItem('cookieBannerReaded') === 'true' ? true : false;
+    })
   }
-  
+
   closeCookieBanner() {
     this.isCookieClose = true
     localStorage.setItem('cookieBannerReaded', 'true');

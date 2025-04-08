@@ -93,4 +93,16 @@ export class SeoService {
       head.appendChild(link);
     });
   }
+
+  /**
+ * Adds a structured data script (JSON-LD) to the head.
+ * @param jsonLD The JSON object to be added as a script.
+ */
+  setStructuredData(jsonLD: Object) {
+    const script = this._document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(jsonLD);
+    this._document.head.appendChild(script);
+  }
+
 }

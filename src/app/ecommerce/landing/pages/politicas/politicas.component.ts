@@ -44,14 +44,9 @@ export class PoliticasComponent {
   }
 
   options: string[] = [
-    '/atencion-cliente/preguntas-frecuentes',
-    '/atencion-cliente/contactanos',
-    '/atencion-cliente/como-funciona',
-    '/atencion-cliente/envio-y-entrega',
-    '/atencion-cliente/cambio',
-    '/atencion-cliente/pausar-cancelar',
-    '/atencion-cliente/pago',
-    '/atencion-cliente/programa-loyalty',
-    '/atencion-cliente/spromociones'
+    '/politicas/terminos-y-condiciones',
+    '/politicas/condiciones-de-uso',
+    '/politicas/privacidad',
+    '/politicas/cookies'
   ];
 }

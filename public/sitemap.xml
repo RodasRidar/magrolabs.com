@@ -1,82 +1,175 @@
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<url>
-<loc>https://magrolabs.com/</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>1.00</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/como-funciona</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/atencion-cliente</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.86</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/productos</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/login</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.90</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/registro</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.85</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/loyalty-webshop</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-100-gr</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.70</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-3-kg</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.70</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/politicas/envio-y-entrega</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/politicas/pagos</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/politicas/terminos-y-condiciones</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/politicas/condiciones-de-uso</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/politicas/privacidad</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
-<url>
-<loc>https://magrolabs.com/referido-por-amigo</loc>
-<lastmod>2024-11-22T21:16:34+00:00</lastmod>
-<priority>0.80</priority>
-</url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
+  http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <url>
+    <loc>https://magrolabs.com/</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>1.00</priority>
+  </url>
+
+  <!-- Registro -->
+  <url>
+    <loc>https://magrolabs.com/registro</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/registro/crear-cuenta</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/registro/direccion</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/registro/verificacion</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/registro/confirmacion</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Login -->
+  <url>
+    <loc>https://magrolabs.com/login</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Políticas -->
+  <url>
+    <loc>https://magrolabs.com/politicas/terminos-y-condiciones</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/politicas/condiciones-de-uso</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/politicas/privacidad</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/politicas/cookies</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Atención al cliente -->
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/preguntas-frecuentes</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/contactanos</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/como-funciona</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/envio-y-entrega</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/cambio</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/pausar-cancelar</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/pago</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/programa-loyalty</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/atencion-cliente/promociones</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.86</priority>
+  </url>
+
+  <!-- Productos -->
+  <url>
+    <loc>https://magrolabs.com/productos</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-100-gr</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/productos/creatinas/creatina-monohidratada-3-kg</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- Loyalty Webshop -->
+  <url>
+    <loc>https://magrolabs.com/loyalty-webshop</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Página de referido -->
+  <url>
+    <loc>https://magrolabs.com/referido-por-amigo</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Extras -->
+  <url>
+    <loc>https://magrolabs.com/recuperar-password</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/encuesta</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/bolsa</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://magrolabs.com/checkout</loc>
+    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <priority>0.70</priority>
+  </url>
+
 </urlset>

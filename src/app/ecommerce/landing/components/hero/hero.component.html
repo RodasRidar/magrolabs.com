@@ -7,8 +7,8 @@
       </h1>
       <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
         Con una suscripción de creatina Magrolabs recibe en tu
-        casa un paquete de creatina por solo <strong>S/{{ENV.precioCreatinaSubscription}}</strong> al mes** ¡Regístrate
-        ahora y recibe tu primera creatina gratis*!
+        casa un paquete de creatina por solo <strong>S/{{ENV.precioCreatinaSubscription}}</strong> al mes<span class="text-base tracking-tighter">**</span> ¡Regístrate
+        ahora y recibe tu primera creatina gratis<span class="text-base tracking-tighter">*</span>!
       </h2>
 
       <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
@@ -19,19 +19,19 @@
           </a>
         </div>
       </div>
-      <p class="mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+      <p class="tracking-tighter mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
         ** Precio de S/{{ENV.precioCreatinaSubscription}} corresponde al plan mensual de
         {{ENV.creatinaSubscription250}} gr de
         creatina.
       </p>
-      <p class="mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+      <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
         * Creatina gratis ({{ENV.creatinaFreeGramos}} gr) se entrega en un plazo de
-        {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}}-{{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días
+        {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días
         hábiles.
       </p>
     </div>
   </div>
-  <div class="relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full bg-gradient-to-r from-[#94716B] to-[#C4A39C]">
+  <div class="max-lg:mt-8 relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full bg-gradient-to-r from-[#94716B] to-[#C4A39C]">
     <img class="absolute inset-0 h-full object-cover mx-auto"
       src="/banner-landing.png"
       alt="banner-landing" />

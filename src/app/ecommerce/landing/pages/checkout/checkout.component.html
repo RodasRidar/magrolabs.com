@@ -22,7 +22,7 @@
                                     }
                                 </ul>
 
-                                <form class="mt-4">
+                                <!-- <form class="mt-4">
                                     <label for="discount-code-mobile" class="block text-sm font-medium text-gray-700">
                                         Código de descuento
                                     </label>
@@ -34,7 +34,7 @@
                                             Aplicar
                                         </button>
                                     </div>
-                                </form>
+                                </form> -->
 
                             </div>
 
@@ -47,7 +47,7 @@
                             <dt>Subtotal</dt>
                             <dd class="text-gray-900">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>
                         </div>
-                        <div class="flex justify-between">
+                        <!-- <div class="flex justify-between">
                             <dt class="flex">
                                 Descuento
                                 <span
@@ -55,14 +55,14 @@
                             </dt>
                             <dd class="text-gray-900">-{{this.shoppingCart.totalDiscount | currency : 'S/'}}
                             </dd>
-                        </div>
-                        <div class="flex justify-between">
-                            <dt>Impuestos</dt>
-                            <dd class="text-gray-900">S/9.92</dd>
-                        </div>
+                        </div> -->
+                        <!-- <div class="flex justify-between">
+                            <dt>IGV (18%)</dt>
+                            <dd class="text-gray-900">{{(this.shoppingCart.subTotal * 0.18) | currency : 'S/'}}</dd>
+                        </div> -->
                         <div class="flex justify-between">
                             <dt>Envío</dt>
-                            <dd class="text-gray-900">S/10.00</dd>
+                            <dd class="text-gray-900">Gratis</dd>
                         </div>
                         <p
                             class="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-3 mt-3">
@@ -84,7 +84,7 @@
                         </ul>
 
                         <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
-                            <form>
+                            <!-- <form>
                                 <label for="discount-code" class="block text-sm font-medium text-gray-700">
                                     Código de descuento
                                 </label>
@@ -96,28 +96,28 @@
                                         Aplicar
                                     </button>
                                 </div>
-                            </form>
+                            </form> -->
 
-                            <dl class="text-sm font-medium text-gray-500 mt-10 space-y-6">
+                            <dl class="text-sm font-medium text-gray-500 space-y-6">
                                 <div class="flex justify-between">
                                     <dt>Subtotal</dt>
                                     <dd class="text-gray-900">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
                                 </div>
-                                <div class="flex justify-between">
+                                <!-- <div class="flex justify-between">
                                     <dt class="flex">
                                         Descuento
                                         <span
                                             class="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">CHEAPSKATE</span>
                                     </dt>
                                     <dd class="text-gray-900">-{{shoppingCart.totalDiscount | currency : 'S/'}}</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt>Impuestos</dt>
-                                    <dd class="text-gray-900">S/9.92</dd>
-                                </div>
+                                </div> -->
+                                <!-- <div class="flex justify-between">
+                                    <dt>IGV (18%)</dt>
+                                    <dd class="text-gray-900">{{(this.shoppingCart.subTotal * 0.18) | currency : 'S/'}}</dd>
+                                </div> -->
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
-                                    <dd class="text-gray-900">S/10.00</dd>
+                                    <dd class="text-gray-900">Gratis</dd>
                                 </div>
                                 <div
                                     class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6 text-base">
@@ -617,11 +617,17 @@
                                                             <span class=" text-gray-600">Al completar tu pedido,
                                                                 declaras que eres mayor
                                                                 de 18 años y
-                                                                aceptas las <a class="underline cursor-pointer">Términos
+                                                                aceptas las <a
+                                                                    href="https://magrolabs.com/politicas/terminos-y-condiciones"
+                                                                    target="_blank"
+                                                                    class="underline cursor-pointer">Términos
                                                                     y
-                                                                    condiciones</a>, <a
-                                                                    class="underline cursor-pointer">Términos de uso</a>
-                                                                y la <a class="underline cursor-pointer">Declaración de
+                                                                    condiciones</a>, <a class="underline cursor-pointer"
+                                                                    href="https://magrolabs.com/politicas/condiciones-de-uso"
+                                                                    target="_blank">Términos de uso</a>
+                                                                y la <a class="underline cursor-pointer"
+                                                                    href="https://magrolabs.com/politicas/privacidad"
+                                                                    target="_blank">Declaración de
                                                                     privacidad</a> y además
                                                                 declaras que has comprobado que tu pedido y tus datos
                                                                 son correctos.</span>

@@ -4,7 +4,6 @@ import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-sum
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TypeDocumentEnum } from '../../../signup/pages/create-account/create-account.component';
 import { CommonModule } from '@angular/common';
 import { debounceTime, finalize, map, Observable, switchMap, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
@@ -17,6 +16,7 @@ import { SummaryService } from '../../../../shared/services/summary-service.serv
 import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
 
 @Component({
   selector: 'app-checkout',
@@ -69,7 +69,7 @@ export class CheckoutComponent {
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern(/^9[0-9]{8}$/)]),
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocumentEnum>'1', [Validators.required]),
+    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument> 'DNI', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
@@ -151,10 +151,13 @@ export class CheckoutComponent {
 
   hasValidatorError(field: string) {
     const control = this.form.get(field);
-    if (field === 'nroDocument' && this.form.get('typeDocument')?.value === TypeDocumentEnum.DNI) {
+    if (field === 'nroDocument' && this.form.get('typeDocument')?.value === 'DNI') {
       return control?.value.toString().length !== 8 && control?.touched && control?.invalid;
     }
-    if (field === 'nroDocument' && this.form.get('typeDocument')?.value === TypeDocumentEnum.CarnetExt) {
+    if (field === 'nroDocument' && this.form.get('typeDocument')?.value === 'CE') {
+      return control?.value.toString().length !== 12 && control?.touched && control?.invalid;
+    }
+    if (field === 'nroDocument' && this.form.get('typeDocument')?.value === 'PASSPORT') {
       return control?.value.toString().length !== 12 && control?.touched && control?.invalid;
     }
     return control?.invalid && control?.touched;
@@ -317,10 +320,10 @@ export class CheckoutComponent {
             this._summaryService.setUserData({
               nombre: this.form.get('firtName')?.value ?? '',
               apellido: this.form.get('lastName')?.value ?? '',
-              dni: this.form.get('nroDocument')?.value ?? '',
+              nroDocument: this.form.get('nroDocument')?.value ?? '',
               email: this.form.get('email')?.value ?? '',
               cellphone: this.form.get('cellphone')?.value ?? '',
-              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
               password: this.form.get('password')?.value ?? '',
               customerId: customerResponse.customerId,
               isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
@@ -380,10 +383,10 @@ export class CheckoutComponent {
             this._summaryService.setUserData({
               nombre: this.form.get('firtName')?.value ?? '',
               apellido: this.form.get('lastName')?.value ?? '',
-              dni: this.form.get('nroDocument')?.value ?? '',
+              nroDocument: this.form.get('nroDocument')?.value ?? '',
               email: this.form.get('email')?.value ?? '',
               cellphone: this.form.get('cellphone')?.value ?? '',
-              typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+              typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
               password: this.form.get('password')?.value ?? '',
               customerId: customerResponse.customerId,
               isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
@@ -439,10 +442,10 @@ export class CheckoutComponent {
         this._summaryService.setUserData({
           nombre: this.form.get('firtName')?.value ?? '',
           apellido: this.form.get('lastName')?.value ?? '',
-          dni: this.form.get('nroDocument')?.value ?? '',
+          nroDocument: this.form.get('nroDocument')?.value ?? '',
           email: this.form.get('email')?.value ?? '',
           cellphone: this.form.get('cellphone')?.value ?? '',
-          typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+          typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
           password: this.form.get('password')?.value ?? '',
           customerId: '',
           isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
@@ -502,10 +505,10 @@ export class CheckoutComponent {
           this._summaryService.setUserData({
             nombre: this.form.get('firtName')?.value ?? '',
             apellido: this.form.get('lastName')?.value ?? '',
-            dni: this.form.get('nroDocument')?.value ?? '',
+            nroDocument: this.form.get('nroDocument')?.value ?? '',
             email: this.form.get('email')?.value ?? '',
             cellphone: this.form.get('cellphone')?.value ?? '',
-            typeDocument: this.form.get('typeDocument')?.value ?? TypeDocumentEnum.DNI,
+            typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
             password: this.form.get('password')?.value ?? '',
             customerId: response.customerId,
             isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
@@ -558,8 +561,8 @@ export class CheckoutComponent {
     this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
     this.form.get('lastName')?.setValue(summary?.userData?.apellido ?? '');
     this.form.get('cellphone')?.setValue(summary?.userData?.cellphone ?? '');
-    this.form.get('nroDocument')?.setValue(summary?.userData?.dni ?? '');
-    this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? TypeDocumentEnum.DNI);
+    this.form.get('nroDocument')?.setValue(summary?.userData?.nroDocument ?? '');
+    this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? 'DNI');
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? false);

@@ -1,5 +1,4 @@
-import { TypeDocumentEnum } from "../../ecommerce/signup/pages/create-account/create-account.component"
-
+import { TypeDocument } from "../interfaces/auth.interfaces";
 export interface Summary {
     chosePlan?: ChosePlanSummary,
     userData?: UserDataSummary,
@@ -16,12 +15,13 @@ export interface ChosePlanSummary {
 }
 
 export interface UserDataSummary {
+    id?: string,
     nombre: string,
     apellido : string,
-    dni: string,
+    nroDocument: string,
     email: string
     cellphone: string,
-    typeDocument: TypeDocumentEnum,
+    typeDocument: TypeDocument,
     password?: string,
     customerId?: string //Flow
     isPaymentVerified?: boolean,

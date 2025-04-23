@@ -401,3 +401,5 @@ FodyWeavers.xsd
 .DS_Store
 dist/*
 .env
+*/.DS_Store
+app/.DS_Store

@@ -34,6 +34,18 @@ export class AddressService {
   getDistricts(provinceUbigeo: string): Observable<Ubigeo[]> {
     return of(DISTRICTS[provinceUbigeo as keyof typeof DISTRICTS]);
   }
+
+  getListDepartments(): Ubigeo[] {
+    return DEPARTMENTS;
+  }
+
+  getListProvinces(departmentUbigeo: string): Ubigeo[] {
+    return PROVINCES[departmentUbigeo as keyof typeof PROVINCES];
+  }
+
+  getListDistricts(provinceUbigeo: string): Ubigeo[] {
+    return DISTRICTS[provinceUbigeo as keyof typeof DISTRICTS];
+  }
 }
 
 interface AddressAPI {

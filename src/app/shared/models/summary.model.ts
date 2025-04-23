@@ -31,6 +31,7 @@ export interface UserDataSummary {
 }
 
 export interface AddressSummary {
+    id?: string,
     tipoVia :string
     nombreVia :string
     numero? :string

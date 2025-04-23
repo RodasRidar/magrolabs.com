@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
-import { debounceTime, map, Observable, switchMap, tap } from 'rxjs';
-import { state } from '@angular/animations';
+import { debounceTime, map, Observable, switchMap, tap, catchError, of, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { AddressApiService } from '../../../../shared/services/address-api.service';
+import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
+import { UserService } from '../../../../shared/services/user.service';
 
 export interface Address {
   searchAddress: FormControl<string>,
@@ -37,7 +40,9 @@ export class AddressComponent {
   private _summaryService = inject(SummaryService)
   private _route = inject(ActivatedRoute)
   private _seo = inject(SeoService)
-
+  private _toastService = inject(ToastService)
+  private _addressApiService = inject(AddressApiService)
+  private _userService = inject(UserService)
   private nextUrl = '';
   stepEnum = StepEnum;
   addressList: PlaceAPI[] = [];
@@ -194,6 +199,10 @@ export class AddressComponent {
     this.form.get('district')?.enable();
   }
 
+  selectDistrict(event: any): void {
+    this.districtUbigeo = event.target.value;
+  }
+
   findIdUbigeo(name: string | undefined, list: Ubigeo[]): string {
     if (!name) {
       return '';
@@ -203,36 +212,126 @@ export class AddressComponent {
 
   nextStep(): void {
     this.isSaving = true;
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.isSaving = false;
       return;
     }
+    
     if (!this.isAddressRegistered()) {
       this.form.markAllAsTouched();
+      this.isSaving = false;
       return;
     }
-    this._summaryService.setAddress(
-      {
-        tipoVia: '',
-        nombreVia: this.form.get('streetAddress')?.value ?? '',
-        numero: this.form.get('number')?.value ?? '',
-        codigoPostal: this.form.get('postalCode')?.value ?? '',
-        distrito: this.form.get('district')?.value ?? '',
-        provincia: this.form.get('province')?.value ?? '',
-        department: this.form.get('department')?.value ?? '',
-        reference: this.form.get('reference')?.value ?? '',
-      }
-    );
+    
+    // Crear objeto de dirección para el servicio de resumen
+    const addressSummary = {
+      tipoVia: '',
+      nombreVia: this.form.get('streetAddress')?.value ?? '',
+      numero: this.form.get('number')?.value ?? '',
+      codigoPostal: this.form.get('postalCode')?.value ?? '',
+      distrito: this.form.get('district')?.value ?? '',
+      provincia: this.form.get('province')?.value ?? '',
+      department: this.form.get('department')?.value ?? '',
+      reference: this.form.get('reference')?.value ?? '',
+    };
+    
+    // Obtener el ID del usuario del servicio de resumen
+    const userId = this._summaryService.getSummary()?.userData?.id;
+    const addressId = this._summaryService.getSummary()?.address?.id;
+    if (userId) {
+      const department = this._addressService.getListDepartments().find((x) => x.id_ubigeo == this.departmentUbigeo);
+      const province = this._addressService.getListProvinces(this.departmentUbigeo).find((x) => x.id_ubigeo == this.provinceUbigeo);
+      const district = this._addressService.getListDistricts(this.provinceUbigeo).find((x) => x.id_ubigeo == this.districtUbigeo);
 
+      const addressRequest: CreateAddressRequest = {
+        avenue: addressSummary.nombreVia,
+        department: department?.nombre_ubigeo ?? '',
+        department_ubigeo: this.departmentUbigeo,
+        province: province?.nombre_ubigeo ?? '',
+        province_ubigeo: this.provinceUbigeo,
+        district: district?.nombre_ubigeo ?? '',
+        district_ubigeo: this.districtUbigeo,
+        postalcode: addressSummary.codigoPostal,
+        number: addressSummary.numero,
+        reference: addressSummary.reference
+      };
+
+      if (addressId) {
+        this._addressApiService.updateAddress(addressId, addressRequest)
+          .pipe(
+            switchMap(response => {
+              const addressId = response.data.address.id;
+              this._summaryService.setAddress({...addressSummary, id: addressId});
+              return this._userService.updateUser(userId, { address_id: addressId });
+            }),
+            catchError(err => {
+              console.error(err);
+              this._toastService.error('Ups!', 'Error al guardar la nueva dirección. Por favor, intenta nuevamente.');
+              return of(null);
+            }),
+            finalize(() => {
+              this.isSaving = false;
+            })
+          ).subscribe({
+            next: (response) => {
+              if (response) {
+                this._toastService.success('¡Listo!', 'Dirección guardada correctamente.');
+                this.navigateToNextStep();
+              }
+            },
+            error: () => {
+              this._toastService.error('Ups!', 'Error al guardar la dirección. Por favor, intenta nuevamente.');
+              this.isSaving = false;
+            }
+          })
+      }
+      else{
+      // Crear dirección en la API y asociarla al usuario
+      this._addressApiService.createAddress(addressRequest)
+        .pipe(
+          switchMap(response => {
+            const addressId = response.data.address.id;
+            this._summaryService.setAddress({...addressSummary, id: addressId});
+            return this._userService.updateUser(userId, {address_id: addressId});
+          }),
+          catchError(err => {
+            console.error(err);
+            this._toastService.error('Ups!', 'Error al guardar la dirección. Por favor, intenta nuevamente.');
+            return of(null);
+          }),
+          finalize(() => {
+            this.isSaving = false;
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this._toastService.success('¡Listo!', 'Dirección guardada correctamente.');
+              this.navigateToNextStep();
+            }
+          },
+          error: () => {
+            // Error ya manejado en catchError
+            this.isSaving = false;
+          }
+        });
+      }
+
+    } else {
+      this._toastService.error('Ups!', 'Error al guardar la dirección. No se encontro el ID usuario.');
+      this.isSaving = false;
+    }
+  }
+  
+  // Método para navegar al siguiente paso
+  private navigateToNextStep(): void {
     if (this.nextUrl !== '') {
       this._router.navigate(['/registro/' + this.nextUrl]);
-    }
-    else {
+    } else {
       this._router.navigate(['/registro/verificacion']);
     }
-
-
-    this.isSaving = false;
   }
 
   hasValidatorError(field: string) {

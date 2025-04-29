@@ -28,6 +28,7 @@ export interface UserDataSummary {
     last4CardDigits?: string,//Flow
     creditCardType?: string,//Flow
     isSignUpAcepted?: boolean,
+    orderId?: string,
 }
 
 export interface AddressSummary {

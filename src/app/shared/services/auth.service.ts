@@ -96,7 +96,9 @@ export class AuthService {
           }
         }),
         catchError(error => {
-          this.logout();
+          //this.logout();
+          alert('Error al renovar el token.refreshToken');
+          console.error('refreshToken catchError', error);
           return throwError(() => error);
         })
       );

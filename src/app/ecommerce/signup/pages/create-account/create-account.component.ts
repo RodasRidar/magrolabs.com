@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { StepEnum } from '../../models/step.model';
 import { StepComponent } from '../../components/step/step.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
@@ -54,6 +54,7 @@ export class CreateAccountComponent implements OnDestroy {
   private _toastService = inject(ToastService)
   private _authService = inject(AuthService)
   private _userService = inject(UserService)
+  private platformId = inject(PLATFORM_ID);
   private nextUrl = '';
 
   stepEnum = StepEnum;
@@ -193,6 +194,8 @@ export class CreateAccountComponent implements OnDestroy {
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
+        }else{
+          localStorage.setItem('isEmailInvalid', 'false');
         }
       });
     }
@@ -223,6 +226,8 @@ export class CreateAccountComponent implements OnDestroy {
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
+        }else{
+          localStorage.setItem('isExternalIdExists', 'false');
         }
       });
     }
@@ -261,12 +266,14 @@ export class CreateAccountComponent implements OnDestroy {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return control?.hasError('nroDocumentExists') && control.dirty;
+    return (control?.hasError('nroDocumentExists') && control.dirty) || 
+           (isPlatformBrowser(this.platformId) && localStorage.getItem('isExternalIdExists') === 'true');
   }
 
   hasInvalidEmail() {
     const control = this.form.get('email');
-    return control?.hasError('emailInvalid') && control.dirty;
+    return (control?.hasError('emailInvalid') && control.dirty) || 
+           (isPlatformBrowser(this.platformId) && localStorage.getItem('isEmailInvalid') === 'true');
   }
 
   // Validar email
@@ -364,7 +371,8 @@ export class CreateAccountComponent implements OnDestroy {
       })
     ).subscribe({
       next: (response) => {
-        userData.id = response.id;
+        const customerId = this._summaryService.getSummary()?.userData?.customerId;
+        userData = { ...userData, customerId ,id:response.id};
         this.saveUserDataAndNavigate(userData);
         this._toastService.success('¡Listo!', 'Datos actualizados correctamente.');
       }

@@ -49,7 +49,7 @@ const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
 const fechaUltimaActualizacionPrivacidad = '03/12/2024';
 const fechaUltimaActualizacionCookies = '04/12/2024';
 const creatinaFreePrecio = 35;
-const apiMagroLabs = 'https://api.magrolabs.com/api/v1';
+const apiMagroLabs = 'https://dev-api.magrolabs.com/api/v1';
 
 
 

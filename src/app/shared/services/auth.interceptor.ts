@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take, finalize } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/env';
 
 // Variable para controlar el estado de actualización del token
 let isRefreshing = false;
@@ -15,7 +16,8 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const token = authService.getToken();
   
-  if (token) {
+  // Solo agregar el token si la URL contiene 'apiMagroLabs'
+  if (token && request.url.includes(environment.apiMagroLabs)) {
     request = addTokenHeader(request, token);
   }
 

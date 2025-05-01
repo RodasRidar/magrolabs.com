@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/env';
 import { 
   CreateSubscriptionRequest,
@@ -12,7 +12,8 @@ import {
   SubscriptionPlansResponse,
   SubscriptionPlanResponse,
   CreateSubscriptionPlanRequest,
-  UpdateSubscriptionPlanRequest
+  UpdateSubscriptionPlanRequest,
+  Subscription
 } from '../interfaces/subscription.interface';
 
 @Injectable({
@@ -52,9 +53,10 @@ export class SubscriptionService {
    * Crear una nueva suscripción
    * @param subscriptionData Datos de la suscripción
    */
-  createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<SubscriptionResponse> {
+  createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<Subscription> {
     return this.http.post<SubscriptionResponse>(this.API_URL, subscriptionData)
       .pipe(
+        map(response => response.data.subscription),
         catchError(error => throwError(() => error))
       );
   }

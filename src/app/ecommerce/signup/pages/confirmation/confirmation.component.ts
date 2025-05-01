@@ -120,6 +120,7 @@ export class ConfirmationComponent {
       }
       this._summaryService.clearSummary();
       this._shoppingCartService.clearCart();
+      localStorage.clear();
     });
   }
 

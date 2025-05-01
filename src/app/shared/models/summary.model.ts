@@ -29,6 +29,7 @@ export interface UserDataSummary {
     creditCardType?: string,//Flow
     isSignUpAcepted?: boolean,
     orderId?: string,
+    subscriptionId?: string, //Flow
 }
 
 export interface AddressSummary {

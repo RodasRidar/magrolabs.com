@@ -279,7 +279,16 @@ export interface UpdateOrderDetailsRequest {
   status?: OrderStatus;
   shipping_address?: string;
   discount?: number;
-  payment_method?: string;
+  payment_method?: PaymentMethod;
   code_discount?: string;
   isLoyaltyWebShow?: boolean;
+}
+
+export enum PaymentMethod {
+  CREDIT_CARD = 'CREDIT_CARD',
+  DEBIT_CARD = 'DEBIT_CARD',
+  BANK_TRANSFER = 'BANK_TRANSFER',
+  PAYPAL = 'PAYPAL',
+  PAGO_EFECTIVO = 'PAGO_EFECTIVO',
+  YAPE = 'YAPE'
 }

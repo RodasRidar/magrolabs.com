@@ -113,7 +113,7 @@ export class CreateAccountComponent implements OnDestroy {
     ).subscribe(email => {
       this.validateEmailWithServer(email);
     });
-    
+
     // Configurar debounce para teléfono
     const phoneSubscription = this.phoneSubject.pipe(
       debounceTime(500), // Esperar 800ms después de que el usuario deje de escribir
@@ -122,7 +122,7 @@ export class CreateAccountComponent implements OnDestroy {
     ).subscribe(phone => {
       this.validatePhoneWithServer(phone);
     });
-    
+
     // Configurar debounce para documento
     const documentSubscription = this.documentSubject.pipe(
       debounceTime(500),
@@ -135,7 +135,7 @@ export class CreateAccountComponent implements OnDestroy {
     ).subscribe(document => {
       this.validateDocumentWithServer(document);
     });
-    
+
     this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
 
     // Escuchar cambios en el email
@@ -151,7 +151,7 @@ export class CreateAccountComponent implements OnDestroy {
         this.phoneSubject.next(val);
       }
     });
-    
+
     // Escuchar cambios en el documento
     this.form.get('nroDocument')?.valueChanges.subscribe(val => {
       if (val) {
@@ -172,6 +172,12 @@ export class CreateAccountComponent implements OnDestroy {
         passwordControl?.updateValueAndValidity();
       });
     }
+
+    if (isPlatformBrowser(this.platformId) && localStorage.getItem('passwordSignal') == 'true') {
+      this.form.get('password')?.setValidators([Validators.required]);
+      this.form.get('password')?.updateValueAndValidity();
+      this.form.get('password')?.markAsTouched()
+    }
   }
 
   ngOnDestroy(): void {
@@ -184,7 +190,7 @@ export class CreateAccountComponent implements OnDestroy {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
-  
+
   // Validar email con el servidor
   private validateEmailWithServer(email: string): void {
     const control = this.form.get('email');
@@ -194,13 +200,13 @@ export class CreateAccountComponent implements OnDestroy {
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
-        }else{
+        } else {
           localStorage.setItem('isEmailInvalid', 'false');
         }
       });
     }
   }
-  
+
   // Validar teléfono con el servidor
   private validatePhoneWithServer(phone: string): void {
     const control = this.form.get('cellphone');
@@ -214,19 +220,19 @@ export class CreateAccountComponent implements OnDestroy {
       });
     }
   }
-  
+
   // Validar documento con el servidor
   private validateDocumentWithServer(document: string): void {
     const control = this.form.get('nroDocument');
     const typeDoc = this.form.get('typeDocument')?.value;
-    
+
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
         catchError(() => EMPTY)
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
-        }else{
+        } else {
           localStorage.setItem('isExternalIdExists', 'false');
         }
       });
@@ -266,14 +272,14 @@ export class CreateAccountComponent implements OnDestroy {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return (control?.hasError('nroDocumentExists') && control.dirty) || 
-           (isPlatformBrowser(this.platformId) && localStorage.getItem('isExternalIdExists') === 'true');
+    return (control?.hasError('nroDocumentExists') && control.dirty) ||
+      (isPlatformBrowser(this.platformId) && localStorage.getItem('isExternalIdExists') === 'true');
   }
 
   hasInvalidEmail() {
     const control = this.form.get('email');
-    return (control?.hasError('emailInvalid') && control.dirty) || 
-           (isPlatformBrowser(this.platformId) && localStorage.getItem('isEmailInvalid') === 'true');
+    return (control?.hasError('emailInvalid') && control.dirty) ||
+      (isPlatformBrowser(this.platformId) && localStorage.getItem('isEmailInvalid') === 'true');
   }
 
   // Validar email
@@ -305,12 +311,14 @@ export class CreateAccountComponent implements OnDestroy {
     this.isProcessing = true;
     //const customerId = this._summaryService.getSummary()?.userData?.customerId;
     const userId = this._summaryService.getSummary()?.userData?.id;
-    const userData = this.getUserDataFromForm();
-
+    let userData = this.getUserDataFromForm();
+    if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0 )|| this.isCreatinaGratis) {
+      userData.isSignUpAcepted = true;
+    }
     if (userId) {
       this.updateExistingCustomerByApi(userId, userData);
     }
-    else{
+    else {
       this.createNewCustomerByApi(userData);
     }
     // Actualizar usuario existente en Flow
@@ -331,6 +339,11 @@ export class CreateAccountComponent implements OnDestroy {
 
       this.createNewCustomerWithFlow(userData);
     }*/
+
+
+    localStorage.removeItem('passwordSignal');
+    localStorage.removeItem('isEmailInvalid');
+    localStorage.removeItem('isExternalIdExists');
   }
 
   private updateExistingCustomerByApi(userId: string, userData: UserDataSummary) {
@@ -353,7 +366,7 @@ export class CreateAccountComponent implements OnDestroy {
             newPassword: userData.password,
             confirmPassword: userData.password
           };
-          
+
           // Retornamos la actualización de contraseña dentro del switchMap
           return this._userService.updatePassword(passwordRequest).pipe(
             // Después de actualizar la contraseña, devolvemos el usuario actualizado
@@ -372,7 +385,7 @@ export class CreateAccountComponent implements OnDestroy {
     ).subscribe({
       next: (response) => {
         const customerId = this._summaryService.getSummary()?.userData?.customerId;
-        userData = { ...userData, customerId ,id:response.id};
+        userData = { ...userData, customerId, id: response.id };
         this.saveUserDataAndNavigate(userData);
         this._toastService.success('¡Listo!', 'Datos actualizados correctamente.');
       }
@@ -389,7 +402,7 @@ export class CreateAccountComponent implements OnDestroy {
       documentType: userData.typeDocument,
       phone: userData.cellphone,
     };
-    
+
     if (this.form.get('password')?.value && this.form.get('password')!.value.length > 0) {
       registerRequest.password = this.form.get('password')?.value;
     }
@@ -409,7 +422,7 @@ export class CreateAccountComponent implements OnDestroy {
         this.saveUserDataAndNavigate(userData);
       });
   }
-  
+
   // Extraer datos del formulario
   private getUserDataFromForm(): UserDataSummary {
     const userData: UserDataSummary = {
@@ -433,7 +446,7 @@ export class CreateAccountComponent implements OnDestroy {
 
     this._summaryService.setUserData(userData);
     this.isProcessing = false;
-    
+
     if (this.nextUrl !== '') {
       this._router.navigate(['/registro/' + this.nextUrl]);
     } else {
@@ -454,7 +467,7 @@ export class CreateAccountComponent implements OnDestroy {
       .pipe(
         switchMap(response => {
           userData.customerId = response.customerId;
-          
+
           const updateUserRequest: UpdateUserRequest = {
             first_name: userData.nombre,
             last_name: userData.apellido,
@@ -464,7 +477,7 @@ export class CreateAccountComponent implements OnDestroy {
             isSignUpAcepted: userData.isSignUpAcepted,
             email: userData.email,
           };
-          
+
           return this._userService.updateUser(customerId, updateUserRequest);
         }),
         catchError(err => {
@@ -496,7 +509,7 @@ export class CreateAccountComponent implements OnDestroy {
         switchMap(response => {
           userData.customerId = response.customerId;
           this._summaryService.setUserData(userData);
-          
+
           const registerRequest: RegisterUserRequest = {
             email: userData.email,
             password: userData.password ?? '',
@@ -509,7 +522,7 @@ export class CreateAccountComponent implements OnDestroy {
             phone: userData.cellphone,
           };
 
-          if(userData.id){
+          if (userData.id) {
             return EMPTY;
           }
           return this._authService.register(registerRequest);
@@ -535,7 +548,7 @@ export class CreateAccountComponent implements OnDestroy {
   // Manejar errores de cliente
   private handleCustomerError(err: any) {
     this.isProcessing = false;
-    
+
     if (err.error?.code === 501) {
       if (err.error.message.includes('externalId')) {
         this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');

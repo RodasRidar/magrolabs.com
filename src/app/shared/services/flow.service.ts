@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionRequest, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
+import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
@@ -74,7 +74,7 @@ export class FlowService {
   }
 
   registerCard(customerId: string): Observable<RegisterCardResponse> {
-    const url_return = 'http://magrolabs.com/registro/verificacion';
+    const url_return = environment.flowUrlReturn;
     if (environment.production) {
       const url = `${this.apiUrl}customer/register.ts`;
       return this.http.post<RegisterCardResponse>(url, { customerId, url_return });
@@ -92,7 +92,7 @@ export class FlowService {
     }
   }
 
-  createSubscription(subscriptionData: CreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
+  createSubscription(subscriptionData: FlowCreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
     if (environment.production) {
       const url = `${this.apiUrl}subscription/create.ts`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);

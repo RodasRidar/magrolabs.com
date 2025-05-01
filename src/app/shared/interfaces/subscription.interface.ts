@@ -6,11 +6,12 @@
  * Representa los estados posibles de una suscripción
  */
 export enum SubscriptionStatusEnum {
-    ACTIVE = 'ACTIVE',
-    PAUSED = 'PAUSED',
-    CANCELLED = 'CANCELLED',
-    EXPIRED = 'EXPIRED'
-  }
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  PAUSED = 'PAUSED',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED'
+}
   
   /**
    * Representa un plan de suscripción
@@ -82,11 +83,7 @@ export enum SubscriptionStatusEnum {
   export interface Subscription {
     id: string;
     user_id: string;
-    user?: SubscriptionUser;
     subscription_plan_id: string;
-    subscriptionPlan?: SubscriptionPlan;
-    product_id: string;
-    product?: SubscriptionProduct;
     start_date: string;
     end_date?: string;
     status: SubscriptionStatusEnum;
@@ -96,7 +93,8 @@ export enum SubscriptionStatusEnum {
     credits: number;
     created_at: string;
     updated_at: string;
-    subscriptionOrders?: SubscriptionOrder[];
+    updated_by: string;
+    is_deleted: boolean;
   }
   
   /**
@@ -105,7 +103,6 @@ export enum SubscriptionStatusEnum {
   export interface CreateSubscriptionRequest {
     user_id?: string; // Opcional, si no se proporciona se usa el del usuario autenticado
     subscription_plan_id: string;
-    product_id: string;
     start_date: string;
     end_date?: string;
     status?: SubscriptionStatusEnum;
@@ -168,7 +165,10 @@ export enum SubscriptionStatusEnum {
    * Respuesta de una sola suscripción
    */
   export interface SubscriptionResponse {
-    subscription: Subscription;
+    status: string
+    data: {
+      subscription: Subscription;
+    };
   }
   
   /**

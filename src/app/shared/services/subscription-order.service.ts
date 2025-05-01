@@ -1,113 +1,91 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/env';
 import { 
   CreateSubscriptionOrderRequest,
+  UpdateSubscriptionOrderRequest,
+  UpdateSubscriptionOrderStatusRequest,
   OrderStatusEnum,
   PaginatedSubscriptionOrdersResponse,
-  SubscriptionOrderResponse,
-  UpdateSubscriptionOrderRequest,
-  UpdateSubscriptionOrderStatusRequest
+  SubscriptionOrderResponse
 } from '../interfaces/subscription-order.interface';
-import { SubscriptionOrder, SubscriptionOrderStatus } from '../models/subscription-order.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionOrderService {
-  private readonly API_URL = `${environment.apiMagroLabs}/subscription-orders`;
-
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiMagroLabs}/subscription-orders`;
 
   /**
-   * Obtener todas las órdenes de suscripción
+   * Obtiene todas las órdenes de suscripción con opciones de paginación y filtrado
+   * 
    * @param page Número de página
-   * @param limit Límite de elementos por página
-   * @param status Estado de las órdenes a filtrar (opcional)
+   * @param limit Cantidad de elementos por página
+   * @param includeDeleted Incluir elementos eliminados
+   * @param subscriptionId Filtrar por ID de suscripción
+   * @param status Filtrar por estado
+   * @returns Observable con los resultados paginados
    */
   getAllSubscriptionOrders(
-    page: number = 1, 
-    limit: number = 10, 
+    page = 1,
+    limit = 10,
+    includeDeleted = false,
+    subscriptionId?: string,
     status?: OrderStatusEnum
   ): Observable<PaginatedSubscriptionOrdersResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString());
+      .set('limit', limit.toString())
+      .set('includeDeleted', includeDeleted.toString());
+
+    if (subscriptionId) {
+      params = params.set('subscriptionId', subscriptionId);
+    }
 
     if (status) {
       params = params.set('status', status);
     }
 
-    return this.http.get<PaginatedSubscriptionOrdersResponse>(this.API_URL, { params })
+    return this.http.get<PaginatedSubscriptionOrdersResponse>(this.apiUrl, { params })
       .pipe(
         catchError(error => throwError(() => error))
       );
   }
 
   /**
-   * Crear una nueva orden de suscripción
-   * @param orderData Datos de la orden de suscripción
-   */
-  createSubscriptionOrder(orderData: CreateSubscriptionOrderRequest): Observable<SubscriptionOrderResponse> {
-    return this.http.post<SubscriptionOrderResponse>(this.API_URL, orderData)
-      .pipe(
-        catchError(error => throwError(() => error))
-      );
-  }
-
-  /**
-   * Obtener una orden de suscripción por su ID
+   * Obtiene una orden de suscripción específica por su ID
+   * 
    * @param id ID de la orden de suscripción
+   * @returns Observable con la información de la orden
    */
   getSubscriptionOrderById(id: string): Observable<SubscriptionOrderResponse> {
-    return this.http.get<SubscriptionOrderResponse>(`${this.API_URL}/${id}`)
+    return this.http.get<SubscriptionOrderResponse>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(error => throwError(() => error))
       );
   }
 
   /**
-   * Actualizar una orden de suscripción
-   * @param id ID de la orden de suscripción
-   * @param orderData Datos a actualizar
-   */
-  updateSubscriptionOrder(id: string, orderData: UpdateSubscriptionOrderRequest): Observable<SubscriptionOrderResponse> {
-    return this.http.put<SubscriptionOrderResponse>(`${this.API_URL}/${id}`, orderData)
-      .pipe(
-        catchError(error => throwError(() => error))
-      );
-  }
-
-  /**
-   * Eliminar una orden de suscripción (soft delete)
-   * @param id ID de la orden de suscripción
-   */
-  deleteSubscriptionOrder(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.API_URL}/${id}`)
-      .pipe(
-        catchError(error => throwError(() => error))
-      );
-  }
-
-  /**
-   * Obtener órdenes por ID de suscripción
+   * Obtiene todas las órdenes asociadas a una suscripción específica
+   * 
    * @param subscriptionId ID de la suscripción
    * @param page Número de página
-   * @param limit Límite de elementos por página
+   * @param limit Cantidad de elementos por página
+   * @returns Observable con los resultados paginados
    */
   getOrdersBySubscriptionId(
     subscriptionId: string,
-    page: number = 1,
-    limit: number = 10
+    page = 1,
+    limit = 10
   ): Observable<PaginatedSubscriptionOrdersResponse> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
 
     return this.http.get<PaginatedSubscriptionOrdersResponse>(
-      `${this.API_URL}/subscription/${subscriptionId}`,
+      `${this.apiUrl}/subscription/${subscriptionId}`,
       { params }
     ).pipe(
       catchError(error => throwError(() => error))
@@ -115,47 +93,61 @@ export class SubscriptionOrderService {
   }
 
   /**
-   * Actualizar el estado de una orden de suscripción
-   * @param id ID de la orden de suscripción
-   * @param statusData Datos del nuevo estado
+   * Crea una nueva orden de suscripción
+   * 
+   * @param data Datos para crear la orden
+   * @returns Observable con la orden creada
+   */
+  createSubscriptionOrder(data: CreateSubscriptionOrderRequest): Observable<SubscriptionOrderResponse> {
+    return this.http.post<SubscriptionOrderResponse>(this.apiUrl, data)
+      .pipe(
+        catchError(error => throwError(() => error))
+      );
+  }
+
+  /**
+   * Actualiza una orden de suscripción existente
+   * 
+   * @param id ID de la orden a actualizar
+   * @param data Datos para actualizar
+   * @returns Observable con la orden actualizada
+   */
+  updateSubscriptionOrder(id: string, data: UpdateSubscriptionOrderRequest): Observable<SubscriptionOrderResponse> {
+    return this.http.put<SubscriptionOrderResponse>(`${this.apiUrl}/${id}`, data)
+      .pipe(
+        catchError(error => throwError(() => error))
+      );
+  }
+
+  /**
+   * Actualiza el estado de una orden de suscripción
+   * 
+   * @param id ID de la orden
+   * @param statusData Datos del estado a actualizar
+   * @returns Observable con la orden actualizada
    */
   updateSubscriptionOrderStatus(
     id: string, 
     statusData: UpdateSubscriptionOrderStatusRequest
   ): Observable<SubscriptionOrderResponse> {
     return this.http.patch<SubscriptionOrderResponse>(
-      `${this.API_URL}/${id}/status`,
+      `${this.apiUrl}/${id}/status`,
       statusData
     ).pipe(
       catchError(error => throwError(() => error))
     );
   }
 
-  getAll(): Observable<SubscriptionOrder[]> {
-    return this.http.get<SubscriptionOrder[]>(this.API_URL);
-  }
-
-  getById(id: string): Observable<SubscriptionOrder> {
-    return this.http.get<SubscriptionOrder>(`${this.API_URL}/${id}`);
-  }
-
-  getBySubscriptionId(subscriptionId: string): Observable<SubscriptionOrder[]> {
-    return this.http.get<SubscriptionOrder[]>(`${this.API_URL}/subscription/${subscriptionId}`);
-  }
-
-  create(order: Partial<SubscriptionOrder>): Observable<SubscriptionOrder> {
-    return this.http.post<SubscriptionOrder>(this.API_URL, order);
-  }
-
-  update(id: string, order: Partial<SubscriptionOrder>): Observable<SubscriptionOrder> {
-    return this.http.put<SubscriptionOrder>(`${this.API_URL}/${id}`, order);
-  }
-
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/${id}`);
-  }
-
-  updateStatus(id: string, status: SubscriptionOrderStatus): Observable<SubscriptionOrder> {
-    return this.http.patch<SubscriptionOrder>(`${this.API_URL}/${id}/status`, { status });
+  /**
+   * Elimina una orden de suscripción (soft delete)
+   * 
+   * @param id ID de la orden a eliminar
+   * @returns Observable de la operación
+   */
+  deleteSubscriptionOrder(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(error => throwError(() => error))
+      );
   }
 } 

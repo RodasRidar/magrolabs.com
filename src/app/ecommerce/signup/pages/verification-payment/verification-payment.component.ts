@@ -16,12 +16,17 @@ import { ConfirmationStatus, SummaryEnum, UserDataSummary } from '../../../../sh
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateCustomerRequest, CreateSubscriptionRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
-import { switchMap, EMPTY, catchError, tap, finalize } from 'rxjs';
-import { RegisterUserRequest } from '../../../../shared/interfaces/auth.interfaces';
-import { AuthService } from '../../../../shared/services/auth.service';
+import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
+import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of, Subscription, map } from 'rxjs';
 import { OrderService } from '../../../../shared/services/order.service';
-import { CreateOrderRequest, OrderStatus, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
+import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
+import { SubscriptionService } from '../../../../shared/services/subscription.service';
+import { CreateSubscriptionRequest, SubscriptionResponse, SubscriptionStatusEnum } from '../../../../shared/interfaces/subscription.interface';
+import { SubscriptionOrderService } from '../../../../shared/services/subscription-order.service';
+import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/subscription-order.interface';
+import { response } from 'express';
+import { UserService } from '../../../../shared/services/user.service';
+import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
 
 @Component({
   selector: 'app-verification-payment',
@@ -56,8 +61,10 @@ export class VerificationPaymentComponent {
   private _toastService = inject(ToastService)
   private _cookieService = inject(CookieService)
   private _flowService = inject(FlowService)
-  private _authService = inject(AuthService)
   private _orderService = inject(OrderService)
+  private _subscriptionService = inject(SubscriptionService)
+  private _subscriptionOrderService = inject(SubscriptionOrderService)
+  private _userService = inject(UserService)
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = '**** **** **** ';
   stepEnum = StepEnum;
@@ -116,7 +123,31 @@ export class VerificationPaymentComponent {
 
   nextStep() {
     this.isLoading = true;
+    
     if (this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
+      this.handleRecurrentPaymentOption();
+      return;
+    }
+
+    const promoCode = this.form.get('promoCode')?.value;
+    if (promoCode === 'FREE') {
+      this._router.navigate(['registro/confirmacion'], { 
+        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA } 
+      });
+      this.isLoading = false;
+      return;
+    }
+
+    if (this.isCreatinaGratis) {
+      this.handleSubscriptionFlow();
+    } else {
+      this.handleOnePurchaseFlow();
+    }
+  }
+
+  private handleRecurrentPaymentOption(): void {
+    const userData = this._summaryService.getSummary()?.userData;
+    if (userData?.isSignUpAcepted && userData?.password) {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
@@ -124,145 +155,323 @@ export class VerificationPaymentComponent {
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
         quantity: 1
-      })
+      });
       this.ngOnInit();
-      return
+    } else {
+      this._toastService.warning('Ups!', 'Necesitas completar la contraseña para suscribirte.');
+      this._summaryService.setChoosePlan({
+        selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+        descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
+        descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
+        quantity: 1
+      });
+      this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' } });
+      localStorage.setItem('passwordSignal', 'true');
     }
+    this.isLoading = false;
+  }
 
-    const promoCode = this.form.get('promoCode')?.value;
-    if (promoCode === 'FREE') {
-      this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA } });
+  private handleOnePurchaseFlow(): void {
+    if (this.isPaymentVerified) {
+      this.handleVerifiedPayment();
+      return;
     }
-    else {
-      if (!this.isCreatinaGratis) {
-        if (this.isPaymentVerified) {
-          //Logica para hacer pago unico con el token de la tarjeta.
-          this._toastService.success('¡Genial!', 'Pago realizado con éxito.');
-          setTimeout(() => {
-            this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } });
-          }, 2000);
-        }
-        else {
-          const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
-          const paymentRequest: FlowPaymentRequest = {
-            amount: this.ENV.precioCreatinaOnePurchase,
-            currency: 'PEN',
-            commerceOrder: '',
-            subject: 'Creatina Monohidratada Magrolabs de 250 gr.',
-            email: this._summaryService.getSummary()?.userData?.email ?? '',
-            paymentMethod: this.paymentMethod,
-            urlReturn: this.ENV.flowUrlReturn,
-            urlConfirmation: this.ENV.flowUrlConfirmation
-          }
+    
+    const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+    const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false 
+      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION 
+      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+    
+    const paymentRequest = this.createPaymentRequest();
+    localStorage.setItem('status', status.toString());
 
-          localStorage.setItem('status', status.toString());
-
-          const orderRequest: CreateOrderRequest = {
-            shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-            payment_method: this.paymentMethod.toString(),
-            //discount: 20,
-            isLoyaltyWebShow: false,
-            orderItems: [
-              {
-                product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
-                quantity: 1
-              }
-            ]
-          }
-
-          //Create order
-          const orderId = this._summaryService.getSummary()?.userData?.orderId ?? ''
-
-          if (orderId) {
-
-            const orderDetails: UpdateOrderDetailsRequest = {
-              payment_method: this.paymentMethod.toString(),
-              shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-            }
-
-            this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
-              switchMap(response => {
-                //console.log('updateOrderDetails response', response);
-                paymentRequest.commerceOrder = response.data.order.id;
-                return this._flowService.createPayment(paymentRequest);
-              }),
-              finalize(() => {
-                this.isLoading = false;
-              })
-            ).subscribe({
-              next: (response) => {
-                window.location.href = response.url + '?token=' + response.token;
-              },
-              error: (err) => {
-                console.error('Error creating payment: ', err);
-                this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-              }
-            });
-          } else {
-            this._orderService.createOrder(orderRequest).pipe(
-              switchMap(response => {
-                paymentRequest.commerceOrder = response.data.order.id;
-                const userData = this._summaryService.getSummary()?.userData;
-                if (userData) {
-                  this._summaryService.setUserData({
-                    ...userData,
-                    orderId: response.data.order.id,
-                    nombre: userData.nombre || '',
-                    apellido: userData.apellido || '',
-                    nroDocument: userData.nroDocument || '',
-                    email: userData.email || '',
-                    cellphone: userData.cellphone || '',
-                    typeDocument: userData.typeDocument || '',
-                    customerId: userData.customerId || '',
-                    isPaymentVerified: userData.isPaymentVerified || false,
-                    last4CardDigits: userData.last4CardDigits || '',
-                    creditCardType: userData.creditCardType || ''
-                  });
-                }
-                return this._flowService.createPayment(paymentRequest);
-              }),
-              finalize(() => {
-                this.isLoading = false;
-              })
-            ).subscribe({
-              next: (response) => {
-                window.location.href = response.url + '?token=' + response.token;
-              },
-              error: (err) => {
-                console.error('Error creating payment: ', err);
-                this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-              }
-            });
-          }
-        }
-      }
-      else {
-        const subscription: CreateSubscriptionRequest = {
-          planId: this.ENV.flowCreatina250Gr2025PlanId,
-          customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
-          trial_period_days: this.ENV.diasNormalesDePruebaOperiodoDeReflexion
-        }
-        this._flowService.createSubscription(subscription).subscribe({
-          next: (response) => {
-            // console.log('Subscription created: ', response);
-            this._router.navigate(['registro/confirmacion'], { queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } });
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error('Error creating subscription: ', err);
-            this._toastService.error('Ups!', 'Error al procesar la suscripción. Por favor, intenta nuevamente.');
-            this.isLoading = false;
-          },
-          complete: () => {
-            this.isLoading = false;
-          }
-        });
-      }
-      // this._router.navigate(['registro/confirmacion'], { queryParams: { status: 0 } });
+    if (orderId) {
+      this.processExistingOrderPayment(orderId, paymentRequest);
+    } else {
+      this.processNewOrderPayment(paymentRequest);
     }
   }
-  //Create Order_subscription
-  //Create payment
+
+  private handleVerifiedPayment(): void {
+    this._toastService.success('¡Genial!', 'Pago realizado con éxito.');
+    setTimeout(() => {
+      this._router.navigate(['registro/confirmacion'], { 
+        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+      });
+    }, 2000);
+    this.isLoading = false;
+  }
+
+  private createPaymentRequest(): FlowPaymentRequest {
+    return {
+      amount: this.ENV.precioCreatinaOnePurchase,
+      currency: 'PEN',
+      commerceOrder: '',
+      subject: 'Creatina Monohidratada Magrolabs de 250 gr.',
+      email: this._summaryService.getSummary()?.userData?.email ?? '',
+      paymentMethod: this.paymentMethod,
+      urlReturn: this.ENV.flowUrlReturn,
+      urlConfirmation: this.ENV.flowUrlConfirmation
+    };
+  }
+
+  private processExistingOrderPayment(orderId: string, paymentRequest: FlowPaymentRequest): void {
+    const orderDetails = this.createOrderDetailsWithPaymentMethod();
+    
+    this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
+      switchMap(response => {
+        paymentRequest.commerceOrder = response.data.order.id;
+        return this._flowService.createPayment(paymentRequest);
+      }),
+      catchError(error => {
+        console.error('Error creating payment: ', error);
+        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response) => {
+        window.location.href = response.url + '?token=' + response.token;
+      }
+    });
+  }
+
+  private processNewOrderPayment(paymentRequest: FlowPaymentRequest): void {
+    const orderRequest = this.createOrderRequest();
+    
+    this._orderService.createOrder(orderRequest).pipe(
+      switchMap(response => {
+        paymentRequest.commerceOrder = response.data.order.id;
+        this.updateUserDataWithOrderId(response.data.order.id);
+        return this._flowService.createPayment(paymentRequest);
+      }),
+      catchError(error => {
+        console.error('Error creating payment: ', error);
+        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response) => {
+        window.location.href = response.url + '?token=' + response.token;
+      }
+    });
+  }
+
+  private handleSubscriptionFlow(): void {
+    const subscription = this.createFlowSubscriptionRequest();
+    const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+    
+    if (orderId) {
+      this.processExistingOrderSubscription(orderId, subscription);
+    } 
+    else {
+      this.processNewOrderSubscription(subscription);
+    }
+  }
+
+  private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
+    return {
+      planId: this.ENV.flowCreatina250Gr2025PlanId,
+      customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
+      trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
+    };
+  }
+
+  private createOrderRequest(): CreateOrderRequest {
+    let paymentMethod = PaymentMethod.CREDIT_CARD;
+    switch(this.paymentMethod) {
+      case FlowPaymentMethod.BANK_TRANSFER:
+        paymentMethod = PaymentMethod.BANK_TRANSFER;
+        break;
+      case FlowPaymentMethod.PAGO_EFECTIVO:
+        paymentMethod = PaymentMethod.PAGO_EFECTIVO;
+        break;
+      case FlowPaymentMethod.YAPE:
+        paymentMethod = PaymentMethod.YAPE;
+        break;
+      default:
+        paymentMethod = PaymentMethod.CREDIT_CARD;
+    }
+    return {
+      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+      payment_method: paymentMethod,
+      isLoyaltyWebShow: false,
+      orderItems: [
+        {
+          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          quantity: 1
+        },
+        {
+          product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
+          quantity: 1
+        }
+      ],
+      discount: 20
+    };
+  }
+
+  private createOrderDetailsWithPaymentMethod(): UpdateOrderDetailsRequest {
+    let orderDetails: UpdateOrderDetailsRequest = {
+      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+    };
+    
+    switch(this.paymentMethod) {
+      case FlowPaymentMethod.BANK_TRANSFER:
+        orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
+        break;
+      case FlowPaymentMethod.PAGO_EFECTIVO:
+        orderDetails.payment_method = PaymentMethod.PAGO_EFECTIVO;
+        break;
+      case FlowPaymentMethod.YAPE:
+        orderDetails.payment_method = PaymentMethod.YAPE;
+        break;
+      default:
+        orderDetails.payment_method = PaymentMethod.CREDIT_CARD;
+    }
+    
+    return orderDetails;
+  }
+
+  private updateUserDataWithOrderId(orderId: string): void {
+    const userData = this._summaryService.getSummary()?.userData;
+    if (userData) {
+      this._summaryService.setUserData({
+        ...userData,
+        orderId: orderId,
+      });
+    }
+  }
+
+  private processExistingOrderSubscription(orderId: string, subscription: FlowCreateSubscriptionRequest): void {
+    const orderDetails: UpdateOrderDetailsRequest = {
+      payment_method: PaymentMethod.CREDIT_CARD,
+      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+    };
+
+    this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
+      switchMap(response => {
+        this.updateUserDataWithOrderId(response.data.order.id);
+        const existingSubscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId;
+        
+        if (existingSubscriptionId) {
+          this._summaryService.setUserData({
+            ...this._summaryService.getSummary()?.userData as UserDataSummary,
+            subscriptionId: existingSubscriptionId
+          });
+          return of(<CreateSubscriptionResponse>{ subscriptionId: existingSubscriptionId });
+        } else {
+          return this._flowService.createSubscription(subscription);
+        }
+      }),
+      switchMap(flowResponse => {
+        return this.createBackendSubscription();
+      }),
+      switchMap(subscriptionResponse => {
+       // console.log('Subscription response: ', subscriptionResponse);
+        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
+        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
+      }),
+      switchMap(subscriptionOrderResponse => {
+        //console.log('Subscription order created: ', subscriptionOrderResponse);
+        return this._orderService.updateOrderDetails(orderId, {
+          status: OrderStatus.PROCESSING
+        });
+      }),
+      catchError(error => this.handleSubscriptionError(error)),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response) => {
+        console.log('Order updated: ', response);
+        this.navigateToConfirmation();
+      }
+    });
+  }
+
+  private processNewOrderSubscription(subscription: FlowCreateSubscriptionRequest): void {
+    const orderRequest = this.createOrderRequest();
+    
+    this._orderService.createOrder(orderRequest).pipe(
+      switchMap(response => {
+        this.updateUserDataWithOrderId(response.data.order.id);
+        return this._flowService.createSubscription(subscription);
+      }),
+      switchMap(flowResponse => {
+        console.log('Flow Subscription created: ', flowResponse);
+        return this.createBackendSubscription();
+      }),
+      switchMap(subscriptionResponse => {
+        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
+        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
+      }),
+      switchMap(subscriptionOrderResponse => {
+        console.log('Subscription order created: ', subscriptionOrderResponse);
+        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+        return this._orderService.updateOrderDetails(orderId, {
+          status: OrderStatus.PROCESSING
+        });
+      }),
+      catchError(error => this.handleSubscriptionError(error)),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (response) => {
+        console.log('Order updated: ', response);
+        this.navigateToConfirmation();
+      }
+    });
+  }
+
+  private createBackendSubscription() {
+    const subscriptionRequestAPI: CreateSubscriptionRequest = {
+      subscription_plan_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
+      start_date: new Date(
+        Date.now() + 
+        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 
+        24 * 60 * 60 * 1000 - 
+        5 * 60 * 60 * 1000
+      ).toISOString(),
+      status: SubscriptionStatusEnum.TRIAL
+    };
+    
+    return this._subscriptionService.createSubscription(subscriptionRequestAPI)
+  }
+
+  private createSubscriptionOrderRequest(subscriptionId: string): CreateSubscriptionOrderRequest {
+    const order_id = this._summaryService.getSummary()?.userData?.orderId ?? '';
+    return {
+      subscription_id: subscriptionId,
+      order_id,
+      shipment_date: new Date(
+        Date.now() + 
+        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 
+        24 * 60 * 60 * 1000 - 
+        5 * 60 * 60 * 1000
+      ).toISOString()
+    };
+  }
+
+  private handleSubscriptionError(error: any): Observable<never> {
+    console.error('Error en el proceso de suscripción: ', error);
+    this._toastService.error('Ups!', 'Error al procesar la suscripción. Por favor, intenta nuevamente.');
+    return throwError(() => error);
+  }
+
+  private navigateToConfirmation(): void {
+    this._router.navigate(['registro/confirmacion'], { 
+      queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+    });
+  }
+
   verifyPayment() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -310,10 +519,11 @@ export class VerificationPaymentComponent {
     if (userData?.id) {
       if (userData.customerId && this.isCreatinaGratis) {
         this.updateExistingCustomerWithFlow(userData.customerId, userData);
-      } else if (!userData.customerId && this.isCreatinaGratis) {
+      }
+      else if (!userData.customerId && this.isCreatinaGratis) {
         this.createNewCustomerWithFlow(userData);
       }
-      else{
+      else {
         return;
       }
     }
@@ -332,7 +542,13 @@ export class VerificationPaymentComponent {
           this._summaryService.setUserData({ ...userData, customerId: response.customerId });
           this.isLoading = false;
         }),
-        switchMap(response => this._flowService.registerCard(response.customerId)),
+        switchMap(response => {
+          return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
+        }),
+        switchMap(response => {
+          console.log('Customer updated: ', response);
+          return this._flowService.registerCard(this._summaryService.getSummary()?.userData?.customerId ?? '')
+        }),
         catchError(err => {
           this.isLoading = false;
           console.error(err);
@@ -365,7 +581,13 @@ export class VerificationPaymentComponent {
           this._summaryService.setUserData(userData);
           this.isLoading = false;
         }),
-        switchMap(() => this._flowService.registerCard(customerId)),
+        switchMap(response => {
+          return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
+        }),
+        switchMap(response => {
+          //console.log('Customer updated: ', response);
+          return this._flowService.registerCard(this._summaryService.getSummary()?.userData?.customerId ?? '')
+        }),
         catchError(err => {
           console.error(err);
           this.handleCustomerError(err);
@@ -387,14 +609,14 @@ export class VerificationPaymentComponent {
     if (err.error?.code === 501) {
       if (err.error.message.includes('externalId')) {
         localStorage.setItem('isExternalIdExists', 'true');
-        this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' }});
+        this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' } });
         this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
         //localStorage.setItem('isExternalIdExists', 'false');
-        
+
 
       } else if (err.error.message.includes('email')) {
         localStorage.setItem('isEmailInvalid', 'true');
-        this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' }});
+        this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' } });
         this._toastService.warning('Ups!', 'El correo ingresado no existe, por favor ingrese un correo válido.');
         //localStorage.setItem('isEmailInvalid', 'false');
 

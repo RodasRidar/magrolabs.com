@@ -49,7 +49,7 @@ export interface RegisterCardRequest extends FlowModelRequest{
     creditCardType: string; // Tipo de tarjeta (Visa, MasterCard, etc.)
     last4CardDigits: string; // Últimos 4 dígitos de la tarjeta
   }
-  export interface CreateSubscriptionRequest extends FlowModelRequest {
+  export interface FlowCreateSubscriptionRequest extends FlowModelRequest {
     planId: string;
     customerId: string;
     subscription_start?: string;

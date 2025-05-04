@@ -30,6 +30,7 @@ export interface UserDataSummary {
     isSignUpAcepted?: boolean,
     orderId?: string,
     subscriptionId?: string, //Flow
+    referralCode?: string,
 }
 
 export interface AddressSummary {

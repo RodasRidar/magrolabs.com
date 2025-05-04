@@ -418,6 +418,7 @@ export class CreateAccountComponent implements OnDestroy {
       )
       .subscribe(response => {
         userData.id = response.data.user.id;
+        userData.referralCode = response.data.user.referralCode;
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         this.saveUserDataAndNavigate(userData);
       });

@@ -48,7 +48,7 @@ export class ModalComponent {
   ngOnInit(): void {
     if (this.data.type === ModalTypeEnum.WELCOME) {
       const nombre = this._summaryService.getSummary()?.userData?.nombre || this.data.friendName || 'Tu amigo';
-      const codigo = this.data.afiliateCode || '';
+      const codigo = this.data.referralCode || '';
       this.isModalWelcome = true;
       this.urlShared = 'https://magrolabs.com/referido-por-amigo?codigo=' + codigo + '&nombre=' + nombre;
       this.urlShared = this.urlShared.replace(/ /g, '%20');
@@ -85,7 +85,7 @@ export enum ModalTypeEnum {
 export interface ModalData {
   title: string;
   message: string;
-  afiliateCode?: string;
+  referralCode?: string;
   type: ModalTypeEnum;
   friendName?: string;
 }

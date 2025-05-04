@@ -129,7 +129,7 @@ export class ConfirmationComponent {
       type: ModalTypeEnum.WELCOME,
       title: 'titulo',
       message: 'mensaje',
-      afiliateCode: 'KOSDJ1',
+      referralCode: this._summaryService.getSummary()?.userData?.referralCode ?? '',
       friendName: this.clientName
     }
 

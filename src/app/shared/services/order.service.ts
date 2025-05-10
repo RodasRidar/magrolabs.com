@@ -116,7 +116,7 @@ export class OrderService {
    * @param orderId ID de la orden
    */
   cancelOrder(orderId: string): Observable<OrderCancelResponse> {
-    return this.http.post<OrderCancelResponse>(`${this.API_URL}/${orderId}/cancel`, {})
+    return this.http.patch<OrderCancelResponse>(`${this.API_URL}/${orderId}/cancel`, {})
       .pipe(
         catchError(error => throwError(() => error))
       );

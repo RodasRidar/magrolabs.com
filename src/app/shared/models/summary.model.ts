@@ -31,6 +31,7 @@ export interface UserDataSummary {
     orderId?: string,
     subscriptionId?: string, //Flow
     referralCode?: string,
+    isSubscription?: boolean,
 }
 
 export interface AddressSummary {

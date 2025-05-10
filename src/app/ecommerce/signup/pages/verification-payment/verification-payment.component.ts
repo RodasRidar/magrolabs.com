@@ -186,12 +186,54 @@ export class VerificationPaymentComponent {
     
     const paymentRequest = this.createPaymentRequest();
     localStorage.setItem('status', status.toString());
+    const wasSubscription = this._summaryService.getSummary()?.userData?.isSubscription ?? false;
 
     if (orderId) {
-      this.processExistingOrderPayment(orderId, paymentRequest);
+      if (wasSubscription) {
+        this.processCancelAndCreateNewOrder(orderId, paymentRequest);
+      }
+      else {
+        this.processExistingOrderPayment(orderId, paymentRequest);
+      }
     } else {
       this.processNewOrderPayment(paymentRequest);
     }
+  }
+  processCancelAndCreateNewOrder(orderId: string, paymentRequest: FlowPaymentRequest) {
+      const orderRequest = this.createOrderRequest(false);
+      const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';
+      
+      this._orderService.cancelOrder(orderId).pipe(
+        switchMap(response => {
+          console.log('Order canceled: ', response);
+          return this._subscriptionService.cancelSubscription(subscriptionId);
+        }),
+        switchMap(response => {
+          console.log('Subscription canceled: ', response);
+          return this._orderService.createOrder(orderRequest);
+        }),
+        switchMap(response => {
+          paymentRequest.commerceOrder = response.data.order.id;
+          this.updateUserDataWithOrderId(response.data.order.id);
+          return this._flowService.createPayment(paymentRequest);
+        }),
+        catchError(error => {
+          console.error('Error creating payment: ', error);
+          this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this._summaryService.setUserData({
+            ...this._summaryService.getSummary()?.userData as UserDataSummary,
+            isSubscription: false
+          });
+          this.isLoading = false;
+        })
+      ).subscribe({
+        next: (response) => {
+          window.location.href = response.url + '?token=' + response.token;
+        }
+      });
   }
 
   private handleVerifiedPayment(): void {
@@ -231,6 +273,10 @@ export class VerificationPaymentComponent {
         return throwError(() => error);
       }),
       finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: false
+        });
         this.isLoading = false;
       })
     ).subscribe({
@@ -241,7 +287,7 @@ export class VerificationPaymentComponent {
   }
 
   private processNewOrderPayment(paymentRequest: FlowPaymentRequest): void {
-    const orderRequest = this.createOrderRequest();
+    const orderRequest = this.createOrderRequest(false);
     
     this._orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
@@ -255,6 +301,10 @@ export class VerificationPaymentComponent {
         return throwError(() => error);
       }),
       finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: false
+        });
         this.isLoading = false;
       })
     ).subscribe({
@@ -267,13 +317,62 @@ export class VerificationPaymentComponent {
   private handleSubscriptionFlow(): void {
     const subscription = this.createFlowSubscriptionRequest();
     const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-    
+    const wasSubscription = this._summaryService.getSummary()?.userData?.isSubscription ?? false;
+
     if (orderId) {
-      this.processExistingOrderSubscription(orderId, subscription);
-    } 
+      if (!wasSubscription) {
+        this.processCancelAndCreateNewOrderSubscription(orderId, subscription);
+      }
+      else {
+        this.processExistingOrderSubscription(orderId, subscription);
+      }
+    }
     else {
       this.processNewOrderSubscription(subscription);
     }
+  }
+
+  private processCancelAndCreateNewOrderSubscription(orderId: string, subscription: FlowCreateSubscriptionRequest) {
+    const orderRequest = this.createOrderRequest(true);
+
+    this._orderService.cancelOrder(orderId).pipe(
+        switchMap(response => {
+          console.log('Order canceled: ', response);
+          return this._orderService.createOrder(orderRequest);
+        }),
+        switchMap(response => {
+          this.updateUserDataWithOrderId(response.data.order.id);
+          return this._flowService.createSubscription(subscription);
+        }),
+        switchMap(flowResponse => {
+          console.log('Flow Subscription created: ', flowResponse);
+          return this.createBackendSubscription();
+        }),
+        switchMap(subscriptionResponse => {
+          const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
+          return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
+        }),
+        switchMap(subscriptionOrderResponse => {
+          console.log('Subscription order created: ', subscriptionOrderResponse);
+          const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+          return this._orderService.updateOrderDetails(orderId, {
+            status: OrderStatus.PROCESSING
+          });
+        }),
+        catchError(error => this.handleSubscriptionError(error)),
+        finalize(() => {
+          this._summaryService.setUserData({
+            ...this._summaryService.getSummary()?.userData as UserDataSummary,
+            isSubscription: true
+          });
+          this.isLoading = false;
+        })
+      ).subscribe({
+        next: (response) => {
+          console.log('Order updated: ', response);
+          this.navigateToConfirmation();
+        }
+      });
   }
 
   private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
@@ -284,7 +383,7 @@ export class VerificationPaymentComponent {
     };
   }
 
-  private createOrderRequest(): CreateOrderRequest {
+  private createOrderRequest(isSubscription: boolean): CreateOrderRequest {
     let paymentMethod = PaymentMethod.CREDIT_CARD;
     switch(this.paymentMethod) {
       case FlowPaymentMethod.BANK_TRANSFER:
@@ -299,6 +398,24 @@ export class VerificationPaymentComponent {
       default:
         paymentMethod = PaymentMethod.CREDIT_CARD;
     }
+    if (isSubscription) {
+      return {
+        shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+        payment_method: paymentMethod,
+        isLoyaltyWebShow: false,
+        orderItems: [
+          {
+            product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+            quantity: 1
+          },
+          {
+            product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
+            quantity: 1
+          }
+        ],
+        discount: 20
+      };
+    }
     return {
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
       payment_method: paymentMethod,
@@ -307,13 +424,9 @@ export class VerificationPaymentComponent {
         {
           product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
           quantity: 1
-        },
-        {
-          product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
-          quantity: 1
         }
       ],
-      discount: 20
+      discount: 0
     };
   }
 
@@ -353,6 +466,7 @@ export class VerificationPaymentComponent {
     const orderDetails: UpdateOrderDetailsRequest = {
       payment_method: PaymentMethod.CREDIT_CARD,
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+      discount: 20,
     };
 
     this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
@@ -386,6 +500,10 @@ export class VerificationPaymentComponent {
       }),
       catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: true
+        });
         this.isLoading = false;
       })
     ).subscribe({
@@ -397,7 +515,7 @@ export class VerificationPaymentComponent {
   }
 
   private processNewOrderSubscription(subscription: FlowCreateSubscriptionRequest): void {
-    const orderRequest = this.createOrderRequest();
+    const orderRequest = this.createOrderRequest(true);
     
     this._orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
@@ -421,6 +539,10 @@ export class VerificationPaymentComponent {
       }),
       catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: true
+        });
         this.isLoading = false;
       })
     ).subscribe({
@@ -491,6 +613,7 @@ export class VerificationPaymentComponent {
     cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
     this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
   }
+  
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod = paymentMethod;
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {

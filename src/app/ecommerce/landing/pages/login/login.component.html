@@ -37,8 +37,7 @@
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700"> Contraseña* </label>
           <div class="mt-1">
-            <input id="password" name="password" type="password" autocomplete="current-password" required
-              placeholder="••••••••" formControlName="password"
+            <input id="password" name="password" type="password" autocomplete="current-password" required formControlName="password"
               [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password') || credentialsFailed }"
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
           </div>

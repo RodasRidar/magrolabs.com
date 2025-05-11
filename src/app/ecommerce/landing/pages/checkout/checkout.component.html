@@ -198,7 +198,7 @@
                                                         class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
                                                         +51
                                                     </div>
-                                                    <input type="number" placeholder="987654321"
+                                                    <input type="number" placeholder="987654321" #cellphoneInput
                                                         (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
                                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
@@ -281,10 +281,10 @@
                                                 <div class="mt-2">
                                                     <input formControlName="email" #emailInput id="email" name="email"
                                                         type="email" autocomplete="email" placeholder="tu@example.com"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
+                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasInvalidEmail() || hasValidatorError('email')}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                                 </div>
-                                                @if(hasRequiredError('email') || hasValidatorError('email')) {
+                                                @if(hasRequiredError('email') || hasValidatorError('email') || hasExistEmail() || hasInvalidEmail()) {
                                                 <div class="p-2">
                                                     @if(hasRequiredError('email')) {
                                                     <p class="text-xs text-red-500">*Correo es obligatorio</p>
@@ -294,15 +294,15 @@
                                                         *El correo ya está registrado
                                                     </p>
                                                     }
-                                                    @if(hasValidatorError('email')) {
+                                                    @if(hasInvalidEmail()) {
                                                     <p class="text-xs text-red-500">*Correo inválido o no existente</p>
+                                                    }
+                                                    @if(hasValidatorError('email') && !hasRequiredError('email') && !hasExistEmail() && !hasInvalidEmail()) {
+                                                    <p class="text-xs text-red-500">*Formato de correo inválido</p>
                                                     }
                                                 </div>
                                                 }
                                             </div>
-
-
-
 
                                             <div class="sm:col-span-3 col-span-6"
                                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
@@ -311,7 +311,6 @@
                                                     Contraseña *</label>
                                                 <div class="mt-2">
                                                     <input formControlName="password" name="password" type="password"
-                                                        placeholder="••••••••"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
                                                 </div>
@@ -334,11 +333,11 @@
                                             </div>
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
                                                 <label class="inline-flex items-center my-2 cursor-pointer">
-                                                    <input #isSignUpAceptedInput type="checkbox"
+                                                    <input #isSignUpAceptedInput type="checkbox" (change)="isSignUpAceptedChange()"
                                                         formControlName="isSignUpAcepted"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
                                                         class="sr-only peer">
-                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
+                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                     <span
@@ -362,7 +361,7 @@
 
                                             <!-- ENTREGA -->
 
-                                            <div class="col-span-6 mb-3">
+                                            <div class="col-span-6 my-3">
                                                 <h2
                                                     class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
                                                     Envío.</h2>
@@ -422,6 +421,12 @@
                                                 }
                                             </div>
 
+                                            <div class="col-span-6 mb-3"  [ngClass]="hideSearching ? 'hidden' : ''">
+                                                <p class="my-5 text-sm text-center">
+                                                    <span class="cursor-pointer font-bold antialiased"
+                                                        (click)="hideSearching = true; isSearched = true">O ingresa tu dirección manualmente ➤</span>
+                                                </p>
+                                            </div>
                                             <div class="col-span-6 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6"
                                                 [ngClass]="hideSearching ? '' : 'hidden'">
 
@@ -512,7 +517,7 @@
 
                                                         <select
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
-                                                            formControlName="district" [value]="districtUbigeo"
+                                                            formControlName="district" [value]="districtUbigeo" (change)="selectDistrict($event)"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
                                                             @if (districts$ | async; as districtsList) {
                                                             @for (item of districtsList; track $index) {

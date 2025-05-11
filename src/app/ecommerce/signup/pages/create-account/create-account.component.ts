@@ -23,7 +23,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserService } from '../../../../shared/services/user.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
-import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map } from 'rxjs';
+import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map, finalize } from 'rxjs';
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
 
 export interface SignUp {
@@ -107,23 +107,27 @@ export class CreateAccountComponent implements OnDestroy {
 
     // Configurar debounce para email
     const emailSubscription = this.emailSubject.pipe(
-      debounceTime(500), // Esperar 800ms después de que el usuario deje de escribir
+      debounceTime(500),
       distinctUntilChanged(),
       filter(email => !!email && email.length > 5 && this.isValidEmail(email))
     ).subscribe(email => {
-      this.validateEmailWithServer(email);
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validateEmailWithServer(email);
+      }
     });
 
-    // Configurar debounce para teléfono
+    // Configurar validación en tiempo real para teléfono
     const phoneSubscription = this.phoneSubject.pipe(
-      debounceTime(500), // Esperar 800ms después de que el usuario deje de escribir
+      debounceTime(500),
       distinctUntilChanged(),
       filter(phone => !!phone && phone.length === 9)
     ).subscribe(phone => {
-      this.validatePhoneWithServer(phone);
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validatePhoneWithServer(phone);
+      }
     });
 
-    // Configurar debounce para documento
+    // Configurar validación en tiempo real para documento
     const documentSubscription = this.documentSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -133,7 +137,9 @@ export class CreateAccountComponent implements OnDestroy {
         return !!document && document.length >= 8 && document.length <= 12;
       })
     ).subscribe(document => {
-      this.validateDocumentWithServer(document);
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validateDocumentWithServer(document);
+      }
     });
 
     this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
@@ -193,10 +199,12 @@ export class CreateAccountComponent implements OnDestroy {
 
   // Validar email con el servidor
   private validateEmailWithServer(email: string): void {
+    this.isProcessing = true;
     const control = this.form.get('email');
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
@@ -207,12 +215,13 @@ export class CreateAccountComponent implements OnDestroy {
     }
   }
 
-  // Validar teléfono con el servidor
   private validatePhoneWithServer(phone: string): void {
+    this.isProcessing = true;
     const control = this.form.get('cellphone');
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ cellphoneExists: true });
@@ -220,15 +229,16 @@ export class CreateAccountComponent implements OnDestroy {
       });
     }
   }
-
-  // Validar documento con el servidor
+  
   private validateDocumentWithServer(document: string): void {
+    this.isProcessing = true;
     const control = this.form.get('nroDocument');
     const typeDoc = this.form.get('typeDocument')?.value;
 
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
@@ -391,7 +401,40 @@ export class CreateAccountComponent implements OnDestroy {
       }
     });
   }
+  
+  isSignUpAceptedChange() {
+    if (this.form.get('isSignUpAcepted')?.value) {
 
+      // Validar email
+      this.validateEmailWithServer(this.form.get('email')?.value ?? '');
+
+      // Validar teléfono
+      this.validatePhoneWithServer(this.form.get('cellphone')?.value ?? '');
+
+      // Validar documento
+      this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
+    }else{
+      let emailControl = this.form.get('email');
+      let cellphoneControl = this.form.get('cellphone');
+      let nroDocumentControl = this.form.get('nroDocument');
+
+      emailControl?.setErrors({emailExists: false });
+      cellphoneControl?.setErrors({ cellphoneExists: false });
+      nroDocumentControl?.setErrors({ nroDocumentExists: false });
+
+
+      let emailValue = emailControl?.value;
+      let cellphoneValue = cellphoneControl?.value;
+
+      if (emailControl) {
+        emailControl.setValue(emailValue ?? '');
+      }
+      if (cellphoneControl) {
+        cellphoneControl.setValue(cellphoneValue ?? '');
+      }
+    }
+  }
+  
   private createNewCustomerByApi(userData: UserDataSummary) {
     const registerRequest: RegisterUserRequest = {
       email: userData.email,

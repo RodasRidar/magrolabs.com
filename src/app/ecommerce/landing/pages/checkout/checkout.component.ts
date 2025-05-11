@@ -1,11 +1,11 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { debounceTime, finalize, map, Observable, switchMap, tap } from 'rxjs';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
@@ -13,10 +13,17 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { environment } from '../../../../../environments/env';
 import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
-import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
+import { AddressSummary, ConfirmationStatus, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { ToastService } from '../../../../shared/services/toast.service';
-import { TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
+import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
+import { UserService } from '../../../../shared/services/user.service';
+import { OrderService } from '../../../../shared/services/order.service';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { AddressApiService } from '../../../../shared/services/address-api.service';
+import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
+import { CreateOrderRequest, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
+import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
 
 @Component({
   selector: 'app-checkout',
@@ -25,23 +32,28 @@ import { TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnDestroy {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
   @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
   @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('cellphoneInput') cellphoneInput!: ElementRef<HTMLInputElement>;
   paymentMethod: FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
   navbarTypeEnum = NavbarTypeEnum;
   ENV = environment;
   cartHas250Creatine = false;
   isProcessing = false;
 
+  private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
   private _shoppingCartService = inject(ShoppingCartService);
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
   private _flowService = inject(FlowService)
-
+  private _userService = inject(UserService)
+  private _orderService = inject(OrderService)
+  private _authService = inject(AuthService)
+  private _addressApiService = inject(AddressApiService)
   //
   private _addressService = inject(AddressService)
   addressList: PlaceAPI[] = [];
@@ -63,13 +75,19 @@ export class CheckoutComponent {
   districts$: Observable<Ubigeo[]> = this._addressService.getDistricts(this.provinceUbigeo);
   //
 
+  // Subjects para validación en tiempo real
+  private emailSubject = new Subject<string>();
+  private phoneSubject = new Subject<string>();
+  private documentSubject = new Subject<string>();
+  private subscriptions: Subscription[] = [];
+
   shoppingCart: ShoppingCart = <ShoppingCart>{};
   form = this._formBuilder.group({
     firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern(/^9[0-9]{8}$/)]),
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument> 'DNI', [Validators.required]),
+    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
@@ -110,22 +128,181 @@ export class CheckoutComponent {
       this.addressList = results;
       this.isSearchingAddress = false;
     });
+    const passwordControl = this.form.get('password');
 
-    if (this.form.get('isSignUpAcepted')) {
-      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
-        const passwordControl = this.form.get('password');
+    this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
+      if (signUp) {
+        passwordControl?.addValidators(Validators.required);
+      } else {
+        passwordControl?.removeValidators(Validators.required);
+      }
+      passwordControl?.updateValueAndValidity();
+    });
 
-        if (signUp) {
-          passwordControl?.addValidators(Validators.required);
-        } else {
-          passwordControl?.clearValidators();
-        }
+    // Configurar validación en tiempo real para email
+    const emailSubscription = this.emailSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(email => !!email && email.length > 5 && this.isValidEmail(email))
+    ).subscribe(email => {
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validateEmailWithServer(email);
+      }
+    });
 
-        passwordControl?.updateValueAndValidity();
-      });
-    }
+    // Configurar validación en tiempo real para teléfono
+    const phoneSubscription = this.phoneSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(phone => !!phone && phone.length === 9)
+    ).subscribe(phone => {
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validatePhoneWithServer(phone);
+      }
+    });
+
+    // Configurar validación en tiempo real para documento
+    const documentSubscription = this.documentSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(document => {
+        const typeDoc = this.form.get('typeDocument')?.value;
+        if (typeDoc === 'DNI') return !!document && document.length === 8;
+        return !!document && document.length >= 8 && document.length <= 12;
+      })
+    ).subscribe(document => {
+      if (this.form.get('isSignUpAcepted')?.value) {
+        this.validateDocumentWithServer(document);
+      }
+    });
+
+    this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
+
+    // Escuchar cambios en el email
+    this.form.get('email')?.valueChanges.subscribe(val => {
+      if (val) {
+        this.emailSubject.next(val);
+      }
+    });
+
+    // Escuchar cambios en el teléfono
+    this.form.get('cellphone')?.valueChanges.subscribe(val => {
+      if (val) {
+        this.phoneSubject.next(val);
+      }
+    });
+
+    // Escuchar cambios en el documento
+    this.form.get('nroDocument')?.valueChanges.subscribe(val => {
+      if (val) {
+        this.documentSubject.next(val);
+      }
+    });
 
     this.setValuesInFormFromSummary();
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar todas las suscripciones
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  isSignUpAceptedChange() {
+    if (this.form.get('isSignUpAcepted')?.value) {
+
+      // Validar email
+      this.validateEmailWithServer(this.form.get('email')?.value ?? '');
+
+      // Validar teléfono
+      this.validatePhoneWithServer(this.form.get('cellphone')?.value ?? '');
+
+      // Validar documento
+      this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
+    } else {
+      let emailControl = this.form.get('email');
+      let cellphoneControl = this.form.get('cellphone');
+      let nroDocumentControl = this.form.get('nroDocument');
+
+      emailControl?.setErrors({ emailExists: false });
+      cellphoneControl?.setErrors({ cellphoneExists: false });
+      nroDocumentControl?.setErrors({ nroDocumentExists: false });
+
+
+      let emailValue = emailControl?.value;
+      let cellphoneValue = cellphoneControl?.value;
+      let nroDocumentValue = nroDocumentControl?.value;
+
+      if (emailControl) {
+        emailControl.setValue(emailValue ?? '');
+      }
+      if (cellphoneControl) {
+        cellphoneControl.setValue(cellphoneValue ?? '');
+      }
+      if (nroDocumentControl) {
+        nroDocumentControl.setValue(nroDocumentValue ?? '');
+      }
+    }
+  }
+
+  selectDistrict(event: any): void {
+    this.districtUbigeo = event.target.value;
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  // Validar email con el servidor
+  private validateEmailWithServer(email: string): void {
+    this.isProcessing = true;
+    const control = this.form.get('email');
+    if (control && !control.hasError('email')) {
+      this._userService.validateEmail(email).pipe(
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
+      ).subscribe(response => {
+        if (response.data.exists) {
+          control.setErrors({ emailExists: true });
+        } else {
+          localStorage.setItem('isEmailInvalid', 'false');
+        }
+      });
+    }
+  }
+
+  private validatePhoneWithServer(phone: string): void {
+    this.isProcessing = true;
+    const control = this.form.get('cellphone');
+    if (control && !control.hasError('pattern')) {
+      this._userService.validatePhone(phone).pipe(
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
+      ).subscribe(response => {
+        if (response.data.exists) {
+          control.setErrors({ cellphoneExists: true });
+        }
+      });
+    }
+  }
+
+  private validateDocumentWithServer(document: string): void {
+    this.isProcessing = true;
+    const control = this.form.get('nroDocument');
+    const typeDoc = this.form.get('typeDocument')?.value;
+
+    if (control && !control.hasError('pattern') && typeDoc) {
+      this._userService.validateDocument(document, typeDoc).pipe(
+        catchError(() => EMPTY),
+        finalize(() => this.isProcessing = false)
+      ).subscribe((response: { data: { exists: boolean } }) => {
+        if (response.data.exists) {
+          control.setErrors({ nroDocumentExists: true });
+        } else {
+          localStorage.setItem('isExternalIdExists', 'false');
+        }
+      });
+    }
   }
 
   quantityValueChanged(value: number, product: ItemShoppingCart) {
@@ -170,24 +347,24 @@ export class CheckoutComponent {
 
   hasExistDocument() {
     const control = this.form.get('nroDocument');
-    return control?.hasError('nroDocumentExists') && control.dirty;
+    return (control?.hasError('nroDocumentExists') && control.dirty) ||
+      (isPlatformBrowser(this.platformId) && localStorage.getItem('isExternalIdExists') === 'true');
   }
 
   hasExistEmail() {
     const control = this.form.get('email');
-    return false;
-    // return control?.hasError('emailExists') && control.dirty;
+    return control?.hasError('emailExists') && control.dirty;
   }
 
   hasInvalidEmail() {
     const control = this.form.get('email');
-    return control?.hasError('emailInvalid') && control.dirty;
+    return (control?.hasError('emailInvalid') && control.dirty) ||
+      (isPlatformBrowser(this.platformId) && localStorage.getItem('isEmailInvalid') === 'true');
   }
 
   hasExistCellphone() {
     const control = this.form.get('cellphone');
-    return false;
-    // return control?.hasError('cellphoneExists') && control.dirty;
+    return control?.hasError('cellphoneExists') && control.dirty;
   }
 
   limitDigits(nroDigits: number, field: string): void {
@@ -288,272 +465,293 @@ export class CheckoutComponent {
     this.isProcessing = true;
 
     if (this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
-      this.processGoToSubscription();
+      this.handleRecurrentPaymentOption();
       return;
     }
-    const status = this.form.get('isSignUpAcepted')?.value ?? false ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+
+    const status = this.form.get('isSignUpAcepted')?.value ?? false
+      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
+      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
     localStorage.setItem('status', status.toString());
 
-    const paymentRequest: FlowPaymentRequest = {
-      amount: this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
-      currency: 'PEN',
-      commerceOrder: localStorage.getItem('commerceOrder') ?? '0002',
-      subject: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) + ' x Creatina Monohidratada Magrolabs de 250g.',
-      email: this.form.get('email')?.value ?? '',
-      paymentMethod: this.paymentMethod,
-      urlReturn: this.ENV.flowUrlReturn,
-      urlConfirmation: this.ENV.flowUrlConfirmation + '?status=' + Number(status).toString()
-    }
-
-    const isSignUpAcepted = this.form.get('isSignUpAcepted')?.value ?? false;
-    if (isSignUpAcepted) {
-      //VALIDAR DATOS CON API 
-      const customerId = this._summaryService.getSummary()?.userData?.customerId;
-      if (!customerId) {
-        const customerRequest: CreateCustomerRequest = {
-          name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
-          email: this.form.get('email')?.value ?? '',
-          externalId: this.form.get('nroDocument')?.value ?? '',
-        }
-        this._flowService.createCustomer(customerRequest).pipe(
-          switchMap((customerResponse) => {
-            this._summaryService.setUserData({
-              nombre: this.form.get('firtName')?.value ?? '',
-              apellido: this.form.get('lastName')?.value ?? '',
-              nroDocument: this.form.get('nroDocument')?.value ?? '',
-              email: this.form.get('email')?.value ?? '',
-              cellphone: this.form.get('cellphone')?.value ?? '',
-              typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
-              password: this.form.get('password')?.value ?? '',
-              customerId: customerResponse.customerId,
-              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
-            });
-
-            this._summaryService.setAddress({
-              tipoVia: '',
-              nombreVia: this.form.get('streetAddress')?.value ?? '',
-              numero: this.form.get('number')?.value ?? '',
-              codigoPostal: this.form.get('postalCode')?.value ?? '',
-              distrito: this.form.get('district')?.value ?? '',
-              provincia: this.form.get('province')?.value ?? '',
-              department: this.form.get('department')?.value ?? '',
-              reference: this.form.get('reference')?.value ?? '',
-            });
-
-            this._summaryService.setChoosePlan({
-              selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
-              descriptionOne: 'Monohidratada 100%',
-              descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
-              quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
-            });
-            return this._flowService.createPayment(paymentRequest);
-          }),
-          finalize(() => {
-            this.isProcessing = false;
-          })
-        ).subscribe({
-          next: (paymentResponse) => {
-            window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
-          },
-          error: (err) => {
-            if (err.error?.code === 501) {
-              if (err.error.message.includes('externalId')) {
-                this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
-                this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
-              } else if (err.error.message.includes('email')) {
-                this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
-                this.focusAndErrorInput(this.emailInput, 'email');
-              }
-            } else {
-              this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
-              console.error('Error:', err);
-            }
-          }
-        });
-      } else {
-        const customerRequest: EditCustomerRequest = {
-          name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
-          email: this.form.get('email')?.value ?? '',
-          externalId: this.form.get('nroDocument')?.value ?? '',
-          customerId,
-        }
-
-        this._flowService.editCustomer(customerRequest).pipe(
-          switchMap((customerResponse) => {
-            this._summaryService.setUserData({
-              nombre: this.form.get('firtName')?.value ?? '',
-              apellido: this.form.get('lastName')?.value ?? '',
-              nroDocument: this.form.get('nroDocument')?.value ?? '',
-              email: this.form.get('email')?.value ?? '',
-              cellphone: this.form.get('cellphone')?.value ?? '',
-              typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
-              password: this.form.get('password')?.value ?? '',
-              customerId: customerResponse.customerId,
-              isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
-            });
-
-            this._summaryService.setAddress({
-              tipoVia: '',
-              nombreVia: this.form.get('streetAddress')?.value ?? '',
-              numero: this.form.get('number')?.value ?? '',
-              codigoPostal: this.form.get('postalCode')?.value ?? '',
-              distrito: this.form.get('district')?.value ?? '',
-              provincia: this.form.get('province')?.value ?? '',
-              department: this.form.get('department')?.value ?? '',
-              reference: this.form.get('reference')?.value ?? '',
-            });
-
-            this._summaryService.setChoosePlan({
-              selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
-              descriptionOne: 'Monohidratada 100%',
-              descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
-              quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
-            });
-            return this._flowService.createPayment(paymentRequest);
-          }),
-          finalize(() => {
-            this.isProcessing = false;
-          })
-        ).subscribe({
-          next: (paymentResponse) => {
-            window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
-          },
-          error: (err) => {
-            if (err.error?.code === 501) {
-              if (err.error.message.includes('externalId')) {
-                this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
-                this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
-              } else if (err.error.message.includes('email')) {
-                this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
-                this.focusAndErrorInput(this.emailInput, 'email');
-              }
-            } else {
-              this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
-              console.error('Error:', err);
-            }
-          }
-        });
-      }
-      return
-    }
-
-    this._flowService.createPayment(paymentRequest).subscribe({
-      next: (response) => {
-        this._summaryService.setUserData({
-          nombre: this.form.get('firtName')?.value ?? '',
-          apellido: this.form.get('lastName')?.value ?? '',
-          nroDocument: this.form.get('nroDocument')?.value ?? '',
-          email: this.form.get('email')?.value ?? '',
-          cellphone: this.form.get('cellphone')?.value ?? '',
-          typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
-          password: this.form.get('password')?.value ?? '',
-          customerId: '',
-          isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
-        });
-
-        this._summaryService.setChoosePlan({
-          selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
-          descriptionOne: 'Monohidratada 100%',
-          descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
-          quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
-        })
-
-        this._summaryService.setAddress(
-          {
-            tipoVia: '',
-            nombreVia: this.form.get('streetAddress')?.value ?? '',
-            numero: this.form.get('number')?.value ?? '',
-            codigoPostal: this.form.get('postalCode')?.value ?? '',
-            distrito: this.form.get('district')?.value ?? '',
-            provincia: this.form.get('province')?.value ?? '',
-            department: this.form.get('department')?.value ?? '',
-            reference: this.form.get('reference')?.value ?? '',
-          }
-        );
-
-        this.isProcessing = false;
-        window.location.href = response.url + '?token=' + response.token;
-      },
-      error: (err) => {
-        this.isProcessing = false;
-        console.error('Error creating payment: ', err);
-        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-      },
-      complete: () => {
-        this.isProcessing = false;
-      }
-    })
+    this.processPayment();
   }
 
-  private processGoToSubscription() {
-
-    //Validar si el checkbox de registro esta chequeado
-    if (!this.form.get('isSignUpAcepted')?.value) {
-      this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
-      this.isProcessing = false;
-      return;
+  private processPayment(): void {
+    const userId = this._summaryService.getSummary()?.userData?.id;
+    
+    if (!userId) {
+      this.createCustomerAndCreatePayment();
+    } else {
+      this.updateCustomerAndCreatePayment(userId);
     }
+  }
 
-    const customerRequest: CreateCustomerRequest = {
-      name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
-      email: this.form.get('email')?.value ?? '',
-      externalId: this.form.get('nroDocument')?.value ?? '',
-    }
-    this._flowService.createCustomer(customerRequest)
-      .subscribe({
-        next: (response) => {
+  private createCustomerAndCreatePayment(): void {
+    this.saveUserDataForOnePurchase();
+    const userRequest = this.createUserRequest();
+    
+    //Crear usuario
+    this._authService.register(userRequest).pipe(
+      tap((response) => {
+        // Actualizar userData inmediatamente después de crear el usuario
+        const userData = this._summaryService.getSummary()?.userData;
+        if (userData) {
           this._summaryService.setUserData({
-            nombre: this.form.get('firtName')?.value ?? '',
-            apellido: this.form.get('lastName')?.value ?? '',
-            nroDocument: this.form.get('nroDocument')?.value ?? '',
-            email: this.form.get('email')?.value ?? '',
-            cellphone: this.form.get('cellphone')?.value ?? '',
-            typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
-            password: this.form.get('password')?.value ?? '',
-            customerId: response.customerId,
-            isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+            ...userData,
+            id: response.data.user.id,
+            referralCode: response.data.user.referralCode
           });
-
-          this._summaryService.setChoosePlan({
-            selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
-            descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
-            descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
-            descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
-            descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
-            quantity: 1
-          })
-
-          this._summaryService.setAddress(
-            {
-              tipoVia: '',
-              nombreVia: this.form.get('streetAddress')?.value ?? '',
-              numero: this.form.get('number')?.value ?? '',
-              codigoPostal: this.form.get('postalCode')?.value ?? '',
-              distrito: this.form.get('district')?.value ?? '',
-              provincia: this.form.get('province')?.value ?? '',
-              department: this.form.get('department')?.value ?? '',
-              reference: this.form.get('reference')?.value ?? '',
-            }
-          );
-          this.isProcessing = false;
-          this._router.navigate([`/registro/verificacion`]);
-        },
-        error: (err) => {
-          this.isProcessing = false;
-          if (err.error?.code === 501) {
-            if (err.error.message.includes('externalId')) {
-              this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
-              this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
-            } else if (err.error.message.includes('email')) {
-              this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
-              this.focusAndErrorInput(this.emailInput, 'email');
-            }
-          } else {
-            this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
-            console.error('Error:', err);
-          }
         }
-      });
+      }),
+      //Crear direccion
+      switchMap((response) => {
+        return this._addressApiService.createAddress(this.createAddressRequest()).pipe(
+          tap(addressResponse => {
+            // Actualizar addressData inmediatamente después de crear la dirección
+            const addressData = this._summaryService.getSummary()?.address;
+            if (addressData) {
+              this._summaryService.setAddress({
+                ...addressData,
+                id: addressResponse.data.address.id,
+              });
+            }
+          })
+        );
+      }),
+      //Actualizar direccion de usuario
+      switchMap(addressResponse => {
+        const addressId = addressResponse.data.address.id;
+        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+        return this._userService.updateUser(userId, { address_id: addressId });
+      }),
+      //Crear Orden de compra
+      switchMap(() => {
+        return this._orderService.createOrder(this.createOrderRequest()).pipe(
+          tap(orderResponse => {
+            // Actualizar userData con el orderId
+            const userData = this._summaryService.getSummary()?.userData;
+            if (userData) {
+              this._summaryService.setUserData({
+                ...userData,
+                orderId: orderResponse.data.order.id,
+              });
+            }
+          })
+        );
+      }),
+      //Crear pago en flow
+      switchMap((orderResponse) => {
+        let createPaymentRequest = this.createPaymentRequest();
+        createPaymentRequest.commerceOrder = orderResponse.data.order.id;
+        return this._flowService.createPayment(createPaymentRequest);
+      }),
+      finalize(() => {
+        this.isProcessing = false;
+      })
+    ).subscribe({
+      next: (paymentResponse) => {
+
+        this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
+        window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
+      },
+      error: (err) => {
+        console.error('Error creating payment: ', err);
+        this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
+        this.handleCustomerError(err);
+      }
+    });
+  }
+
+  private createOrderRequest(): CreateOrderRequest {
+    let paymentMethod = PaymentMethod.CREDIT_CARD;
+    switch (this.paymentMethod) {
+      case FlowPaymentMethod.BANK_TRANSFER:
+        paymentMethod = PaymentMethod.BANK_TRANSFER;
+        break;
+      case FlowPaymentMethod.PAGO_EFECTIVO:
+        paymentMethod = PaymentMethod.PAGO_EFECTIVO;
+        break;
+      case FlowPaymentMethod.YAPE:
+        paymentMethod = PaymentMethod.YAPE;
+        break;
+      default:
+        paymentMethod = PaymentMethod.CREDIT_CARD;
+    }
+    //TODO: Cambiar el id del producto de creatina 250gr algo dinamico
+    return {
+      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+      payment_method: paymentMethod,
+      isLoyaltyWebShow: false,
+      orderItems: [
+        {
+          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
+        }
+      ],
+      discount: 0
+    };
+  }
+
+  private createAddressRequest(): CreateAddressRequest {
+    const addressSummary = {
+      tipoVia: '',
+      nombreVia: this.form.get('streetAddress')?.value ?? '',
+      numero: this.form.get('number')?.value ?? '',
+      codigoPostal: this.form.get('postalCode')?.value ?? '',
+      distrito: this.form.get('district')?.value ?? '',
+      provincia: this.form.get('province')?.value ?? '',
+      department: this.form.get('department')?.value ?? '',
+      reference: this.form.get('reference')?.value ?? '',
+    };
+
+    const department = this._addressService.getListDepartments().find((x) => x.id_ubigeo == this.departmentUbigeo);
+    const province = this._addressService.getListProvinces(this.departmentUbigeo).find((x) => x.id_ubigeo == this.provinceUbigeo);
+    const district = this._addressService.getListDistricts(this.provinceUbigeo).find((x) => x.id_ubigeo == this.districtUbigeo);
+
+    const addressRequest: CreateAddressRequest = {
+      avenue: addressSummary.nombreVia,
+      department: department?.nombre_ubigeo ?? '',
+      department_ubigeo: this.departmentUbigeo,
+      province: province?.nombre_ubigeo ?? '',
+      province_ubigeo: this.provinceUbigeo,
+      district: district?.nombre_ubigeo ?? '',
+      district_ubigeo: this.districtUbigeo,
+    };
+    if(addressSummary.reference !== ''){
+      addressRequest.reference = addressSummary.reference;
+    }
+    if(addressSummary.numero !== ''){
+      addressRequest.number = addressSummary.numero;
+    }
+    if(addressSummary.codigoPostal !== ''){
+      addressRequest.postalcode = addressSummary.codigoPostal;
+    }
+    return addressRequest;
+  }
+
+  private createUserRequest(): RegisterUserRequest {
+    const registerRequest: RegisterUserRequest = {
+      email: this.form.get('email')?.value ?? '',
+      first_name: this.form.get('firtName')?.value ?? '',
+      last_name: this.form.get('lastName')?.value ?? '',
+      isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+      documentNumber: this.form.get('nroDocument')?.value ?? '',
+      documentType: this.form.get('typeDocument')?.value ?? 'DNI',
+      phone: this.form.get('cellphone')?.value ?? '',
+    };
+
+    if (this.form.get('password')?.value && this.form.get('password')!.value.length > 0) {
+      registerRequest.password = this.form.get('password')?.value;
+    }
+
+    return registerRequest;
+  }
+
+  private updateCustomerAndCreatePayment(userId: string): void {
+    this.saveUserDataForOnePurchase();
+    const updateUserRequest: UpdateUserRequest = {
+      first_name: this.form.get('firtName')?.value ?? '',
+      last_name: this.form.get('lastName')?.value ?? '',
+      phone: this.form.get('cellphone')?.value ?? '',
+      documentNumber: this.form.get('nroDocument')?.value ?? '',
+      documentType: this.form.get('typeDocument')?.value ?? 'DNI',
+      email: this.form.get('email')?.value ?? '',
+      isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+    }
+
+    //Actualizar usuario
+    this._userService.updateUser(userId, updateUserRequest).pipe(
+      tap((response) => {
+        // Actualizar userData inmediatamente después de actualizar el usuario
+        const userData = this._summaryService.getSummary()?.userData;
+        if (userData) {
+          this._summaryService.setUserData({
+            ...userData,
+            id: response.id,
+          });
+        }
+      }),
+      //Actualizar direccion
+      switchMap(() => {
+        return this._addressApiService.updateAddress(
+          this._summaryService.getSummary()?.address?.id ?? '',
+          this.createAddressRequest()
+        ).pipe(
+          tap(response => {
+            // Actualizar addressData inmediatamente después de actualizar la dirección
+            const addressData = this._summaryService.getSummary()?.address;
+            if (addressData) {
+              this._summaryService.setAddress({
+                ...addressData,
+                id: response.data.address.id,
+              });
+            }
+          })
+        );
+      }),
+      //Actualizar direccion de usuario
+      switchMap(() => {
+        const orderDetails = this.createOrderDetailsWithPaymentMethod();
+        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+        return this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
+          tap(orderResponse => {
+            // Actualizar userData con el orderId
+            const userData = this._summaryService.getSummary()?.userData;
+            if (userData) {
+              this._summaryService.setUserData({
+                ...userData,
+                orderId: orderResponse.data.order.id,
+              });
+            }
+          })
+        );
+      }),
+      //Crear pago en flow
+      switchMap((orderResponse) => {
+        let createPaymentRequest = this.createPaymentRequest();
+        createPaymentRequest.commerceOrder = orderResponse.data.order.id;
+        return this._flowService.createPayment(createPaymentRequest);
+      }),
+      finalize(() => {
+        this.isProcessing = false;
+      })
+    ).subscribe({
+      next: (paymentResponse) => {
+        console.log('Summary', this._summaryService.getSummary())
+        this._toastService.success('¡Listo!', 'Datos actualizados correctamente.');
+        window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
+      },
+      error: (err) => {
+        console.error('Error creating payment: ', err);
+        this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
+        this.handleCustomerError(err);
+      }
+    });
+  }
+
+  private handleCustomerError(err: any): void {
+    if (err.error?.code === 501) {
+      if (err.error.message.includes('externalId')) {
+        this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
+        this.focusAndErrorInput(this.nroDocInput, 'nroDocument');
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('isExternalIdExists', 'true');
+        }
+      } else if (err.error.message.includes('email')) {
+        this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
+        this.focusAndErrorInput(this.emailInput, 'email');
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('isEmailInvalid', 'true');
+        }
+      } else if (err.error.message.includes('phone')) {
+        this._toastService.error('Ups!', 'El número de teléfono ya está registrado.');
+        this.focusAndErrorInput(this.cellphoneInput, 'cellphone');
+      }
+    } else {
+      this._toastService.error('Ups!', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+      console.error('Error:', err);
+    }
   }
 
   private setValuesInFormFromSummary() {
@@ -614,6 +812,10 @@ export class CheckoutComponent {
     const control = this.form.get(controlName);
     if (controlName === 'nroDocument') {
       control?.setErrors({ nroDocumentExists: true });
+    } else if (controlName === 'email') {
+      control?.setErrors({ emailInvalid: true });
+    } else if (controlName === 'cellphone') {
+      control?.setErrors({ cellphoneExists: true });
     } else {
       control?.setErrors({ required: true });
     }
@@ -621,6 +823,142 @@ export class CheckoutComponent {
       input.nativeElement.focus();
       input.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
+  }
 
+  private handleRecurrentPaymentOption(): void {
+    // Validar si el checkbox de registro está marcado
+    if (!this.form.get('isSignUpAcepted')?.value) {
+      this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
+      this.isProcessing = false;
+      return;
+    }
+
+    const customerRequest = this.createCustomerRequest();
+    this._flowService.createCustomer(customerRequest)
+      .subscribe({
+        next: (response) => {
+          this.saveUserDataForSubscription(response.customerId);
+          this.isProcessing = false;
+          this._router.navigate([`/registro/verificacion`]);
+        },
+        error: (err) => {
+          this.isProcessing = false;
+          this.handleCustomerError(err);
+        }
+      });
+  }
+
+  private createPaymentRequest(): FlowPaymentRequest {
+    const status = this.form.get('isSignUpAcepted')?.value ?? false
+      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
+      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+
+    return {
+      amount: this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
+      currency: 'PEN',
+      commerceOrder: '',
+      subject: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) + ' x Creatina Monohidratada Magrolabs de 250g.',
+      email: this.form.get('email')?.value ?? '',
+      paymentMethod: this.paymentMethod,
+      urlReturn: this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
+      urlConfirmation: this.ENV.flowUrlConfirmation
+    };
+  }
+
+  private createCustomerRequest(): CreateCustomerRequest {
+    return {
+      name: this.form.get('firtName')?.value + ' ' + this.form.get('lastName')?.value,
+      email: this.form.get('email')?.value ?? '',
+      externalId: this.form.get('nroDocument')?.value ?? '',
+    };
+  }
+
+  private saveUserDataForSubscription(customerId: string): void {
+    this._summaryService.setUserData({
+      nombre: this.form.get('firtName')?.value ?? '',
+      apellido: this.form.get('lastName')?.value ?? '',
+      nroDocument: this.form.get('nroDocument')?.value ?? '',
+      email: this.form.get('email')?.value ?? '',
+      cellphone: this.form.get('cellphone')?.value ?? '',
+      typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
+      password: this.form.get('password')?.value ?? '',
+      customerId: customerId,
+      isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+    });
+
+    this._summaryService.setChoosePlan({
+      selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+      descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
+      descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+      descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+      descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
+      quantity: 1
+    });
+
+    this._summaryService.setAddress({
+      tipoVia: '',
+      nombreVia: this.form.get('streetAddress')?.value ?? '',
+      numero: this.form.get('number')?.value ?? '',
+      codigoPostal: this.form.get('postalCode')?.value ?? '',
+      distrito: this.form.get('district')?.value ?? '',
+      provincia: this.form.get('province')?.value ?? '',
+      department: this.form.get('department')?.value ?? '',
+      reference: this.form.get('reference')?.value ?? '',
+    });
+  }
+
+  private saveUserDataForOnePurchase(): void {
+    this._summaryService.setUserData({
+      ...this._summaryService.getSummary()?.userData,
+      nombre: this.form.get('firtName')?.value ?? '',
+      apellido: this.form.get('lastName')?.value ?? '',
+      nroDocument: this.form.get('nroDocument')?.value ?? '',
+      email: this.form.get('email')?.value ?? '',
+      cellphone: this.form.get('cellphone')?.value ?? '',
+      typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
+      password: this.form.get('password')?.value ?? '',
+      isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+    });
+
+    this._summaryService.setChoosePlan({
+      selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
+      descriptionOne: 'Monohidratada 100%',
+      descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
+      quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
+    });
+
+    this._summaryService.setAddress({
+      ...this._summaryService.getSummary()?.address,
+      tipoVia: '',
+      nombreVia: this.form.get('streetAddress')?.value ?? '',
+      numero: this.form.get('number')?.value ?? '',
+      codigoPostal: this.form.get('postalCode')?.value ?? '',
+      distrito: this.form.get('district')?.value ?? '',
+      provincia: this.form.get('province')?.value ?? '',
+      department: this.form.get('department')?.value ?? '',
+      reference: this.form.get('reference')?.value ?? '',
+    });
+  }
+
+  private createOrderDetailsWithPaymentMethod(): UpdateOrderDetailsRequest {
+    let orderDetails: UpdateOrderDetailsRequest = {
+      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
+    };
+
+    switch (this.paymentMethod) {
+      case FlowPaymentMethod.BANK_TRANSFER:
+        orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
+        break;
+      case FlowPaymentMethod.PAGO_EFECTIVO:
+        orderDetails.payment_method = PaymentMethod.PAGO_EFECTIVO;
+        break;
+      case FlowPaymentMethod.YAPE:
+        orderDetails.payment_method = PaymentMethod.YAPE;
+        break;
+      default:
+        orderDetails.payment_method = PaymentMethod.CREDIT_CARD;
+    }
+
+    return orderDetails;
   }
 }

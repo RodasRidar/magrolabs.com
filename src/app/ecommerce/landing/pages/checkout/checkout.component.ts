@@ -479,7 +479,7 @@ export class CheckoutComponent implements OnDestroy {
 
   private processPayment(): void {
     const userId = this._summaryService.getSummary()?.userData?.id;
-    
+
     if (!userId) {
       this.createCustomerAndCreatePayment();
     } else {
@@ -490,7 +490,7 @@ export class CheckoutComponent implements OnDestroy {
   private createCustomerAndCreatePayment(): void {
     this.saveUserDataForOnePurchase();
     const userRequest = this.createUserRequest();
-    
+
     //Crear usuario
     this._authService.register(userRequest).pipe(
       tap((response) => {
@@ -618,13 +618,13 @@ export class CheckoutComponent implements OnDestroy {
       district: district?.nombre_ubigeo ?? '',
       district_ubigeo: this.districtUbigeo,
     };
-    if(addressSummary.reference !== ''){
+    if (addressSummary.reference !== '') {
       addressRequest.reference = addressSummary.reference;
     }
-    if(addressSummary.numero !== ''){
+    if (addressSummary.numero !== '') {
       addressRequest.number = addressSummary.numero;
     }
-    if(addressSummary.codigoPostal !== ''){
+    if (addressSummary.codigoPostal !== '') {
       addressRequest.postalcode = addressSummary.codigoPostal;
     }
     return addressRequest;
@@ -826,26 +826,79 @@ export class CheckoutComponent implements OnDestroy {
   }
 
   private handleRecurrentPaymentOption(): void {
-    // Validar si el checkbox de registro está marcado
-    if (!this.form.get('isSignUpAcepted')?.value) {
-      this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
+    const totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
+
+    if (totalItems > 1) {
+      this._toastService.warning('Lo sentimos!', 'Solo puedes suscribirte a un producto por vez.');
       this.isProcessing = false;
       return;
     }
+    // Validar si el checkbox de registro está marcado y la contraseña está completa
+    if (this.form.get('isSignUpAcepted')?.value && this.form.get('password')?.value) {
+      const userRequest = this.createUserRequest();
 
-    const customerRequest = this.createCustomerRequest();
-    this._flowService.createCustomer(customerRequest)
-      .subscribe({
-        next: (response) => {
-          this.saveUserDataForSubscription(response.customerId);
-          this.isProcessing = false;
-          this._router.navigate([`/registro/verificacion`]);
-        },
-        error: (err) => {
-          this.isProcessing = false;
-          this.handleCustomerError(err);
-        }
-      });
+      const userData = this._summaryService.getSummary()?.userData;
+      if (userData?.id) {
+        this._router.navigate([`/registro/verificacion`]);
+      }
+      else {
+        //Crear usuario
+        this._authService.register(userRequest).pipe(
+          tap((response) => {
+            // Actualizar userData inmediatamente después de crear el usuario
+            const userData = this._summaryService.getSummary()?.userData;
+            if (userData) {
+              this._summaryService.setUserData({
+                ...userData,
+                id: response.data.user.id,
+                referralCode: response.data.user.referralCode
+              });
+            }
+          }),
+          //Crear direccion
+          switchMap((response) => {
+            return this._addressApiService.createAddress(this.createAddressRequest()).pipe(
+              tap(addressResponse => {
+                // Actualizar addressData inmediatamente después de crear la dirección
+                const addressData = this._summaryService.getSummary()?.address;
+                if (addressData) {
+                  this._summaryService.setAddress({
+                    ...addressData,
+                    id: addressResponse.data.address.id,
+                  });
+                }
+              })
+            );
+          }),
+          //Actualizar direccion de usuario
+          switchMap(addressResponse => {
+            const addressId = addressResponse.data.address.id;
+            const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+            return this._userService.updateUser(userId, { address_id: addressId });
+          }),
+          finalize(() => {
+            this.isProcessing = false;
+          })
+        ).subscribe({
+          next: () => {
+            this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
+            this._router.navigate([`/registro/verificacion`]);
+          },
+          error: (err) => {
+            console.error('Error creating payment: ', err);
+            this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
+            this.handleCustomerError(err);
+          }
+        });
+      }
+
+    }
+    else {
+      this.isProcessing = false;
+      localStorage.setItem('passwordSignal', 'true');
+      this._toastService.warning('Ups!', 'Necesitas completar la contraseña para suscribirte.');
+      this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
+    }
   }
 
   private createPaymentRequest(): FlowPaymentRequest {
@@ -875,6 +928,7 @@ export class CheckoutComponent implements OnDestroy {
 
   private saveUserDataForSubscription(customerId: string): void {
     this._summaryService.setUserData({
+      ...this._summaryService.getSummary()?.userData,
       nombre: this.form.get('firtName')?.value ?? '',
       apellido: this.form.get('lastName')?.value ?? '',
       nroDocument: this.form.get('nroDocument')?.value ?? '',
@@ -896,6 +950,7 @@ export class CheckoutComponent implements OnDestroy {
     });
 
     this._summaryService.setAddress({
+      ...this._summaryService.getSummary()?.address,
       tipoVia: '',
       nombreVia: this.form.get('streetAddress')?.value ?? '',
       numero: this.form.get('number')?.value ?? '',

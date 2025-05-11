@@ -199,6 +199,7 @@ export class VerificationPaymentComponent {
       this.processNewOrderPayment(paymentRequest);
     }
   }
+
   processCancelAndCreateNewOrder(orderId: string, paymentRequest: FlowPaymentRequest) {
       const orderRequest = this.createOrderRequest(false);
       const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';
@@ -639,6 +640,7 @@ export class VerificationPaymentComponent {
 
   registerUserFlowAndRegisterCard() {
     const userData = this._summaryService.getSummary()?.userData;
+
     if (userData?.id) {
       if (userData.customerId && this.isCreatinaGratis) {
         this.updateExistingCustomerWithFlow(userData.customerId, userData);

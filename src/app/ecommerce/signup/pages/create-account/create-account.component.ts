@@ -413,24 +413,28 @@ export class CreateAccountComponent implements OnDestroy {
 
       // Validar documento
       this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
-    }else{
+    } else {
       let emailControl = this.form.get('email');
       let cellphoneControl = this.form.get('cellphone');
       let nroDocumentControl = this.form.get('nroDocument');
 
-      emailControl?.setErrors({emailExists: false });
+      emailControl?.setErrors({ emailExists: false });
       cellphoneControl?.setErrors({ cellphoneExists: false });
       nroDocumentControl?.setErrors({ nroDocumentExists: false });
 
 
       let emailValue = emailControl?.value;
       let cellphoneValue = cellphoneControl?.value;
+      let nroDocumentValue = nroDocumentControl?.value;
 
       if (emailControl) {
         emailControl.setValue(emailValue ?? '');
       }
       if (cellphoneControl) {
         cellphoneControl.setValue(cellphoneValue ?? '');
+      }
+      if (nroDocumentControl) {
+        nroDocumentControl.setValue(nroDocumentValue ?? '');
       }
     }
   }

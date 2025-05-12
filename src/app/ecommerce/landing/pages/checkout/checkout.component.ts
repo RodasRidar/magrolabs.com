@@ -839,6 +839,14 @@ export class CheckoutComponent implements OnDestroy {
 
       const userData = this._summaryService.getSummary()?.userData;
       if (userData?.id) {
+        this._summaryService.setChoosePlan({
+          selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+          descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
+          descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+          descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
+          quantity: 1
+        });
         this._router.navigate([`/registro/verificacion`]);
       }
       else {
@@ -881,6 +889,14 @@ export class CheckoutComponent implements OnDestroy {
           })
         ).subscribe({
           next: () => {
+            this._summaryService.setChoosePlan({
+              selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+              descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
+              descriptionTwo: 'Ganas S/' + this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+              descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+              descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
+              quantity: 1
+            });
             this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
             this._router.navigate([`/registro/verificacion`]);
           },

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { refLinkGuard } from './shared/guards/ref-link.guard';
+import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -171,9 +172,27 @@ export const routes: Routes = [
     canActivate: [refLinkGuard]
   },
   {
-    path: 'account',
+    path: 'cuenta',
     loadComponent: () => import('./account/account.component').then(m => m.AccountComponent),
-    //canActivate: [refLinkGuard]
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./account/pages/pedidos/pedidos.component').then(m => m.PedidosComponent),
+      },
+      {
+        path: 'credito',
+        loadComponent: () => import('./account/pages/credito/credito.component').then(m => m.CreditoComponent),
+      },
+      {
+        path: 'suscripcion',
+        loadComponent: () => import('./account/pages/suscripcion/suscripcion.component').then(m => m.SuscripcionComponent),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./account/pages/perfil/perfil.component').then(m => m.PerfilComponent),
+      },
+    ]
   },
   {
     path: '**',

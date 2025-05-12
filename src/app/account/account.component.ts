@@ -1,16 +1,18 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { UserService } from '../shared/services/user.service';
 import { UserDetailResponse } from '../shared/interfaces/user.interfaces';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './account.component.html',
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
   private _router = inject(Router);
   private _authService = inject(AuthService);
   private _userService = inject(UserService);
@@ -20,11 +22,23 @@ export class AccountComponent {
   isMobileMenuOpen = false;
   subscription: any = null;
   lastOrder: any = null;
+  loyaltyPoints = 10;
+  loyaltyProgressWidth = '0%';
+  maxLoyaltyPoints = 200;
 
   ngOnInit() {
-    //this.loadUserData();
-    //this.loadSubscriptionData();
-    //this.loadLastOrder();
+    this.loadUserData();
+    this.loadSubscriptionData();
+    this.loadLastOrder();
+    
+    // Iniciar con 0% y luego animar hasta el porcentaje actual
+    setTimeout(() => {
+      this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
+    }, 500);
+  }
+
+  calculateProgressPercentage(): number {
+    return (this.loyaltyPoints / this.maxLoyaltyPoints) * 100;
   }
 
   toggleUserMenu() {
@@ -49,6 +63,7 @@ export class AccountComponent {
   private loadUserData() {
     this._userService.getCurrentUser().subscribe({
       next: (user) => {
+        console.log('user', user);
         this.user = user;
       },
       error: (error) => {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../../../environments/env';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -17,14 +17,14 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   private _formBuilder = inject(FormBuilder);
   private _router = inject(Router);
   private _cookieService = inject(CookieService);
   private _toastService = inject(ToastService);
   private _authService = inject(AuthService);
-  private readonly destroy$ = takeUntilDestroyed();
+  private _destroyRef = inject(DestroyRef);
 
   ENV = environment;
   isProcessing = false;
@@ -45,7 +45,7 @@ export class LoginComponent {
       this.form.get('email')?.setValue(rememberMeEmail);
       this.form.get('rememberMe')?.setValue(true);
       this._toastService.onToastClosed()
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe(() => {
           this.credentialsFailed = false;
         });
@@ -85,7 +85,7 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => {
-          this._router.navigate(['/account']);
+          this._router.navigate(['/cuenta']);
         },
         error: (error) => {
           this.credentialsFailed = true;

@@ -12,22 +12,22 @@
                         </a>
                     </div>
                     <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                        <a routerLink="/account"
+                        <a routerLink="/cuenta"
                             class="border-[#d07d66] text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                             aria-current="page">
                             Mi Cuenta
                         </a>
-                        <a routerLink="/account/pedidos"
-                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Mis Pedidos
-                        </a>
-                        <a routerLink="/account/suscripcion"
+                        <a routerLink="/cuenta/suscripcion"
                             class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Mi Suscripción
                         </a>
-                        <a routerLink="/account/configuracion"
+                        <a routerLink="/cuenta/credito"
                             class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Configuración
+                            Mi Crédito
+                        </a>
+                        <a routerLink="/cuenta/pedidos"
+                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Mis Pedidos
                         </a>
                     </div>
                 </div>
@@ -59,17 +59,18 @@
                             </button>
                         </div>
                         @if (isUserMenuOpen) {
-                        <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                            <a routerLink="/account/perfil"
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                                    {{user?.last_name || ''}}</div>
+                                <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
+                                </div>
+                            </div>
+                            <a routerLink="/cuenta/perfil"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-0">
                                 Mi Perfil
-                            </a>
-                            <a routerLink="/account/configuracion"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                tabindex="-1" id="user-menu-item-1">
-                                Configuración
                             </a>
                             <a (click)="logout()"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -102,22 +103,22 @@
 
         <div class="sm:hidden" id="mobile-menu" [class.hidden]="!isMobileMenuOpen">
             <div class="pt-2 pb-3 space-y-1">
-                <a routerLink="/account"
+                <a routerLink="/cuenta"
                     class="bg-[#d07d66] border-[#d07d66] text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                     aria-current="page">
                     Mi Cuenta
                 </a>
-                <a routerLink="/account/pedidos"
-                    class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                    Mis Pedidos
-                </a>
-                <a routerLink="/account/suscripcion"
+                <a routerLink="/cuenta/suscripcion"
                     class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                     Mi Suscripción
                 </a>
-                <a routerLink="/account/configuracion"
+                <a routerLink="/cuenta/credito"
                     class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                    Configuración
+                    Mi Crédito
+                </a>
+                <a routerLink="/cuenta/pedidos"
+                    class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    Mis Pedidos
                 </a>
             </div>
             <div class="pt-4 pb-3 border-t border-gray-200">
@@ -130,7 +131,8 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}</div>
+                        <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                            {{user?.last_name || ''}}</div>
                         <div class="text-sm font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}</div>
                     </div>
                     <!-- 
@@ -146,13 +148,9 @@
                     </button>-->
                 </div>
                 <div class="mt-3 space-y-1">
-                    <a routerLink="/account/perfil"
+                    <a routerLink="/cuenta/perfil"
                         class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
                         Mi Perfil
-                    </a>
-                    <a routerLink="/account/configuracion"
-                        class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                        Configuración
                     </a>
                     <a (click)="logout()"
                         class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 cursor-pointer">
@@ -172,6 +170,100 @@
         <main>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="px-4 py-8 sm:px-0">
+                    <!-- Medidor de lealtad -->
+                    <div class="col-span-1 sm:col-span-2 lg:col-span-3 my-8">
+                        <div class="overflow-hidden shadow rounded-lg text-white" style="background:linear-gradient(90deg, rgba(20, 20, 20, 1) 0%, rgb(40 40 66) 35%, #393737 100%)">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-xl font-medium leading-6 text-white">Medidor de lealtad</h3>
+                                    <a routerLink="/cuenta/credito"
+                                        class="flex items-center text-white text-sm hover:underline">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"
+                                            fill="currentColor" class="mr-1" viewBox="0 0 24 24">
+                                            <path
+                                                d="M17,10.43V2H7v8.43c0,0.35,0.18,0.68,0.49,0.86l4.18,2.51l-0.99,2.34l-3.41,0.29l2.59,2.24L9.07,22L12,20.23L14.93,22 l-0.78-3.33l2.59-2.24l-3.41-0.29l-0.99-2.34l4.18-2.51C16.82,11.11,17,10.79,17,10.43z M13,12.23l-1,0.6l-1-0.6V3h2V12.23z" />
+                                        </svg>
+                                        Mis créditos
+                                    </a>
+                                </div>
+
+                                <div class="mt-4">
+                                    <h2 class="text-5xl font-bold">S/{{loyaltyPoints}}</h2>
+
+                                    <div class="relative mt-6 mb-8 w-[94%] max-w-[975px]">
+                                        <!-- Barra de progreso base -->
+                                        <div class="h-2.5 bg-white bg-opacity-20 rounded-r-lg"></div>
+
+                                        <!-- Barra de progreso llena -->
+                                        <div class="absolute top-0 left-0 h-2.5 bg-[#d07d66] rounded-r-lg"
+                                            [style.width]="loyaltyProgressWidth" style="transition: width 1.5s ease-in-out;"></div>
+
+                                        <!-- Marcadores de niveles -->
+                                        <div class="relative h-20">
+                                            <div class="absolute left-[20%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                                <div
+                                                    class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
+                                                    <span class="text-[#d07d66] text-sm">★</span>
+                                                </div>
+                                                <span class="text-lg font-semibold mt-1">S/50</span>
+                                                <span class="text-white text-opacity-80 text-sm">Bronce</span>
+                                            </div>
+
+                                            <div class="absolute left-[40%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                                <div
+                                                    class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
+                                                    <span class="text-[#d07d66] text-sm">★</span>
+                                                </div>
+                                                <span class="text-lg font-semibold mt-1">S/75</span>
+                                                <span class="text-white text-opacity-80 text-sm">Plata</span>
+                                            </div>
+
+                                            <div class="absolute left-[60%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                                <div
+                                                    class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
+                                                    <span class="text-[#d07d66] text-sm">★</span>
+                                                </div>
+                                                <span class="text-lg font-semibold mt-1">S/100</span>
+                                                <span class="text-white text-opacity-80 text-sm">Oro</span>
+                                            </div>
+
+                                            <div class="absolute left-[80%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                                <div
+                                                    class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
+                                                    <span class="text-[#d07d66] text-sm">★</span>
+                                                </div>
+                                                <span class="text-lg font-semibold mt-1">S/120</span>
+                                                <span class="text-white text-opacity-80 text-sm">Platino</span>
+                                            </div>
+
+                                            <div class="absolute right-0 flex flex-col items-center" style="transform: translateX(50%);">
+                                                <div
+                                                    class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
+                                                    <span class="text-[#d07d66] text-sm">★</span>
+                                                </div>
+                                                <span class="text-lg font-semibold mt-1">S/200</span>
+                                                <span class="text-white text-opacity-80 text-sm">Diamante</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-6">
+                                        <a routerLink="/cuenta/credito"
+                                            class="text-white hover:text-white hover:underline flex items-center">
+                                            <span class="font-medium">Recibe S/20 de crédito para compras.</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <!-- Resumen de Suscripción -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -181,7 +273,7 @@
                                     <p>{{subscription?.status || 'Sin suscripción activa'}}</p>
                                 </div>
                                 <div class="mt-5">
-                                    <a routerLink="/account/suscripcion"
+                                    <a routerLink="/cuenta/suscripcion"
                                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
                                         Ver detalles
                                     </a>
@@ -197,7 +289,7 @@
                                     <p>{{lastOrder?.status || 'No hay pedidos recientes'}}</p>
                                 </div>
                                 <div class="mt-5">
-                                    <a routerLink="/account/pedidos"
+                                    <a routerLink="/cuenta/pedidos"
                                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
                                         Ver pedidos
                                     </a>
@@ -213,7 +305,7 @@
                                     <p>{{user?.email || 'No hay información disponible'}}</p>
                                 </div>
                                 <div class="mt-5">
-                                    <a routerLink="/account/perfil"
+                                    <a routerLink="/cuenta/perfil"
                                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
                                         Editar perfil
                                     </a>

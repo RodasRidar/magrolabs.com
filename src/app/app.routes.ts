@@ -171,6 +171,11 @@ export const routes: Routes = [
     canActivate: [refLinkGuard]
   },
   {
+    path: 'account',
+    loadComponent: () => import('./account/account.component').then(m => m.AccountComponent),
+    //canActivate: [refLinkGuard]
+  },
+  {
     path: '**',
     loadComponent: () => import('./shared/pages/not-found/not-found.component')
   }

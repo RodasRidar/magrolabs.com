@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +20,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class LoginComponent {
 
   private _formBuilder = inject(FormBuilder);
-  // private _router = inject(Router);
+  private _router = inject(Router);
   private _cookieService = inject(CookieService);
   private _toastService = inject(ToastService);
+  private _authService = inject(AuthService);
   private readonly destroy$ = takeUntilDestroyed();
 
   ENV = environment;
@@ -42,12 +45,11 @@ export class LoginComponent {
       this.form.get('email')?.setValue(rememberMeEmail);
       this.form.get('rememberMe')?.setValue(true);
       this._toastService.onToastClosed()
-      // .pipe(this.destroy$)
-      .subscribe(() => {
-        this.credentialsFailed = false;
-      });
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => {
+          this.credentialsFailed = false;
+        });
     }
-
   }
 
   hasRequiredError(field: string) {
@@ -65,22 +67,31 @@ export class LoginComponent {
       this.form.markAllAsTouched();
       return;
     }
+
     this.isProcessing = true;
-    const rememberMe = this.form.get('rememberMe')?.value;
+    const { email, password, rememberMe } = this.form.value;
+
     if (rememberMe) {
       this._cookieService.set('rememberMe', 'true', 365);
-      const email = this.form.get('email')?.value;
       this._cookieService.set('rememberMeEmail', email ?? '', 365);
     } else {
       this._cookieService.delete('rememberMe');
       this._cookieService.delete('rememberMeEmail');
     }
-    // setInterval(() => {
-    //   this.credentialsFailed = true;
-    //   // this._router.navigate(['/account']);
-    // }, 2000);
-    this._toastService.error(this.toastTitle, this.toastMessage);
-    this.credentialsFailed = true;
-    this.isProcessing = false;
+
+    this._authService.login({ email: email!, password: password! })
+      .pipe(
+        finalize(() => this.isProcessing = false)
+      )
+      .subscribe({
+        next: () => {
+          this._router.navigate(['/account']);
+        },
+        error: (error) => {
+          this.credentialsFailed = true;
+          this._toastService.error(this.toastTitle, this.toastMessage);
+          console.error('Error en login:', error);
+        }
+      });
   }
 }

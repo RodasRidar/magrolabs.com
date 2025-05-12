@@ -1,0 +1,228 @@
+<div class="min-h-full">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a routerLink="/" aria-label="Ir al inicio">
+                            <img class="block lg:hidden h-12 w-auto" src="/favicon.png" alt="Magrolabs" width="32"
+                                height="32">
+                            <img class="hidden lg:block h-12 w-auto" src="/favicon.png" alt="Magrolabs" width="32"
+                                height="32">
+                        </a>
+                    </div>
+                    <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+                        <a routerLink="/account"
+                            class="border-[#d07d66] text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                            aria-current="page">
+                            Mi Cuenta
+                        </a>
+                        <a routerLink="/account/pedidos"
+                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Mis Pedidos
+                        </a>
+                        <a routerLink="/account/suscripcion"
+                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Mi Suscripción
+                        </a>
+                        <a routerLink="/account/configuracion"
+                            class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Configuración
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <!-- 
+                    <button type="button"
+                        class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                        aria-label="Ver notificaciones">
+                        <span class="sr-only">Ver notificaciones</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>-->
+
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button"
+                                class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                                id="user-menu-button" aria-expanded="false" aria-haspopup="true"
+                                (click)="toggleUserMenu()">
+                                <span class="sr-only">Abrir menú de usuario</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
+                                    width="40px" fill="#434343">
+                                    <path
+                                        d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        @if (isUserMenuOpen) {
+                        <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <a routerLink="/account/perfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-0">
+                                Mi Perfil
+                            </a>
+                            <a routerLink="/account/configuracion"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-1">
+                                Configuración
+                            </a>
+                            <a (click)="logout()"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                role="menuitem" tabindex="-1" id="user-menu-item-2">
+                                Cerrar sesión
+                            </a>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                        aria-controls="mobile-menu" aria-expanded="false" (click)="toggleMobileMenu()">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg class="block h-6 w-6" [class.hidden]="isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" [class.block]="isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sm:hidden" id="mobile-menu" [class.hidden]="!isMobileMenuOpen">
+            <div class="pt-2 pb-3 space-y-1">
+                <a routerLink="/account"
+                    class="bg-[#d07d66] border-[#d07d66] text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    aria-current="page">
+                    Mi Cuenta
+                </a>
+                <a routerLink="/account/pedidos"
+                    class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    Mis Pedidos
+                </a>
+                <a routerLink="/account/suscripcion"
+                    class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    Mi Suscripción
+                </a>
+                <a routerLink="/account/configuracion"
+                    class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    Configuración
+                </a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px"
+                            fill="#434343">
+                            <path
+                                d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}</div>
+                        <div class="text-sm font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}</div>
+                    </div>
+                    <!-- 
+                    <button type="button"
+                        class="ml-auto bg-white flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                        aria-label="Ver notificaciones">
+                        <span class="sr-only">Ver notificaciones</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>-->
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a routerLink="/account/perfil"
+                        class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                        Mi Perfil
+                    </a>
+                    <a routerLink="/account/configuracion"
+                        class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                        Configuración
+                    </a>
+                    <a (click)="logout()"
+                        class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 cursor-pointer">
+                        Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="py-10">
+        <header>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight text-gray-900">Mi Cuenta</h1>
+            </div>
+        </header>
+        <main>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="px-4 py-8 sm:px-0">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <!-- Resumen de Suscripción -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
+                                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                                    <p>{{subscription?.status || 'Sin suscripción activa'}}</p>
+                                </div>
+                                <div class="mt-5">
+                                    <a routerLink="/account/suscripcion"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
+                                        Ver detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Último Pedido -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Último Pedido</h3>
+                                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                                    <p>{{lastOrder?.status || 'No hay pedidos recientes'}}</p>
+                                </div>
+                                <div class="mt-5">
+                                    <a routerLink="/account/pedidos"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
+                                        Ver pedidos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Personal -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Información Personal</h3>
+                                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                                    <p>{{user?.email || 'No hay información disponible'}}</p>
+                                </div>
+                                <div class="mt-5">
+                                    <a routerLink="/account/perfil"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
+                                        Editar perfil
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

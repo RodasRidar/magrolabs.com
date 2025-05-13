@@ -152,13 +152,16 @@ export enum SubscriptionStatusEnum {
    * Respuesta paginada de suscripciones
    */
   export interface PaginatedSubscriptionsResponse {
-    subscriptions: Subscription[];
-    pagination: {
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    };
+    status: string;
+    data: {
+      subscriptions: Subscription[];
+      pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    };  
   }
   
   /**

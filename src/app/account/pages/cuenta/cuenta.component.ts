@@ -70,8 +70,9 @@ export class CuentaComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          if (response.subscriptions && response.subscriptions.length > 0) {
-            this.subscription = response.subscriptions[0];
+          if (response.data.subscriptions && response.data.subscriptions.length > 0) {
+            console.log('response.subscriptions[0]', response.data.subscriptions[0]);
+            this.subscription = response.data.subscriptions[0];
           } else {
             this.subscription = null;
           }

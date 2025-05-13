@@ -177,6 +177,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: 'mi-cuenta',
+        loadComponent: () => import('./account/pages/cuenta/cuenta.component').then(m => m.CuentaComponent),
+      },
+      {
         path: 'pedidos',
         loadComponent: () => import('./account/pages/pedidos/pedidos.component').then(m => m.PedidosComponent),
       },

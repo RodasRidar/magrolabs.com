@@ -140,7 +140,7 @@ export interface OrderResponse {
    * Total de la orden
    * @example 59.98
    */
-  total: number;
+  total_amount: number;
 
   /**
    * Costo de envío
@@ -172,9 +172,12 @@ export interface OrderResponse {
    */
   shipping_address: string;
 
+  order_date: string;
+
   /**
    * Información de la dirección de envío
    */
+
   address?: any;
 
   /**

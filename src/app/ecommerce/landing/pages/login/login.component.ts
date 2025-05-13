@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this._router.navigate(['/cuenta']);
+          this._router.navigate(['/cuenta/mi-cuenta']);
         },
         error: (error) => {
           this.credentialsFailed = true;

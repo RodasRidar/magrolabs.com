@@ -1,15 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterOutlet, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { UserService } from '../shared/services/user.service';
 import { UserDetailResponse } from '../shared/interfaces/user.interfaces';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterOutlet,RouterLinkActive],
   templateUrl: './account.component.html',
 })
 export class AccountComponent implements OnInit {

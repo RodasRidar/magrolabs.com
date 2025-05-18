@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal } from '@angular/core';
+import { Component, inject, input, InputSignal, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -7,11 +7,12 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { CartComponent } from '../../../../shared/ui/cart/cart.component';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule,ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive],
+  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   animations: [
@@ -40,19 +41,19 @@ import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
       transition('end => start', [
         animate('0.5s ease')
       ])
-      
     ])
   ]
 })
-
-
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   isCheckout = input.required<boolean>();
-  private _shoppingCartService = inject(ShoppingCartService);
-  private _authService = inject(AuthService);
-  private _router = inject(Router);
   
-  isLoading: boolean = false;
+  private readonly _shoppingCartService = inject(ShoppingCartService);
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+  private readonly _cdr = inject(ChangeDetectorRef);
+  private _subscriptions: Subscription[] = [];
+  
+  isLoading = false;
   showCart = 'inactivate';
   numItemsCart = 0;
   cartState = 'start';
@@ -66,21 +67,30 @@ export class NavbarComponent {
   static navbarTypeEnum: any;
 
   ngOnInit(): void {
-    this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
-      this.numItemsCart = this._shoppingCartService.getTotalItemsByShoppingCart(shoppingCart);
-      this.cartState = this.cartState === 'start' ? 'end' : 'start';
-      setTimeout(() => {
-        this.cartState = 'start';
-      }, 500); 
-    });
+    this._subscriptions.push(
+      this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
+        this.numItemsCart = this._shoppingCartService.getTotalItemsByShoppingCart(shoppingCart);
+        this.cartState = this.cartState === 'start' ? 'end' : 'start';
+        setTimeout(() => {
+          this.cartState = 'start';
+          this._cdr.detectChanges();
+        }, 500);
+      }),
 
-    this._authService.currentUser$.subscribe(user => {
-      this.user = user;
-    });
+      this._authService.currentUser$.subscribe(user => {
+        this.user = user;
+        this._cdr.detectChanges();
+      }),
 
-    this._authService.isAuthenticated$.subscribe(isAuth => {
-      this.isAuthenticated = isAuth;
-    });
+      this._authService.isAuthenticated$.subscribe(isAuth => {
+        this.isAuthenticated = isAuth;
+        this._cdr.detectChanges();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   toggleNavbar(): void {

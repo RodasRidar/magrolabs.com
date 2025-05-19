@@ -185,5 +185,8 @@ export enum SubscriptionStatusEnum {
    * Respuesta de un solo plan de suscripción
    */
   export interface SubscriptionPlanResponse {
-    subscriptionPlan: SubscriptionPlan;
+    status: string;
+    data: {
+      subscriptionPlan: SubscriptionPlan;
+    };
   } 

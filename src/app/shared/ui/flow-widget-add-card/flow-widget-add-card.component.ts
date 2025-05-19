@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, inject, Inject, input, OnDestroy,
 import { environment } from '../../../../environments/env';
 import { FlowService } from '../../services/flow.service';
 import { SummaryService } from '../../services/summary-service.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-flow-widget-add-card',
@@ -18,6 +19,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
   private flowInstance: any;
   private _flowService = inject(FlowService);
   private _summaryService = inject(SummaryService);
+  private _authService = inject(AuthService);
 
   constructor(
     private el: ElementRef,
@@ -64,7 +66,8 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       this.flowInstance.handleCardSubscribed(subscribe)
         .then((data: any) => {
           // console.log('Suscripción procesada correctamente:', data);
-          const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
+          const customerId = this._summaryService.getSummary()?.userData?.customerId 
+          ?? this._authService.getCurrentUser()?.flowCustomerId ?? '';
           this._flowService.getCustomer(customerId).subscribe((customer) => {
             if (customer.last4CardDigits !== '') {
               const usrData = this._summaryService.getSummary()?.userData;

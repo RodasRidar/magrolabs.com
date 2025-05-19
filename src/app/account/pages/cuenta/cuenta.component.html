@@ -199,10 +199,10 @@
                                     <span class="sr-only">Cargando información personal...</span>
                                 </div>
                             } @else {
-                                <p>{{user?.first_name || 'No hay información disponible'}} {{user?.last_name || 'No hay información disponible'}}</p>
+                                <p>{{user.first_name || 'No hay información disponible'}} {{user.last_name || 'No hay información disponible'}}</p>
                                 <p></p>
-                                <p>{{user?.email || 'No hay información disponible'}}</p>
-                                <p>{{user?.phone || 'No hay información disponible'}}</p>
+                                <p>{{user.email || 'No hay información disponible'}}</p>
+                                <p>{{user.phone || 'No hay información disponible'}}</p>
                             }
                         </div>
                         <div class="mt-5">

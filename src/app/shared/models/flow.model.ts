@@ -82,9 +82,59 @@ export interface RegisterCardRequest extends FlowModelRequest{
   }
 
   export interface FlowPaymentResponse {
-    url: string; // URL de redirección para el pago
-    token: string; // Token único de la transacción
-    flowOrder: string; // Orden del comercio
+    token: string;
+    url: string;
+    flowOrder: number;
+  }
+
+  /**
+   * Respuesta de la API de Flow para obtener los cobros de un cliente
+   */
+  export interface FlowChargesResponse {
+    total: number;
+    hasMore: boolean;
+    data: FlowCharge[];
+  }
+
+  /**
+   * Información de un cobro de Flow
+   */
+  export interface FlowCharge {
+    flowOrder: number;
+    commerceOrder: string;
+    requestDate: string;
+    status: number;
+    subject: string;
+    currency: string;
+    amount: string;
+    payer: string;
+    optional: any;
+    pending_info: {
+      media: any;
+      date: any;
+    };
+    paymentData: {
+      date: any;
+      media: any;
+      conversionDate: any;
+      conversionRate: any;
+      amount: any;
+      currency: any;
+      fee: any;
+      balance: any;
+      transferDate: any;
+    };
+    merchantId: any;
+  }
+
+  /**
+   * Estados de cobro de Flow
+   */
+  export enum FlowChargeStatus {
+    PENDING = 1,
+    COMPLETED = 2,
+    REJECTED = 3,
+    CANCELLED = 4
   }
 
   export interface CreateSubscriptionResponse {

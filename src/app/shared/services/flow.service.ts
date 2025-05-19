@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
+import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
@@ -151,11 +151,34 @@ export class FlowService {
   }
 
   /**
- * 📌 Método para generar la firma HMAC-SHA256 segun formato de Flow
- * @param params Objeto con los parámetros a firmar
- * @param secretKey Clave secreta para firmar los datos
- * @returns Firma en formato hexadecimal
- */
+   * Obtiene el historial de cobros de un cliente de Flow
+   * @param customerId ID del cliente en Flow
+   * @param limit Límite de registros a obtener
+   * @returns Observable con la respuesta de cobros
+   */
+  getCharges(customerId: string, limit: number = 10): Observable<FlowChargesResponse> {
+    if (environment.production) {
+      const url = `${this.apiUrl}customer/getCharges.ts`;
+      return this.http.get<FlowChargesResponse>(url, { params: { customerId, limit: limit.toString() } });
+    }
+    else {
+      const url = `${this.apiUrlLocal}/customer/getCharges`;
+      const toSign = { apiKey: this.apiKey, customerId, limit: limit.toString() };
+      const params = new HttpParams()
+        .set('customerId', customerId)
+        .set('limit', limit.toString())
+        .set('apiKey', this.apiKey)
+        .set('s', this.getFlowSignature(toSign));
+      return this.http.get<FlowChargesResponse>(url, { params });
+    }
+  }
+
+  /**
+   * 📌 Método para generar la firma HMAC-SHA256 segun formato de Flow
+   * @param params Objeto con los parámetros a firmar
+   * @param secretKey Clave secreta para firmar los datos
+   * @returns Firma en formato hexadecimal
+   */
   private getFlowSignature(params: Record<string, string | number>): string {
     // Ordenar las claves alfabéticamente
     const sortedKeys = Object.keys(params).sort();

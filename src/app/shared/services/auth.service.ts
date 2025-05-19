@@ -250,6 +250,10 @@ export class AuthService {
   /**
    * Obtener usuario actual
    */
+  getCurrentUserObservable(): Observable<UserResponse | null> {
+    return of(this.currentUserSubject.value);
+  }
+
   getCurrentUser(): UserResponse | null {
     return this.currentUserSubject.value;
   }

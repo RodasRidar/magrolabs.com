@@ -77,8 +77,11 @@
                                 </div>
 
                                 <div>
-                                    <dt class="text-sm font-medium text-gray-500">Créditos disponibles</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ subscription()!.credits  | currency:'S/'}}</dd>
+                                    <dt class="text-sm font-medium text-gray-500">Mi Crédito</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">
+                                        <span *ngIf="isLoadingCredits()">Cargando...</span>
+                                        <a *ngIf="!isLoadingCredits()" routerLink="/cuenta/credito" class="hover:text-[#d07d66] hover:underline">{{ userCredits() | currency:'S/'}}</a>
+                                    </dd>
                                 </div>
 
                                 <div *ngIf="subscription()!.next_shipment">

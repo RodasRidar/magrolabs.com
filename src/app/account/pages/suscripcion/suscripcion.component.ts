@@ -4,16 +4,19 @@ import { SubscriptionService } from '../../../shared/services/subscription.servi
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of } from 'rxjs';
+import { switchMap, catchError, of, takeUntil } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { CreditTransactionService } from '../../../shared/services/credit-transactions.service';
+import { Subject } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })
@@ -23,6 +26,8 @@ export class SuscripcionComponent implements OnInit {
   private authService = inject(AuthService);
   private sanitizer = inject(DomSanitizer);
   private _toastService = inject(ToastService);
+  private _creditTransactionService = inject(CreditTransactionService);
+  private destroy$ = new Subject<void>();
 
   subscription = signal<Subscription | null>(null);
   subscriptionPlan = signal<SubscriptionPlan | null>(null);
@@ -36,6 +41,10 @@ export class SuscripcionComponent implements OnInit {
   cardType = signal<string>('');
   cardLastFour = signal<string>('');
 
+  // Información de créditos
+  userCredits = signal<string>('0');
+  isLoadingCredits = signal<boolean>(false);
+
   // Historial de pagos
   charges = signal<FlowCharge[]>([]);
   isLoadingCharges = signal<boolean>(false);
@@ -46,6 +55,7 @@ export class SuscripcionComponent implements OnInit {
   
   ngOnInit(): void {
     this.loadSubscription();
+    this.loadUserCredits();
     this.authService.getCurrentUserObservable()?.subscribe(user => {
       if (user?.flowCustomerId) {
         this.flowService.registerCard(user.flowCustomerId).subscribe(response => {
@@ -54,6 +64,35 @@ export class SuscripcionComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadUserCredits(): void {
+    this.isLoadingCredits.set(true);
+    
+    const user = this.authService.getCurrentUser();
+    if (user && user.id) {
+      this._creditTransactionService.getTotalCredits(user.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response && response.data && response.data.totalCredits) {
+              this.userCredits.set(response.data.totalCredits);
+            }
+            this.isLoadingCredits.set(false);
+          },
+          error: (error) => {
+            console.error('Error al obtener los créditos del usuario:', error);
+            this.isLoadingCredits.set(false);
+          }
+        });
+    } else {
+      this.isLoadingCredits.set(false);
+    }
   }
 
   cardAddedSuccessfully($event: boolean) {

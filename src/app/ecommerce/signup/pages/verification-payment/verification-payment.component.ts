@@ -27,6 +27,7 @@ import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/su
 import { response } from 'express';
 import { UserService } from '../../../../shared/services/user.service';
 import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
+import { CreditTransactionService, TransactionType } from '../../../../shared/services/credit-transactions.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -65,6 +66,7 @@ export class VerificationPaymentComponent {
   private _subscriptionService = inject(SubscriptionService)
   private _subscriptionOrderService = inject(SubscriptionOrderService)
   private _userService = inject(UserService)
+  private _creditTransactionService = inject(CreditTransactionService)
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = '**** **** **** ';
   stepEnum = StepEnum;
@@ -360,6 +362,21 @@ export class VerificationPaymentComponent {
             status: OrderStatus.PROCESSING
           });
         }),
+        switchMap(orderUpdateResponse => {
+          const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+          if (!userId) {
+            return of(null);
+          }
+          
+          // Agregar 10 créditos al usuario por la suscripción
+          return this._creditTransactionService.createTransaction({
+            user_id: userId,
+            type: TransactionType.EARNED,
+            amount: this.ENV.creditoRegaloPorCompraMes,
+            description: '¡Bienvenido a Magrolabs!',
+            source: PaymentMethod.CREDIT_CARD
+          });
+        }),
         catchError(error => this.handleSubscriptionError(error)),
         finalize(() => {
           this._summaryService.setUserData({
@@ -370,7 +387,7 @@ export class VerificationPaymentComponent {
         })
       ).subscribe({
         next: (response) => {
-          console.log('Order updated: ', response);
+          console.log('Order updated and credits added: ', response);
           this.navigateToConfirmation();
         }
       });
@@ -489,14 +506,27 @@ export class VerificationPaymentComponent {
         return this.createBackendSubscription();
       }),
       switchMap(subscriptionResponse => {
-       // console.log('Subscription response: ', subscriptionResponse);
         const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
         return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
       }),
       switchMap(subscriptionOrderResponse => {
-        //console.log('Subscription order created: ', subscriptionOrderResponse);
         return this._orderService.updateOrderDetails(orderId, {
           status: OrderStatus.PROCESSING
+        });
+      }),
+      switchMap(orderUpdateResponse => {
+        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+        if (!userId) {
+          return of(null);
+        }
+        
+        // Agregar 10 créditos al usuario por la suscripción
+        return this._creditTransactionService.createTransaction({
+          user_id: userId,
+          type: TransactionType.EARNED,
+          amount: this.ENV.creditoRegaloPorCompraMes,
+          description: '¡Bienvenido a Magrolabs!',
+          source: PaymentMethod.CREDIT_CARD
         });
       }),
       catchError(error => this.handleSubscriptionError(error)),
@@ -509,7 +539,7 @@ export class VerificationPaymentComponent {
       })
     ).subscribe({
       next: (response) => {
-        console.log('Order updated: ', response);
+        console.log('Order updated and credits added: ', response);
         this.navigateToConfirmation();
       }
     });
@@ -538,6 +568,21 @@ export class VerificationPaymentComponent {
           status: OrderStatus.PROCESSING
         });
       }),
+      switchMap(orderUpdateResponse => {
+        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+        if (!userId) {
+          return of(null);
+        }
+        
+        // Agregar 10 créditos al usuario por la suscripción
+        return this._creditTransactionService.createTransaction({
+          user_id: userId,
+          type: TransactionType.EARNED,
+          amount: this.ENV.creditoRegaloPorCompraMes,
+          description: '¡Bienvenido a Magrolabs!',
+          source: PaymentMethod.CREDIT_CARD
+        });
+      }),
       catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
         this._summaryService.setUserData({
@@ -548,7 +593,7 @@ export class VerificationPaymentComponent {
       })
     ).subscribe({
       next: (response) => {
-        console.log('Order updated: ', response);
+        console.log('Order updated and credits added: ', response);
         this.navigateToConfirmation();
       }
     });

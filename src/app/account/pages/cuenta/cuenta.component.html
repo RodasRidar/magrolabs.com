@@ -36,7 +36,7 @@
 
                                 <!-- Marcadores de niveles -->
                                 <div class="relative h-20">
-                                    <div class="absolute left-[20%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                    <div class="absolute left-[25%] flex flex-col items-center" style="transform: translateX(-50%);">
                                         <div
                                             class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
                                             <span class="text-[#d07d66] text-sm">★</span>
@@ -50,11 +50,11 @@
                                             class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
                                             <span class="text-[#d07d66] text-sm">★</span>
                                         </div>
-                                        <span class="text-lg font-semibold mt-1">S/75</span>
+                                        <span class="text-lg font-semibold mt-1">S/80</span>
                                         <span class="text-white text-opacity-80 text-sm">Plata</span>
                                     </div>
 
-                                    <div class="absolute left-[60%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                    <div class="absolute left-[50%] flex flex-col items-center" style="transform: translateX(-50%);">
                                         <div
                                             class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
                                             <span class="text-[#d07d66] text-sm">★</span>
@@ -63,12 +63,12 @@
                                         <span class="text-white text-opacity-80 text-sm">Oro</span>
                                     </div>
 
-                                    <div class="absolute left-[80%] flex flex-col items-center" style="transform: translateX(-50%);">
+                                    <div class="absolute left-[75%] flex flex-col items-center" style="transform: translateX(-50%);">
                                         <div
                                             class="w-5 h-5 flex items-center justify-center bg-white rounded-full -mt-3.5">
                                             <span class="text-[#d07d66] text-sm">★</span>
                                         </div>
-                                        <span class="text-lg font-semibold mt-1">S/120</span>
+                                        <span class="text-lg font-semibold mt-1">S/150</span>
                                         <span class="text-white text-opacity-80 text-sm">Platino</span>
                                     </div>
 
@@ -122,9 +122,18 @@
                             } @else if (subscriptionError) {
                                 <p>Error al cargar datos de suscripción</p>
                             } @else {
-                                <p>{{getSubscriptionStatusText(subscription?.status)}}</p>
+                                <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full" 
+                                      [ngClass]="getStatusClass(subscription?.status)">
+                                      <span class="w-2 h-2 me-1 rounded-full" [ngClass]="getDotClass(subscription?.status)"></span>
+                                      <span class="hidden bg-green-500"></span>
+                                      <span class="hidden bg-yellow-500"></span>
+                                      <span class="hidden bg-red-500"></span>
+                                      <span class="hidden bg-blue-500"></span>
+                                      <span class="hidden bg-gray-500"></span>
+                                    {{ getSubscriptionStatusText(subscription?.status) }}
+                                </span>
                                 @if (subscription) {
-                                    <p class="mt-1">Próxima facturación: {{subscription.next_billing_date ? (subscription.next_billing_date | date:'dd/MM/yyyy') : 'No disponible'}}</p>
+                                    <p class="mt-3">Próximo pago: {{subscription.next_billing_date ? (subscription.next_billing_date | date:'dd/MM/yyyy') : 'No disponible'}}</p>
                                 }
                             }
                         </div>

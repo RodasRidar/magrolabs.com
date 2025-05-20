@@ -38,12 +38,12 @@ export class PaymentMethodComponent {
       icon: `DEBIT_CREDIT_CARD`,
       id: FlowPaymentMethod.DEBIT_CREDIT_CARD,
     },
-    {
+    /*{
       name: 'Transferencia bancaria',
       description: 'Paga a través de todos los bancos.',
       icon: ``,
       id: FlowPaymentMethod.BANK_TRANSFER,
-    },
+    },*/
     {
       name: 'Yape',
       description: 'Paga con Yape y otras billeteras.',

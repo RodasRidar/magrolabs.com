@@ -69,8 +69,8 @@ export class CreateAccountComponent implements OnDestroy {
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
     typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
-    password: this._formBuilder.nonNullable.control('', [Validators.minLength(8)]),
-    isSignUpAcepted: this._formBuilder.nonNullable.control(false, []),
+    password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
+    isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
   });
 
   private emailSubject = new Subject<string>();
@@ -103,7 +103,7 @@ export class CreateAccountComponent implements OnDestroy {
     this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? 'DNI');
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
-    this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? false);
+    this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
 
     // Configurar debounce para email
     const emailSubscription = this.emailSubject.pipe(
@@ -173,6 +173,7 @@ export class CreateAccountComponent implements OnDestroy {
           passwordControl?.addValidators(Validators.required);
         } else {
           passwordControl?.clearValidators();
+          passwordControl?.addValidators(Validators.minLength(8));
         }
 
         passwordControl?.updateValueAndValidity();

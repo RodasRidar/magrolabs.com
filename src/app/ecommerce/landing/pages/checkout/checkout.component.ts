@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnDestroy {
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
     typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
-    password: this._formBuilder.nonNullable.control('', [Validators.minLength(8)]),
+    password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
     streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]),
     department: this._formBuilder.nonNullable.control('', [Validators.required]),
@@ -98,7 +98,7 @@ export class CheckoutComponent implements OnDestroy {
     number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]),
     reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
-    isSignUpAcepted: this._formBuilder.nonNullable.control(false, []),
+    isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
   });
   buttonName = 'Pagar →';
 
@@ -130,15 +130,20 @@ export class CheckoutComponent implements OnDestroy {
     });
     const passwordControl = this.form.get('password');
 
-    this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
-      if (signUp) {
-        passwordControl?.addValidators(Validators.required);
-      } else {
-        passwordControl?.removeValidators(Validators.required);
-      }
-      passwordControl?.updateValueAndValidity();
-    });
+    if (this.form.get('isSignUpAcepted')) {
+      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
+        const passwordControl = this.form.get('password');
 
+        if (signUp) {
+          passwordControl?.addValidators(Validators.required);
+        } else {
+          passwordControl?.clearValidators();
+          passwordControl?.addValidators(Validators.minLength(8));
+        }
+
+        passwordControl?.updateValueAndValidity();
+      });
+    }
     // Configurar validación en tiempo real para email
     const emailSubscription = this.emailSubject.pipe(
       debounceTime(500),
@@ -763,7 +768,7 @@ export class CheckoutComponent implements OnDestroy {
     this.form.get('typeDocument')?.setValue(summary?.userData?.typeDocument ?? 'DNI');
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
-    this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? false);
+    this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
 
     if (summary && summary?.address?.nombreVia) {
       this.hideSearching = true;
@@ -922,6 +927,14 @@ export class CheckoutComponent implements OnDestroy {
       ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
       : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
 
+
+      // crea la costante urlReturn, obten de la url de la pagina web si es localhost que sea localhost si es prod que sea api.magrolabs.com, si es dev que sea dev-api.magrolabs.com
+      const hostName = 
+      window.location.hostname === 'localhost' ? 'http://localhost:4200' 
+      : window.location.hostname === 'develop.magrolabs.com' ? 'https://develop.magrolabs.com' 
+      : window.location.hostname === 'magrolabs.com' ? 'https://magrolabs.com' 
+      : 'https://develop.magrolabs.com';
+
     return {
       amount: this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
       currency: 'PEN',
@@ -929,7 +942,7 @@ export class CheckoutComponent implements OnDestroy {
       subject: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) + ' x Creatina Monohidratada Magrolabs de 250g.',
       email: this.form.get('email')?.value ?? '',
       paymentMethod: this.paymentMethod,
-      urlReturn: this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
+      urlReturn: hostName + this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
       urlConfirmation: this.ENV.flowUrlConfirmation
     };
   }

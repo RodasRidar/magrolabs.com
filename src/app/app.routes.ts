@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { refLinkGuard } from './shared/guards/ref-link.guard';
 import { authGuard } from './shared/guards/auth.guard';
+import { notAuthGuard } from './shared/guards/not-auth.guard';
 
 export const routes: Routes = [
   {
@@ -33,7 +34,7 @@ export const routes: Routes = [
       },
     ],
     loadComponent: () => import('./ecommerce/signup/signup.component').then(m => m.SignupComponent),
-    canActivate: [refLinkGuard]
+    canActivate: [refLinkGuard, notAuthGuard]
   },
   {
     path: 'login',

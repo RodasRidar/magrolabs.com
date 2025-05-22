@@ -1,4 +1,4 @@
-const production = true;
+const production = false;
 const encrypt = false;
 const precioCreatinaOnePurchase = 86;
 const precioCreatinaSubscription = 69;
@@ -24,14 +24,14 @@ const emailAtencionClientes = 'hola@magrolabs.com';
 const telefonoAtencionClientes = '51974680428';
 const rucEmpresa = '20614056577';
 const nroReviews = 6;
-const urlApiFlow = 'https://flow.cl/api';
-const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
+const urlApiFlow = '/api';
 const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
-const flowApiUrl = 'https://function.magrolabs.com/api/flow/';
-const flowUrlReturn = 'https://magrolabs.com/registro/confirmacion';
-const flowUrlConfirmation = 'https://api.magrolabs.com/api/v1/orders/pagos/flow/confirmacion';
-const creatina2025Descuento = '20%';
+const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
+const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
+const flowUrlReturn = 'https://develop.magrolabs.com/registro/confirmacion';
+const flowUrlConfirmation = 'https://dev-api.magrolabs.com/api/v1/orders/pagos/flow/confirmacion';
+const creatina2025Descuento = '20%'
 const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
 const garantíaDeSatisfacción = 90;
 const diaDeCobroSubscripcion = 27;
@@ -40,9 +40,7 @@ const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
 const fechaUltimaActualizacionPrivacidad = '03/12/2024';
 const fechaUltimaActualizacionCookies = '04/12/2024';
 const creatinaFreePrecio = 35;
-const apiMagroLabs = 'https://api.magrolabs.com/api/v1';
-
-
+const apiMagroLabs = 'https://dev-api.magrolabs.com/api/v1';
 
 export const environment = {
     production,

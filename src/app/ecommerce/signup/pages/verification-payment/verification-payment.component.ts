@@ -250,11 +250,6 @@ export class VerificationPaymentComponent {
   }
 
   private createPaymentRequest(): FlowPaymentRequest {
-    const hostName = 
-    window.location.hostname === 'localhost' ? 'http://localhost:4200' 
-    : window.location.hostname === 'develop.magrolabs.com' ? 'https://develop.magrolabs.com' 
-    : window.location.hostname === 'magrolabs.com' ? 'https://magrolabs.com' 
-    : 'https://develop.magrolabs.com';
 
     const status = this.form.get('isSignUpAcepted')?.value ?? false
     ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
@@ -267,7 +262,7 @@ export class VerificationPaymentComponent {
       subject: 'Creatina Monohidratada Magrolabs de 250 gr.',
       email: this._summaryService.getSummary()?.userData?.email ?? '',
       paymentMethod: this.paymentMethod,
-      urlReturn: hostName + this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
+      urlReturn: this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
       urlConfirmation: this.ENV.flowUrlConfirmation
     };
   }

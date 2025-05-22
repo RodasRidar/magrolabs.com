@@ -50,7 +50,6 @@ export function app(): express.Express {
     res.header('Content-Type', 'application/xml');
 
     try {
-      // const smStream = new SitemapStream({ hostname: process.env[EnvironmentVariable.APP_URL] });
       const smStream = new SitemapStream({ hostname: 'https://magrolabs.com' });
 
       (async () => {

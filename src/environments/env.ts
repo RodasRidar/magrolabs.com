@@ -1,9 +1,4 @@
 const production = false;
-const APP_URL = 'develop.magrolabs.com';
-const secretKey = '<<LLAVE PRIVADA>>';
-const publicKey = '<<LLAVE PÚBLICA>>';
-const rsaId = '<<LLAVE PÚBLICA RSA ID>>';
-const rsaPublickKey = '<<LLAVE PÚBLICA RSA>>';
 const encrypt = false;
 const precioCreatinaOnePurchase = 86;
 const precioCreatinaSubscription = 69;
@@ -34,8 +29,8 @@ const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
 const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
-const flowUrlReturn = '/registro/confirmacion';
-const flowUrlConfirmation = 'https://dev-api.magrolabs.com/api/v1/orders/pagos/flow/confirmacion';
+const flowUrlReturn = 'http://localhost:4200/registro/confirmacion';
+const flowUrlConfirmation = 'http://localhost:3000/api/v1/orders/pagos/flow/confirmacion';
 const creatina2025Descuento = '20%'
 const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
 const garantíaDeSatisfacción = 90;
@@ -48,12 +43,7 @@ const creatinaFreePrecio = 35;
 const apiMagroLabs = 'http://localhost:3000/api/v1';
 
 export const environment = {
-    APP_URL,
     production,
-    secretKey,
-    publicKey,
-    rsaId,
-    rsaPublickKey,
     encrypt,
     precioCreatinaOnePurchase,
     precioCreatinaSubscription,

@@ -156,7 +156,10 @@ export class AuthService {
   login(credentials: LoginUserRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials)
       .pipe(
-        tap(response => this.handleAuthResponse(response)),
+        tap(response => {
+          this.handleAuthResponse(response);
+          this.saveAuthenticationToCookie(true);
+        }),
         catchError(error => {
           return throwError(() => error);
         })
@@ -268,7 +271,7 @@ export class AuthService {
           localStorage.setItem(this.TOKEN_KEY, response.data.token);
           localStorage.setItem(this.REFRESH_TOKEN_KEY, response.data.refreshToken);
           localStorage.setItem(this.USER_KEY, JSON.stringify(response.data.user));
-          this.saveAuthenticationToCookie(true);
+          //this.saveAuthenticationToCookie(true);
         } catch (error) {
           console.error('Error handling auth response:', error);
         }

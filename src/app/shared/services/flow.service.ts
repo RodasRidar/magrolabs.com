@@ -74,13 +74,8 @@ export class FlowService {
   }
 
   registerCard(customerId: string): Observable<RegisterCardResponse> {
-    const hostName = 
-    window.location.hostname === 'localhost' ? 'http://localhost:4200' 
-    : window.location.hostname === 'develop.magrolabs.com' ? 'https://develop.magrolabs.com' 
-    : window.location.hostname === 'magrolabs.com' ? 'https://magrolabs.com' 
-    : 'https://develop.magrolabs.com';
     
-    const url_return = hostName + environment.flowUrlReturn;
+    const url_return = environment.flowUrlReturn;
     if (environment.production) {
       const url = `${this.apiUrl}customer/register.ts`;
       return this.http.post<RegisterCardResponse>(url, { customerId, url_return });

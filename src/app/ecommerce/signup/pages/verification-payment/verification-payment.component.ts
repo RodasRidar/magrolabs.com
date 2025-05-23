@@ -428,15 +428,17 @@ export class VerificationPaymentComponent {
         isLoyaltyWebShow: false,
         orderItems: [
           {
+            product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
+            quantity: 1
+          },
+          /*{
             product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
             quantity: 1
           },
-          {
-            product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
-            quantity: 1
-          }
+          discount: 20
+          */
         ],
-        discount: 20
+        
       };
     }
     return {
@@ -445,7 +447,7 @@ export class VerificationPaymentComponent {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
           quantity: 1
         }
       ],

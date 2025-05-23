@@ -4,10 +4,13 @@
 
 // Enumerado para los estados de orden
 export enum OrderStatus {
-  PENDING = 'PENDING',
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
   PROCESSING = 'PROCESSING',
+  PAID = 'PAID',
   SHIPPED = 'SHIPPED',
   DELIVERED = 'DELIVERED',
+  REFUNDED = 'REFUNDED',
+  REJECTED = 'REJECTED',
   CANCELLED = 'CANCELLED'
 }
 
@@ -110,7 +113,7 @@ export interface OrderItemResponse {
    * @example 29.99
    */
   price: number;
-
+  unit_price?: number;
   /**
    * Información del producto
    */

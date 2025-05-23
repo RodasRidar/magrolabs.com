@@ -70,6 +70,17 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/env.ts",
+                  "with": "src/environments/env.ts"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -82,9 +93,12 @@
             },
             "development": {
               "buildTarget": "magrolabs-app:build:development"
+            },
+            "local": {
+              "buildTarget": "magrolabs-app:build:local"
             }
           },
-          "defaultConfiguration": "development",
+          "defaultConfiguration": "local",
           "options": {
             "proxyConfig": "proxy.conf.json"
           }

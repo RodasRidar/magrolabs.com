@@ -67,7 +67,7 @@ export class OrderService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    if (status) {
+    if (status !== undefined && status !== null) {
       params = params.set('status', status);
     }
 

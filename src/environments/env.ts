@@ -30,6 +30,7 @@ const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
 const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'http://localhost:4200/registro/confirmacion';
+const flowUrlReturnPagoPorAdmin = 'http://localhost:4200/cuenta/pedidos';
 const flowUrlConfirmation = 'http://localhost:3000/api/v1/orders/pagos/flow/confirmacion';
 const creatina2025Descuento = '20%'
 const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
@@ -85,5 +86,6 @@ export const environment = {
     fechaUltimaActualizacionPrivacidad,
     fechaUltimaActualizacionCookies,
     creatinaFreePrecio,
-    apiMagroLabs
+    apiMagroLabs,
+    flowUrlReturnPagoPorAdmin
 };

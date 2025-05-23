@@ -1,16 +1,325 @@
-<header>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mis Pedidos</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <h1 class="text-2xl font-bold text-gray-800">Mis Pedidos</h1>
+
+    <div class="flex items-center gap-2">
+      <!-- Filtro de estado
+      <label for="filtroEstado" class="text-sm text-gray-600">Filtrar por estado:</label>
+      <select id="filtroEstado"
+        class="border border-gray-300 rounded-md pl-2 pr-7 text-center py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        (change)="filtrarPorEstado($event)">
+        @for (option of statusOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select> -->
     </div>
-</header>
-<main>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="px-4 py-8 sm:px-0">
+  </div>
 
+  <!-- Estado de carga -->
+  @if (isLoading()) {
+  <div class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+  </div>
+  }
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Mensaje de error -->
+  @if (error()) {
+  <div class="flex flex-col items-center justify-center p-12 text-center bg-red-50 rounded-lg my-8">
+    <svg class="w-12 h-12 text-red-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <p class="text-red-600 mb-4">{{ error() }}</p>
+    <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
+      (click)="cargarPedidos()">
+      Reintentar
+    </button>
+  </div>
+  }
 
-            </div>
+  <!-- Sin pedidos -->
+  @if (!isLoading() && !error() && pedidos().length === 0) {
+  <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
+    <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+        </path>
+      </svg>
+    </div>
+    <h2 class="text-xl font-semibold text-gray-700 mb-2">No tienes pedidos</h2>
+    <p class="text-gray-600 max-w-md mb-6">Aún no has realizado ningún pedido. ¡Explora nuestros productos y realiza tu
+      primera compra!</p>
+    <a routerLink="/productos"
+      class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
+  </div>
+  }
+
+  <!-- Lista de pedidos -->
+  @if (!isLoading() && !error() && pedidos().length > 0) {
+  <div class="space-y-6">
+    @for (pedido of pedidos(); track pedido.id) {
+    <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition hover:-translate-y-1">
+      <!-- Cabecera del pedido -->
+      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between">
+        <div class="mb-2 md:mb-0">
+          <span class="block font-semibold text-gray-800">Pedido #{{ pedido.id.substring(0, 8) }}</span>
         </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+                  'bg-yellow-100 text-yellow-800': pedido.status === 'PENDING_PAYMENT',
+                  'bg-blue-100 text-blue-800': pedido.status === 'PROCESSING',
+                  'bg-indigo-100 text-indigo-800': pedido.status === 'SHIPPED',
+                  'bg-green-100 text-green-800': pedido.status === 'DELIVERED',
+                  'bg-red-100 text-red-800': pedido.status === 'CANCELLED'|| pedido.status === 'REJECTED',
+                  'bg-gray-200 text-gray-800': pedido.status === 'PAID' || pedido.status === 'REFUNDED'
+                }">
+            {{ obtenerTextoEstado(pedido.status) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Productos del pedido -->
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Productos</h3>
+        @if (pedido.orderItems.length) {
+        <div class="space-y-4">
+          @for (item of pedido.orderItems; track item.id) {
+          <!-- Cabecera de producto (siempre visible) -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center p-2 bg-gray-50 cursor-pointer"
+              (click)="toggleProductExpand(item.id)">
+              <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-16 h-16 overflow-hidden rounded-md">
+                  <img [src]="getImageUrl(item)" [alt]="item.product?.name || 'Producto'"
+                    class="w-full h-full object-cover" onerror="this.src='/product-img-not-found.png'">
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">{{ item.product?.name || 'Producto' }}</p>
+                  <p class="text-sm text-gray-500">{{ item.unit_price| currency:'S/':'symbol':'1.2-2' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  {{ isProductExpanded(item.id) ? 'Ocultar' : 'Detalles' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Detalles desplegables del producto -->
+            @if (isProductExpanded(item.id)) {
+            <div class="p-4 border-t border-gray-200 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
+                  <p class="font-medium text-gray-800">{{ item.id.substring(0, 8) }}</p>
+
+                  <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
+                  <p class="font-medium text-gray-800">{{ formatearFecha(pedido.created_at) }}</p>
+                </div>
+
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
+                  <p class="font-medium text-gray-800">{{ item.quantity }}</p>
+
+                  <div class="mt-6 flex flex-col gap-2 w-fit">
+                    <ml-button *ngIf="pedido.status === 'DELIVERED'"
+                      (click)="escribirResena(pedido.id, item.product_id); $event.stopPropagation()"
+                      name="Dejar reseña →" type="secondary">
+                    </ml-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="text-center text-gray-500 italic">No hay información de productos disponible</p>
+        }
+      </div>
+
+      <!-- Pie del pedido -->
+      <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div class="mb-4 sm:mb-0">
+          <span class="font-semibold text-gray-700 mr-2">Total:</span>
+          <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2'
+            }}</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <ml-button 
+            *ngIf="pedido.status !== 'REFUNDED' && pedido.status !== 'REJECTED' && pedido.status !== 'CANCELLED' && pedido.status !== 'PENDING_PAYMENT'"
+            (click)="seguirCompra(pedido.id)" 
+            name="Seguir mi compra" 
+            type="primary">
+          </ml-button>
+
+          <ml-button 
+            *ngIf="(pedido.status === 'PAID' || pedido.status === 'SHIPPED' || pedido.status === 'DELIVERED') && pedido.total_amount !== 0"
+            (click)="descargarBoleta(pedido.id)" 
+            name="Descargar boleta" 
+            type="secondary-outlined">
+          </ml-button>
+
+          @if (pedido.status === 'PENDING_PAYMENT') {
+          <div class="flex gap-2">
+            <ml-button
+              (click)="pagarPedido(pedido.id, pedido.total_amount, pedido.id)"
+              name="Pagar"
+              type="primary">
+            </ml-button>
+            
+            <ml-button
+              (click)="cancelarPedido(pedido.id)"
+              name="Cancelar"
+              type="secondary-outlined">
+            </ml-button>
+          </div>
+          }
+        </div>
+      </div>
     </div>
-</main>
+    }
+  </div>
+
+  <!-- Paginación -->
+  @if (totalPages() > 1) {
+  <div class="flex justify-center mt-8">
+    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+      <button
+        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === 1" (click)="cambiarPagina(currentPage() - 1)">
+        <span class="sr-only">Anterior</span>
+        &laquo;
+      </button>
+
+      @for (pagina of generarArrayPaginas(); track pagina) {
+      <button
+        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50"
+        [class.bg-blue-50]="currentPage() === pagina" [class.text-blue-600]="currentPage() === pagina"
+        [class.border-blue-500]="currentPage() === pagina" [class.text-gray-700]="currentPage() !== pagina"
+        (click)="cambiarPagina(pagina)">
+        {{ pagina }}
+      </button>
+      }
+
+      <button
+        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === totalPages()" (click)="cambiarPagina(currentPage() + 1)">
+        <span class="sr-only">Siguiente</span>
+        &raquo;
+      </button>
+    </nav>
+  </div>
+  }
+  }
+</div>
+
+<!-- Modal de Seguimiento de compra -->
+@if (mostrarSeguimiento()) {
+<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
+    <div class="flex justify-between items-center p-6 border-b">
+      <h2 class="text-2xl font-bold text-gray-800">Seguimiento de compra</h2>
+      <button (click)="cerrarSeguimiento()" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6">
+      <!-- Timeline de seguimiento -->
+      <div class="relative">
+        <!-- Contenido del timeline -->
+        <div class="flex items-center justify-between mb-20 relative">
+          <!-- Línea horizontal que conecta los círculos -->
+          <div class="absolute top-8 left-16 right-0 h-0.5 bg-[#d7816a] z-0 w-[82%]"></div>
+
+          <!-- Paso 1: Recibido -->
+          <div class="flex flex-col items-center">
+            <div
+              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10">
+              <svg class="w-8 h-8 text-[#d7816a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-center font-bold">Recibimos tu pedido</h3>
+            <p class="text-gray-600 text-center min-h-[24px]">{{ formatearFechaCompleta(pedidoSeleccionado()?.created_at || '') }}</p>
+          </div>
+
+          <!-- Paso 2: En proceso -->
+          <div class="flex flex-col items-center">
+            <div
+              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10">
+              <svg class="w-8 h-8 text-[#d7816a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-center font-bold">Pedido en proceso</h3>
+            <p class="text-gray-600 text-center min-h-[24px]">{{
+            pedidoSeleccionado()?.status === 'PROCESSING' || pedidoSeleccionado()?.status === 'PAID' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
+            }}</p>
+          </div>
+
+          <!-- Paso 3: En camino -->
+          <div class="flex flex-col items-center">
+            <div
+              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10"
+              [ngClass]="{'border-[#d7816a]': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
+              <svg class="w-8 h-8"
+                [ngClass]="{'text-[#d7816a]': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-center font-bold"
+              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
+              ¡Vamos en camino!</h3>
+            <p class="text-gray-600 text-center  min-h-[24px]">{{ pedidoSeleccionado()?.status === 'SHIPPED' ||
+              pedidoSeleccionado()?.status === 'SHIPPED' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
+              }}</p>
+          </div>
+
+          <!-- Paso 4: Entregado -->
+          <div class="flex flex-col items-center">
+            <div class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 z-10"
+              [ngClass]="{'border-[#d7816a]': pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}">
+              <svg class="w-8 h-8"
+                [ngClass]="{'text-[#d7816a]': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-center font-bold"
+              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': pedidoSeleccionado()?.status !== 'DELIVERED'}">
+              ¡Tu pedido llegó!</h3>
+            <p class="text-gray-600 text-center min-h-[24px]">{{ pedidoSeleccionado()?.status === 'DELIVERED' ?
+              formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : '' }}</p>
+          </div>
+        </div>
+
+        <!-- Información de entrega -->
+        <div class="flex items-center justify-center mt-8 border-t border-gray-200 pt-6">
+          <svg class="w-8 h-8 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="text-xl font-semibold">Entrega a domicilio de {{ENV.plazoDeEntregaDiasHabiles.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

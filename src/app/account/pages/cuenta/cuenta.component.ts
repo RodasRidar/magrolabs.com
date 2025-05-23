@@ -181,7 +181,7 @@ export class CuentaComponent implements OnInit {
     if (!status) return 'Estado desconocido';
     
     switch (status) {
-      case OrderStatus.PENDING:
+      case OrderStatus.PENDING_PAYMENT:
         return 'Pendiente';
       case OrderStatus.PROCESSING:
         return 'En proceso';

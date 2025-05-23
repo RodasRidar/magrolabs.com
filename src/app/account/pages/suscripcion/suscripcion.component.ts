@@ -250,7 +250,7 @@ export class SuscripcionComponent implements OnInit {
    * Formatea la fecha de solicitud del cobro
    */
   formatChargeDate(dateString: string): string {
-    if (!dateString) return 'N/A';
+    if (!dateString) return 'No disponible';
     
     const parts = dateString.split(' ');
     if (parts.length !== 2) return dateString;
@@ -318,7 +318,7 @@ export class SuscripcionComponent implements OnInit {
   }
 
   formatDate(dateString?: string): string {
-    if (!dateString) return 'N/A';
+    if (!dateString) return 'No disponible';
     return new Date(dateString).toLocaleDateString('es-ES', {
       day: '2-digit',
       month: 'long',

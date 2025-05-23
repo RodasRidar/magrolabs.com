@@ -590,7 +590,7 @@ export class CheckoutComponent implements OnDestroy {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],

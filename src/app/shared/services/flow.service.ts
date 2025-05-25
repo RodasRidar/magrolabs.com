@@ -12,12 +12,13 @@ export class FlowService {
   private apiUrlLocal = environment.urlApiFlow;
   private apiUrl = environment.flowApiUrl;
   private apiKey = environment.flowApiKey;
+  private useProxy = false;
 
   constructor(private http: HttpClient) { }
 
   createCustomer(customerData: CreateCustomerRequest): Observable<CreateCustomerResponse> {
 
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}customer/create.ts`;
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
@@ -37,7 +38,7 @@ export class FlowService {
   }
 
   editCustomer(customerData: EditCustomerRequest): Observable<EditCustomerResponse> {
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}customer/edit.ts`;
       return this.http.post<CreateCustomerResponse>(url, customerData);
     }
@@ -58,7 +59,7 @@ export class FlowService {
   }
 
   getCustomer(customerId: string): Observable<CreateCustomerResponse> {
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}customer/get.ts`;
       return this.http.get<CreateCustomerResponse>(url, { params: { customerId } });
     }
@@ -76,7 +77,7 @@ export class FlowService {
   registerCard(customerId: string): Observable<RegisterCardResponse> {
     
     const url_return = environment.flowUrlReturn;
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}customer/register.ts`;
       return this.http.post<RegisterCardResponse>(url, { customerId, url_return });
     }
@@ -94,7 +95,7 @@ export class FlowService {
   }
 
   createSubscription(subscriptionData: FlowCreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}subscription/create.ts`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);
     }
@@ -127,7 +128,7 @@ export class FlowService {
 
   createPayment(paymentRequest: FlowPaymentRequest): Observable<FlowPaymentResponse> {
 
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}payment/create.ts`;
       return this.http.post<FlowPaymentResponse>(url, paymentRequest);
     }
@@ -158,7 +159,7 @@ export class FlowService {
    * @returns Observable con la respuesta de cobros
    */
   getCharges(customerId: string, limit: number = 10): Observable<FlowChargesResponse> {
-    if (environment.production) {
+    if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}customer/getCharges.ts`;
       return this.http.get<FlowChargesResponse>(url, { params: { customerId, limit: limit.toString() } });
     }

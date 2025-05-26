@@ -12,7 +12,7 @@ export class FlowService {
   private apiUrlLocal = environment.urlApiFlow;
   private apiUrl = environment.flowApiUrl;
   private apiKey = environment.flowApiKey;
-  private useProxy = false;
+  private useProxy = environment.useProxy;
 
   constructor(private http: HttpClient) { }
 

@@ -23,6 +23,8 @@ export class AuthService {
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private readonly USER_KEY = 'user_data';
   private readonly IS_AUTHENTICATED_KEY = 'is_authenticated';
+  // Duración de las cookies en horas
+  private readonly COOKIE_DURATION_HOURS = 12;
   
   private cookieService = inject(CookieService);
   private isBrowser: boolean;
@@ -71,32 +73,89 @@ export class AuthService {
   }
 
   /**
-   * Cargar usuario desde el almacenamiento local
+   * Obtener expiración de cookie (12 horas)
+   */
+  private getCookieExpiration(): Date {
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + this.COOKIE_DURATION_HOURS);
+    return expirationDate;
+  }
+
+  /**
+   * Guardar valor en cookie
+   */
+  private saveCookie(key: string, value: string): void {
+    if (!this.isBrowser) return;
+    
+    try {
+      this.cookieService.set(
+        key, 
+        value, 
+        { 
+          expires: this.getCookieExpiration(), 
+          path: '/', 
+          sameSite: 'Strict',
+          secure: true 
+        }
+      );
+    } catch (error) {
+      console.error(`Error saving cookie ${key}:`, error);
+    }
+  }
+
+  /**
+   * Obtener valor de cookie
+   */
+  private getCookie(key: string): string | null {
+    if (!this.isBrowser) return null;
+    
+    try {
+      return this.cookieService.check(key) ? this.cookieService.get(key) : null;
+    } catch (error) {
+      console.error(`Error getting cookie ${key}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Eliminar cookie
+   */
+  private deleteCookie(key: string): void {
+    if (!this.isBrowser) return;
+    
+    try {
+      this.cookieService.delete(key, '/');
+    } catch (error) {
+      console.error(`Error deleting cookie ${key}:`, error);
+    }
+  }
+
+  /**
+   * Cargar usuario desde cookies
    */
   private loadUserFromStorage(): void {
     if (!this.isBrowser) return;
     
     try {
-      const token = localStorage.getItem(this.TOKEN_KEY);
-      const userData = localStorage.getItem(this.USER_KEY);
+      const token = this.getCookie(this.TOKEN_KEY);
+      const userData = this.getCookie(this.USER_KEY);
       
       if (token && userData) {
         const user = JSON.parse(userData) as UserResponse;
         this.currentUserSubject.next(user);
       } else {
         // Si no hay token pero hay cookie de autenticación, es una inconsistencia
-        // La lógica de negocio debe decidir si mantener la cookie o eliminarla
         const cookieAuth = this.getAuthenticationFromCookie();
         if (cookieAuth && !token) {
           console.warn('Inconsistencia: Cookie de autenticación presente pero sin token');
           // Opción 1: Mantener la cookie y esperar que el usuario vuelva a hacer login
           // Opción 2: Eliminar la cookie para forzar login
-          // this.cookieService.delete(this.IS_AUTHENTICATED_KEY, '/');
+          // this.deleteCookie(this.IS_AUTHENTICATED_KEY);
           // this.isAuthenticatedSubject.next(false);
         }
       }
     } catch (error) {
-      console.error('Error loading user from storage:', error);
+      console.error('Error loading user from cookies:', error);
       this.logout();
     }
   }
@@ -123,15 +182,7 @@ export class AuthService {
     if (!this.isBrowser) return;
     
     try {
-      const expirationDate = new Date();
-      // Cookie válida por 7 días
-      expirationDate.setDate(expirationDate.getDate() + 7);
-      
-      this.cookieService.set(
-        this.IS_AUTHENTICATED_KEY, 
-        isAuthenticated.toString(), 
-        { expires: expirationDate, path: '/', sameSite: 'Strict' }
-      );
+      this.saveCookie(this.IS_AUTHENTICATED_KEY, isAuthenticated.toString());
     } catch (error) {
       console.error('Error saving authentication to cookie:', error);
     }
@@ -175,7 +226,7 @@ export class AuthService {
     }
     
     try {
-      const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
+      const refreshToken = this.getCookie(this.REFRESH_TOKEN_KEY);
       
       if (!refreshToken) {
         return throwError(() => new Error('No refresh token available'));
@@ -187,8 +238,8 @@ export class AuthService {
         .pipe(
           tap(response => {
             if (response.success && response.data) {
-              localStorage.setItem(this.TOKEN_KEY, response.data.token);
-              localStorage.setItem(this.REFRESH_TOKEN_KEY, response.data.refreshToken);
+              this.saveCookie(this.TOKEN_KEY, response.data.token);
+              this.saveCookie(this.REFRESH_TOKEN_KEY, response.data.refreshToken);
             }
           }),
           catchError(error => {
@@ -207,10 +258,10 @@ export class AuthService {
   logout(): Observable<boolean> {
     if (this.isBrowser) {
       try {
-        localStorage.removeItem(this.TOKEN_KEY);
-        localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-        localStorage.removeItem(this.USER_KEY);
-        this.cookieService.delete(this.IS_AUTHENTICATED_KEY, '/');
+        this.deleteCookie(this.TOKEN_KEY);
+        this.deleteCookie(this.REFRESH_TOKEN_KEY);
+        this.deleteCookie(this.USER_KEY);
+        this.deleteCookie(this.IS_AUTHENTICATED_KEY);
       } catch (error) {
         console.error('Error during logout:', error);
       }
@@ -229,7 +280,7 @@ export class AuthService {
     
     try {
       const cookieAuth = this.getAuthenticationFromCookie();
-      return cookieAuth && !!localStorage.getItem(this.TOKEN_KEY);
+      return cookieAuth && !!this.getCookie(this.TOKEN_KEY);
     } catch (error) {
       console.error('Error checking authentication:', error);
       return false;
@@ -243,7 +294,7 @@ export class AuthService {
     if (!this.isBrowser) return null;
     
     try {
-      return localStorage.getItem(this.TOKEN_KEY);
+      return this.getCookie(this.TOKEN_KEY);
     } catch (error) {
       console.error('Error getting token:', error);
       return null;
@@ -268,10 +319,9 @@ export class AuthService {
     if (response.success && response.data) {
       if (this.isBrowser) {
         try {
-          localStorage.setItem(this.TOKEN_KEY, response.data.token);
-          localStorage.setItem(this.REFRESH_TOKEN_KEY, response.data.refreshToken);
-          localStorage.setItem(this.USER_KEY, JSON.stringify(response.data.user));
-          //this.saveAuthenticationToCookie(true);
+          this.saveCookie(this.TOKEN_KEY, response.data.token);
+          this.saveCookie(this.REFRESH_TOKEN_KEY, response.data.refreshToken);
+          this.saveCookie(this.USER_KEY, JSON.stringify(response.data.user));
         } catch (error) {
           console.error('Error handling auth response:', error);
         }

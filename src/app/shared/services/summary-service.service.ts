@@ -52,7 +52,8 @@ export class SummaryService {
   private saveSummaryToCookies(summary: Summary) {
     const json = JSON.stringify(summary);
     const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 6);
+    // Establece la fecha de expiración de la cookie a 12 horas desde ahora
+    expirationDate.setHours(expirationDate.getHours() + 12);
     this._cookieService.set(this.cookieName, json, { path: '/', expires: expirationDate, sameSite: 'Strict' });
   }
 

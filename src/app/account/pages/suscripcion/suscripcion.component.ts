@@ -4,7 +4,7 @@ import { SubscriptionService } from '../../../shared/services/subscription.servi
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of, takeUntil } from 'rxjs';
+import { switchMap, catchError, of, takeUntil, map, finalize } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
@@ -12,6 +12,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { CreditTransactionService } from '../../../shared/services/credit-transactions.service';
 import { Subject } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../environments/env';
 
 @Component({
   selector: 'app-suscripcion',
@@ -36,7 +37,8 @@ export class SuscripcionComponent implements OnInit {
   error = signal<string | null>(null);
   statusEnum = SubscriptionStatusEnum;
   flowToken = '';
-  
+  nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
+  nextBillingDate = signal<string>('');
   // Información de pago
   cardType = signal<string>('');
   cardLastFour = signal<string>('');
@@ -112,22 +114,46 @@ export class SuscripcionComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.subscriptionService.getMySubscriptions(1, 1)
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-          if (response.data.subscriptions.length > 0) {
+      this.subscriptionService.getMySubscriptions(1, 1)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(response => {
+          if (response.data.subscriptions && response.data.subscriptions.length > 0) {
             this.subscription.set(response.data.subscriptions[0]);
             this.loadSubscriptionPlan(response.data.subscriptions[0].subscription_plan_id);
             this.loadPaymentMethod();
-          } else {
-            this.isLoading.set(false);
+            const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+            return this.flowService.getSubscriptions(customerId || '')
+              .pipe(
+                map(flowResponse => ({
+                  subscriptionResponse: response,
+                  flowResponse
+                })),
+                catchError(err => {
+                  console.error('Error al obtener detalles de Flow:', err);
+                  return of({
+                    subscriptionResponse: response,
+                    flowResponse: null
+                  });
+                })
+              );
           }
-        },
-        error: (err) => {
-          this.error.set('Error al cargar la suscripción');
+          this.subscription.set(null);
+          // Retornar un observable que emite null si no hay suscripciones
+          return of({ subscriptionResponse: response, flowResponse: null });
+        }),
+        finalize(() => {
           this.isLoading.set(false);
-          console.error('Error cargando suscripción:', err);
+        })
+      )
+      .subscribe({
+        next: (combinedResponse) => {
+          this.nextBillingDate.set(combinedResponse.flowResponse?.data[0].next_invoice_date || '');
+        },
+        error: (error) => {
+          console.error('Error al cargar datos de suscripción:', error);
+          this.error.set('Error al cargar la suscripción');
+          this.subscription.set(null);
         }
       });
   }

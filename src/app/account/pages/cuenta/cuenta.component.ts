@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../shared/services/user.service';
@@ -7,11 +7,13 @@ import { SubscriptionService } from '../../../shared/services/subscription.servi
 import { Subscription, SubscriptionStatusEnum } from '../../../shared/interfaces/subscription.interface';
 import { OrderService } from '../../../shared/services/order.service';
 import { OrderResponse, OrderStatus } from '../../../shared/interfaces/order.interfaces';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil, switchMap, map, catchError } from 'rxjs/operators';
 import { CreditTransactionService } from '../../../shared/services/credit-transactions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
+import { environment } from '../../../../environments/env';
+import { FlowService } from '../../../shared/services/flow.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -28,7 +30,9 @@ export class CuentaComponent implements OnInit {
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
+  private _flowService = inject(FlowService);
 
+  nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   user: UserDetailResponse | null = null;
   subscription: Subscription | null = null;
   subscriptionLoading = false;
@@ -40,18 +44,19 @@ export class CuentaComponent implements OnInit {
   loyaltyProgressWidth = '0%';
   maxLoyaltyPoints = 200;
   statusEnum = SubscriptionStatusEnum;
+  nextBillingDate = signal<string>('');
 
   ngOnInit() {
     this.loadUserData();
     this.loadSubscriptionData();
     this.loadLastOrder();
     this.loadUserCredits();
-    
+
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();
     });
-    
+
     // Iniciar con 0% y luego animar hasta el porcentaje actual
     setTimeout(() => {
       this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
@@ -78,22 +83,43 @@ export class CuentaComponent implements OnInit {
   private loadSubscriptionData() {
     this.subscriptionLoading = true;
     this.subscriptionError = false;
-    
+
     this._subscriptionService.getMySubscriptions(1, 1)
       .pipe(
         takeUntil(this.destroy$),
+        switchMap(response => {
+          if (response.data.subscriptions && response.data.subscriptions.length > 0) {
+            this.subscription = response.data.subscriptions[0];
+            const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+            return this._flowService.getSubscriptions(customerId || '')
+              .pipe(
+                map(flowResponse => ({
+                  subscriptionResponse: response,
+                  flowResponse
+                })),
+                catchError(err => {
+                  console.error('Error al obtener detalles de Flow:', err);
+                  // Retornar un objeto con solo la respuesta original para no interrumpir el flujo
+                  return of({
+                    subscriptionResponse: response,
+                    flowResponse: null
+                  });
+                })
+              );
+          }
+          this.subscription = null;
+          // Retornar un observable que emite null si no hay suscripciones
+          return of({ subscriptionResponse: response, flowResponse: null });
+        }),
         finalize(() => {
           this.subscriptionLoading = false;
         })
       )
       .subscribe({
-        next: (response) => {
-          if (response.data.subscriptions && response.data.subscriptions.length > 0) {
-            console.log('response.subscriptions[0]', response.data.subscriptions[0]);
-            this.subscription = response.data.subscriptions[0];
-          } else {
-            this.subscription = null;
-          }
+        next: (combinedResponse) => {
+          //console.log('combinedResponse', combinedResponse);
+          //console.log('Próxima fecha de pago:', combinedResponse.flowResponse?.data[0].next_invoice_date);
+          this.nextBillingDate.set(combinedResponse.flowResponse?.data[0].next_invoice_date || '');
         },
         error: (error) => {
           console.error('Error al cargar datos de suscripción:', error);
@@ -106,7 +132,7 @@ export class CuentaComponent implements OnInit {
   private loadLastOrder() {
     this.orderLoading = true;
     this.orderError = false;
-    
+
     // Obtener solo el último pedido (page=1, limit=1)
     this._orderService.getMyOrders(1, 1)
       .pipe(
@@ -153,14 +179,14 @@ export class CuentaComponent implements OnInit {
         });
     }
   }
-  
+
   private getLoggedUserId(): string {
     return this.authService.getCurrentUser()?.id || '';
   }
-  
+
   getSubscriptionStatusText(status: SubscriptionStatusEnum | undefined): string {
     if (!status) return 'Sin suscripción activa';
-    
+
     switch (status) {
       case SubscriptionStatusEnum.ACTIVE:
         return 'Activa';
@@ -176,10 +202,10 @@ export class CuentaComponent implements OnInit {
         return 'Estado desconocido';
     }
   }
-  
+
   getOrderStatusText(status: OrderStatus | undefined): string {
     if (!status) return 'Estado desconocido';
-    
+
     switch (status) {
       case OrderStatus.PENDING_PAYMENT:
         return 'Pendiente';
@@ -201,7 +227,7 @@ export class CuentaComponent implements OnInit {
    */
   getStatusClass(status: SubscriptionStatusEnum | undefined): string {
     if (!status) return 'bg-gray-100 text-gray-800';
-    
+
     switch (status) {
       case SubscriptionStatusEnum.ACTIVE:
         return 'bg-green-100 text-green-800';
@@ -223,7 +249,7 @@ export class CuentaComponent implements OnInit {
    */
   getDotClass(status: SubscriptionStatusEnum | undefined): string {
     if (!status) return 'bg-gray-500';
-    
+
     switch (status) {
       case SubscriptionStatusEnum.ACTIVE:
         return 'bg-green-500';

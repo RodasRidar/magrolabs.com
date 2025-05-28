@@ -73,7 +73,14 @@
 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Fecha de inicio</dt>
+                                    @if(subscription()!.status !== statusEnum.TRIAL){
                                     <dd class="mt-1 text-sm text-gray-900">{{ formatDate(subscription()!.start_date) }}</dd>
+                                    }
+                                    @else {
+                                        <dd class="mt-1 text-sm text-gray-900">
+                                            {{ nextBillingDateFreeCreatine}}
+                                        </dd>
+                                    }
                                 </div>
 
                                 <div>
@@ -163,9 +170,15 @@
                 <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
                     <div class="mb-6">
                         <!-- Próximo pago-->
-                        <h4 class="text-lg font-bold text-gray-700 mb-2">Próximo pago</h4>
-                        <p class="text-lg text-gray-700">{{ formatDate(subscription()!.next_billing_date) }}</p> 
-                        
+                         @if(subscription()!.status === statusEnum.TRIAL){
+                            <h4 class="text-lg font-bold text-gray-700 mb-2">Próximo pago</h4>
+                            <p class="text-lg text-gray-700">{{ nextBillingDateFreeCreatine }}</p> 
+                         }
+                         @else {
+                            <h4 class="text-lg font-bold text-gray-700 mb-2">Próximo pago</h4>
+                            <p class="text-lg text-gray-700">{{ nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy') : 'No disponible'}}</p> 
+                         }
+
                         <div class="flex justify-between items-center mt-4">
                             @if (cardType() !== '' && cardLastFour() !== '') {
                             <div class="flex items-center">

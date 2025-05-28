@@ -65,7 +65,7 @@
       <!-- Cabecera del pedido -->
       <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between">
         <div class="mb-2 md:mb-0">
-          <span class="block font-semibold text-gray-800">Pedido #{{ pedido.id.substring(0, 8) }}</span>
+          <span class="block font-semibold text-gray-800">Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
@@ -98,7 +98,11 @@
                 </div>
                 <div>
                   <p class="text-sm font-medium text-gray-800">{{ item.product?.name || 'Producto' }}</p>
+                  @if (pedido.total_amount > 0) {
                   <p class="text-sm text-gray-500">{{ item.unit_price| currency:'S/':'symbol':'1.2-2' }}</p>
+                  }@else {
+                  <p class="text-sm text-gray-500">Gratis</p>
+                  }
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -118,7 +122,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
-                  <p class="font-medium text-gray-800">{{ item.id.substring(0, 8) }}</p>
+                  <p class="font-medium text-gray-800">{{ item.id.substring(0, 8).toUpperCase() }}</p>
 
                   <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
                   <p class="font-medium text-gray-800">{{ formatearFecha(pedido.created_at) }}</p>
@@ -236,13 +240,13 @@
       </button>
     </div>
 
-    <div class="p-6">
+    <div class="p-2 sm:p-6">
       <!-- Timeline de seguimiento -->
       <div class="relative">
         <!-- Contenido del timeline -->
-        <div class="flex items-center justify-between mb-20 relative">
+        <div class="flex items-center justify-between my-10 sm:my-20 relative">
           <!-- Línea horizontal que conecta los círculos -->
-          <div class="absolute top-8 left-16 right-0 h-0.5 bg-[#d7816a] z-0 w-[82%]"></div>
+          <div class="absolute top-8 left-4 right-0 h-0.5 bg-gray-300 z-0 w-[90%]"></div>
 
           <!-- Paso 1: Recibido -->
           <div class="flex flex-col items-center">
@@ -253,8 +257,8 @@
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <h3 class="mt-4 text-center font-bold">Recibimos tu pedido</h3>
-            <p class="text-gray-600 text-center min-h-[24px]">{{ formatearFechaCompleta(pedidoSeleccionado()?.created_at || '') }}</p>
+            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Recibimos tu pedido</h3>
+            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ formatearFechaCompleta(pedidoSeleccionado()?.created_at || '') }}</p>
           </div>
 
           <!-- Paso 2: En proceso -->
@@ -266,8 +270,8 @@
                   d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
               </svg>
             </div>
-            <h3 class="mt-4 text-center font-bold">Pedido en proceso</h3>
-            <p class="text-gray-600 text-center min-h-[24px]">{{
+            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Pedido en proceso</h3>
+            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{
             pedidoSeleccionado()?.status === 'PROCESSING' || pedidoSeleccionado()?.status === 'PAID' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
             }}</p>
           </div>
@@ -284,7 +288,7 @@
                   d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
               </svg>
             </div>
-            <h3 class="mt-4 text-center font-bold"
+            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
               [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
               ¡Vamos en camino!</h3>
             <p class="text-gray-600 text-center  min-h-[24px]">{{ pedidoSeleccionado()?.status === 'SHIPPED' ||
@@ -302,10 +306,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 class="mt-4 text-center font-bold"
+            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
               [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': pedidoSeleccionado()?.status !== 'DELIVERED'}">
               ¡Tu pedido llegó!</h3>
-            <p class="text-gray-600 text-center min-h-[24px]">{{ pedidoSeleccionado()?.status === 'DELIVERED' ?
+            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ pedidoSeleccionado()?.status === 'DELIVERED' ?
               formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : '' }}</p>
           </div>
         </div>
@@ -316,7 +320,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          <span class="text-xl font-semibold">Entrega a domicilio de {{ENV.plazoDeEntregaDiasHabiles.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles</span>
+          <span class="text-base sm:text-xl font-semibold">Entrega a domicilio de {{ENV.plazoDeEntregaDiasHabiles.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles</span>
         </div>
       </div>
     </div>

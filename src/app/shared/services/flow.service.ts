@@ -5,6 +5,15 @@ import { environment } from '../../../environments/env';
 import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 
+/**
+ * Interfaz para la respuesta de las suscripciones de un cliente
+ */
+export interface FlowSubscriptionsResponse {
+  total: number;
+  hasMore: number;
+  data: any[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -150,6 +159,63 @@ export class FlowService {
       return this.http.post<FlowPaymentResponse>(url, body.toString(), { headers });
     }
 
+  }
+
+  /**
+   * Obtiene la lista paginada de suscripciones de un cliente
+   * @param customerId Identificador del cliente
+   * @param start Número de registro de inicio de la página
+   * @param limit Número de registros por página
+   * @param filter Filtro por el identificador de la suscripción
+   * @returns Observable con la respuesta de suscripciones
+   */
+  getSubscriptions(
+    customerId: string, 
+    start?: number, 
+    limit?: number, 
+    filter?: string
+  ): Observable<FlowSubscriptionsResponse> {
+    if (environment.production || !this.useProxy) {
+      const url = `${this.apiUrl}customer/getSubscriptions`;
+      const params: Record<string, string> = {
+        apiKey: this.apiKey,
+        customerId
+      };
+      
+      if (start !== undefined) params["start"] = start.toString();
+      if (limit !== undefined) params["limit"] = limit.toString();
+      if (filter !== undefined) params["filter"] = filter;
+      
+      params["s"] = this.getFlowSignature(params);
+      
+      return this.http.get<FlowSubscriptionsResponse>(url, { params });
+    } else {
+      const url = `${this.apiUrlLocal}/customer/getSubscriptions`;
+      
+      // Construir objeto para firmar
+      const toSign: Record<string, string | number> = {
+        apiKey: this.apiKey,
+        customerId
+      };
+      
+      if (start !== undefined) toSign["start"] = start;
+      if (limit !== undefined) toSign["limit"] = limit;
+      if (filter !== undefined) toSign["filter"] = filter;
+      
+      // Construir parámetros
+      let params = new HttpParams()
+        .set('apiKey', this.apiKey)
+        .set('customerId', customerId);
+        
+      if (start !== undefined) params = params.set('start', start.toString());
+      if (limit !== undefined) params = params.set('limit', limit.toString());
+      if (filter !== undefined) params = params.set('filter', filter);
+      
+      // Agregar firma
+      params = params.set('s', this.getFlowSignature(toSign));
+      
+      return this.http.get<FlowSubscriptionsResponse>(url, { params });
+    }
   }
 
   /**

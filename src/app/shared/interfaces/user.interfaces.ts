@@ -16,6 +16,7 @@ export interface UpdateUserRequest {
   isSignUpAcepted?: boolean;
   email?: string;
   address_id?: string;
+  birth_date?: string;
 }
 
 export interface UpdatePasswordRequest {
@@ -93,6 +94,12 @@ export interface UserDetailResponse {
    * Direcciones del usuario
    */
   address?: any;
+
+  /**
+   * Fecha de nacimiento del usuario
+   * @example "1990-01-01"
+   */
+  birth_date?: string;
 
   /**
    * Fecha de creación del usuario

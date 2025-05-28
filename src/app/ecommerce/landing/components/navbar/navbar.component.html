@@ -44,42 +44,47 @@
                         </div>
 
                         @if (isUserMenuOpen) {
-                            @if(isAuthenticated){
-                            <div class="z-50 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <div class="px-4 py-3 border-b border-gray-100">
-                                    <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
-                                        {{user?.last_name || ''}}</div>
-                                    <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
-                                    </div>
-                                </div>
-                                <a routerLink="/cuenta/perfil"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                    tabindex="-1" id="user-menu-item-0">
-                                    Mi Perfil
-                                </a>
-                                <a (click)="logout()"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                    role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                    Cerrar sesión
-                                </a>
-                            </div>
-
-                            }@else {
-                            <div class="origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
-                                    <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
-                                        class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                                        Iniciar sesión
-                                    </a>
-
-                                    <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"
-                                        type="secondary-outlined" />
-
+                        @if(isAuthenticated){
+                        <div class="z-50 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                                    {{user?.last_name || ''}}</div>
+                                <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
-                            }
+                            <a routerLink="/cuenta/perfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-0">
+                                Mi Perfil
+                            </a>
+                            <a routerLink="/cuenta/mi-cuenta"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-1">
+                                Mi Cuenta
+                            </a>
+                            <a (click)="logout()"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                role="menuitem" tabindex="-1" id="user-menu-item-2">
+                                Cerrar sesión
+                            </a>
+                        </div>
+
+                        }@else {
+                        <div class="origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
+                                <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
+                                    class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                    Iniciar sesión
+                                </a>
+
+                                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"
+                                    type="secondary-outlined" />
+
+                            </div>
+                        </div>
+                        }
                         }
                     </div>
 
@@ -196,42 +201,47 @@
                         </div>
 
                         @if (isUserMenuOpen) {
-                            @if(isAuthenticated){
-                            <div class="z-10 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <div class="px-4 py-3 border-b border-gray-100">
-                                    <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
-                                        {{user?.last_name || ''}}</div>
-                                    <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
-                                    </div>
-                                </div>
-                                <a routerLink="/cuenta/perfil"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                    tabindex="-1" id="user-menu-item-0">
-                                    Mi Perfil
-                                </a>
-                                <a (click)="logout()"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                                    role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                    Cerrar sesión
-                                </a>
-                            </div>
-
-                            }@else {
-                            <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
-                                    <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
-                                        class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                                        Iniciar sesión
-                                    </a>
-
-                                    <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"
-                                        type="secondary-outlined" />
-
+                        @if(isAuthenticated){
+                        <div class="z-10 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                                    {{user?.last_name || ''}}</div>
+                                <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
-                            }
+                            <a routerLink="/cuenta/perfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-0">
+                                Mi Perfil
+                            </a>
+                            <a routerLink="/cuenta/mi-cuenta"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-1">
+                                Mi Cuenta
+                            </a>
+                            <a (click)="logout()"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                role="menuitem" tabindex="-1" id="user-menu-item-2">
+                                Cerrar sesión
+                            </a>
+                        </div>
+
+                        }@else {
+                        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
+                                <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
+                                    class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                    Iniciar sesión
+                                </a>
+
+                                <ml-button class="mx-6" name="Regístrate" [routerLink]="'/registro'"
+                                    type="secondary-outlined" />
+
+                            </div>
+                        </div>
+                        }
                         }
                     </div>
 
@@ -292,6 +302,11 @@
                         <a routerLink="/cuenta/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             role="menuitem" tabindex="-1" id="user-menu-item-0">
                             Mi Perfil
+                        </a>
+                        <a routerLink="/cuenta/mi-cuenta"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                            tabindex="-1" id="user-menu-item-1">
+                            Mi Cuenta
                         </a>
                         <a (click)="logout()"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

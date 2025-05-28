@@ -331,4 +331,35 @@ export class AuthService {
       this.isAuthenticatedSubject.next(true);
     }
   }
+
+  /**
+   * Solicitar recuperación de contraseña
+   * @param email Correo electrónico del usuario
+   * @returns Observable con la respuesta del servidor
+   */
+  requestPasswordRecovery(email: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/request-password-recovery`, { email })
+      .pipe(
+        catchError(error => {
+          console.error('Error al solicitar recuperación de contraseña:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Restablecer la contraseña con token
+   * @param token Token de recuperación de contraseña
+   * @param newPassword Nueva contraseña
+   * @returns Observable con la respuesta del servidor
+   */
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/reset-password`, { token, newPassword })
+      .pipe(
+        catchError(error => {
+          console.error('Error al restablecer la contraseña:', error);
+          return throwError(() => error);
+        })
+      );
+  }
 } 

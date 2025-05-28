@@ -1,43 +1,87 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-recuperar-password',
   standalone: true,
-  imports: [ButtonComponent, ReactiveFormsModule, CommonModule],
+  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './recuperar-password.component.html',
   styleUrl: './recuperar-password.component.css'
 })
-export class RecuperarPasswordComponent {
+export class RecuperarPasswordComponent implements OnInit {
 
   private _formBuilder = inject(FormBuilder);
   private _cookieService = inject(CookieService);
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+
   isProcessing = false;
   isEmailSent = false;
+  isResetPasswordMode = false;
+  isPasswordReset = false;
+  errorMessage = '';
+  token = '';
 
   form = this._formBuilder.group({
     email: this._formBuilder.control('', [Validators.required, Validators.email]),
-  })
+  });
+
+  resetPasswordForm = this._formBuilder.group({
+    password: this._formBuilder.control('', [Validators.required, Validators.minLength(8)]),
+    confirmPassword: this._formBuilder.control('', [Validators.required])
+  });
 
   ngOnInit() {
-    const rememberMe = this._cookieService.get('rememberMe');
-    const rememberMeEmail = this._cookieService.get('rememberMeEmail');
-    if (rememberMe === 'true' && rememberMeEmail) {
-      this.form.get('email')?.setValue(rememberMeEmail);
-    }
+    // Verificar si hay un token en la URL
+    this._route.queryParams.subscribe(params => {
+      this.token = params['token'];
+      
+      if (this.token) {
+        this.isResetPasswordMode = true;
+      } else {
+        // Modo de solicitud de recuperación
+        const rememberMe = this._cookieService.get('rememberMe');
+        const rememberMeEmail = this._cookieService.get('rememberMeEmail');
+        if (rememberMe === 'true' && rememberMeEmail) {
+          this.form.get('email')?.setValue(rememberMeEmail);
+        }
+      }
+    });
   }
 
-  hasRequiredError(field: string) {
-    const control = this.form.get(field);
+  hasRequiredError(field: string, formGroup: 'resetPassword' | 'requestReset' = 'requestReset') {
+    const control = formGroup === 'requestReset' 
+      ? this.form.get(field) 
+      : this.resetPasswordForm.get(field);
+    
     return control?.hasError('required') && control.touched;
   }
 
-  hasValidatorError(field: string) {
-    const control = this.form.get(field);
+  hasValidatorError(field: string, formGroup: 'resetPassword' | 'requestReset' = 'requestReset') {
+    const control = formGroup === 'requestReset' 
+      ? this.form.get(field) 
+      : this.resetPasswordForm.get(field);
+    
     return control?.invalid && control?.touched;
+  }
+
+  hasMinLengthError(field: string) {
+    const control = this.resetPasswordForm.get(field);
+    return control?.hasError('minlength') && control.touched;
+  }
+
+  passwordsMatch(): boolean {
+    const password = this.resetPasswordForm.get('password')?.value;
+    const confirmPassword = this.resetPasswordForm.get('confirmPassword')?.value;
+    return password === confirmPassword;
   }
 
   recoverPassword() {
@@ -45,9 +89,73 @@ export class RecuperarPasswordComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.isProcessing = true;
-    this.isEmailSent = true;
-    alert('Recover password');
 
+    this.isProcessing = true;
+    this.errorMessage = '';
+    
+    const email = this.form.get('email')?.value;
+    
+    if (!email) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this._authService.requestPasswordRecovery(email)
+      .pipe(
+        catchError(error => {
+          // Incluso si hay un error, no mostramos mensaje específico por seguridad
+          console.error('Error al solicitar recuperación de contraseña:', error);
+          return of({ success: true }); // Simulamos éxito por razones de seguridad
+        }),
+        finalize(() => {
+          this.isProcessing = false;
+        })
+      )
+      .subscribe({
+        next: () => {
+          // Siempre mostramos el mensaje de éxito, incluso si el correo no existe
+          // por razones de seguridad para evitar enumeración de usuarios
+          this.isEmailSent = true;
+        }
+      });
+  }
+
+  resetPassword() {
+    if (!this.resetPasswordForm.valid || this.isProcessing) {
+      this.resetPasswordForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.passwordsMatch()) {
+      this.errorMessage = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    this.isProcessing = true;
+    this.errorMessage = '';
+    
+    const newPassword = this.resetPasswordForm.get('password')?.value || '';
+    
+    this._authService.resetPassword(this.token, newPassword)
+      .pipe(
+        catchError(error => {
+          if (error.status === 400) {
+            this.errorMessage = 'El token es inválido o ha expirado';
+          } else {
+            this.errorMessage = 'Ocurrió un error al restablecer la contraseña';
+          }
+          return of(null);
+        }),
+        finalize(() => {
+          this.isProcessing = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            this.isPasswordReset = true;
+          }
+        }
+      });
   }
 }

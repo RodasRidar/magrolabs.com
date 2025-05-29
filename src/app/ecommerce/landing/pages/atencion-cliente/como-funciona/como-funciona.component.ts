@@ -33,7 +33,7 @@ export class ComoFuncionaComponent {
     },
     {
       title: '¿Cómo funciona el período de prueba?',
-      description:'Después de recibir tu creatina de '+ this.ENV.creatinaFreeGramos + ' gr gratis, comienza tu período de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Durante el período, puedes cancelar tu suscripción de forma gratuita en cualquier momento. Después de estos '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, tu suscripción se convertirá automáticamente en una suscripción de pago, y recibirás una sorpresa única en tu puertax cada mes.'
+      description:'Después de recibir tu creatina de '+ this.ENV.creatinaFreeGramos + ' gr gratis, comienza tu período de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Durante el período, puedes cancelar tu suscripción de forma gratuita en cualquier momento. Después de estos '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, tu suscripción se convertirá automáticamente en una suscripción de pago, y recibirás una creatina en tu puerta cada mes.'
     }
   ]
 

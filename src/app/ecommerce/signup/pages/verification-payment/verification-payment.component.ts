@@ -209,7 +209,7 @@ export class VerificationPaymentComponent {
       this._orderService.cancelOrder(orderId).pipe(
         switchMap(response => {
           console.log('Order canceled: ', response);
-          return this._subscriptionService.cancelSubscription(subscriptionId);
+          return this._subscriptionService.cancelSubscription(subscriptionId, 'Cancelación desde verificación de pago');
         }),
         switchMap(response => {
           console.log('Subscription canceled: ', response);

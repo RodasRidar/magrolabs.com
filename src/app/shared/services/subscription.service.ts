@@ -124,8 +124,8 @@ export class SubscriptionService {
    * Cancelar una suscripción
    * @param id ID de la suscripción
    */
-  cancelSubscription(id: string): Observable<SubscriptionResponse> {
-    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/cancel`, {})
+  cancelSubscription(id: string, reason: string): Observable<SubscriptionResponse> {
+    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/cancel`, { reason })
       .pipe(
         catchError(error => throwError(() => error))
       );

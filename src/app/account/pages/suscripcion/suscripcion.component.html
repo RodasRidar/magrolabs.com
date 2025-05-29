@@ -100,19 +100,30 @@
                                     <dt class="text-sm font-medium text-gray-500">Fecha de finalización</dt>
                                     <dd class="mt-1 text-sm text-gray-900">{{ formatDate(subscription()!.end_date) }}</dd>
                                 </div>
+
+                                <div *ngIf="subscription()!.next_billing_date && subscription()!.status == statusEnum.CANCELLED">
+                                    <dt class="text-sm font-medium text-gray-500">Próximo pago</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ formatDate(subscription()!.next_billing_date) }}</dd>
+                                </div>
+
+                                <div *ngIf="subscription()!.next_shipment">
+                                    <dt class="text-sm font-medium text-gray-500">Próximo envío</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ formatDate(subscription()!.next_shipment) || 'No disponible'}}</dd>
+                                </div>
                             </dl>
                         </div>
 
                         <!-- Columna derecha - Acciones -->
                         <div class="flex flex-col justify-center space-y-4">
                             <div *ngIf="subscription()!.status === statusEnum.ACTIVE" class="flex flex-col space-y-3">
+                                <!-- 
                                 <button (click)="pauseSubscription()" 
                                         class="flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                     </svg>
                                     Pausar suscripción
-                                </button>
+                                </button>-->
                                 <button (click)="cancelSubscription()" 
                                         class="flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -130,20 +141,15 @@
                                     </svg>
                                     Reactivar suscripción
                                 </button>
-                                <button (click)="cancelSubscription()" 
-                                        class="flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                    </svg>
-                                    Cancelar suscripción
-                                </button>
                             </div>
 
                             <div *ngIf="subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED" class="bg-gray-50 p-4 rounded-md">
-                                <p class="text-sm text-gray-700">Tu suscripción ha finalizado. Si deseas volver a suscribirte, explora nuestros planes disponibles.</p>
-                                <a href="/planes" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#d07d66] hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
-                                    Ver planes disponibles
-                                </a>
+                                <p class="text-sm text-gray-700">¿Pensando en empezar de nuevo con tu suscripción?</p>
+                                <button 
+                                    (click)="reactivateSubscription()" 
+                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
+                                    Activar directamente
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -267,6 +273,504 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de cancelación de suscripción -->
+    <div *ngIf="showCancellationModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closeCancellationModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-4" id="modal-title">
+                                {{ userName() }}, qué pena que te vayas!
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-lg text-gray-700 mb-4">
+                                    Cuéntanos por qué quieres pausar/cancelar tu suscripción. ¡Valoramos tu opinión!
+                                </p>
+
+                                <div class="mt-6 space-y-3">
+                                    <!-- Opciones para cancelar la suscripción -->
+                                    <div class="flex items-center">
+                                        <input type="radio" id="reason1" name="cancellationReason" class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]" 
+                                               (change)="cancellationReason.set('Ya no quiero consumir creatina')">
+                                        <label for="reason1" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Ya no quiero consumir creatina
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="reason2" name="cancellationReason" class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]" 
+                                               (change)="cancellationReason.set('Estoy experimentando problemas con la entrega')">
+                                        <label for="reason2" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Estoy experimentando problemas con la entrega
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="reason3" name="cancellationReason" class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]" 
+                                               (change)="cancellationReason.set('No quiero una suscripción')">
+                                        <label for="reason3" class="ml-3 block text-sm font-medium text-gray-700">
+                                            No quiero una suscripción
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="reason4" name="cancellationReason" class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]" 
+                                               (change)="cancellationReason.set('No me gusta el sabor de la creatina')">
+                                        <label for="reason4" class="ml-3 block text-sm font-medium text-gray-700">
+                                            No me gusta el sabor de la creatina
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="radio" id="reason5" name="cancellationReason" class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]" 
+                                               (change)="cancellationReason.set('No estoy satisfecho/a con la calidad')">
+                                        <label for="reason5" class="ml-3 block text-sm font-medium text-gray-700">
+                                            No estoy satisfecho/a con la calidad
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
+                    <button (click)="closeCancellationModal()" type="button" 
+                            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 
+                                   bg-white text-base font-medium text-gray-700 hover:bg-gray-50 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 
+                                   sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cerrar
+                    </button>
+                    <button (click)="confirmCancellation()" type="button" 
+                            [disabled]="!cancellationReason()"
+                            [ngClass]="{'opacity-50 cursor-not-allowed': !cancellationReason(), 'hover:bg-amber-600': cancellationReason()}"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
+                                   bg-amber-500 text-base font-medium text-white
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 
+                                   sm:ml-3 sm:w-auto sm:text-sm">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de pausa de suscripción -->
+    <div *ngIf="showPauseModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closePauseModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-4" id="modal-title">
+                                ¿Qué te parece tomar una pausa?
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-lg text-gray-700 mb-6">
+                                    ¿Por cuántos meses quieres pausar tu suscripción?
+                                </p>
+
+                                <div class="mb-8">
+                                    <!-- Valor actual -->
+                                    <p class="text-xl font-semibold text-center mb-2">{{ pauseDurationMonths() }} {{ pauseDurationMonths() === 1 ? 'mes' : 'meses' }}</p>
+                                    
+                                    <!-- Barra de progreso -->
+                                    <div class="w-full flex items-center mb-4">
+                                        <input type="range" 
+                                               min="1" 
+                                               max="6" 
+                                               step="1" 
+                                               [value]="pauseDurationMonths()" 
+                                               (input)="updatePauseDuration($event)"
+                                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#d7816a]">
+                                    </div>
+                                    
+                                    <!-- Indicadores min/max -->
+                                    <div class="flex justify-between text-xs text-gray-500">
+                                        <span>1 mes</span>
+                                        <span>6 meses</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 p-4 rounded-md mb-6">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Período de pausa:</h4>
+                                    <p class="font-medium text-gray-700">{{ pauseStartDate() }} al {{ pauseEndDate() }}</p>
+                                    
+                                    <h4 class="font-semibold text-gray-800 mt-4 mb-2">Próximo pago:</h4>
+                                    <p class="font-medium text-gray-700">{{ nextPaymentDate() }}</p>
+                                </div>
+
+                                <ul class="space-y-3 text-sm text-gray-700 list-disc pl-5">
+                                    <li>Durante el período de pausa, tu credito se congelará. Puedes reactivar tu suscripción en cualquier momento.</li>
+                                    <li>No se realizarán cobros durante el período de pausa.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
+                    <button (click)="proceedWithCancellation()" type="button" 
+                            class="w-full mb-3 sm:mb-0 inline-flex justify-center rounded-md shadow-sm px-4 py-2 
+                                    text-base font-medium text-gray-800 hover:bg-gray-300
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
+                                   border border-gray-900
+                                   sm:ml-3 sm:w-auto sm:text-sm">
+                        Continuar con la cancelación
+                    </button>
+                    <button (click)="pauseSubscription()" type="button" 
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
+                                   bg-amber-500 text-base font-medium text-white hover:bg-amber-600 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 
+                                   sm:ml-3 sm:w-auto sm:text-sm">
+                        Pausar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación de reactivación -->
+    <div *ngIf="showReactivationModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closeReactivationModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-4" id="modal-title">
+                                ¡Excelente decisión!
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-lg text-gray-700">
+                                    {{ reactivationMessage() }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button (click)="closeReactivationModal()" type="button" 
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-2 
+                                   bg-teal-400 text-base font-medium text-white hover:bg-teal-500 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400 
+                                   sm:ml-3 sm:w-auto sm:text-sm">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal final de confirmación de cancelación (pérdida de créditos) -->
+    <div *ngIf="showFinalCancelModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <!-- Botón para cerrar el modal -->
+                    <div class="absolute top-0 right-0 pt-3 pr-3">
+                        <button type="button" (click)="closeFinalCancelModal()" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
+                            <span class="sr-only">Cerrar</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Contenido del modal -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tu crédito acumulado...</h3>
+                        
+                        <!-- Tarjeta de crédito de compras -->
+                        <div class="bg-blue-600 text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6">
+                            <p class="text-lg font-semibold mb-2">Tu crédito de compras</p>
+                            <p class="text-6xl font-bold mb-6">{{userCredits() | currency:'S/'}}</p>
+                            
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-md mb-4 mx-auto max-w-md">
+                            <p class="text-xl font-bold mb-2">Estás cerca.</p>
+                            <p class="text-sm text-gray-700">Hay un producto exclusivo de Magrolabs en la <a routerLink="/loyalty-webshop" class="text-blue-600 hover:text-blue-800 underline">Loyalty webshop</a> esperándote...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
+                    <button (click)="keepCredits()" type="button" 
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
+                                  bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
+                                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
+                                  sm:w-auto sm:text-sm">
+                        Mantener mi crédito
+                    </button>
+                    <button (click)="finalConfirmCancellation()" type="button" 
+                            class="w-full mt-3 sm:mt-0 inline-flex justify-center rounded-md shadow-sm px-4 py-2 
+                                   text-base font-medium text-gray-800 hover:bg-gray-300
+                                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
+                                  border border-gray-900
+                                   sm:w-auto sm:text-sm">
+                        Continuar con la cancelación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de descuento del 50% -->
+    <div *ngIf="showDiscountModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closeDiscountModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <!-- Contenido del modal -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un 50% de descuento en tu Creatina!</h3>
+                        
+                        <!-- Tarjeta de descuento -->
+                        <div class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white rounded-lg px-8 py-12 mx-auto max-w-md my-8 relative overflow-hidden">
+                            <!-- Efectos decorativos -->
+                            <div class="absolute top-0 left-0 w-full h-full opacity-20">
+                                <div class="absolute top-2 left-2 text-xs font-medium opacity-60">DISCOUNT • OFERTA • SALE • REBAJAS</div>
+                                <div class="absolute bottom-2 right-2 text-xs font-medium opacity-60">DISCOUNT • OFERTA • SALE • REBAJAS</div>
+                            </div>
+                            
+                            <div class="relative z-10">
+                                <p class="text-8xl font-bold mb-4 drop-shadow-lg">-50%</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-lg font-semibold text-gray-900 mb-2">No pagas {{ENV.precioCreatinaSubscription  | currency:'S/'}} sino {{ENV.precioCreatinaSubscription * 0.5 | currency:'S/'}} .</p>
+                            <p class="text-gray-700 leading-relaxed">
+                                ¡Nos entristecería que te vayas! Por eso, tenemos una oferta especial para ti: 
+                                quédate como miembro y obtén un 50% de descuento en tu próxima Creatina.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
+                    <button (click)="acceptDiscount()" type="button" 
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-3 
+                                   bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
+                                   sm:w-auto sm:text-sm">
+                        ¡Quiero el descuento!
+                    </button>
+                    <button (click)="proceedWithFinalCancellation()" type="button" 
+                            class="w-full mt-3 sm:mt-0 inline-flex justify-center rounded-md shadow-sm px-6 py-3 
+                                   text-base font-medium text-gray-800 hover:bg-gray-300
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
+                                   border border-gray-900
+                                   sm:w-auto sm:text-sm">
+                        Continuar con la cancelación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación final de cancelación -->
+    <div *ngIf="showFinalConfirmationModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closeFinalConfirmationModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <!-- Contenido del modal -->
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">¿Estás seguro de que quieres cancelar tu suscripción?</h3>
+                        
+                        <!-- Ícono de advertencia -->
+                        <div class="bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg px-8 py-8 mx-auto max-w-xs my-6 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                        </div>
+                        
+                        <div class="text-left mb-6">
+                            <h4 class="font-semibold text-gray-900 mb-3">Perderás acceso a:</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li class="flex items-center">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                                    Tu crédito de {{userCredits() | currency:'S/'}}
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                                    Futuros lanzamientos
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                                    Productos exclusivos de Magrolabs
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-left mb-6 space-y-4">
+                            <p class="text-gray-700">Tu suscripción se volverá inactiva después del último pago.</p>
+                            
+                            <div class="space-y-2">
+                                <p class="text-gray-900 font-semibold">Último pago: {{ lastPaymentDate() }}</p>
+                                <p class="text-gray-900 font-semibold">Última entrega: {{ lastDeliveryDate() }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-left mb-6">
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                ¿Quieres recibir mensualmente una nueva creatina en tu buzón de nuevo? 
+                                Puedes volver a activar tu suscripción en cualquier momento desde tu cuenta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-6 py-4 sm:px-8 sm:py-6 flex flex-col space-y-3">
+                    <button (click)="finallyCancel()" type="button" 
+                            [disabled]="isLoading()"
+                            class="w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-6 py-3 
+                                   bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
+                                   disabled:opacity-50 disabled:cursor-not-allowed
+                                   sm:text-sm">
+                        <span *ngIf="isLoading()" class="mr-2">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        {{ isLoading() ? 'Cancelando...' : 'Quiero cancelar' }}
+                    </button>
+                    <button (click)="continueAsMember()" type="button" 
+                            [disabled]="isLoading()"
+                            class="w-full inline-flex justify-center rounded-md shadow-sm px-6 py-3 
+                                   text-base font-medium text-gray-800 hover:bg-gray-100
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
+                                   border border-gray-900 disabled:opacity-50 disabled:cursor-not-allowed
+                                   sm:text-sm">
+                        Continúo como miembro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación exitosa de cancelación -->
+    <div *ngIf="showSuccessCancellationModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full max-w-md mx-auto">
+                <div class="bg-white px-6 pt-6 pb-4 relative">
+                    <!-- Contenido del modal -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-8">Membresía cancelada</h3>
+                        
+                        <!-- Ícono de check verde -->
+                        <div class="mx-auto max-w-xs my-6 flex items-center justify-center">
+                            <div class="bg-green-500 rounded-full p-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-6">
+                            <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                                Tu suscripción se cancelará inmediatamente después de tu último pago. 
+                                Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros productos!
+                            </p>
+                        </div>
+                        
+                        <!-- Información del usuario y suscripción -->
+                        <div class="text-left mb-6 space-y-4">
+                            <p class="text-gray-900 font-bold text-lg">{{ userName() }}</p>
+                            
+                            <div class="space-y-1">
+                                <p class="text-gray-900 font-bold text-lg">{{ subscriptionPlan()?.description || 'Plan de Suscripción' }}</p>
+                                <p class="text-gray-600 text-sm">Suscripción {{ getPeriodText(subscriptionPlan()?.period) }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-left mb-6 space-y-3">
+                            <div>
+                                <p class="text-gray-700 font-medium">Último pago:</p>
+                                <p class="text-gray-900 font-bold">{{ lastPaymentDate() }}</p>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-700 font-medium">Última entrega:</p>
+                                <p class="text-gray-900 font-bold">{{ lastDeliveryDate() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 px-6 py-4 flex justify-center">
+                    <button (click)="closeSuccessCancellationModal()" type="button" 
+                            class="w-full max-w-xs inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-6 py-3 
+                                   bg-white text-base font-medium text-gray-700 hover:bg-gray-50 
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 
+                                   sm:text-sm">
+                        Cerrar ›
+                    </button>
                 </div>
             </div>
         </div>

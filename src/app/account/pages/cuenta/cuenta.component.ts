@@ -45,6 +45,7 @@ export class CuentaComponent implements OnInit {
   maxLoyaltyPoints = 200;
   statusEnum = SubscriptionStatusEnum;
   nextBillingDate = signal<string>('');
+  ENV = environment;
 
   ngOnInit() {
     this.loadUserData();
@@ -185,7 +186,7 @@ export class CuentaComponent implements OnInit {
   }
 
   getSubscriptionStatusText(status: SubscriptionStatusEnum | undefined): string {
-    if (!status) return 'Sin suscripción activa';
+    if (!status) return 'Sin suscripción';
 
     switch (status) {
       case SubscriptionStatusEnum.ACTIVE:

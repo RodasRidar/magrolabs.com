@@ -312,6 +312,16 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  //actualizar el flowCustomerId del usuario en el storage
+  updateFlowCustomerId(flowCustomerId: string): void {
+    const user = this.currentUserSubject.value;
+    if (user) {
+      user.flowCustomerId = flowCustomerId;
+      this.saveCookie(this.USER_KEY, JSON.stringify(user));
+      this.currentUserSubject.next(user);
+    }
+  }
+
   /**
    * Manejar respuesta de autenticación
    */

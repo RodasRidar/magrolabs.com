@@ -137,15 +137,18 @@
                                          {{nextBillingDateFreeCreatine}}
                                     </p>
                                 }
+                                @else if (!subscription?.status) {
+                                    <p class="mt-3">Suscribete a Magrolabs y recibe un crédito de S/{{ENV.creditoRegaloPorCompraMes}} para compras.</p>
+                                }
                                 @else{
-                                    <p class="mt-3">Próximo pago: {{nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy') : 'No disponible'}}</p>
+                                    <p class="mt-3">Próximo pago: {{nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy')  : 'No disponible'}}</p>
                                 }
                             }
                         </div>
                         <div class="mt-5">
                             <a routerLink="/cuenta/suscripcion"
                                 class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20">
-                                Ver detalles
+                                {{!subscription?.status ? 'Suscribirme →' : 'Ver detalles'}}
                             </a>
                         </div>
                     </div>

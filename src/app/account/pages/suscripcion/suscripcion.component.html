@@ -5,7 +5,7 @@
 </header>
 <main>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="px-4 py-8 sm:px-0">
+        <div class="px-1 py-8 sm:px-4">
             <!-- Pantalla de carga -->
             <div *ngIf="isLoading()" class="flex justify-center items-center h-64">
                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -17,16 +17,344 @@
             </div>
 
             <!-- Sin suscripción -->
-            <div *ngIf="!isLoading() && !subscription()" class="bg-white overflow-hidden shadow rounded-lg p-6">
-                <div class="text-center py-12">
-                    <h2 class="text-2xl font-medium text-gray-900">No tienes ninguna suscripción activa</h2>
-                    <p class="mt-2 text-sm text-gray-500">Explora nuestros planes disponibles y disfruta de todos los beneficios.</p>
-                    <div class="mt-6">
-                        <a href="/planes" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#d07d66] hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
-                            Ver planes disponibles
-                        </a>
+            <div *ngIf="!isLoading() && !subscription()" class="bg-white overflow-hidden shadow rounded-lg p-2 sm:p-6">
+                <div class="bg-white rounded-lg shadow-lg ">
+                    <div class="max-w-2xl mx-auto max-sm:px-2  max-sm:py-1 max-lg:px-6 max-lg:py-4 px-16 py-9">
+                        <!-- Product details -->
+                        <div class=" lg:self-end">
+            
+                            <div class="mt-2">
+                                <h2 class="sr-only">Reviews</h2>
+                                <div class="flex items-center">
+                                    <div>
+                                        <div class="flex items-center">
+            
+                                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+            
+                                            <!-- Heroicon name: solid/star -->
+                                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+            
+                                            <!-- Heroicon name: solid/star -->
+                                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+            
+                                            <!-- Heroicon name: solid/star -->
+                                            <svg class="text-black h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+            
+                                            <!-- Heroicon name: solid/star -->
+                                            <svg class="text-gray-300 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        </div>
+                                        <p class="sr-only">4 out of 5 stars</p>
+                                    </div>
+                                    <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
+                                        target="_blank"
+                                        class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
+                                        ({{ENV.nroReviews}} reseñas)
+                                    </a>
+                                </div>
+                            </div>
+            
+                            <div class="mt-1">
+                                <h1 class="text-3xl sm:font-light font-thin tracking-tighter text-gray-900 sm:text-3xl">Creatina
+                                    Monohidratada 250 gr</h1>
+                            </div>
+            
+                            <section aria-labelledby="information-heading" class="mt-4">
+                                <h2 id="information-heading" class="sr-only">Product information</h2>
+            
+                                <div class="flex items-center">
+                                    
+                                    <div class="flex justify-center items-center font-extralight">
+                                        <p class="text-base text-gray-500 sm:text-lg line-through">{{ENV.precioCreatinaOnePurchase |
+                                            currency : 'S/'}}</p>
+                                        <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaSubscription | currency
+                                            : 'S/'}}</p>
+                                    </div>
+                                    
+                                </div>
+                            </section>
+                        </div>
+            
+                        <div class="mt-2 lg:col-start-1 lg:row-start-2 lg:self-start">
+                            <section aria-labelledby="options-heading">
+                                <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">100% Monohidratada</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Regeneración muscular</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Certificada de alta calidad</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Fácil digestión</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza + resistencia</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Aumenta la testosterona + densidad ósea</p>
+                                    </div>
+                                </div>
+                                <h2 class="text-gray-500 text-[12px] font-extralight">{{ENV.creatinaSubscription250}}g.
+                                    {{ENV.nroServicios250g}} servicios.</h2>
+                                <h2 id="options-heading" class="sr-only">Product options</h2>
+            
+                                <div class="mx-auto pt-6 pb-2">
+                                    <div class="space-y-4">
+            
+                                        <div #Subscription 
+                                            class="rounded-lg overflow-hidden group border"
+                                            [ngClass]="{'border-gray-800': true,'border-gray-900': true}" open>
+                                            <summary
+                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
+                                                <div class="flex items-center">
+                                                    <span class="relative size-5 shrink-0 mr-2">
+            
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                            viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100"
+                                                            width="24px" fill="#000000">
+                                                            <path
+                                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                                        </svg>
+            
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                            viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                                                            width="24px" fill="#434343">
+                                                            <path
+                                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                                        </svg>
+                                                    </span>
+            
+                                                    <h2 class="font-light mr-2 max-lg:text-sm">Subscribir</h2>
+                                                    <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
+                                                        <p class="max-lg:text-[10px] text-xs text-white font-extralight">Ahorra
+                                                            {{ENV.creatina2025Descuento}}</p>
+                                                    </div>
+                                                </div>
+            
+                                                <div class="flex items-center">
+                                                    <div class="flex justify-center items-center font-extralight">
+                                                        <p class="text-xs text-gray-500  line-through">
+                                                            {{ENV.precioCreatinaOnePurchase | currency : 'S/'}}</p>
+                                                        <p class="text-sm text-gray-900  ml-2">{{ENV.precioCreatinaSubscription |
+                                                            currency : 'S/'}}</p>
+                                                    </div>
+                                                </div>
+            
+                                            </summary>
+            
+                                            <div class="m-3">
+                                                <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
+                                                    <span class="text-sm text-left text-gray-900 font-light">
+                                                        Así es como funciona la subscripción:
+                                                    </span>
+                                                    <div class="flex flex-row items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
+                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                            <path
+                                                                d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z" />
+                                                        </svg>
+                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
+                                                            Entrega gratis cada 30 días
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex flex-row items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
+                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                            <path
+                                                                d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z" />
+                                                        </svg>
+                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
+                                                            Prueba gratis de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex flex-row items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
+                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                            <path
+                                                                d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
+                                                        </svg>
+                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
+                                                            Recibes una creatina gratis + S/{{ENV.creditoRegaloPorCompraMes}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                                @if(!showPaymentVerification()) {
+
+                                <div class="max-sm:hidden my-2">
+                                    <ml-button name="Continuar →" (click)="nextStep()"></ml-button>
+                                </div>
+                                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                    <button (click)="nextStep()" type="button"
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                        Continuar →
+                                    </button>
+                                </div>
+                                }
+
+                            </section>
+                        </div>
+                        @if(showPaymentVerification()) {
+                        <!-- VERIFICAR PAGO -->
+                        <div class="relative text-gray-600 mt-5">
+                            <div class="border border-gray-300 rounded-sm mb-4">
+                                <div class=" bg-[#e9e9e9]  p-4">
+                                    <div class="flex items-center"><span class="font-semibold mr-3">Tarjeta</span>
+                                        <svg width="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            class="inline h-5 w-auto mr-2">
+                                            <rect width="34" height="34" rx="3" fill="#FEF0D4"></rect>
+                                            <g fill-rule="evenodd" clip-rule="evenodd">
+                                                <path
+                                                    d="M12.569 19.85l1.84-5.716h1.656l-1.857 5.716h-1.64zm-.736-5.716l-1.473 2.418c-.384.629-.602.958-.702 1.35H9.64c.034-.502-.05-1.13-.05-1.475l-.167-2.293H6.647l-.034.157c.72 0 1.138.33 1.255 1.021l.535 4.538h1.707l3.446-5.716h-1.723zm12.797 5.7l-.05-.848h-2.058l-.418.848h-1.79l3.246-5.7h2.191l.552 5.7H24.63zm-.184-3.36c-.017-.424-.033-.99 0-1.335h-.017c-.1.283-.535 1.13-.719 1.555l-.619 1.256h1.439l-.084-1.476zm-6.658 3.533c-1.154 0-1.94-.346-2.476-.66l.787-1.13c.501.267.886.565 1.773.565.284 0 .569-.063.72-.33.233-.376-.051-.565-.703-.91l-.318-.189c-.954-.612-1.372-1.193-.92-2.198.284-.644 1.037-1.146 2.291-1.146.854 0 1.673.345 2.142.69l-.904.99c-.451-.345-.836-.518-1.271-.518-.351 0-.619.125-.703.298-.167.314.05.534.552.832l.385.22c1.154.691 1.439 1.398 1.138 2.073-.502 1.146-1.473 1.413-2.493 1.413zm9-5.103h-.067v-.408h.168c.1 0 .15.031.15.11 0 .078-.05.11-.117.11l.117.172h-.084l-.117-.173h-.067l.017.189zm.084-.236c.05 0 .1 0 .1-.063 0-.047-.05-.062-.1-.062h-.084v.125h.084zm0 .393c-.218 0-.385-.157-.385-.361 0-.22.184-.361.385-.361.2 0 .385.14.385.36 0 .22-.184.362-.385.362zm0-.675a.294.294 0 00-.301.298c0 .173.117.298.3.298a.294.294 0 00.302-.298.294.294 0 00-.301-.298z"
+                                                    fill="#005596"></path>
+                                                <path d="M30 21.364l-26.229.017V25h26.23v-3.636z" fill="#F7AA0F"></path>
+                                                <path d="M30 7.636H3.771v4.3h26.23v-8z" fill="#005596"></path>
+                                            </g>
+                                        </svg>
+                                        <svg width="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            class="inline h-5 w-auto mr-2">
+                                            <rect width="34" height="34" rx="3" fill="#122B79"></rect>
+                                            <path d="M20.784 23.184h-7.568V9.816h7.568v13.368z" fill="#6C6BBD"></path>
+                                            <path
+                                                d="M13.697 16.5c0-2.708 1.29-5.126 3.303-6.684A8.71 8.71 0 0011.652 8C6.872 8 3 11.804 3 16.5S6.872 25 11.652 25A8.71 8.71 0 0017 23.184c-2.012-1.558-3.303-3.965-3.303-6.684z"
+                                                fill="#D32011"></path>
+                                            <path
+                                                d="M31 16.5c0 4.696-3.872 8.5-8.652 8.5A8.71 8.71 0 0117 23.184c2.012-1.558 3.303-3.976 3.303-6.684S19.013 11.374 17 9.816A8.71 8.71 0 0122.348 8C27.128 8 31 11.804 31 16.5z"
+                                                fill="#0099DF"></path>
+                                        </svg>
+                                        <svg width="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                            class="inline h-5 w-auto mr-2">
+                                            <rect width="34" height="34" rx="3" fill="#000"></rect>
+                                            <path d="M21.237 9.823h-8.45v14.329h8.45V9.822z" fill="#FF5F00"></path>
+                                            <path
+                                                d="M13.64 17.013c0-2.785 1.241-5.443 3.36-7.165-3.8-3.114-9.327-2.43-12.323 1.52-2.995 3.948-2.338 9.695 1.486 12.784 3.19 2.607 7.647 2.607 10.837.025a9.291 9.291 0 01-3.36-7.164z"
+                                                fill="#EB001B"></path>
+                                            <path
+                                                d="M30.346 22.658v-.304h.121v-.05h-.292v.05h.122v.304h.049zm.56 0v-.354h-.098l-.097.253-.098-.253h-.097v.354h.073v-.278l.098.228h.072l.098-.228v.278h.049zm.268-5.645c0 5.038-3.921 9.114-8.768 9.114A8.47 8.47 0 0117 24.177c3.8-3.114 4.457-8.86 1.485-12.81A8.752 8.752 0 0017 9.823c3.8-3.114 9.327-2.43 12.323 1.544 1.193 1.595 1.85 3.595 1.85 5.646z"
+                                                fill="#F79E1B"></path>
+                                        </svg>
+                                        <svg fill="none" width="34" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg"
+                                            class="inline h-5 w-auto mr-2">
+                                            <clipPath id="a">
+                                                <path d="M0 0h34v34H0z"></path>
+                                            </clipPath>
+                                            <g clip-path="url(#a)">
+                                                <rect fill="#2e77bc" height="34" rx="3" width="34"></rect>
+                                                <g fill="#fff">
+                                                    <path
+                                                        d="M3.045 14.705l-.647-1.586-.648 1.586zm14.327-.624c-.132.084-.288.084-.468.084h-1.15v-.89h1.174c.168 0 .336.013.456.073s.203.18.203.348c-.023.18-.095.312-.215.385zm8.236.624l-.66-1.586-.659 1.586zm-15.346 1.73h-.97v-3.123l-1.38 3.123h-.839l-1.378-3.123v3.123H3.752l-.36-.889H1.416l-.372.89H.012l1.702-3.99H3.13l1.607 3.773v-3.772h1.546L7.53 15.15l1.139-2.703h1.582zm3.873 0H10.97v-3.988h3.177v.829h-2.23v.72h2.17v.817h-2.17v.793h2.218zm4.484-2.92c0 .638-.42.962-.672 1.058.204.084.384.216.468.337.132.192.156.372.156.732v.781h-.96v-.504c0-.24.024-.589-.155-.781-.144-.144-.348-.168-.696-.168h-1.019v1.453h-.947v-3.988h2.182c.48 0 .84.012 1.15.192.313.192.493.444.493.889zm1.522 2.92h-.971v-3.988h.971zm11.246 0h-1.343l-1.799-2.991v2.991h-1.93l-.371-.889h-1.979l-.36.89h-1.114c-.468 0-1.043-.109-1.379-.445s-.503-.793-.503-1.526c0-.589.108-1.13.515-1.562.312-.312.791-.468 1.439-.468h.923v.853h-.9c-.347 0-.539.048-.73.24-.168.168-.276.48-.276.901 0 .432.084.733.263.937.144.156.408.204.66.204h.431l1.343-3.135h1.427l1.606 3.772v-3.772h1.45l1.667 2.775v-2.775h.972v4zM0 17.216h1.618l.372-.889h.815l.36.89h3.189v-.674l.288.685h1.654l.288-.685v.685h7.936v-1.453h.156c.108 0 .144.012.144.192v1.261h4.1v-.336c.336.18.851.336 1.523.336h1.726l.372-.889h.815l.36.89h3.333v-.842l.503.841h2.662v-5.574h-2.638v.66l-.371-.66h-2.71v.66l-.336-.66h-3.656c-.612 0-1.151.084-1.583.324v-.324h-2.53v.324c-.275-.24-.659-.324-1.078-.324H8.104l-.611 1.441-.635-1.441H3.944v.66l-.311-.66H1.15L0 14.297zM34.02 19.646h-1.726c-.168 0-.288.012-.383.072-.097.06-.144.156-.144.288 0 .156.084.253.203.3.096.037.204.049.372.049l.516.012c.515.012.863.108 1.079.324.036.036.06.06.084.096zm0 2.631c-.227.336-.683.505-1.294.505H30.89v-.853h1.823c.18 0 .311-.024.383-.096a.336.336 0 00.108-.265.327.327 0 00-.12-.264c-.072-.06-.168-.084-.335-.084-.888-.036-2.002.024-2.002-1.238 0-.576.371-1.19 1.366-1.19h1.895V18h-1.763c-.527 0-.911.132-1.187.324V18h-2.601c-.42 0-.9.108-1.14.324V18H22.68v.324c-.372-.264-.995-.324-1.283-.324h-3.069v.324c-.288-.288-.947-.324-1.343-.324h-3.428l-.78.853-.73-.853H6.95v5.563h5.023l.803-.865.768.865h3.093v-1.31h.3c.407.012.899-.012 1.318-.192v1.502h2.554v-1.454h.12c.156 0 .168.012.168.168v1.286h7.78c.492 0 1.007-.133 1.295-.36v.36h2.458c.515 0 1.007-.072 1.39-.253zm-3.788-1.598c.18.192.288.433.288.841 0 .853-.54 1.262-1.487 1.262h-1.846v-.853h1.846c.18 0 .312-.024.384-.096a.382.382 0 00.108-.265c0-.12-.048-.204-.12-.264s-.168-.084-.336-.084c-.887-.036-2.002.024-2.002-1.238 0-.576.36-1.19 1.355-1.19h1.906v.854H28.59c-.168 0-.288.012-.384.072-.108.06-.144.156-.144.288 0 .157.084.253.204.3.096.037.204.049.372.049l.515.012c.516.012.863.096 1.079.312zm-8.572-.24c-.132.072-.288.084-.468.084h-1.15v-.89h1.174c.168 0 .336 0 .456.073.12.06.192.192.192.36 0 .157-.072.3-.204.373zm.576.492c.215.084.383.217.467.337.132.192.156.372.156.733v.793h-.96V22.3c0-.24.025-.589-.155-.78-.144-.145-.348-.181-.695-.181h-1.02v1.454h-.958v-3.99h2.194c.479 0 .827.025 1.138.193.3.18.492.433.492.89.012.624-.408.948-.66 1.044zm1.198-2.126H26.6v.829h-2.23v.72h2.17v.818h-2.17v.793h2.23v.829h-3.165zm-6.402 1.838H15.81v-1.01h1.234c.348 0 .576.145.576.494 0 .336-.228.516-.588.516zm-2.182 1.778L13.388 20.8l1.462-1.574zm-3.764-.468H8.748v-.793h2.086v-.817H8.748v-.721h2.386l1.043 1.165zm7.553-1.838c0 1.105-.827 1.333-1.655 1.333h-1.186v1.334H13.95l-1.174-1.322-1.211 1.322H7.8v-3.99h3.825l1.174 1.31 1.211-1.31h3.034c.743.013 1.594.217 1.594 1.322z">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-left text-sm mt-1" [ngClass]="{'hidden': !isPaymentVerified()}">
+                                        {{labelCardRegisted}}
+                                    </h4>
+                                    <h5 class="text-left text-xs mt-1"> S/0.00 de verificación</h5>
+                                </div>
+                                @if (flowToken !== '' && !isPaymentVerified()) {
+                                <form class="p-4 bg-[#f8f9fa]">
+                                    <app-flow-widget-add-card [token]="flowToken"
+                                        (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
+            
+                                    <p class="flex justify-center text-sm font-medium text-gray-500 mt-6">
+                                        <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Operación segura con <a href="https://flowpagos.com/"
+                                            class="ml-1 hover:underline text-gray-800" target="_blank"> Flow</a>
+                                    </p>
+            
+                                </form>
+                                }
+                            </div>
+      
+                            <div class="max-sm:hidden my-6">
+                                <ml-button [name]="isPaymentVerified() ? 'Suscríbete →' : 'Suscríbete'" (click)="nextStep()"
+                                    [isDisabled]="!isPaymentVerified() || isLoading()"></ml-button>
+                            </div>
+                            <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+
+                                <button (click)="nextStep()" type="button"  [disabled]="!isPaymentVerified() || isLoading()"
+                                class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                Suscríbete →
+                            </button>
+                            </div>
+                        </div>
+                        }
                     </div>
+            
                 </div>
+            
+            
             </div>
 
             <!-- Información de la suscripción -->

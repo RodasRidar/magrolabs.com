@@ -242,10 +242,6 @@
                                                             <path
                                                                 d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z" />
                                                         </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Prueba gratis de
-                                                            {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días
-                                                        </p>
                                                     </div>
                                                     <div class="flex flex-row items-center">
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="18px"
@@ -254,8 +250,7 @@
                                                                 d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
                                                         </svg>
                                                         <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Recibes una creatina gratis +
-                                                            S/{{ENV.creditoRegaloPorCompraMes}}
+                                                            Recibes S/{{ENV.creditoRegaloPorCompraMes}} de crédito
                                                         </p>
                                                     </div>
                                                 </div>
@@ -411,12 +406,7 @@
                         <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
                             <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
                             <p class="text-pretty text-sm">Después de realizar el pago de verificación,
-                                enviaremos tu creatina gratis de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala
-                                y
-                                disfruta la creatina tanto como quieras! Durante tu período de prueba de
-                                {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días. Después de estos
-                                {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, tu suscripción se convertirá
-                                automáticamente en una suscripción de pago y recibirás la mejor creatina mensualmente.</p>
+                                enviaremos tu creatina de inmediato, comenzará tu suscripción y recibirás la mejor creatina mensualmente.</p>
                         </div>
                 
                 
@@ -539,58 +529,6 @@
                         <!-- FAQs -->
                         <div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10">
                             <div class="space-y-4">
-                                <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
-                                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                                        <h2 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h2>
-                                        <span class="relative size-5 shrink-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </span>
-                                    </summary>
-                
-                                    <p class="mt-4 leading-relaxed text-gray-700">
-                                        Te regalamos la primera creatina.
-                                        ¿Por qué? Queremos mostrarte y hacerte sentir que estás tomando la mejor decisión. ¡Estamos tan
-                                        convencidos de nuestra creatina!
-                                    </p>
-                                </details>
-                
-                                <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
-                                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                                        <h2 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h2>
-                
-                                        <span class="relative size-5 shrink-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="absolute inset-0 opacity-100 group-open:opacity-0" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="absolute inset-0 opacity-0 group-open:opacity-100" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </span>
-                                    </summary>
-                
-                                    <p class="mt-4 leading-relaxed text-gray-700">
-                                        Después de registrarte, tu creatina gratis estará en tu casa en un plazo de 6-9 días hábiles.
-                                    </p>
-                                </details>
                 
                                 <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
                                     <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
@@ -614,13 +552,7 @@
                                     </summary>
                 
                                     <p class="mt-4 leading-relaxed text-gray-700">
-                                        Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
-                                        días para probarla,
-                                        este es tu período de prueba.
-                                        Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
-                                        Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un
-                                        período de cancelación mensual.
-                                        ¿Cancelas antes del día 20 del mes? Entonces habrá un pago y una entrega más.
+                                        Si cancelas antes del día 20 del mes, habrá un pago y una entrega más.
                                     </p>
                                 </details>
                             </div>

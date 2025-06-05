@@ -3,6 +3,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-signup',

@@ -17,8 +17,8 @@
             </div>
 
             <!-- Sin suscripción -->
-            <div *ngIf="!isLoading() && !subscription()" class="bg-white overflow-hidden shadow rounded-lg p-2 sm:p-6">
-                <div class="bg-white rounded-lg shadow-lg ">
+            <div *ngIf="!isLoading() && !subscription()" class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg p-2 sm:p-6">
+                <div class="bg-[#f6f6f6] rounded-lg shadow-lg ">
                     <div class="max-w-2xl mx-auto max-sm:px-2  max-sm:py-1 max-lg:px-6 max-lg:py-4 px-16 py-9">
                         <!-- Product details -->
                         <div class=" lg:self-end">
@@ -563,7 +563,7 @@
 
             <!-- Información de la suscripción -->
             <div *ngIf="!isLoading() && subscription()"
-                class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+                class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                 <!-- Cabecera con estado -->
                 <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
@@ -719,7 +719,7 @@
 
             <!-- Card de información de pago -->
             <div *ngIf="!isLoading() && subscription() && subscription()!.status !== statusEnum.CANCELLED && subscription()!.status !== statusEnum.EXPIRED"
-                class="mt-8 bg-white overflow-hidden shadow rounded-lg">
+                class="mt-8 bg-[#f6f6f6] overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-xl font-bold text-gray-900">Información de pago</h3>
                 </div>
@@ -746,7 +746,7 @@
                             }
 
                             <button (click)="openCardRegistration.set(true)" type="button"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-[#f6f6f6] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -823,7 +823,7 @@
                                                 Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
+                                    <tbody class="bg-[#f6f6f6] divide-y divide-gray-200">
                                         <tr *ngFor="let charge of charges()">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
                                                 formatDate(charge.requestDate) }}</td>
@@ -861,8 +861,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeCancellationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -932,7 +932,7 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
                     <button (click)="closeCancellationModal()" type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 
-                                   bg-white text-base font-medium text-gray-700 hover:bg-gray-50 
+                                   bg-[#f6f6f6] text-base font-medium text-gray-700 hover:bg-gray-50 
                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 
                                    sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Cerrar
@@ -959,8 +959,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closePauseModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1046,8 +1046,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeReactivationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1092,12 +1092,12 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <!-- Botón para cerrar el modal -->
                     <div class="absolute top-0 right-0 pt-3 pr-3">
                         <button type="button" (click)="closeFinalCancelModal()"
-                            class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
+                            class="bg-[#f6f6f6] rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
                             <span class="sr-only">Cerrar</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -1157,8 +1157,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeDiscountModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1230,8 +1230,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-white px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeFinalConfirmationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1332,8 +1332,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full max-w-md mx-auto">
-                <div class="bg-white px-6 pt-6 pb-4 relative">
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full max-w-md mx-auto">
+                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 relative">
                     <!-- Contenido del modal -->
                     <div class="text-center">
                         <h3 class="text-2xl font-bold text-gray-900 mb-8">Membresía cancelada</h3>
@@ -1384,7 +1384,7 @@
 
                 <div class="bg-gray-50 px-6 py-4 flex justify-center">
                     <button (click)="closeSuccessCancellationModal()" type="button" class="w-full max-w-xs inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-6 py-3 
-                                   bg-white text-base font-medium text-gray-700 hover:bg-gray-50 
+                                   bg-[#f6f6f6] text-base font-medium text-gray-700 hover:bg-gray-50 
                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 
                                    sm:text-sm">
                         Cerrar ›

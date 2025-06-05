@@ -25,6 +25,7 @@ import { UserService } from '../../../../shared/services/user.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
 import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map, finalize } from 'rxjs';
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
+import { CookieService } from 'ngx-cookie-service';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -56,6 +57,7 @@ export class CreateAccountComponent implements OnDestroy {
   private _userService = inject(UserService)
   private platformId = inject(PLATFORM_ID);
   private nextUrl = '';
+  private _cookieService = inject(CookieService);
 
   stepEnum = StepEnum;
   ENV = environment
@@ -449,6 +451,7 @@ export class CreateAccountComponent implements OnDestroy {
       documentNumber: userData.nroDocument,
       documentType: userData.typeDocument,
       phone: userData.cellphone,
+      referralCodeBy: this._cookieService.get('codigo'),
     };
 
     if (this.form.get('password')?.value && this.form.get('password')!.value.length > 0) {

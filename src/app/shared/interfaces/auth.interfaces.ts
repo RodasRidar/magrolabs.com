@@ -15,7 +15,7 @@ export interface RegisterUserRequest {
   documentType?: TypeDocument;
   flowCustomerId?: string;
   isSignUpAcepted: boolean;
-  referralCode?: string;
+  referralCodeBy?: string;
 }
 
 export interface LoginUserRequest {
@@ -52,6 +52,7 @@ export interface UserResponse {
   documentType?: TypeDocument;
   flowCustomerId?: string;
   isSignUpAcepted: boolean;
+  referralCode?: string;
 }
 
 export interface AuthResponse {

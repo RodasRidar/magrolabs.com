@@ -28,6 +28,7 @@ export class CreditoComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
 
+  ENV = environment;
   // Crédito disponible
   totalCredits = '0';
   isLoadingCredits = true;
@@ -38,10 +39,8 @@ export class CreditoComponent implements OnInit {
   isLoadingTransactions = true;
 
   // Invitaciones
-  invitationLink = '';
-  invitationCode = '';
   invitationCredits = 0;
-  isLoadingInvitations = true;
+  isLoadingInvitations = false;
   maxInvitationCredits = 20;
 
   // Ambiente
@@ -51,16 +50,22 @@ export class CreditoComponent implements OnInit {
   hasInvitationError = false;
   invitationSuccess = false;
   copiedToClipboard = false;
+  urlShared = '';
 
   ngOnInit(): void {
     this.loadUserCredits();
     this.loadTransactions();
-    this.generateInvitationCode();
 
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();
     });
+
+      const nombre = this.authService.getCurrentUser()?.first_name || 'Tu amigo';
+      const codigo = this.authService.getCurrentUser()?.referralCode || '';
+      this.urlShared = 'https://magrolabs.com/referido-por-amigo?codigo=' + codigo + '&nombre=' + nombre;
+      this.urlShared = this.urlShared.replace(/ /g, '%20');
+
   }
 
   private loadUserCredits(): void {
@@ -113,6 +118,14 @@ export class CreditoComponent implements OnInit {
   }
 
   private processTransactionHistory(): void {
+    this.transactions.map(transaction => {
+      const description = transaction.description || this.getDefaultDescription(transaction);
+      
+      if (description.toLowerCase().includes('amigo')) {
+        this.invitationCredits += parseFloat(transaction.amount);
+      }
+    });
+
     this.transactionHistory = this.transactions.map(transaction => {
       return {
         date: new Date(transaction.created_at),
@@ -134,25 +147,9 @@ export class CreditoComponent implements OnInit {
     }
   }
 
-  private generateInvitationCode(): void {
-    this.isLoadingInvitations = true;
-    const user = this.authService.getCurrentUser();
-    
-    if (user) {
-      // En un sistema real, aquí obtendríamos la información desde el backend
-      // Por ahora generamos un código simple basado en el ID de usuario
-      this.invitationCode = `INVITE${user.id?.substring(0, 8).toUpperCase() || 'CODE'}`;
-      this.invitationLink = `${window.location.origin}/registro?ref=${this.invitationCode}`;
-      
-      // Simulamos obtener los créditos ganados (en producción, vendría del backend)
-      this.invitationCredits = 0; // Asumimos que no ha ganado créditos por invitaciones aún
-    }
-    
-    this.isLoadingInvitations = false;
-  }
 
   copyInvitationLink(): void {
-    navigator.clipboard.writeText(this.invitationLink).then(() => {
+    navigator.clipboard.writeText(this.urlShared).then(() => {
       this.copiedToClipboard = true;
       setTimeout(() => {
         this.copiedToClipboard = false;

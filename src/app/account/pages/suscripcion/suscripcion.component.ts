@@ -69,7 +69,7 @@ export class SuscripcionComponent implements OnInit {
   showChargesHistory = signal<boolean>(false);
   chargeStatusEnum = FlowChargeStatus;
   isCardAdded = false;
-  labelCardRegisted = '•••• •••• •••• ';
+  labelCardRegisted = '**** **** **** ';
   
   // Variables para el modal de confirmación
   showReactivationModal = signal<boolean>(false);
@@ -113,9 +113,11 @@ export class SuscripcionComponent implements OnInit {
           this.flowToken = (response as RegisterCardResponse).token;
           this.showPaymentVerification.set(true);
           //despues de 2 segundos redirigir a suscription [fragment]="'reviews'"
-          setTimeout(() => {
-            this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
-          }, 2000);
+          if(!this.isPaymentVerified()){
+            setTimeout(() => {
+              this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
+            }, 2000);
+          }
         });
       }
       
@@ -125,6 +127,11 @@ export class SuscripcionComponent implements OnInit {
         this.userName.set(nombre);
       }
     });
+
+    this.isPaymentVerified.set(localStorage.getItem('isPaymentVerified') === 'true');
+    if (this.isPaymentVerified()) {
+      this.cardAddedSuccessfully(true);
+    }
   }
 
   ngOnDestroy(): void {
@@ -180,6 +187,7 @@ export class SuscripcionComponent implements OnInit {
       }, 2000);
       this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '')
       this.cardType.set(localStorage.getItem('creditCardType') || '')
+      localStorage.setItem('isPaymentVerified', 'true');
 
       const card = this.cardLastFour() + ' (' + this.cardType() + ')';
       this.labelCardRegisted += card;
@@ -893,12 +901,28 @@ export class SuscripcionComponent implements OnInit {
    * Procesa la creación de una nueva suscripción
    */
   private processNewSubscription(flowCreateSubscriptionRequest: FlowCreateSubscriptionRequest): void {
-    const orderRequest = this.createOrderRequest();
+    const user = this.authService.getCurrentUser();
     
-    this.orderService.createOrder(orderRequest).pipe(
+    if (!user?.id) {
+      this._toastService.error('Error', 'No se encontró información del usuario');
+      return;
+    }
+
+    // Obtener dirección predeterminada del usuario
+    this.userService.getUserById(user.id).pipe(
+      catchError(error => {
+        console.error('Error obteniendo dirección predeterminada:', error);
+        this._toastService.error('Error', 'No se encontró una dirección predeterminada. Por favor, configura una dirección en tu perfil.');
+        return EMPTY;
+      }),
+      switchMap(userResponse => {
+        console.log('Default address obtained:', userResponse.address_id);
+        const orderRequest = this.createOrderRequest(userResponse.address_id ?? '');
+        return this.orderService.createOrder(orderRequest);
+      }),
       switchMap(response => {
         console.log('Order created:', response.data);
-        localStorage.setItem('OrderId', response.data.order.id)
+        localStorage.setItem('OrderId', response.data.order.id);
         return this.flowService.createSubscription(flowCreateSubscriptionRequest);
       }),
       switchMap(flowResponse => {
@@ -929,6 +953,8 @@ export class SuscripcionComponent implements OnInit {
       }),
       catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
+        localStorage.setItem('isPaymentVerified', '');
+        this.userCredits.set(environment.creditoRegaloPorCompraMes.toString());
         this.isLoading.set(false);
       })
     ).subscribe({
@@ -943,10 +969,11 @@ export class SuscripcionComponent implements OnInit {
 
   /**
    * Crea la solicitud de orden
+   * @param addressId ID de la dirección de envío
    */
-  private createOrderRequest(): CreateOrderRequest  {
+  private createOrderRequest(addressId: string): CreateOrderRequest  {
     return {
-      shipping_address: 'SAME_AS_CUSTOMER',
+      shipping_address: addressId,
       payment_method: PaymentMethod.CREDIT_CARD,
       isLoyaltyWebShow: false,
       orderItems: [

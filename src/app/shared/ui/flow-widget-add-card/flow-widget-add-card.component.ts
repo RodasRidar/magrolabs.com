@@ -76,9 +76,9 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
                 usrData.last4CardDigits = customer.last4CardDigits;
                 usrData.creditCardType = customer.creditCardType;
                 this._summaryService.setUserData(usrData);
-                localStorage.setItem('last4CardDigits', customer.last4CardDigits || '1234' )
-                localStorage.setItem('creditCardType', customer.creditCardType || 'UKNOW' )
               }
+              localStorage.setItem('last4CardDigits', customer.last4CardDigits || '1234' )
+              localStorage.setItem('creditCardType', customer.creditCardType || 'UKNOW' )
               this.cardAddedSuccessfully.emit(true);
             }
             else {

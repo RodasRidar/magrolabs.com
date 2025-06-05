@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubscriptionService } from '../../../shared/services/subscription.service';
-import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
+import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { switchMap, catchError, of, takeUntil, map, finalize, EMPTY, tap, Observable } from 'rxjs';
@@ -18,7 +18,8 @@ import { UserService } from '../../../shared/services/user.service';
 import { CreateCustomerRequest } from '../../../shared/models/flow.model';
 import { OrderService } from '../../../shared/services/order.service';
 import { SubscriptionOrderService } from '../../../shared/services/subscription-order.service';
-import { OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
+import { CreateOrderRequest, OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
+import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subscription-order.interface';
 
 @Component({
   selector: 'app-suscripcion',
@@ -865,7 +866,11 @@ export class SuscripcionComponent implements OnInit {
    */
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
-    const subscriptionPlan = this.subscriptionPlan();
+    const subscriptionPlan : FlowCreateSubscriptionRequest = {
+        planId: this.ENV.flowCreatina250Gr2025PlanId,
+        customerId: user?.flowCustomerId ?? '',
+
+    }
     
     if (!user?.flowCustomerId || !subscriptionPlan) {
       this._toastService.error('Error', 'Información incompleta para crear la suscripción');
@@ -873,28 +878,30 @@ export class SuscripcionComponent implements OnInit {
     }
 
     this.isLoading.set(true);
-    this.processNewSubscription(user.flowCustomerId, subscriptionPlan);
+    this.processNewSubscription(subscriptionPlan);
   }
 
   /**
    * Procesa la creación de una nueva suscripción
    */
-  private processNewSubscription(flowCustomerId: string, plan: SubscriptionPlan): void {
+  private processNewSubscription(flowCreateSubscriptionRequest: FlowCreateSubscriptionRequest): void {
     const orderRequest = this.createOrderRequest();
     
     this.orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
-        console.log('Order created:', response);
-        const subscription = this.createFlowSubscriptionRequest(flowCustomerId, plan);
-        return this.flowService.createSubscription(subscription);
+        console.log('Order created:', response.data);
+        localStorage.setItem('OrderId', response.data.order.id)
+        return this.flowService.createSubscription(flowCreateSubscriptionRequest);
       }),
       switchMap(flowResponse => {
         console.log('Flow Subscription created:', flowResponse);
-        return this.createBackendSubscription(plan);
+        return this.createBackendSubscription();
       }),
       switchMap(subscriptionResponse => {
         console.log('Backend Subscription created:', subscriptionResponse);
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
+        const orderId = localStorage.getItem('OrderId') || ''
+        console.log('orderId', orderId)
+        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id, orderId);
         return this.subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
       }),
       switchMap(subscriptionOrderResponse => {
@@ -929,64 +936,48 @@ export class SuscripcionComponent implements OnInit {
   /**
    * Crea la solicitud de orden
    */
-  private createOrderRequest(): any {
-    const user = this.authService.getCurrentUser();
-    const plan = this.subscriptionPlan();
-    
+  private createOrderRequest(): CreateOrderRequest  {
     return {
-      user_id: user?.id,
-      total_amount: plan?.price || 0,
-      currency: 'CLP',
+      shipping_address: 'SAME_AS_CUSTOMER',
       payment_method: PaymentMethod.CREDIT_CARD,
-      status: OrderStatus.PENDING_PAYMENT,
-      items: [{
-        name: plan?.name,
-        price: plan?.price || 0,
-        quantity: 1
-      }]
+      isLoyaltyWebShow: false,
+      orderItems: [
+        {
+          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          quantity: 1
+        }
+      ],
+      discount: 20
     };
-  }
 
-  /**
-   * Crea la solicitud de suscripción para Flow
-   */
-  private createFlowSubscriptionRequest(customerId: string, plan: SubscriptionPlan): FlowCreateSubscriptionRequest {
-    return {
-      customerId: customerId,
-      planId: this.ENV.flowCreatina250Gr2025PlanId,
-      trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
-    };
   }
 
   /**
    * Crea la suscripción en el backend
    */
-  private createBackendSubscription(plan: SubscriptionPlan): Observable<Subscription> {
-    const user = this.authService.getCurrentUser();
-    
-    return this.subscriptionService.createSubscription({
-      user_id: user?.id || '',
-      subscription_plan_id: plan.id,
-      status: SubscriptionStatusEnum.ACTIVE,
+  private createBackendSubscription(): Observable<Subscription> {
+    const subscriptionRequestAPI: CreateSubscriptionRequest = {
+      subscription_plan_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date().toISOString(),
-      credits: environment.creditoRegaloPorCompraMes
-    });
+      status: SubscriptionStatusEnum.ACTIVE,
+    };
+    
+    return this.subscriptionService.createSubscription(subscriptionRequestAPI)
   }
 
   /**
    * Crea la solicitud de orden de suscripción
    */
-  private createSubscriptionOrderRequest(subscriptionId: string): any {
-    const user = this.authService.getCurrentUser();
-    const plan = this.subscriptionPlan();
-    
+  private createSubscriptionOrderRequest(subscriptionId: string, orderId: string): CreateSubscriptionOrderRequest {
     return {
       subscription_id: subscriptionId,
-      user_id: user?.id,
-      amount: plan?.price || 0,
-      currency: 'CLP',
-      payment_method: PaymentMethod.CREDIT_CARD,
-      status: 'completed'
+      order_id: orderId,
+      shipment_date: new Date(
+        Date.now() + 
+        (this.ENV.plazoDeEntregaDiasHabiles.max) * 
+        24 * 60 * 60 * 1000 - 
+        5 * 60 * 60 * 1000
+      ).toISOString()
     };
   }
 
@@ -999,12 +990,6 @@ export class SuscripcionComponent implements OnInit {
     return EMPTY;
   }
 
-  /**
-   * Selecciona un plan de suscripción
-   */
-  selectSubscription(plan: SubscriptionPlan): void {
-    this.subscriptionPlan.set(plan);
-  }
 
   /**
    * Maneja errores del servicio de Flow

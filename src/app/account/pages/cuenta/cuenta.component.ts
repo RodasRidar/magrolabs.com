@@ -218,6 +218,12 @@ export class CuentaComponent implements OnInit {
         return 'Entregado';
       case OrderStatus.CANCELLED:
         return 'Cancelado';
+      case OrderStatus.PAID:
+        return 'Pagado';
+      case OrderStatus.REFUNDED:
+        return 'Reembolsado';
+      case OrderStatus.REJECTED:
+        return 'Rechazado';
       default:
         return 'Estado desconocido';
     }

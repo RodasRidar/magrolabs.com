@@ -11,7 +11,7 @@ import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-c
 import { ToastService } from '../../../shared/services/toast.service';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 import { Subject } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/env';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { UserService } from '../../../shared/services/user.service';
@@ -43,6 +43,7 @@ export class SuscripcionComponent implements OnInit {
   private userService = inject(UserService);
   private orderService = inject(OrderService);
   private subscriptionOrderService = inject(SubscriptionOrderService);
+  private router = inject(Router);
 
   ENV = environment;
   subscription = signal<Subscription | null>(null);
@@ -68,7 +69,7 @@ export class SuscripcionComponent implements OnInit {
   showChargesHistory = signal<boolean>(false);
   chargeStatusEnum = FlowChargeStatus;
   isCardAdded = false;
-  labelCardRegisted = '**** **** **** ';
+  labelCardRegisted = '•••• •••• •••• ';
   
   // Variables para el modal de confirmación
   showReactivationModal = signal<boolean>(false);
@@ -111,6 +112,10 @@ export class SuscripcionComponent implements OnInit {
           console.log(response);
           this.flowToken = (response as RegisterCardResponse).token;
           this.showPaymentVerification.set(true);
+          //despues de 2 segundos redirigir a suscription [fragment]="'reviews'"
+          setTimeout(() => {
+            this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
+          }, 2000);
         });
       }
       
@@ -173,6 +178,9 @@ export class SuscripcionComponent implements OnInit {
       setTimeout(() => {
         this.isCardAdded = true;
       }, 2000);
+      this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '')
+      this.cardType.set(localStorage.getItem('creditCardType') || '')
+
       const card = this.cardLastFour() + ' (' + this.cardType() + ')';
       this.labelCardRegisted += card;
       this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);

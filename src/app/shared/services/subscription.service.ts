@@ -135,8 +135,8 @@ export class SubscriptionService {
    * Pausar una suscripción
    * @param id ID de la suscripción
    */
-  pauseSubscription(id: string): Observable<SubscriptionResponse> {
-    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/pause`, {})
+  pauseSubscription(id: string, reason: string, paused_until: Date, next_billing_date: Date): Observable<SubscriptionResponse> {
+    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/pause`, { reason, paused_until, next_billing_date })
       .pipe(
         catchError(error => throwError(() => error))
       );
@@ -210,3 +210,7 @@ export class SubscriptionService {
       );
   }
 } 
+export enum AtPeriodEnd {
+  IMMEDIATE = '0',
+  END_OF_PERIOD = '1'
+}

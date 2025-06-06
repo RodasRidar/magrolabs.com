@@ -35,7 +35,7 @@ const flowUrlConfirmation = 'http://localhost:3000/api/v1/orders/pagos/flow/conf
 const creatina2025Descuento = '20%'
 const plazoDeEntregaMensualesCreatina = { min: 17, max: 23};
 const garantíaDeSatisfacción = 90;
-const diaDeCobroSubscripcion = 27;
+const diasAntesDeSiguienteCobroSubscripcion = 5;
 const fechaUltimaActualizacionCondicionesUso = '01/12/2024';
 const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
 const fechaUltimaActualizacionPrivacidad = '03/12/2024';
@@ -81,7 +81,7 @@ export const environment = {
     creatina2025Descuento,
     plazoDeEntregaMensualesCreatina,
     garantíaDeSatisfacción,
-    diaDeCobroSubscripcion,
+    diasAntesDeSiguienteCobroSubscripcion,
     fechaUltimaActualizacionCondicionesUso,
     fechaUltimaActualizacionTerminosCondiciones,
     fechaUltimaActualizacionPrivacidad,

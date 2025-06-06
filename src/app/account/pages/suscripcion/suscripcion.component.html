@@ -11,11 +11,6 @@
                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
             </div>
 
-            <!-- Mensaje de error -->
-            <div *ngIf="error()" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-                <span class="block sm:inline">{{ error() }}</span>
-            </div>
-
             <!-- Sin suscripción -->
             <div *ngIf="!isLoading() && !subscription()" class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg p-2 sm:p-6">
                 <div class="bg-[#f6f6f6] rounded-lg shadow-lg ">
@@ -931,20 +926,8 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
-                    <button (click)="closeCancellationModal()" type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 
-                                   bg-[#f6f6f6] text-base font-medium text-gray-700 hover:bg-gray-50 
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 
-                                   sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cerrar
-                    </button>
-                    <button (click)="confirmCancellation()" type="button" [disabled]="!cancellationReason()"
-                        [ngClass]="{'opacity-50 cursor-not-allowed': !cancellationReason(), 'hover:bg-amber-600': cancellationReason()}"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
-                                   bg-amber-500 text-base font-medium text-white
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 
-                                   sm:ml-3 sm:w-auto sm:text-sm">
-                        Siguiente
-                    </button>
+                    <ml-button name="Cerrar" (click)="closeCancellationModal()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Siguiente" (click)="confirmCancellation()" [isDisabled]="!cancellationReason()"></ml-button>
                 </div>
             </div>
         </div>
@@ -988,7 +971,7 @@
 
                                     <!-- Barra de progreso -->
                                     <div class="w-full flex items-center mb-4">
-                                        <input type="range" min="1" max="6" step="1" [value]="pauseDurationMonths()"
+                                        <input type="range" min="1" max="3" step="1" [value]="pauseDurationMonths()"
                                             (input)="updatePauseDuration($event)"
                                             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#d7816a]">
                                     </div>
@@ -996,17 +979,17 @@
                                     <!-- Indicadores min/max -->
                                     <div class="flex justify-between text-xs text-gray-500">
                                         <span>1 mes</span>
-                                        <span>6 meses</span>
+                                        <span>3 meses</span>
                                     </div>
                                 </div>
 
                                 <div class="bg-gray-50 p-4 rounded-md mb-6">
                                     <h4 class="font-semibold text-gray-800 mb-2">Período de pausa:</h4>
-                                    <p class="font-medium text-gray-700">{{ pauseStartDate() }} al {{ pauseEndDate() }}
+                                    <p class="font-medium text-gray-700">{{ pauseStartDate() }} al {{ pauseEndDateString() }}
                                     </p>
 
                                     <h4 class="font-semibold text-gray-800 mt-4 mb-2">Próximo pago:</h4>
-                                    <p class="font-medium text-gray-700">{{ nextPaymentDate() }}</p>
+                                    <p class="font-medium text-gray-700">{{ nextPaymentDateString() }}</p>
                                 </div>
 
                                 <ul class="space-y-3 text-sm text-gray-700 list-disc pl-5">
@@ -1019,19 +1002,8 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
-                    <button (click)="proceedWithCancellation()" type="button" class="w-full mb-3 sm:mb-0 inline-flex justify-center rounded-md shadow-sm px-4 py-2 
-                                    text-base font-medium text-gray-800 hover:bg-gray-300
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
-                                   border border-gray-900
-                                   sm:ml-3 sm:w-auto sm:text-sm">
-                        Continuar con la cancelación
-                    </button>
-                    <button (click)="pauseSubscription()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
-                                   bg-amber-500 text-base font-medium text-white hover:bg-amber-600 
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 
-                                   sm:ml-3 sm:w-auto sm:text-sm">
-                        Pausar
-                    </button>
+                    <ml-button name="Continuar con la cancelación" (click)="proceedWithCancellation()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Pausar" (click)="pauseSubscription()" [isProcessing]="isLoading()"></ml-button>
                 </div>
             </div>
         </div>
@@ -1113,7 +1085,7 @@
                             acumulado...</h3>
 
                         <!-- Tarjeta de crédito de compras -->
-                        <div class="bg-blue-600 text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6">
+                        <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6">
                             <p class="text-lg font-semibold mb-2">Tu crédito de compras</p>
                             <p class="text-6xl font-bold mb-6">{{userCredits() | currency:'S/'}}</p>
 
@@ -1130,19 +1102,8 @@
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <button (click)="keepCredits()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 
-                                  bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
-                                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
-                                  sm:w-auto sm:text-sm">
-                        Mantener mi crédito
-                    </button>
-                    <button (click)="finalConfirmCancellation()" type="button" class="w-full mt-3 sm:mt-0 inline-flex justify-center rounded-md shadow-sm px-4 py-2 
-                                   text-base font-medium text-gray-800 hover:bg-gray-300
-                                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
-                                  border border-gray-900
-                                   sm:w-auto sm:text-sm">
-                        Continuar con la cancelación
-                    </button>
+                    <ml-button name="Mantener mi crédito" (click)="keepCredits()" ></ml-button>
+                    <ml-button name="Continuar con la cancelación" (click)="finalConfirmCancellation()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1176,7 +1137,7 @@
 
                         <!-- Tarjeta de descuento -->
                         <div
-                            class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white rounded-lg px-8 py-12 mx-auto max-w-md my-8 relative overflow-hidden">
+                            class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-8 py-12 mx-auto max-w-md my-8 relative overflow-hidden">
                             <!-- Efectos decorativos -->
                             <div class="absolute top-0 left-0 w-full h-full opacity-20">
                                 <div class="absolute top-2 left-2 text-xs font-medium opacity-60">DISCOUNT • OFERTA •
@@ -1191,7 +1152,7 @@
                         </div>
 
                         <div class="mb-6">
-                            <p class="text-lg font-semibold text-gray-900 mb-2">No pagas
+                            <p class="text-lg font-semibold text-gray-900 mb-2">No pagaras
                                 {{ENV.precioCreatinaSubscription | currency:'S/'}} sino {{ENV.precioCreatinaSubscription
                                 * 0.5 | currency:'S/'}} .</p>
                             <p class="text-gray-700 leading-relaxed">
@@ -1203,19 +1164,8 @@
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <button (click)="acceptDiscount()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-6 py-3 
-                                   bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
-                                   sm:w-auto sm:text-sm">
-                        ¡Quiero el descuento!
-                    </button>
-                    <button (click)="proceedWithFinalCancellation()" type="button" class="w-full mt-3 sm:mt-0 inline-flex justify-center rounded-md shadow-sm px-6 py-3 
-                                   text-base font-medium text-gray-800 hover:bg-gray-300
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
-                                   border border-gray-900
-                                   sm:w-auto sm:text-sm">
-                        Continuar con la cancelación
-                    </button>
+                    <ml-button [name]="isLoading() ? 'Aplicando descuento...' : '¡Quiero el descuento!'" (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
+                    <ml-button name="Continuar con la cancelación" (click)="proceedWithFinalCancellation()"></ml-button>
                 </div>
             </div>
         </div>
@@ -1249,7 +1199,7 @@
 
                         <!-- Ícono de advertencia -->
                         <div
-                            class="bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg px-8 py-8 mx-auto max-w-xs my-6 flex items-center justify-center">
+                            class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-lg px-8 py-8 mx-auto max-w-[28rem] my-6 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -1275,6 +1225,7 @@
                             </ul>
                         </div>
 
+                        @if(lastPaymentDate() != '' && lastDeliveryDate() != '') {
                         <div class="text-left mb-6 space-y-4">
                             <p class="text-gray-700">Tu suscripción se volverá inactiva después del último pago.</p>
 
@@ -1283,7 +1234,7 @@
                                 <p class="text-gray-900 font-semibold">Última entrega: {{ lastDeliveryDate() }}</p>
                             </div>
                         </div>
-
+                        }
                         <div class="text-left mb-6">
                             <p class="text-gray-700 text-sm leading-relaxed">
                                 ¿Quieres recibir mensualmente una nueva creatina en tu buzón de nuevo?
@@ -1294,30 +1245,8 @@
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 sm:px-8 sm:py-6 flex flex-col space-y-3">
-                    <button (click)="finallyCancel()" type="button" [disabled]="isLoading()" class="w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-6 py-3 
-                                   bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
-                                   disabled:opacity-50 disabled:cursor-not-allowed
-                                   sm:text-sm">
-                        <span *ngIf="isLoading()" class="mr-2">
-                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                        </span>
-                        {{ isLoading() ? 'Cancelando...' : 'Quiero cancelar' }}
-                    </button>
-                    <button (click)="continueAsMember()" type="button" [disabled]="isLoading()" class="w-full inline-flex justify-center rounded-md shadow-sm px-6 py-3 
-                                   text-base font-medium text-gray-800 hover:bg-gray-100
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
-                                   border border-gray-900 disabled:opacity-50 disabled:cursor-not-allowed
-                                   sm:text-sm">
-                        Continúo como miembro
-                    </button>
+                    <ml-button [name]="isLoading() ? 'Cancelando...' : 'Quiero cancelar'" (click)="finallyCancel()" [isDisabled]="isLoading()" [isProcessing]="isLoading()"></ml-button>
+                    <ml-button name="Continúo como miembro" (click)="continueAsMember()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1383,12 +1312,7 @@
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 flex justify-center">
-                    <button (click)="closeSuccessCancellationModal()" type="button" class="w-full max-w-xs inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-6 py-3 
-                                   bg-[#f6f6f6] text-base font-medium text-gray-700 hover:bg-gray-50 
-                                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 
-                                   sm:text-sm">
-                        Cerrar ›
-                    </button>
+                    <ml-button name="Cerrar" (click)="closeSuccessCancellationModal()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>

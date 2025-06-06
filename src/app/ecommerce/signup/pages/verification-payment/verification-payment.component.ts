@@ -20,7 +20,7 @@ import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest,
 import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of, Subscription, map } from 'rxjs';
 import { OrderService } from '../../../../shared/services/order.service';
 import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
-import { SubscriptionService } from '../../../../shared/services/subscription.service';
+import { AtPeriodEnd, SubscriptionService } from '../../../../shared/services/subscription.service';
 import { CreateSubscriptionRequest, SubscriptionResponse, SubscriptionStatusEnum } from '../../../../shared/interfaces/subscription.interface';
 import { SubscriptionOrderService } from '../../../../shared/services/subscription-order.service';
 import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/subscription-order.interface';
@@ -201,7 +201,7 @@ export class VerificationPaymentComponent {
       this.processNewOrderPayment(paymentRequest);
     }
   }
-
+//TODO: Cancelar la suscripción en flow tambien?
   processCancelAndCreateNewOrder(orderId: string, paymentRequest: FlowPaymentRequest) {
       const orderRequest = this.createOrderRequest(false);
       const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';

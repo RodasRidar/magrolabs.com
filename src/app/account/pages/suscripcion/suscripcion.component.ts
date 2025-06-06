@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubscriptionService } from '../../../shared/services/subscription.service';
+import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
@@ -50,11 +50,11 @@ export class SuscripcionComponent implements OnInit {
   subscriptionPlan = signal<SubscriptionPlan | null>(null);
   isLoading = signal<boolean>(true);
   openCardRegistration = signal<boolean>(false);
-  error = signal<string | null>(null);
   statusEnum = SubscriptionStatusEnum;
   flowToken = '';
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   nextBillingDate = signal<string>('');
+  flowSubscriptionId = signal<string>('');
   // Información de pago
   cardType = signal<string>('');
   cardLastFour = signal<string>('');
@@ -84,9 +84,10 @@ export class SuscripcionComponent implements OnInit {
   showPauseModal = signal<boolean>(false);
   pauseDurationMonths = signal<number>(1);
   pauseStartDate = signal<string>('');
-  pauseEndDate = signal<string>('');
-  nextPaymentDate = signal<string>('');
-  
+  pauseEndDateString = signal<string>('');
+  nextPaymentDateString = signal<string>('');
+  pauseEndDate = signal<Date>(new Date());
+  nextPaymentDate = signal<Date>(new Date());
   // Variables para modal de confirmación final de cancelación
   showFinalCancelModal = signal<boolean>(false);
   
@@ -201,7 +202,6 @@ export class SuscripcionComponent implements OnInit {
 
   loadSubscription(): void {
     this.isLoading.set(true);
-    this.error.set(null);
 
       this.subscriptionService.getMySubscriptions(1, 1)
       .pipe(
@@ -238,10 +238,11 @@ export class SuscripcionComponent implements OnInit {
       .subscribe({
         next: (combinedResponse) => {
           this.nextBillingDate.set(combinedResponse.flowResponse?.data[0].next_invoice_date || '');
+          this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
         },
         error: (error) => {
           console.error('Error al cargar datos de suscripción:', error);
-          this.error.set('Error al cargar la suscripción');
+          this._toastService.error('Error', 'Error al cargar la suscripción');
           this.subscription.set(null);
         }
       });
@@ -256,7 +257,7 @@ export class SuscripcionComponent implements OnInit {
           this.isLoading.set(false);
         },
         error: (err) => {
-          this.error.set('Error al cargar el plan de suscripción');
+          this._toastService.error('Error', 'Error al cargar el plan de suscripción');
           this.isLoading.set(false);
           console.error('Error cargando plan de suscripción:', err);
         }
@@ -391,21 +392,60 @@ export class SuscripcionComponent implements OnInit {
   }
   
   calculatePauseDates(): void {
-    // Obtener la fecha actual
     const now = new Date();
+    const graceperiodDays = environment.diasAntesDeSiguienteCobroSubscripcion; // 5 días
     
-    // Establecer la fecha de inicio de pausa al primer día del mes siguiente
-    const startDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    if (!this.subscription()) return;
     
-    // Calcular la fecha de fin de pausa (startDate + meses seleccionados)
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + this.pauseDurationMonths() - 1);
-    endDate.setDate(new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate()); // Último día del mes
+    // Obtener el día de facturación personal del usuario desde su fecha de inicio
+    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const userBillingDay = subscriptionStartDate.getDate();
     
-    // Calcular la fecha del próximo pago (día 27 del mes en que finaliza la pausa)
-    const nextPayment = new Date(endDate);
-    nextPayment.setMonth(nextPayment.getMonth() + 1);
-    nextPayment.setDate(27);
+    // Calcular la próxima fecha de facturación del usuario
+    let nextBillingMonth = now.getMonth();
+    let nextBillingYear = now.getFullYear();
+    
+    // Si ya pasó el día de facturación de este mes, la próxima facturación es el próximo mes
+    if (now.getDate() > userBillingDay) {
+      nextBillingMonth++;
+      if (nextBillingMonth > 11) {
+        nextBillingMonth = 0;
+        nextBillingYear++;
+      }
+    }
+    
+    const nextBillingDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
+    
+    // Calcular la fecha límite para cancelar sin cargos (5 días antes de facturación)
+    const cancelDeadline = new Date(nextBillingDate);
+    cancelDeadline.setDate(cancelDeadline.getDate() - graceperiodDays);
+    
+    // Determinar si la pausa aplica inmediatamente o después del próximo cobro
+    let pauseStartDate: Date;
+    
+    if (now <= cancelDeadline) {
+      // Estamos dentro del período de gracia, la pausa inicia inmediatamente
+      // sin cobro ni entrega del próximo mes
+      pauseStartDate = new Date(nextBillingDate);
+    } else {
+      // Ya pasó el período de gracia, habrá un cobro y entrega más
+      // La pausa inicia después del siguiente período de facturación
+      pauseStartDate = new Date(nextBillingDate);
+      pauseStartDate.setMonth(pauseStartDate.getMonth() + 1);
+      if (pauseStartDate.getMonth() === 0 && nextBillingDate.getMonth() === 11) {
+        pauseStartDate.setFullYear(pauseStartDate.getFullYear() + 1);
+      }
+    }
+    
+    // Calcular la fecha de fin de pausa (mantiene el día de facturación personal)
+    const pauseEndDate = new Date(pauseStartDate);
+    pauseEndDate.setMonth(pauseEndDate.getMonth() + this.pauseDurationMonths());
+    pauseEndDate.setDate(pauseEndDate.getDate() - 1); // Termina el día anterior al reinicio
+    this.pauseEndDate.set(pauseEndDate);
+    this.pauseEndDate.set(pauseEndDate);
+    // La fecha del próximo pago mantiene el día personal de facturación
+    const nextPaymentDate = new Date(pauseStartDate);
+    nextPaymentDate.setMonth(nextPaymentDate.getMonth() + this.pauseDurationMonths());
     
     // Formatear las fechas
     const formatOptions: Intl.DateTimeFormatOptions = { 
@@ -414,9 +454,9 @@ export class SuscripcionComponent implements OnInit {
       year: 'numeric' 
     };
     
-    this.pauseStartDate.set(startDate.toLocaleDateString('es-ES', formatOptions));
-    this.pauseEndDate.set(endDate.toLocaleDateString('es-ES', formatOptions));
-    this.nextPaymentDate.set(nextPayment.toLocaleDateString('es-ES', formatOptions));
+    this.pauseStartDate.set(pauseStartDate.toLocaleDateString('es-ES', formatOptions));
+    this.pauseEndDateString.set(pauseEndDate.toLocaleDateString('es-ES', formatOptions));
+    this.nextPaymentDateString.set(nextPaymentDate.toLocaleDateString('es-ES', formatOptions));
   }
   
   updatePauseDuration(event: Event): void {
@@ -439,8 +479,54 @@ export class SuscripcionComponent implements OnInit {
       endDate: this.pauseEndDate()
     };
     
+    // Determinar si la pausa es inmediata o al final del período
+    const now = new Date();
+    const gracePeriodDays = environment.diasAntesDeSiguienteCobroSubscripcion;
+    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const userBillingDay = subscriptionStartDate.getDate();
+    
+    let nextBillingMonth = now.getMonth();
+    let nextBillingYear = now.getFullYear();
+    
+    if (now.getDate() > userBillingDay) {
+      nextBillingMonth++;
+      if (nextBillingMonth > 11) {
+        nextBillingMonth = 0;
+        nextBillingYear++;
+      }
+    }
+    
+    const nextBillingDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
+    const cancelDeadline = new Date(nextBillingDate);
+    cancelDeadline.setDate(cancelDeadline.getDate() - gracePeriodDays);
+    
+    // 0 = inmediato, 1 = al final del período
+    const atPeriodEnd = now <= cancelDeadline ? AtPeriodEnd.IMMEDIATE : AtPeriodEnd.END_OF_PERIOD;
+    
     // Llamar al servicio existente para pausar la suscripción
-    this.subscriptionService.pauseSubscription(this.subscription()!.id)
+    this.subscriptionService.pauseSubscription(
+      this.subscription()!.id, 
+      this.cancellationReason(),
+      this.pauseEndDate(),
+      this.nextPaymentDate()
+    )
+      .pipe(
+        switchMap((response) => {
+          // Si tenemos el Flow subscription ID, cancelar también en Flow
+          if (this.flowSubscriptionId()) {
+            return this.flowService.cancelSubscription(this.flowSubscriptionId(), atPeriodEnd)
+              .pipe(
+                map(() => response),
+                catchError((flowError) => {
+                  console.error('Error cancelando suscripción en Flow:', flowError);
+                  // Continuar con la respuesta original aunque falle en Flow
+                  return of(response);
+                })
+              );
+          }
+          return of(response);
+        })
+      )
       .subscribe({
         next: (response) => {
           response.data.subscription.credits = 10;
@@ -449,9 +535,10 @@ export class SuscripcionComponent implements OnInit {
           
           // Registrar la información de pausa para análisis
           console.log('Información de pausa:', pauseInfo);
+          this._toastService.success('Éxito', 'Suscripción pausada correctamente');
         },
         error: (err) => {
-          this.error.set('Error al pausar la suscripción');
+          this._toastService.error('Ups!', 'Ocurrio un error al pausar la suscripción');
           this.isLoading.set(false);
           console.error('Error pausando suscripción:', err);
         }
@@ -501,24 +588,52 @@ export class SuscripcionComponent implements OnInit {
   
   // Método para calcular las fechas de último pago y última entrega
   calculateCancellationDates(): void {
-    const currentDate = new Date();
+    const now = new Date();
+    const gracePeriodDays = environment.diasAntesDeSiguienteCobroSubscripcion; // 5 días
     
-    // Calcular último pago (ejemplo: próximo mes)
-    const lastPayment = new Date(currentDate);
-    lastPayment.setMonth(currentDate.getMonth() + 1);
-    lastPayment.setDate(26);
-    this.lastPaymentDate.set(this.formatDate(lastPayment.toISOString()));
+    if (!this.subscription()) return;
     
-    // Calcular última entrega (ejemplo: mes siguiente al último pago)
-    const lastDelivery = new Date(lastPayment);
-    lastDelivery.setMonth(lastPayment.getMonth() + 1);
-    lastDelivery.setDate(17);
-    const lastDeliveryEnd = new Date(lastDelivery);
-    lastDeliveryEnd.setDate(23);
+    // Obtener el día de facturación personal del usuario desde su fecha de inicio
+    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const userBillingDay = subscriptionStartDate.getDate();
     
-    this.lastDeliveryDate.set(
-      `${lastDelivery.getDate()}-${lastDeliveryEnd.getDate()} ${this.getMonthName(lastDelivery.getMonth())} ${lastDelivery.getFullYear()}`
-    );
+    // Calcular la próxima fecha de facturación del usuario
+    let nextBillingMonth = now.getMonth();
+    let nextBillingYear = now.getFullYear();
+    
+    // Si ya pasó el día de facturación de este mes, la próxima facturación es el próximo mes
+    if (now.getDate() > userBillingDay) {
+      nextBillingMonth++;
+      if (nextBillingMonth > 11) {
+        nextBillingMonth = 0;
+        nextBillingYear++;
+      }
+    }
+    
+    const nextBillingDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
+    
+    // Calcular la fecha límite para cancelar sin cargos (5 días antes de facturación)
+    const cancelDeadline = new Date(nextBillingDate);
+    cancelDeadline.setDate(cancelDeadline.getDate() - gracePeriodDays);
+    
+    if (now <= cancelDeadline) {
+      // Estamos dentro del período de gracia - NO habrá último pago ni entrega
+      this.lastPaymentDate.set('');
+      this.lastDeliveryDate.set('');
+    } else {
+      // Ya pasó el período de gracia - SÍ habrá último pago y entrega
+      
+      // Último pago: la próxima fecha de facturación personal
+      this.lastPaymentDate.set(this.formatDate(nextBillingDate.toISOString()));
+      
+      // Última entrega: entre el 17-23 del mes de facturación
+      const deliveryStartDate = new Date(nextBillingYear, nextBillingMonth, 17);
+      const deliveryEndDate = new Date(nextBillingYear, nextBillingMonth, 23);
+      
+      this.lastDeliveryDate.set(
+        `${deliveryStartDate.getDate()}-${deliveryEndDate.getDate()} ${this.getMonthName(deliveryStartDate.getMonth())} ${deliveryStartDate.getFullYear()}`
+      );
+    }
   }
   
   // Método auxiliar para obtener el nombre del mes
@@ -563,7 +678,7 @@ export class SuscripcionComponent implements OnInit {
           this.showSuccessCancellationModal.set(true);
         },
         error: (err) => {
-          this.error.set('Error al cancelar la suscripción');
+          this._toastService.error('Error', 'Error al cancelar la suscripción');
           this.isLoading.set(false);
           this.showFinalConfirmationModal.set(false);
           console.error('Error cancelando suscripción:', err);
@@ -646,7 +761,7 @@ export class SuscripcionComponent implements OnInit {
           );
         },
         error: (err) => {
-          this.error.set('Error al reactivar la suscripción');
+          this._toastService.error('Error', 'Error al reactivar la suscripción');
           this.isLoading.set(false);
           console.error('Error reactivando suscripción:', err);
         }
@@ -885,7 +1000,6 @@ export class SuscripcionComponent implements OnInit {
     const subscriptionPlan : FlowCreateSubscriptionRequest = {
         planId: this.ENV.flowCreatina250Gr2025PlanId,
         customerId: user?.flowCustomerId ?? '',
-
     }
     
     if (!user?.flowCustomerId || !subscriptionPlan) {

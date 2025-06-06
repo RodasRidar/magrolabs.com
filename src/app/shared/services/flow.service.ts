@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
 import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
+import { AtPeriodEnd } from './subscription.service';
 
 /**
  * Interfaz para la respuesta de las suscripciones de un cliente
@@ -238,6 +239,37 @@ export class FlowService {
         .set('apiKey', this.apiKey)
         .set('s', this.getFlowSignature(toSign));
       return this.http.get<FlowChargesResponse>(url, { params });
+    }
+  }
+
+  /**
+   * Cancela una suscripción en Flow
+   * @param subscriptionId ID de la suscripción a cancelar
+   * @param atPeriodEnd 0 para cancelación inmediata, 1 para cancelar al final del período vigente
+   * @returns Observable con la respuesta de cancelación
+   */
+  cancelSubscription(subscriptionId: string, atPeriodEnd: AtPeriodEnd): Observable<any> {
+    if (environment.production || !this.useProxy) {
+      const url = `${this.apiUrl}subscription/cancel.ts`;
+      const requestData = {
+        apiKey: this.apiKey,
+        subscriptionId,
+        at_period_end: atPeriodEnd,
+        s: this.getFlowSignature({ apiKey: this.apiKey, subscriptionId, at_period_end: atPeriodEnd })
+      };
+      return this.http.post<any>(url, requestData);
+    }
+    else {
+      const url = `${this.apiUrlLocal}/subscription/cancel`;
+      const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      const toSign = { apiKey: this.apiKey, subscriptionId, at_period_end: atPeriodEnd };
+      const body = new HttpParams()
+        .set('apiKey', this.apiKey)
+        .set('subscriptionId', subscriptionId)
+        .set('at_period_end', atPeriodEnd.toString())
+        .set('s', this.getFlowSignature(toSign));
+      
+      return this.http.post<any>(url, body.toString(), { headers });
     }
   }
 

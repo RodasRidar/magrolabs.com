@@ -105,6 +105,7 @@ export class FlowService {
   }
 
   createSubscription(subscriptionData: FlowCreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
+    console.log('createSubscription', subscriptionData);
     if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}subscription/create.ts`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);
@@ -112,25 +113,31 @@ export class FlowService {
     else {
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const url = `${this.apiUrlLocal}/subscription/create`;
-      const toSign = { apiKey: this.apiKey, planId: subscriptionData.planId, customerId: subscriptionData.customerId };
-      const body = new HttpParams()
+      let toSign: Record<string, string | number> = { apiKey: this.apiKey, planId: subscriptionData.planId, customerId: subscriptionData.customerId };
+      
+      if (subscriptionData.subscription_start) {
+        toSign['subscription_start'] = subscriptionData.subscription_start.toISOString().split('T')[0];
+      }
+
+      if (subscriptionData.trial_period_days) {
+        toSign['trial_period_days'] = subscriptionData.trial_period_days;
+      }
+
+      let body = new HttpParams()
         .set('apiKey', this.apiKey)
         .set('planId', subscriptionData.planId)
-        .set('customerId', subscriptionData.customerId)
-        .set('s', this.getFlowSignature(toSign));
+        .set('customerId', subscriptionData.customerId);
 
-      // if (subscriptionData.subscription_start) {
-      //   body.set('subscription_start', subscriptionData.subscription_start);
-      // }
-      // if (subscriptionData.couponId) {
-      //   body.set('couponId', subscriptionData.couponId.toString());
-      // }
-      if (subscriptionData.trial_period_days) {
-        body.set('trial_period_days', subscriptionData.trial_period_days.toString());
+      if (subscriptionData.subscription_start) {
+        body = body.set('subscription_start', subscriptionData.subscription_start.toISOString().split('T')[0]);
       }
-      // if (subscriptionData.periods_number) {
-      //   body.set('periods_number', subscriptionData.periods_number.toString());
-      // }
+      
+      if (subscriptionData.trial_period_days) {
+        body = body.set('trial_period_days', subscriptionData.trial_period_days.toString());
+      }
+      
+      // Agregar la firma al final
+      body = body.set('s', this.getFlowSignature(toSign));
 
       return this.http.post<CreateSubscriptionResponse>(url, body.toString(), { headers });
     }

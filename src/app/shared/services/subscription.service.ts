@@ -146,8 +146,8 @@ export class SubscriptionService {
    * Reactivar una suscripción pausada
    * @param id ID de la suscripción
    */
-  reactivateSubscription(id: string): Observable<SubscriptionResponse> {
-    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/reactivate`, {})
+  reactivateSubscription(id: string, next_billing_date: Date): Observable<SubscriptionResponse> {
+    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/reactivate`, {next_billing_date})
       .pipe(
         catchError(error => throwError(() => error))
       );

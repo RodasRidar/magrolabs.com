@@ -53,7 +53,7 @@ export class SuscripcionComponent implements OnInit {
   statusEnum = SubscriptionStatusEnum;
   flowToken = '';
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
-  nextBillingDate = signal<string>('');
+
   flowSubscriptionId = signal<string>('');
   // Información de pago
   cardType = signal<string>('');
@@ -110,7 +110,7 @@ export class SuscripcionComponent implements OnInit {
       if (user?.flowCustomerId) {
         // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
         this.flowService.registerCard(user.flowCustomerId).subscribe(response => {
-          console.log(response);
+          //console.log(response);
           this.flowToken = (response as RegisterCardResponse).token;
           this.showPaymentVerification.set(true);
           //despues de 2 segundos redirigir a suscription [fragment]="'reviews'"
@@ -208,6 +208,8 @@ export class SuscripcionComponent implements OnInit {
         takeUntil(this.destroy$),
         switchMap(response => {
           if (response.data.subscriptions && response.data.subscriptions.length > 0) {
+            console.log('response.data.subscriptions[0]', response.data.subscriptions[0]);
+            this.nextPaymentDate.set( new Date(response.data.subscriptions[0].next_billing_date || ''));
             this.subscription.set(response.data.subscriptions[0]);
             this.loadSubscriptionPlan(response.data.subscriptions[0].subscription_plan_id);
             this.loadPaymentMethod();
@@ -237,7 +239,6 @@ export class SuscripcionComponent implements OnInit {
       )
       .subscribe({
         next: (combinedResponse) => {
-          this.nextBillingDate.set(combinedResponse.flowResponse?.data[0].next_invoice_date || '');
           this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
         },
         error: (error) => {
@@ -252,7 +253,7 @@ export class SuscripcionComponent implements OnInit {
     this.subscriptionService.getSubscriptionPlanById(planId)
       .subscribe({
         next: (response) => {
-          console.log('subscriptionPlan', response);
+          //console.log('subscriptionPlan', response);
           this.subscriptionPlan.set(response.data.subscriptionPlan);
           this.isLoading.set(false);
         },
@@ -303,7 +304,7 @@ export class SuscripcionComponent implements OnInit {
         switchMap(user => {
           const flowCustomerId = user?.flowCustomerId;
           if (flowCustomerId) {
-            return this.flowService.getCharges(flowCustomerId, 20);
+            return this.flowService.getCharges(flowCustomerId, 50);
           }
           return of(null);
         }),
@@ -315,7 +316,9 @@ export class SuscripcionComponent implements OnInit {
       .subscribe({
         next: (response: FlowChargesResponse | null) => {
           if (response) {
-            this.charges.set(response.data);
+            this.charges.set(response.data.sort((a, b) => 
+              new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
+            ));
           }
           this.isLoadingCharges.set(false);
         },
@@ -531,6 +534,7 @@ export class SuscripcionComponent implements OnInit {
         next: (response) => {
           response.data.subscription.credits = 10;
           this.subscription.set(response.data.subscription);
+          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
           this.isLoading.set(false);
           
           // Registrar la información de pausa para análisis
@@ -712,9 +716,59 @@ export class SuscripcionComponent implements OnInit {
     if (!this.subscription()) return;
 
     this.isLoading.set(true);
-    this.subscriptionService.reactivateSubscription(this.subscription()!.id)
+    
+    // Calcular el próximo pago basado en la fecha personal de facturación
+    const now = new Date();
+    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const userBillingDay = subscriptionStartDate.getDate();
+    
+    let nextBillingMonth = now.getMonth();
+    let nextBillingYear = now.getFullYear();
+    
+    // La próxima facturación será el próximo mes en el día personal del usuario
+    nextBillingMonth++;
+    if (nextBillingMonth > 11) {
+      nextBillingMonth = 0;
+      nextBillingYear++;
+    }
+    
+    const nextPaymentDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
+    this.subscriptionService.reactivateSubscription(this.subscription()!.id, nextPaymentDate)
+      .pipe(
+        switchMap((response) => {
+          // Crear suscripción en Flow después de reactivar en backend
+          const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+          
+          if (customerId) {
+            const flowSubscriptionData: FlowCreateSubscriptionRequest = {
+              planId: environment.flowCreatina250Gr2025PlanId,
+              customerId: customerId,
+              subscription_start: nextPaymentDate, // Formato YYYY-MM-DD
+            };
+            
+            return this.flowService.createSubscription(flowSubscriptionData)
+              .pipe(
+                map((flowResponse) => ({ backendResponse: response, flowResponse })),
+                catchError((flowError) => {
+                  console.error('Error creando suscripción en Flow:', flowError);
+                  // Continuar con la respuesta del backend aunque falle en Flow
+                  return of({ backendResponse: response, flowResponse: null });
+                })
+              );
+          }
+          
+          return of({ backendResponse: response, flowResponse: null });
+        })
+      )
       .subscribe({
-        next: (response) => {
+        next: (combinedResponse) => {
+          const response = combinedResponse.backendResponse;
+          
+          // Actualizar el Flow subscription ID si se creó exitosamente
+          if (combinedResponse.flowResponse) {
+            this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
+          }
+          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
           let credits = '10'
           if(response.data.subscription.status === SubscriptionStatusEnum.PAUSED){
             credits = this.userCredits()
@@ -732,15 +786,10 @@ export class SuscripcionComponent implements OnInit {
           let mesEntrega: number;
           let mesPago: number;
           
-          // Si estamos después del día 23 del mes actual, la entrega será el próximo mes
-          // Si estamos antes o durante el período de entrega (17-23), la entrega será este mes
-          if (diaActual > 23) {
+
             mesEntrega = (mesActual + 1) % 12;
             mesPago = mesActual;
-          } else {
-            mesEntrega = mesActual;
-            mesPago = (mesActual - 1 + 12) % 12; // Mes anterior (con ajuste para enero)
-          }
+
           
           // Obtener nombres de los meses en español
           const nombresMeses = [
@@ -756,9 +805,10 @@ export class SuscripcionComponent implements OnInit {
           this.reactivationMessage.set(
             `¡Bienvenido de nuevo! A partir de ahora, tu suscripción ` +
             `está activa nuevamente. Puedes esperar tu próxima ` +
-            `entrega en ${mesEntregaNombre}. Siempre pagas por adelantado, y el ` +
-            `pago se realizará en ${mesPagoNombre}.`
+            `entrega en ${mesEntregaNombre}.`
           );
+          
+          this._toastService.success('¡Éxito!', 'Suscripción reactivada correctamente');
         },
         error: (err) => {
           this._toastService.error('Error', 'Error al reactivar la suscripción');
@@ -1030,12 +1080,10 @@ export class SuscripcionComponent implements OnInit {
         return EMPTY;
       }),
       switchMap(userResponse => {
-        console.log('Default address obtained:', userResponse.address_id);
         const orderRequest = this.createOrderRequest(userResponse.address_id ?? '');
         return this.orderService.createOrder(orderRequest);
       }),
       switchMap(response => {
-        console.log('Order created:', response.data);
         localStorage.setItem('OrderId', response.data.order.id);
         return this.flowService.createSubscription(flowCreateSubscriptionRequest);
       }),
@@ -1044,14 +1092,12 @@ export class SuscripcionComponent implements OnInit {
         return this.createBackendSubscription();
       }),
       switchMap(subscriptionResponse => {
-        console.log('Backend Subscription created:', subscriptionResponse);
         const orderId = localStorage.getItem('OrderId') || ''
-        console.log('orderId', orderId)
         const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id, orderId);
         return this.subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
       }),
       switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created:', subscriptionOrderResponse);
+        console.log('Subscription order created:', subscriptionOrderResponse)
         // Agregar créditos al usuario por la suscripción
         const user = this.authService.getCurrentUser();
         if (user?.id) {

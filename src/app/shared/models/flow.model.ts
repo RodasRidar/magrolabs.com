@@ -52,7 +52,7 @@ export interface RegisterCardRequest extends FlowModelRequest{
   export interface FlowCreateSubscriptionRequest extends FlowModelRequest {
     planId: string;
     customerId: string;
-    subscription_start?: string;
+    subscription_start?: Date;
     couponId?: number;
     trial_period_days?: number;
     periods_number?: number;

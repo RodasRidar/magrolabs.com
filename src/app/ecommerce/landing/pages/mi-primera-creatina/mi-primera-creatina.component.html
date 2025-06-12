@@ -1,0 +1,260 @@
+<main class="min-h-screen bg-white">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        ¡Tu Primera Creatina Magrolabs!
+      </h1>
+      <p class="text-xl md:text-2xl opacity-90 mb-6">
+        Descubre todo lo que necesitas saber sobre la creatina más pura del mercado
+      </p>
+      @if (lote()) {
+        <div class="inline-flex items-center bg-white/20 rounded-full px-6 py-2">
+          <span class="text-sm font-medium">Lote: {{ lote() }}</span>
+        </div>
+      }
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    
+    <!-- Introducción -->
+    <section class="mb-16">
+      <div class="prose prose-lg max-w-none">
+        <p class="text-xl text-gray-700 leading-relaxed mb-8">
+          ¡Felicidades por elegir Magrolabs! Estás a punto de experimentar los beneficios 
+          de la creatina monohidrato más pura y efectiva del mercado. En esta guía te 
+          explicaremos todo lo que necesitas saber para maximizar sus beneficios.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tarjeta de Dosis -->
+    <section class="mb-16">
+      <div class="bg-gradient-to-br from-[#f8f6f4] to-[#f1efed] rounded-2xl p-8 border border-gray-200">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <span class="w-10 h-10 bg-[#d07d66] text-white rounded-full flex items-center justify-center mr-4 text-lg">💊</span>
+          Dosis Recomendada
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Fase de Carga (Opcional)</h3>
+            <div class="text-3xl font-bold text-[#d07d66] mb-2">20g</div>
+            <p class="text-gray-600 mb-4">divididos en 4 tomas de 5g durante 5-7 días</p>
+            <p class="text-sm text-gray-500">
+              Esta fase permite saturar más rápido tus músculos, pero no es obligatoria.
+            </p>
+          </div>
+          
+          <div class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Fase de Mantenimiento</h3>
+            <div class="text-3xl font-bold text-[#d07d66] mb-2">6g</div>
+            <p class="text-gray-600 mb-4">una vez al día, todos los días</p>
+            <p class="text-sm text-gray-500">
+              Mantiene los niveles óptimos de creatina en tus músculos.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+          <h4 class="font-semibold text-blue-900 mb-2">💡 Consejo Pro:</h4>
+          <p class="text-blue-800">
+            Toma tu creatina con agua o jugo post-entreno para mejor absorción. 
+            También puedes tomarla en cualquier momento del día - lo importante es la consistencia.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Principales Beneficios de la Creatina
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            💪
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Mayor Fuerza</h3>
+          <p class="text-gray-600">
+            Incrementa tu fuerza y potencia en ejercicios de alta intensidad y corta duración.
+          </p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            🔋
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Más Energía</h3>
+          <p class="text-gray-600">
+            Mejora la regeneración de ATP, dándote más energía para entrenamientos intensos.
+          </p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            🏃‍♂️
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Mejor Recuperación</h3>
+          <p class="text-gray-600">
+            Reduce la fatiga muscular y acelera la recuperación entre series y entrenamientos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mitos y Verdades -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Mitos y Verdades sobre la Creatina
+      </h2>
+      
+      <div class="space-y-6">
+        <!-- Mito 1 -->
+        <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
+          <div class="flex items-start">
+            <span class="text-2xl mr-4">❌</span>
+            <div>
+              <h3 class="text-lg font-semibold text-red-800 mb-2">MITO: "La creatina daña los riñones"</h3>
+              <p class="text-red-700">
+                <strong>FALSO:</strong> Múltiples estudios científicos han demostrado que la creatina es segura 
+                para personas sanas. Es uno de los suplementos más estudiados y seguros del mercado.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verdad 1 -->
+        <div class="bg-green-50 border-l-4 border-green-400 p-6 rounded-r-lg">
+          <div class="flex items-start">
+            <span class="text-2xl mr-4">✅</span>
+            <div>
+              <h3 class="text-lg font-semibold text-green-800 mb-2">VERDAD: "La creatina aumenta el volumen muscular"</h3>
+              <p class="text-green-700">
+                <strong>CIERTO:</strong> La creatina atrae agua hacia las células musculares, 
+                creando un ambiente anabólico que favorece el crecimiento muscular.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mito 2 -->
+        <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
+          <div class="flex items-start">
+            <span class="text-2xl mr-4">❌</span>
+            <div>
+              <h3 class="text-lg font-semibold text-red-800 mb-2">MITO: "La creatina solo sirve para hombres"</h3>
+              <p class="text-red-700">
+                <strong>FALSO:</strong> La creatina beneficia a todas las personas que realizan ejercicio, 
+                independientemente del género. Las mujeres también pueden obtener mejoras significativas.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verdad 2 -->
+        <div class="bg-green-50 border-l-4 border-green-400 p-6 rounded-r-lg">
+          <div class="flex items-start">
+            <span class="text-2xl mr-4">✅</span>
+            <div>
+              <h3 class="text-lg font-semibold text-green-800 mb-2">VERDAD: "La consistencia es clave"</h3>
+              <p class="text-green-700">
+                <strong>CIERTO:</strong> Para obtener los máximos beneficios, debes tomar creatina 
+                de forma constante, incluso en días de descanso.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calidad Magrolabs -->
+    <section class="mb-16">
+      <div class="bg-gradient-to-br from-[#94716B] to-[#C4A39C] text-white rounded-2xl p-8">
+        <h2 class="text-3xl font-bold mb-6 text-center">¿Por qué elegir Magrolabs?</h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🏆</span>
+              <span class="font-semibold">Pureza 99.9%</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🔬</span>
+              <span class="font-semibold">100% Monohidratada</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">📋</span>
+              <span class="font-semibold">Certificaciones internacionales</span>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🌱</span>
+              <span class="font-semibold">Sin aditivos artificiales</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🚫</span>
+              <span class="font-semibold">Libre de gluten y azúcar</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">✨</span>
+              <span class="font-semibold">Sabor neutro</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consejos Adicionales -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Consejos para Maximizar Resultados
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="space-y-6">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">💧</span>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Hidrátate bien</h3>
+              <p class="text-gray-600">Bebe al menos 2.5-3 litros de agua al día para optimizar la función de la creatina.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">🍽️</span>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Combina con carbohidratos</h3>
+              <p class="text-gray-600">Tomar la creatina con una fuente de carbohidratos puede mejorar su absorción.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">⏰</span>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Sé consistente</h3>
+              <p class="text-gray-600">Los resultados se notan después de 2-4 semanas de uso constante.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">🏋️‍♂️</span>
+            <div>
+              <h3 class="font-semibold text-gray-900 mb-2">Entrena intenso</h3>
+              <p class="text-gray-600">La creatina es más efectiva en ejercicios de alta intensidad y corta duración.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </article>
+</main> 

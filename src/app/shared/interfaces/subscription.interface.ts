@@ -95,6 +95,7 @@ export enum SubscriptionStatusEnum {
     updated_at: string;
     updated_by: string;
     is_deleted: boolean;
+    paused_until?: string;
   }
   
   /**

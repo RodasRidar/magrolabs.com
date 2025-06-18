@@ -123,9 +123,11 @@ export class SubscriptionService {
   /**
    * Cancelar una suscripción
    * @param id ID de la suscripción
+   * @param reason Motivo de la cancelación
+   * @param next_billing_date Fecha de la próxima facturación (se tiene que enviar si la suscripción es TO_CANCEL)
    */
-  cancelSubscription(id: string, reason: string): Observable<SubscriptionResponse> {
-    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/cancel`, { reason })
+  cancelSubscription(id: string, reason: string, next_billing_date?: Date): Observable<SubscriptionResponse> {
+    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/cancel`, { reason, next_billing_date })
       .pipe(
         catchError(error => throwError(() => error))
       );
@@ -146,7 +148,7 @@ export class SubscriptionService {
    * Reactivar una suscripción pausada
    * @param id ID de la suscripción
    */
-  reactivateSubscription(id: string, next_billing_date: Date): Observable<SubscriptionResponse> {
+  reactivateSubscription(id: string, next_billing_date?: Date): Observable<SubscriptionResponse> {
     return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/reactivate`, {next_billing_date})
       .pipe(
         catchError(error => throwError(() => error))

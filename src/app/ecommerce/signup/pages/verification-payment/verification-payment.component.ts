@@ -213,6 +213,10 @@ export class VerificationPaymentComponent {
         }),
         switchMap(response => {
           console.log('Subscription canceled: ', response);
+          return this._flowService.cancelSubscription(subscriptionId, AtPeriodEnd.IMMEDIATE);
+        }),
+        switchMap(response => {
+          console.log('flowService cancelSubscription: ', response);
           return this._orderService.createOrder(orderRequest);
         }),
         switchMap(response => {

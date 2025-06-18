@@ -10,7 +10,8 @@ export enum SubscriptionStatusEnum {
   ACTIVE = 'ACTIVE',
   PAUSED = 'PAUSED',
   CANCELLED = 'CANCELLED',
-  EXPIRED = 'EXPIRED'
+  EXPIRED = 'EXPIRED',
+  TO_CANCEL = 'TO_CANCEL'
 }
   
   /**

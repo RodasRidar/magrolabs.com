@@ -682,7 +682,7 @@
                             </div>
 
                             <div *ngIf="subscription()!.status === statusEnum.PAUSED" class="flex flex-col space-y-3">
-                                <button (click)="reactivateSubscription()"
+                                <button (click)="reactivateSubscription(reactivateType.FROM_PAUSE)"
                                     class="flex items-center justify-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
                                         fill="currentColor">
@@ -695,13 +695,22 @@
                             </div>
 
                             <div *ngIf="subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED"
-                                class="bg-gray-50 p-4 rounded-md">
+                                class="bg-gray-200 p-4 rounded-md">
                                 <p class="text-sm text-gray-700">¿Pensando en empezar de nuevo con tu suscripción?</p>
-                                <button (click)="reactivateSubscription()"
+                                <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
                                     class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
                                     Activar directamente
                                 </button>
                             </div>
+
+                            <div *ngIf="subscription()!.status === statusEnum.TO_CANCEL"
+                                class="bg-gray-200 p-4 rounded-md">
+                                <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
+                                <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
+                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
+                                    Activar directamente
+                                </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -1229,13 +1238,12 @@
                             </ul>
                         </div>
 
-                        @if(lastPaymentDate() != '' && lastDeliveryDate() != '') {
+                        @if(lastPaymentDate() != '') {
                         <div class="text-left mb-6 space-y-4">
                             <p class="text-gray-700">Tu suscripción se volverá inactiva después del último pago.</p>
 
                             <div class="space-y-2">
                                 <p class="text-gray-900 font-semibold">Último pago: {{ lastPaymentDate() }}</p>
-                                <p class="text-gray-900 font-semibold">Última entrega: {{ lastDeliveryDate() }}</p>
                             </div>
                         </div>
                         }
@@ -1250,7 +1258,7 @@
 
                 <div class="bg-gray-50 px-6 py-4 sm:px-8 sm:py-6 flex flex-col space-y-3">
                     <ml-button [name]="isLoading() ? 'Cancelando...' : 'Quiero cancelar'" (click)="finallyCancel()" [isDisabled]="isLoading()" [isProcessing]="isLoading()"></ml-button>
-                    <ml-button name="Continúo como miembro" (click)="continueAsMember()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Continuar como miembro" (click)="continueAsMember()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1282,11 +1290,20 @@
                         </div>
 
                         <div class="text-center mb-6">
-                            <p class="text-gray-700 text-sm leading-relaxed mb-6">
-                                Tu suscripción se cancelará inmediatamente después de tu último pago.
-                                Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
-                                productos!
-                            </p>
+                            @if(lastPaymentDate() != '') {
+                                <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                                    Tu suscripción se cancelará inmediatamente después de tu último pago.
+                                    Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
+                                    productos!
+                                </p>
+                            }
+                            @else {
+                                <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                                    Tu suscripción se cancelará inmediatamente.
+                                    Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
+                                    productos!
+                                </p>
+                            }
                         </div>
 
                         <!-- Información del usuario y suscripción -->
@@ -1300,18 +1317,14 @@
                                     getPeriodText(subscriptionPlan()?.period) }}</p>
                             </div>
                         </div>
-
+                        @if(lastPaymentDate() != '') {
                         <div class="text-left mb-6 space-y-3">
                             <div>
                                 <p class="text-gray-700 font-medium">Último pago:</p>
                                 <p class="text-gray-900 font-bold">{{ lastPaymentDate() }}</p>
                             </div>
-
-                            <div>
-                                <p class="text-gray-700 font-medium">Última entrega:</p>
-                                <p class="text-gray-900 font-bold">{{ lastDeliveryDate() }}</p>
-                            </div>
                         </div>
+                        }
                     </div>
                 </div>
 

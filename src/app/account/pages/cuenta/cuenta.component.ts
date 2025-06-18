@@ -120,7 +120,7 @@ export class CuentaComponent implements OnInit {
         next: (combinedResponse) => {
           //console.log('combinedResponse', combinedResponse);
           //console.log('Próxima fecha de pago:', combinedResponse.flowResponse?.data[0].next_invoice_date);
-          this.nextBillingDate.set(combinedResponse.flowResponse?.data[0].next_invoice_date || '');
+          this.nextBillingDate.set(combinedResponse.subscriptionResponse.data.subscriptions[0].next_billing_date || '');
         },
         error: (error) => {
           console.error('Error al cargar datos de suscripción:', error);
@@ -199,6 +199,8 @@ export class CuentaComponent implements OnInit {
         return 'Cancelada';
       case SubscriptionStatusEnum.EXPIRED:
         return 'Expirada';
+      case SubscriptionStatusEnum.TO_CANCEL:
+        return 'Por Cancelar';
       default:
         return 'Estado desconocido';
     }

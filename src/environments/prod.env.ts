@@ -44,7 +44,7 @@ const apiMagroLabs = 'https://api.magrolabs.com/api/v1';
 const flowUrlReturnPagoPorAdmin = 'https://magrolabs.com/cuenta/pedidos';
 const useProxy = false;
 const cancelDiscout = 50;
-const flowCouponId50PercentDiscount = 874;
+const flowCouponId50PercentDiscount = 5104;
 
 export const environment = {
     production,

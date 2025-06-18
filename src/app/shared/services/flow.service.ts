@@ -105,7 +105,6 @@ export class FlowService {
   }
 
   createSubscription(subscriptionData: FlowCreateSubscriptionRequest): Observable<CreateSubscriptionResponse> {
-    console.log('createSubscription', subscriptionData);
     if (environment.production || !this.useProxy) {
       const url = `${this.apiUrl}subscription/create.ts`;
       return this.http.post<CreateSubscriptionResponse>(url, subscriptionData);
@@ -113,14 +112,22 @@ export class FlowService {
     else {
       const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const url = `${this.apiUrlLocal}/subscription/create`;
-      let toSign: Record<string, string | number> = { apiKey: this.apiKey, planId: subscriptionData.planId, customerId: subscriptionData.customerId };
+      let toSign: Record<string, string | number> = { 
+        apiKey: this.apiKey, 
+        planId: subscriptionData.planId, 
+        customerId: subscriptionData.customerId 
+      };
       
       if (subscriptionData.subscription_start) {
-        toSign['subscription_start'] = subscriptionData.subscription_start.toISOString().split('T')[0];
+        toSign['subscription_start'] = subscriptionData.subscription_start;
       }
 
       if (subscriptionData.trial_period_days) {
         toSign['trial_period_days'] = subscriptionData.trial_period_days;
+      }
+
+      if (subscriptionData.couponId) {
+        toSign['couponId'] = subscriptionData.couponId;
       }
 
       let body = new HttpParams()
@@ -129,11 +136,15 @@ export class FlowService {
         .set('customerId', subscriptionData.customerId);
 
       if (subscriptionData.subscription_start) {
-        body = body.set('subscription_start', subscriptionData.subscription_start.toISOString().split('T')[0]);
+        body = body.set('subscription_start', subscriptionData.subscription_start);
       }
       
       if (subscriptionData.trial_period_days) {
         body = body.set('trial_period_days', subscriptionData.trial_period_days.toString());
+      }
+
+      if (subscriptionData.couponId) {
+        body = body.set('couponId', subscriptionData.couponId.toString());
       }
       
       // Agregar la firma al final

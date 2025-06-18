@@ -43,6 +43,8 @@ const creatinaFreePrecio = 35;
 const apiMagroLabs = 'https://dev-api.magrolabs.com/api/v1';
 const flowUrlReturnPagoPorAdmin = 'https://develop.magrolabs.com/cuenta/pedidos';
 const useProxy = false;
+const cancelDiscout = 50;
+const flowCouponId50PercentDiscount = 873;
 
 export const environment = {
     production,
@@ -89,5 +91,7 @@ export const environment = {
     creatinaFreePrecio,
     apiMagroLabs,
     flowUrlReturnPagoPorAdmin,
-    useProxy
+    useProxy,
+    cancelDiscout,
+    flowCouponId50PercentDiscount
 };

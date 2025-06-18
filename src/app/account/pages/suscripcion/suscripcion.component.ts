@@ -566,7 +566,11 @@ export class SuscripcionComponent implements OnInit {
   finalConfirmCancellation(): void {
     // Cerrar el modal actual y mostrar el modal de descuento
     this.showFinalCancelModal.set(false);
-    this.showDiscountModal.set(true);
+    if (!this.subscription()?.has_apply_cancel_discount) {
+      this.showDiscountModal.set(true);
+    } else {
+      this.proceedWithFinalCancellation();
+    }
   }
 
   closeDiscountModal(): void {
@@ -575,9 +579,76 @@ export class SuscripcionComponent implements OnInit {
 
   // Método para aceptar el descuento del 50%
   acceptDiscount(): void {
-    // Aquí implementarías la lógica para aplicar el descuento
-    this._toastService.success('¡Excelente!', '¡Has obtenido un 50% de descuento en tu próxima creatina!');
-    this.closeDiscountModal();
+    if (!this.subscription()) return;
+
+    this.isLoading.set(true);
+
+    // 1. Actualizar la suscripción en el backend con el descuento
+    this.subscriptionService.updateSubscription(this.subscription()!.id, {
+      has_apply_cancel_discount: true,
+      discount: this.ENV.cancelDiscout
+    }).pipe(
+      switchMap((response) => {
+        // 2. Cancelar la suscripción actual en Flow si existe
+        if (this.flowSubscriptionId()) {
+          return this.flowService.cancelSubscription(this.flowSubscriptionId(), AtPeriodEnd.IMMEDIATE)
+            .pipe(
+              map(() => response),
+              catchError((flowError) => {
+                console.error('Error cancelando suscripción en Flow:', flowError);
+                // Continuar con la creación de nueva suscripción aunque falle la cancelación
+                return of(response);
+              })
+            );
+        }
+        return of(response);
+      }),
+      switchMap((response) => {
+        // 3. Crear nueva suscripción en Flow con el descuento aplicado
+                  const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+          if (customerId) {
+            const subscriptionStartDate = new Date(this.subscription()!.next_billing_date!);
+            const formattedStartDate = this.formatDateToLimaTimezone(subscriptionStartDate);
+            const flowSubscriptionData: FlowCreateSubscriptionRequest = {
+              planId: this.ENV.flowCreatina250Gr2025PlanId,
+              customerId: customerId,
+              subscription_start: formattedStartDate,
+              couponId: this.ENV.flowCouponId50PercentDiscount
+            };
+
+          return this.flowService.createSubscription(flowSubscriptionData)
+            .pipe(
+              map((flowResponse) => ({ backendResponse: response, flowResponse })),
+              catchError((flowError) => {
+                console.error('Error creando nueva suscripción en Flow:', flowError);
+                // Continuar aunque falle la creación en Flow
+                return of({ backendResponse: response, flowResponse: null });
+              })
+            );
+        }
+        return of({ backendResponse: response, flowResponse: null });
+      }),
+      finalize(() => {
+        this.isLoading.set(false);
+      })
+    ).subscribe({
+      next: (combinedResponse) => {
+        // Actualizar el Flow subscription ID si se creó exitosamente
+        if (combinedResponse.flowResponse) {
+          this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
+        }
+
+        // Actualizar la suscripción local con la respuesta del backend
+        this.subscription.set(combinedResponse.backendResponse.data.subscription);
+
+        this._toastService.success('¡Excelente!', `¡Has obtenido un ${this.ENV.cancelDiscout}% de descuento en tu próxima creatina!`);
+        this.closeDiscountModal();
+      },
+      error: (err) => {
+        console.error('Error aplicando descuento:', err);
+        this._toastService.error('Error', 'Error al aplicar el descuento. Por favor, intenta nuevamente.');
+      }
+    });
   }
 
   // Método para proceder con la cancelación final
@@ -712,6 +783,19 @@ export class SuscripcionComponent implements OnInit {
     this.showSuccessCancellationModal.set(false);
   }
 
+  /**
+   * Convierte una fecha a formato YYYY-MM-DD en zona horaria de Lima
+   * @param date Fecha a convertir
+   * @returns String en formato YYYY-MM-DD
+   */
+  private formatDateToLimaTimezone(date: Date): string {
+    const limaDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Lima' }));
+    const year = limaDate.getFullYear();
+    const month = String(limaDate.getMonth() + 1).padStart(2, '0');
+    const day = String(limaDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   keepCredits(): void {
     // Cerrar el modal y volver a la pantalla principal
     this.closeFinalCancelModal();
@@ -794,7 +878,7 @@ export class SuscripcionComponent implements OnInit {
               flowSubscriptionData = {
                 planId: environment.flowCreatina250Gr2025PlanId,
                 customerId: customerId,
-                subscription_start: new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' })), // Formato YYYY-MM-DD en hora peruana
+                subscription_start: this.formatDateToLimaTimezone(now), // Formato YYYY-MM-DD en hora peruana
               };
             }
             else if (reactivateType == ReactivateType.FROM_PAUSE) {
@@ -802,7 +886,7 @@ export class SuscripcionComponent implements OnInit {
               flowSubscriptionData = {
                 planId: environment.flowCreatina250Gr2025PlanId,
                 customerId: customerId,
-                subscription_start: startDatePAUSE, // Formato YYYY-MM-DD en hora peruana
+                subscription_start: this.formatDateToLimaTimezone(startDatePAUSE), // Formato YYYY-MM-DD en hora peruana
               };
             };
 

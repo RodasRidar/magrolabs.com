@@ -593,14 +593,14 @@
 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Precio</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ subscriptionPlan()?.price | currency:'S/'
+                                    <dd class="mt-1 text-sm text-gray-900">{{ (subscriptionPlan()?.price ?? 0) * (1 - (subscription()?.discount ?? 0) / 100) | currency:'S/'
                                         }} / {{ getPeriodText(subscriptionPlan()?.period) }}</dd>
                                 </div>
 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Descuento</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ subscriptionPlan()?.discount_rate ?
-                                        (subscriptionPlan()?.discount_rate + '%') : 'No aplica' }}</dd>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ subscription()?.discount ?
+                                        (subscription()?.discount + '%') : 'No aplica' }}</dd>
                                 </div>
 
                                 <div>
@@ -1122,7 +1122,7 @@
         </div>
     </div>
 
-    <!-- Modal de descuento del 50% -->
+    <!-- Modal de descuento % -->
     <div *ngIf="showDiscountModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title"
         role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
@@ -1145,7 +1145,7 @@
 
                     <!-- Contenido del modal -->
                     <div class="text-center">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un 50% de descuento en tu Creatina!
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un {{ENV.cancelDiscout}}% de descuento en tu Creatina!
                         </h3>
 
                         <!-- Tarjeta de descuento -->
@@ -1160,24 +1160,24 @@
                             </div>
 
                             <div class="relative z-10">
-                                <p class="text-8xl font-bold mb-4 drop-shadow-lg">-50%</p>
+                                <p class="text-8xl font-bold mb-4 drop-shadow-lg">-{{ENV.cancelDiscout}}%</p>
                             </div>
                         </div>
 
                         <div class="mb-6">
                             <p class="text-lg font-semibold text-gray-900 mb-2">No pagaras
                                 {{ENV.precioCreatinaSubscription | currency:'S/'}} sino {{ENV.precioCreatinaSubscription
-                                * 0.5 | currency:'S/'}} .</p>
+                                * (1 - ENV.cancelDiscout / 100) | currency:'S/'}} .</p>
                             <p class="text-gray-700 leading-relaxed">
                                 ¡Nos entristecería que te vayas! Por eso, tenemos una oferta especial para ti:
-                                quédate como miembro y obtén un 50% de descuento en tu próxima Creatina.
+                                quédate como miembro y obtén un {{ENV.cancelDiscout}}% de descuento en tu próxima creatina.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <ml-button [name]="isLoading() ? 'Aplicando descuento...' : '¡Quiero el descuento!'" (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
+                    <ml-button [name]="isLoading() ? 'Aplicando...' : '¡Quiero el descuento!'" (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
                     <ml-button name="Continuar con la cancelación" (click)="proceedWithFinalCancellation()"></ml-button>
                 </div>
             </div>
@@ -1227,6 +1227,12 @@
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
                                     Tu crédito de {{userCredits() | currency:'S/'}}
                                 </li>
+                                @if(subscription()?.discount && subscription()?.discount! > 0) {
+                                <li class="flex items-center">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                                    {{ENV.cancelDiscout}}% de descuento en tu próxima creatina
+                                </li>
+                                }
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
                                     Futuros lanzamientos

@@ -97,6 +97,8 @@ export enum SubscriptionStatusEnum {
     updated_by: string;
     is_deleted: boolean;
     paused_until?: string;
+    discount?: number;
+    has_apply_cancel_discount?: boolean;
   }
   
   /**
@@ -126,6 +128,8 @@ export enum SubscriptionStatusEnum {
     next_shipment?: string;
     wanna_scoop?: boolean;
     credits?: number;
+    has_apply_cancel_discount?: boolean;
+    discount?: number;
   }
   
   /**

@@ -195,7 +195,7 @@ export class FlowService {
     filter?: string
   ): Observable<FlowSubscriptionsResponse> {
     if (environment.production || !this.useProxy) {
-      const url = `${this.apiUrl}customer/getSubscriptions`;
+      const url = `${this.apiUrl}customer/getSubscriptions.ts`;
       const params: Record<string, string> = {
         apiKey: this.apiKey,
         customerId

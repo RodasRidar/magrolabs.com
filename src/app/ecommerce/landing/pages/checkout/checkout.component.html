@@ -652,6 +652,7 @@
                                                 <div class="my-6 lg:w-72">
                                                     <ml-button [name]="buttonName"
                                                         [isDisabled]="isProcessing || (!form.valid) "
+                                                        [isProcessing]="isProcessing"
                                                         (click)="nextStep()"></ml-button>
                                                 </div>
 

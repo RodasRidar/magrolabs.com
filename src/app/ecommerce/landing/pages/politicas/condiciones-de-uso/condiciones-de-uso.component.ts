@@ -11,90 +11,139 @@ import { title } from 'process';
 })
 export class CondicionesDeUsoComponent {
   ENV = environment
-  list = [
-    {
-      title: 'Suscripción',
-      description:[
-        '1.1. Tu suscripción a Magrolabs se renueva automáticamente cada mes hasta que la canceles. La cancelación se realiza a través de la cuenta creada al registrarse. Al registrarte, también proporcionas un método de pago. Método de pago significa un método válido, aceptado y mencionado en la página de registro del país correspondiente, que puede actualizarse ocasionalmente. Al registrarte, te pedimos que pagues 1,00€ como costos de verificación, para que podamos vincular tu número de cuenta bancaria a tu cuenta y prevenir fraudes. Nos das permiso para debitar mensualmente las cuotas de tu suscripción a través de tu método de pago, a menos que canceles tu suscripción dentro del período de reflexión de 14 días.',
-        '1.2. Solo puedes elegir el diseño de tu primer bóxer o conjunto gratis durante el registro. Luego, recibirás cada mes un nuevo bóxer o hipster. El diseño será una sorpresa hasta que llegue a tu buzón. No puedes intercambiar el diseño del mes por un bóxer o hipster/bralette lanzado anteriormente. Las condiciones anteriores también se aplican a la membresía de Socks y Undershirt, sin embargo, el primer par de Socks/Undershirt gratis no es a elección propia.'
-      ]
-    },
-    {
-      title: 'Periodo de reflexión',
-      description:[
-        '2.1. Período de reflexión. Tu suscripción a Magrolabs comienza con un período de reflexión de 14 días, a menos que se indique lo contrario durante el proceso de registro. Después de recibir tu primer bóxer o conjunto gratis, puedes probarlo durante 14 días. Si cancelas dentro del período de reflexión, no pagas nada y tu suscripción termina. Después de tus primeros 14 días, aplicamos un plazo de cancelación de un mes. Si cancelas antes del día 20 del mes, se realizará un último pago y una última entrega.',
-        '2.2 Cuenta única. Cada cuenta única tiene derecho a un bóxer o conjunto gratis. Una cuenta única consiste en un correo electrónico único, número de cuenta bancaria único y una dirección única. Cada número de cuenta bancaria, dirección y/o correo electrónico puede usarse una sola vez. En caso de abuso, se cobrará el precio de todos los productos obtenidos sin pagar suscripción. En el caso de una cuenta duplicada, los costos de verificación de 1,00€ no se reembolsarán.',
-        '2.3 Membresías adicionales. Un usuario puede crear de 1 a 10 membresías a través de su cuenta, con un máximo de 5 membresías de Men/Women/Boys y un máximo de 5 membresías de Socks/Undershirt. Las membresías creadas se cargarán en el siguiente débito. Para una membresía adicional, el primer bóxer o conjunto no es gratis.',
-        '2.4 Registro. Tu período de reflexión de 14 días comienza desde el momento en que recibes tu primer bóxer o conjunto. Te informamos por correo electrónico cuando termina tu período de reflexión. Dentro del período de reflexión, puedes cancelar tu membresía de inmediato. Si no lo haces, tu suscripción se activará automáticamente. Después del período de reflexión, se aplica un plazo de cancelación de un mes para cancelar tu suscripción.',
-        '2.5. Oferta. Magrolabs determinará a su discreción si alguien es elegible para el período de reflexión y puede limitar las condiciones o la duración para evitar abusos. Nos reservamos el derecho de cobrar por varios bóxers o conjuntos gratis obtenidos por cuenta.',
-        '2.6. Cuotas de suscripción. Debemos las cuotas de suscripción mensuales al final del período de reflexión a través de tu método de pago, a menos que canceles tu membresía antes de que termine el período de reflexión de 14 días.',
-        '2.7. Plazo de cancelación. La suscripción a Magrolabs se renueva automáticamente después de tu período de reflexión de 14 días. Durante el período de reflexión de 14 días, puedes cancelar el contrato de inmediato. Una vez que tu suscripción esté activa, podrás cancelarla mensualmente.',
-      ]
-    },
-    {
-      title: 'Periodo de reflexión',
-      description:[
-        '2.1. Período de reflexión. Tu suscripción a Magrolabs comienza con un período de reflexión de 14 días, a menos que se indique lo contrario durante el proceso de registro. Después de recibir tu primer bóxer o conjunto gratis, puedes probarlo durante 14 días. Si cancelas dentro del período de reflexión, no pagas nada y tu suscripción termina. Después de tus primeros 14 días, aplicamos un plazo de cancelación de un mes. Si cancelas antes del día 20 del mes, se realizará un último pago y una última entrega.',
-        '2.2 Cuenta única. Cada cuenta única tiene derecho a un bóxer o conjunto gratis. Una cuenta única consiste en un correo electrónico único, número de cuenta bancaria único y una dirección única. Cada número de cuenta bancaria, dirección y/o correo electrónico puede usarse una sola vez. En caso de abuso, se cobrará el precio de todos los productos obtenidos sin pagar suscripción. En el caso de una cuenta duplicada, los costos de verificación de 1,00€ no se reembolsarán.',
-        '2.3 Membresías adicionales. Un usuario puede crear de 1 a 10 membresías a través de su cuenta, con un máximo de 5 membresías de Men/Women/Boys y un máximo de 5 membresías de Socks/Undershirt. Las membresías creadas se cargarán en el siguiente débito. Para una membresía adicional, el primer bóxer o conjunto no es gratis.',
-        '2.4 Registro. Tu período de reflexión de 14 días comienza desde el momento en que recibes tu primer bóxer o conjunto. Te informamos por correo electrónico cuando termina tu período de reflexión. Dentro del período de reflexión, puedes cancelar tu membresía de inmediato. Si no lo haces, tu suscripción se activará automáticamente. Después del período de reflexión, se aplica un plazo de cancelación de un mes para cancelar tu suscripción.',
-        '2.5. Oferta. Magrolabs determinará a su discreción si alguien es elegible para el período de reflexión y puede limitar las condiciones o la duración para evitar abusos. Nos reservamos el derecho de cobrar por varios bóxers o conjuntos gratis obtenidos por cuenta.',
-        '2.6. Cuotas de suscripción. Debemos las cuotas de suscripción mensuales al final del período de reflexión a través de tu método de pago, a menos que canceles tu membresía antes de que termine el período de reflexión de 14 días.',
-        '2.7. Plazo de cancelación. La suscripción a Magrolabs se renueva automáticamente después de tu período de reflexión de 14 días. Durante el período de reflexión de 14 días, puedes cancelar el contrato de inmediato. Una vez que tu suscripción esté activa, podrás cancelarla mensualmente.',
-      ]
-    },
-    {
-      title: 'Período de prueba gratis',
-      description:[
-        '3.1. Cuotas de suscripción. Las cuotas de suscripción de Magrolabs se debitan mensualmente a través del método de pago vinculado al registrarte.',
-        '3.2. Débito y entrega. Las cuotas de suscripción de Magrolabs se debitan antes de que se entregue el producto correspondiente. El débito se realiza alrededor del día 27 de cada mes, y la entrega se realiza a partir del día 17 del mes siguiente',
-        '3.3. Método de pago. Para participar en Magrolabs, debes proporcionar un método de pago válido. Puedes consultar o modificar tus medios de pago en tu cuenta, en el menú superior "Datos personales! y luego en el menú lateral "Datos de pago". Para utilizar y vincular algunos métodos de pago, el proveedor puede cobrarte ciertas tasas, como tasas por transacciones internacionales u otras tasas por procesar tus medios de pago. Los impuestos locales pueden variar según los métodos de pago. Para más información, ponte en contacto con el proveedor de tu método de pago.',
-        '3.4. Cancelación. Puedes cancelar tu suscripción a Magrolabs en cualquier momento en línea a través de tu cuenta creada durante el registro. Después de cancelar, mantienes acceso a tu cuenta de Magrolabs, donde puedes reactivar tu membresía. La cancelación se puede realizar en tu cuenta en "Membresías" . Después de cancelar, se enviará automáticamente un correo electrónico de confirmación a la dirección de correo electrónico registrada.',
-        '3.5. Modificaciones. Podemos cambiar nuestra suscripción y el precio de nuestro servicio de vez en cuando. Sin embargo, los cambios de precio o cambios en nuestra suscripción no serán efectivos hasta 20 días después de la notificación.',
-        '3.6. Supresión de datos. Puede utilizar el "Derecho de inspección" para obtener una visión general de los datos personales que tenemos registrados sobre ti. Puedes modificar tus datos y utilizar el "Derecho de rectificación". Puedes modificar tú mismo la mayoría de los datos online a través de tu cuenta. Haz clic en el siguiente enlace: Aquí para obtener más información sobre la modificación o supresión de tus datos.',
-      ]
-    },
-    {
-      title: 'Garantía de devolución',
-      description:[
-        '4.1. Devoluciones. Si tu producto de Magrolabs se rompe dentro de los 90 días (por uso normal), te enviaremos un nuevo producto sin costo (debes cumplir con las condiciones para enviar una solicitud de devolución, ver el punto 4.2. Condiciones). Solo recibirás un nuevo producto al enviar una solicitud de devolución en tu cuenta. Ve a la sección "Pedidos" y selecciona una solicitud de devolución para el producto correspondiente. Si calificas para un producto de reemplazo, tu solicitud será aprobada. Serás notificado a través del correo electrónico registrado',
-        '4.2. Condiciones. Sólo puede presentar una solicitud de cambio si cumple las tres condiciones siguientes:',
-        'El producto no debe haber sido recibido hace más de 90 días. No debe haber ningún pago pendiente. Cualquier solicitud de cambio anterior debe haber sido completada.'
-      ]
-    },
-    {
-      title: 'Facturación y cancelación',
-      description: [
-        '5.1. Reactivación. Cuando cancelas tu suscripción, tu cuenta permanece activa. Puedes iniciar sesión en cualquier momento para ver tus datos y reactivar tu suscripción. Al reactivar, se aplicará el siguiente débito. No recibirás un bóxer o conjunto gratis al reactivar, ya que lo recibiste al registrarte, a menos que reactives con una promoción específica.',
-        '5.2. Miembro activo. Al reactivar tu suscripción, vuelves a ser un miembro activo. No tienes período de reflexión y se aplica un plazo de cancelación de un mes.',
-        '5.3. Cancelación. Aseguramos que debes pasar por al menos dos pasos para poder reactivar la suscripción. Si decides no reactivar, contáctanos aquí.'
-      ]
-    },
-    {
-      title: 'Loyalty',
-      description: [
-        '6.1. Loyalty Durante tu membresía recibirás un crédito de compra con un máximo de 200 euros. Solo recibirás un nuevo crédito de tienda una vez que el crédito recibido anteriormente se haya gastado en la tienda web.',
-      ]
-    },
-    {
-      title: 'Descuentos',
-      description: [
-        '7.1. Edad. Debes tener al menos dieciocho años o ser mayor de edad en tu Provincia, Región o País para convertirte en miembro y unirte a Magrolabs.',
-        '7.2. El miembro que creó la cuenta de Magrolabs y cuyo método de pago se utiliza para las cuotas de suscripción (también llamado el usuario), tiene acceso y control sobre la cuenta de Magrolabs. Además, el usuario es responsable de todas las actividades que ocurren a través de la cuenta. Eres responsable de la exactitud de los datos que nos proporcionas con respecto a tu cuenta y de actualizarlos cuando sea necesario. Podemos cancelar o bloquear temporalmente tu cuenta para protegerte a ti, a Magrolabs o a nuestros socios contra el robo de identidad u otras actividades fraudulentas.'
-      ]
-    },
-    {
-      title: 'Otros',
-      description: [
-        '8.1. Legislación aplicable. Las presentes Condiciones de Uso se regirán e interpretarán de conformidad con la legislación peruana. Estas Condiciones no limitan la protección obligatoria del consumidor a la que pueda tener derecho en virtud de la legislación aplicable en su país.',
-        '8.2. Atención al Cliente. Si quieres saber más sobre nuestro servicio o necesitas ayuda con tu cuenta, visita nuestra página de ayuda e información. Para ello, ve a .',
-        '8.3. Continuidad de las disposiciones. Si una o más disposiciones de estas Condiciones de uso se consideran inválidas, ilegales o inaplicables, la validez, legalidad y aplicabilidad de las disposiciones restantes no se verán afectadas.',
-        '8.4. Modificaciones de las Condiciones de Uso. Magrolabs podrá modificar periódicamente las presentes Condiciones de Uso. Te notificaremos al menos 30 días antes de que dichos cambios te apliquen.',
-        '8.5. Comunicación electrónica. Te enviaremos información sobre tu Cuenta (como autorizaciones de pago, facturas, cambios de contraseña, cambios en tu(s) método(s) de pago, mensajes de confirmación y avisos) únicamente en formato electrónico, por ejemplo, por correo electrónico a la dirección de correo electrónico que proporcionaste al registrarte.',
+ list = [
+  {
+    title: 'Definiciones y Ámbito',
+    description: [
+      '“Magrolabs” se refiere a la plataforma y tienda en línea operada por la empresa titular, registrada según legislación peruana.',
+      '“Usuario” o “Suscriptor” es la persona natural o jurídica que crea una cuenta, acepta estas Condiciones y contrata servicios o productos de suscripción.',
+      'Estas Condiciones rigen el uso de la plataforma, la suscripción de productos y servicios, pagos y comunicaciones electrónicas.'
+    ]
+  },
+  {
+    title: 'Suscripción y Renovación Automática',
+    description: [
+      'La suscripción se renueva automáticamente cada mes, cargando la cuota a través del método de pago vinculado en la cuenta del Usuario, hasta que éste la cancele. El Usuario autoriza expresamente dichos débitos recurrentes.',
+      'El método de pago debe ser válido y aceptado en Perú (por ejemplo, tarjeta de débito/crédito o pasarela local). Magrolabs podrá requerir verificación de la cuenta, pudiendo aplicar un cargo único de verificación (por ejemplo, S/1 para vinculación bancaria), siempre con previo aviso y consentimiento explícito del Usuario.',
+      'El Usuario puede actualizar sus datos de pago en su cuenta en cualquier momento; Magrolabs no será responsable por débitos fallidos si la información no está vigente.',
+      'En caso de impago recurrente, se notificará al Usuario para regularizar; si persiste el impago, la suscripción podrá suspenderse o cancelarse conforme a las normas aplicables.'
+    ]
+  },
+  {
+    title: 'Período de Desistimiento / Derecho de Retracto',
+    description: [
+      'El Usuario cuenta con el derecho de desistimiento conforme al Código de Protección y Defensa del Consumidor (Ley N° 29571): para ventas a distancia, podrá retractarse dentro de los 7 días hábiles siguientes a la recepción del primer producto sin necesidad de indicar causa y sin penalidad.',
+      'Para ejercer el desistimiento, el Usuario debe comunicar su decisión a Magrolabs vía su cuenta o canales habilitados, antes de expirado el plazo; los costos de devolución serán a cargo del Usuario salvo que Magrolabs disponga lo contrario en promociones especiales.',
+      'Si se ejerce el desistimiento en plazo, se reembolsará cualquier monto cobrado por esa primera entrega dentro de los plazos que fija la ley, utilizando el mismo medio de pago o mediante crédito en tienda según el acuerdo con el Usuario.'
+    ]
+  },
+  {
+    title: 'Periodo de Prueba y Primer Envío',
+    description: [
+      'La suscripción puede incluir un primer envío gratuito o promocional según campaña; este beneficio se aplica una sola vez por cuenta única (único correo electrónico, único RUC/DNI o CLABE de cuenta bancaria y única dirección de envío).',
+      'El período para evaluar dicho primer envío entrará dentro del derecho de desistimiento antes mencionado.',
+      'En caso de abuso o creación de cuentas duplicadas para obtener beneficios múltiples, Magrolabs cobrará el monto correspondiente a los productos obtenidos sin pago y podrá bloquear la cuenta. Los cargos de verificación inicial no son reembolsables si se detecta abuso.'
+    ]
+  },
+  {
+    title: 'Entregas y Débitos Mensuales',
+    description: [
+      'El cargo de la cuota mensual se efectuará en una fecha aproximada (por ejemplo, día 27 de cada mes) y el envío del producto correspondiente se realizará en el siguiente período (por ejemplo, entre días 10 y 20), siempre que el pago se haya procesado correctamente.',
+      'Magrolabs informará en su sitio o mediante notificación al Usuario los plazos de facturación y despacho vigentes. Cualquier cambio en estos plazos será comunicado con al menos 30 días de anticipación.',
+      'Si el pago se procesa después de la fecha límite, el envío podrá retrasarse hasta el próximo ciclo; el Usuario será notificado para decidir si mantiene o cancela la suscripción antes de un nuevo intento de débito.'
+    ]
+  },
+  {
+    title: 'Membresías Adicionales',
+    description: [
+      'Un Usuario puede gestionar múltiples suscripciones (p. ej. hasta 10), sujetas a límites internos (p. ej. máximo 5 de cierto tipo). Cada suscripción adicional no incluirá primer envío gratuito a menos que se indique expresamente en la promoción.',
+      'El cargo de cada membresía adicional se hará en el siguiente ciclo de pago tras su creación, con la misma mecánica y condiciones generales de suscripción.'
+    ]
+  },
+  {
+    title: 'Cancelación de Suscripción',
+    description: [
+      'El Usuario puede cancelar su suscripción directamente desde su cuenta en Magrolabs en cualquier momento. Para suspender la renovación automática, debe hacerlo antes del vencimiento del periodo de facturación actual (se recomienda con al menos 5 días de anticipación, salvo que se indique otro plazo en el sitio).',
+      'Si la cancelación se solicita dentro del periodo de facturación activo, podrá aplicarse un último débito y envío si la cancelación no se gestiona antes de la fecha límite de débito.',
+      'Tras la cancelación, la cuenta permanece activa para reactivaciones posteriores, pero no tendrá derecho a beneficios de primer envío salvo que existan promociones específicas para reactivación.'
+    ]
+  },
+  {
+    title: 'Modificaciones de Precio y Condiciones',
+    description: [
+      'Magrolabs podrá modificar precios, cargos o condiciones de la suscripción; dichos cambios no serán aplicables hasta pasados 30 días desde la notificación al Usuario en la cuenta o correo electrónico registrado',
+      'Si el Usuario no acepta los cambios, podrá cancelar su suscripción antes de la fecha de vigencia del nuevo precio sin penalidad.',
+      'Las promociones especiales o códigos de descuento estarán sujetos a términos especiales anunciados en su momento y no podrán combinarse salvo que se especifique lo contrario.'
+    ]
+  },
+  {
+    title: 'Garantía y Devoluciones',
+    description: [
+      'Los productos cuentan con garantía contra defectos de fabricación o daños en transporte. El Usuario dispondrá de un plazo (p. ej. 90 días) para solicitar reemplazo o reparación según la naturaleza del producto, cumpliendo condiciones específicas: no haber uso indebido, conservar empaque o etiqueta original y no existir pagos pendientes.',
+      'Para solicitar reemplazo o devolución bajo garantía, debe hacerlo desde su cuenta o canal designado, cumpliendo los requisitos de documentación e instrucciones de envío. En caso de procedencia, Magrolabs asumirá costos de reposición o envío según normativas de consumo y buenas prácticas.',
+      'Esta garantía no limita derechos del consumidor contemplados en la ley, incluyendo responsabilidad por vicios o defectos ocultos detectados posteriormente.'
+    ]
+  },
+  {
+    title: 'Datos Personales y Privacidad',
+    description: [
+      'Magrolabs cumple con la Ley N° 29733 de Protección de Datos Personales y su Reglamento (DS 016-2024-JUS) en vigor desde el 30 de marzo de 2025: recopila, almacena y trata datos del Usuario para finalidades legítimas (p. ej. facturación, envíos, atención al cliente) con base legal y medidas de seguridad apropiadas.',
+      'El Usuario puede ejercer sus derechos de acceso, rectificación, cancelación y oposición (ARCO) mediante petición dirigida a Magrolabs, siguiendo los procedimientos publicados en la Política de Privacidad.',
+      'Magrolabs no compartirá datos con terceros no autorizados salvo obligaciones legales o con proveedores necesarios para la prestación del servicio (p. ej. empresas de paquetería, pasarelas de pago), siempre con cláusulas de confidencialidad y seguridad.'
+    ]
+  },
+  {
+    title: 'Propiedad Intelectual',
+    description: [
+      'Todo contenido de la plataforma (textos, imágenes, logos, diseños) es propiedad de Magrolabs o de terceros con licencia. Queda prohibida su reproducción, distribución o uso no autorizado.',
+      'El Usuario concede a Magrolabs licencia no exclusiva para usar contenido que provea (p. ej. reseñas, imágenes para personalización), con fines de operar la plataforma y servicios relacionados.'
+    ]
+  },
+  {
+    title: 'Responsabilidad y Exenciones',
+    description: [
+      'Magrolabs no será responsable por daños indirectos, lucro cesante o perjuicios derivados de fuerza mayor o caso fortuito en la entrega o proceso de suscripción, salvo obligaciones imperativas en favor del consumidor según la ley peruana (Ley N° 29571).',
+      'Magrolabs responderá por incumplimiento o defectos en los productos conforme a la garantía ofrecida y la normativa aplicable en defensa del consumidor.'
+    ]
+  },
+  {
+    title: 'Atención al Cliente y Reclamaciones',
+    description: [
+      'El Usuario podrá presentar consultas o reclamaciones a través de los canales publicados en el sitio (correo electrónico, formulario en línea, chat u otros). Magrolabs dará respuesta dentro de los plazos señalados en normativa de protección al consumidor.',
+      'Si no queda conforme con la resolución interna, el Usuario puede acudir a Indecopi o a mecanismos de solución de controversias en línea reconocidos en Perú (SPO – Sistema de Solución de Controversias en Línea).'
+    ]
+  },
+  {
+    title: 'Comunicaciones Electrónicas',
+    description: [
+      'Todas las notificaciones o comunicaciones que Magrolabs envíe al Usuario (facturas, avisos de débito, cambios de condiciones, confirmaciones) se considerarán válidas si se envían al correo registrado o mediante mensajes en la plataforma.',
+      'El Usuario debe mantener actualizada su dirección de correo; si no recibe notificaciones por datos desactualizados, seguirá aplicándose lo comunicado en la plataforma o última dirección registrada.'
+    ]
+  },
+  {
+    title: 'Legislación Aplicable y Jurisdicción',
+    description: [
+      'Estas Condiciones se rigen por la legislación peruana, en especial el Código de Protección y Defensa del Consumidor (Ley N° 29571), la Ley de Protección de Datos Personales (Ley N° 29733 y su Reglamento) y demás normas aplicables.',
+      'Para cualquier controversia, las partes se someten a la competencia de los órganos previstos por ley (Indecopi, Poder Judicial u otros mecanismos de arbitraje o mediación válidos en Perú), sin perjuicio de medios alternativos de solución pactados de común acuerdo.'
+    ]
+  },
+  {
+    title: 'Modificaciones de las Condiciones de Uso',
+    description: [
+      'Magrolabs puede modificar estas Condiciones periódicamente. Los cambios se notificarán al Usuario con al menos 30 días de anticipación antes de su entrada en vigencia.',
+      'Si el Usuario no manifiesta oposición dentro de ese plazo, se entenderá aceptada la modificación. Si no está de acuerdo, podrá cancelar su suscripción antes de la fecha de vigencia de los nuevos términos.'
+    ]
+  },
+  {
+    title: 'Disposiciones Finales',
+    description: [
+      'Si alguna disposición de estas Condiciones se declara nula o inaplicable, las demás disposiciones seguirán vigentes.',
+      'La falta de ejercicio de un derecho o la demora en exigir su cumplimiento no implica renuncia a éste.',
+      'Para más información o aclaraciones, el Usuario puede consultar la sección de Ayuda en el sitio o contactar Atención al Cliente.'
+    ]
+  }
+];
 
-      ]
-    }
-  ]
 fechaUltimaActualizacion = this.ENV.fechaUltimaActualizacionCondicionesUso
 
 }

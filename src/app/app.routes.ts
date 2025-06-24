@@ -163,6 +163,11 @@ export const routes: Routes = [
     canActivate: [refLinkGuard]
   },
   {
+    path: 'libro-reclamaciones',
+    loadComponent: () => import('./ecommerce/landing/pages/libro-reclamaciones/libro-reclamaciones.component').then(m => m.LibroReclamacionesComponent),
+    canActivate: [refLinkGuard]
+  },
+  {
     path: 'mi-primera-creatina',
     loadComponent: () => import('./ecommerce/landing/pages/mi-primera-creatina/mi-primera-creatina.component').then(m => m.MiPrimeraCreatinaComponent),
     canActivate: [refLinkGuard]

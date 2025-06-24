@@ -67,9 +67,9 @@ export class LibroReclamacionesComponent {
             departamentoConsumidor: ['', Validators.required],
 
             // Datos del proveedor (predefinidos)
-            nombreProveedor: ['MAGRO LABS S.A.C.', Validators.required],
-            rucProveedor: ['20606664971', Validators.required],
-            direccionProveedor: ['Av. José Larco 1232, Miraflores, Lima, Perú', Validators.required],
+            nombreProveedor: ['MAGROLABS S.A.C.', Validators.required],
+            rucProveedor: ['20614056577', Validators.required],
+            direccionProveedor: ['Cal. 2 de Mayo Mza. B Lote. 04 Apv. Buenavista Baja, Lurín, Lima, Perú', Validators.required],
 
             // Detalle del producto/servicio
             tipoReclamacion: ['', Validators.required],

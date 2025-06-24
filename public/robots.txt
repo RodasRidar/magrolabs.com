@@ -2,11 +2,13 @@ User-agent: *
 Disallow: /cart/
 Disallow: /checkout/
 Disallow: /login/
-Disallow: /admin/
+Disallow: /cuenta/
 Disallow: /recuperar-password/
 Disallow: /test/
 Disallow: /temp/
 Disallow: /staging/
+Disallow: /bolsa/
+
 
 Allow: /
 Sitemap: https://magrolabs.com/sitemap.xml

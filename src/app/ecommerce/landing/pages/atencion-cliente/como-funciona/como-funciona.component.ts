@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
-import { title } from 'process';
+import { SeoService } from '../../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-como-funciona',
@@ -9,8 +9,15 @@ import { title } from 'process';
   templateUrl: './como-funciona.component.html',
   styleUrl: './como-funciona.component.css'
 })
-export class ComoFuncionaComponent {
-  ENV = environment
+export class ComoFuncionaComponent implements OnInit {
+  private readonly _seo = inject(SeoService);
+  
+  ENV = environment;
+
+  ngOnInit(): void {
+    this.loadSEO();
+  }
+
   list = [
     {
       title: '¿Cómo puedo registrarme en Magrolabs?',
@@ -35,6 +42,114 @@ export class ComoFuncionaComponent {
       title: '¿Cómo funciona el período de prueba?',
       description:'Después de recibir tu creatina de '+ this.ENV.creatinaFreeGramos + ' gr gratis, comienza tu período de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Durante el período, puedes cancelar tu suscripción de forma gratuita en cualquier momento. Después de estos '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, tu suscripción se convertirá automáticamente en una suscripción de pago, y recibirás una creatina en tu puerta cada mes.'
     }
-  ]
+  ];
 
+  private loadSEO(): void {
+    const title = '¿Cómo Funciona Magrolabs? - Suscripción de Suplementos';
+    const description = 'Descubre cómo funciona la suscripción mensual de Magrolabs. Obtén tu primera creatina gratis, pruébala por ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días y recibe suplementos de alta calidad cada mes.';
+    const URL = 'https://magrolabs.com/atencion-cliente/como-funciona';
+    const image = 'https://magrolabs.com/image-meta.webp';
+    const keywords = 'cómo funciona Magrolabs, suscripción suplementos, creatina gratis, período de prueba, suplementos mensuales, Magrolabs Perú';
+
+    // Configuración básica de SEO
+    this._seo.setTitle(title);
+    this._seo.setCanonicalURL(URL);
+    this._seo.setDescription(description);
+    this._seo.setKeywords(keywords);
+    this._seo.setIndexFollow(true);
+
+    // Open Graph para redes sociales
+    this._seo.setOpenGraph({
+      type: 'article',
+      site_name: 'Magrolabs',
+      title: title,
+      description: description,
+      image: image,
+      url: URL,
+      locale: 'es_PE',
+    });
+
+    // Twitter Cards
+    this._seo.setTwitterCard({
+      'twitter:card': 'summary_large_image',
+      'twitter:url': URL,
+      'twitter:title': title,
+      'twitter:description': description,
+      'twitter:image': image,
+      'twitter:image:alt': 'Cómo funciona la suscripción de Magrolabs',
+    });
+
+    // Hreflang para SEO internacional
+    this._seo.setHreflangs([
+      { lang: 'es', url: URL },
+      { lang: 'en', url: URL },
+      { lang: 'es-pe', url: URL },
+      { lang: 'x-default', url: URL },
+    ]);
+
+    // Structured Data (JSON-LD) para FAQ
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      name: title,
+      url: URL,
+      description: description,
+      mainEntity: this.list.map((item, index) => ({
+        '@type': 'Question',
+        name: item.title,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.description
+        }
+      })),
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Inicio',
+            item: 'https://magrolabs.com'
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Atención al Cliente',
+            item: 'https://magrolabs.com/atencion-cliente'
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: 'Cómo Funciona',
+            item: URL
+          }
+        ]
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Magrolabs',
+        url: 'https://magrolabs.com',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://magrolabs.com/logo-magrolabs.png'
+        }
+      },
+      about: {
+        '@type': 'Service',
+        name: 'Suscripción de Suplementos Magrolabs',
+        description: 'Servicio de suscripción mensual de suplementos deportivos con período de prueba gratuito',
+        provider: {
+          '@type': 'Organization',
+          name: 'Magrolabs'
+        },
+        offers: {
+          '@type': 'Offer',
+          description: 'Primera creatina gratis con período de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
+          priceCurrency: 'PEN'
+        }
+      }
+    };
+
+    this._seo.setStructuredData(structuredData);
+  }
 }

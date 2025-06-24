@@ -99,6 +99,7 @@ export class CheckoutComponent implements OnDestroy {
     reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
+    termsAccepted: this._formBuilder.nonNullable.control(false, [Validators.requiredTrue]),
   });
   buttonName = 'Pagar →';
 

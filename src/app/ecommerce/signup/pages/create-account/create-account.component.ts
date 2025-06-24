@@ -36,6 +36,7 @@ export interface SignUp {
   email: FormControl<string>;
   password: FormControl<string>;
   isSignUpAcepted: FormControl<boolean>;
+  termsAccepted: FormControl<boolean>;
 }
 
 @Component({
@@ -73,6 +74,7 @@ export class CreateAccountComponent implements OnDestroy {
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
+    termsAccepted: this._formBuilder.nonNullable.control(false, [Validators.requiredTrue]),
   });
 
   private emailSubject = new Subject<string>();

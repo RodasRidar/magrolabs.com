@@ -192,8 +192,12 @@
                                 </div>
                             </div>
 
-                            @if(!isCreatinaGratis){
-                            <div class="sm:col-span-4 flex items-end max-sm:mb-16">
+
+
+
+                        </div>
+                        @if(!isCreatinaGratis){
+                            <div class=" flex items-end">
                                 <label class="inline-flex items-center my-2 cursor-pointer">
                                     <input type="checkbox" formControlName="isSignUpAcepted" class="sr-only peer" (change)="isSignUpAceptedChange()">
                                     <div
@@ -204,10 +208,37 @@
                                 </label>
                             </div>
                             }
-
-
-
-                        </div>
+                            
+                            <!-- Checkbox de aceptación de términos y condiciones -->
+                            
+                                <div class="pb-2 max-sm:mb-16">
+                                    <label class="inline-flex items-center my-2 cursor-pointer">
+                                        <input type="checkbox" formControlName="termsAccepted" 
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
+                                            class="sr-only peer">
+                                        <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
+                                            class="relative w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                        </div>
+                                        <span [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
+                                            class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900 w-fit">Declaro que soy mayor de 18 años y acepto los 
+                                            <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank" 
+                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>, 
+                                            <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank" 
+                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la 
+                                            <a href="https://magrolabs.com/politicas/privacidad" target="_blank" 
+                                            class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
+                                            {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')? '*' : ''}}</span>
+                                    </label>
+                                    @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
+                                        <div class="">
+                                            <div class="p-2">
+                                                @if(hasRequiredError('termsAccepted')) {
+                                                <p class="text-xs text-red-500">*Debe aceptar los términos y condiciones para continuar</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        }
+                                </div>
                     </div>
                 </div>
                 <div class="max-sm:hidden mt-6">

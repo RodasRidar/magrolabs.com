@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { OrderService } from '../../../shared/services/order.service';
 import { OrderListResponse, OrderResponse, OrderStatus, OrderItemResponse } from '../../../shared/interfaces/order.interfaces';
 import { catchError, finalize } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export class PedidosComponent implements OnInit {
   totalPages = signal<number>(1);
   selectedStatus = signal<OrderStatus | undefined | 'undefined'>(undefined);
   expandedProducts = signal<Record<string, boolean>>({});
+  private _router = inject(Router);
 
   // Estados para el seguimiento de compra
   mostrarSeguimiento = signal<boolean>(false);
@@ -206,10 +207,21 @@ export class PedidosComponent implements OnInit {
     return '/product-img-not-found';
   }
 
-  escribirResena(orderId: string, productId: string): void {
-    // Aquí se implementaría la lógica para redirigir a la página de escribir reseña
-    // o mostrar un modal para escribir la reseña
-    console.log(`Escribir reseña para producto ${productId} de la orden ${orderId}`);
+  escribirResena(productId: string): void {
+    const slug = this.getSlug(productId);
+    this._router.navigate(['/productos/creatinas', slug], { queryParams: { review: 'true' } });
+  }
+
+  private getSlug(productId: string): string {
+    const auxSlug: { [key: string]: string } = {
+      '00000001-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
+      '00000003-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
+      '00000002-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-100-gr',
+      '00000004-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg',
+      '00000005-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg'
+    };
+    
+    return auxSlug[productId] || productId;
   }
 
   seguirCompra(orderId: string): void {

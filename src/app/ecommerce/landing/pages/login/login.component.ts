@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/env';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
 
   private _formBuilder = inject(FormBuilder);
   private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
   private _cookieService = inject(CookieService);
   private _toastService = inject(ToastService);
   private _authService = inject(AuthService);
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit {
   credentialsFailed = false;
   toastTitle = 'Credenciales incorrectas';
   toastMessage = 'Por favor, verifica tu usuario y contraseña.';
+  returnUrl = '/cuenta/mi-cuenta'; // URL por defecto
 
   form = this._formBuilder.group({
     email: this._formBuilder.control('', [Validators.required, Validators.email]),
@@ -39,6 +41,12 @@ export class LoginComponent implements OnInit {
   })
 
   ngOnInit() {
+    // Obtener returnUrl de los query parameters
+    const returnUrlParam = this._route.snapshot.queryParams['returnUrl'];
+    if (returnUrlParam) {
+      this.returnUrl = returnUrlParam;
+    }
+
     const rememberMe = this._cookieService.get('rememberMe');
     const rememberMeEmail = this._cookieService.get('rememberMeEmail');
     if (rememberMe === 'true' && rememberMeEmail) {
@@ -85,7 +93,8 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this._router.navigate(['/cuenta/mi-cuenta']);
+          // Redirigir a la URL especificada en returnUrl
+          this._router.navigateByUrl(this.returnUrl);
         },
         error: (error) => {
           this.credentialsFailed = true;

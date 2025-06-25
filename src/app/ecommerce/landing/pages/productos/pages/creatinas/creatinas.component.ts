@@ -8,18 +8,23 @@ import { ShoppingCartService } from '../../../../../../shared/services/cart-serv
 import { SummaryService } from '../../../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../../../shared/services/seo.service';
 import { SinceDatePipe } from '../../../../../../shared/pipes/since-date.pipe';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../../../../../shared/services/auth.service';
+import { ReviewService } from '../../../../../../shared/services/review.service';
+import { ToastService } from '../../../../../../shared/services/toast.service';
+import { OrderService } from '../../../../../../shared/services/order.service';
+import { SubscriptionService } from '../../../../../../shared/services/subscription.service';
+import { forkJoin } from 'rxjs';
+import { OrderStatus } from '../../../../../../shared/interfaces/order.interfaces';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, SinceDatePipe],
+  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, SinceDatePipe, ReactiveFormsModule],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
 export class CreatinasComponent {
-  writeReview() {
-    throw new Error('Method not implemented.');
-  }
   @ViewChild('Subscription', { static: false }) subscriptionElement!: ElementRef<HTMLDetailsElement>;
   @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
 
@@ -28,10 +33,14 @@ export class CreatinasComponent {
   private platformId = inject(PLATFORM_ID);
   private _shoppingCartService = inject(ShoppingCartService);
   private _summaryService = inject(SummaryService);
-  private _seo = inject(SeoService)
-
-
-
+  private _seo = inject(SeoService);
+  private _formBuilder = inject(FormBuilder);
+  private _authService = inject(AuthService);
+  private _reviewService = inject(ReviewService);
+  private _toastService = inject(ToastService);
+  private _orderService = inject(OrderService);
+  private _subscriptionService = inject(SubscriptionService);
+  
   ENV = environment
   productName = '';
   productPriceOnePurchase = 0;
@@ -54,12 +63,25 @@ export class CreatinasComponent {
   isSelectOnePurchase = false;
   isLoading = true;
 
+  // Modal review properties
+  isReviewModalOpen = false;
+  isSubmittingReview = false;
+  isCheckingReviewPermission = false;
+  selectedRating = 0;
+  hoveredRating = 0;
+
   reviewDate1 = new Date('2024-12-27')
   reviewDate2 = new Date('2025-01-04')
   reviewDate3 = new Date('2025-01-05')
   reviewDate4 = new Date('2025-01-06')
   reviewDate5 = new Date('2025-01-07')
   reviewDate6 = new Date('2025-01-08')
+
+  // Review form
+  reviewForm = this._formBuilder.group({
+    rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
+    comment: ['', [Validators.required, Validators.maxLength(250), Validators.minLength(10)]]
+  });
 
   jsonLD_250Gr = {
     "@context": "https://schema.org/",
@@ -143,12 +165,20 @@ export class CreatinasComponent {
   };
 
   ngOnInit() {
-
+    this._authService.isAuthenticated$.subscribe(isAuth => {
+      this.isLogged = isAuth;
+    });
+    
     this.isSelectSubscription = true;
     this.slug = this.route.snapshot.params['slug'];
-    // this.productService.getProduct(slug).subscribe(product => {
-    //   this.product = product;
-    // });
+    
+    // Verificar si viene el parámetro review=true
+    const reviewParam = this.route.snapshot.queryParams['review'];
+    if (reviewParam === 'true' && this.isLogged) {
+      // Verificar si el usuario puede escribir una reseña antes de abrir el modal
+      this.checkUserCanReview();
+    }
+
     if (this.slug === 'creatina-monohidratada-250-gr') {
       this.isFreeCreatine = false;
       this.isOutOfStock = false;
@@ -160,7 +190,6 @@ export class CreatinasComponent {
       this.reviews = this.ENV.nroReviews;
       this.recurrencia = '30 días';
       this.principalImgFront = 'package-image.png';
-      // this.principalImgBack = 'package-image-back.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = 'preview-3d-image.png';
       this._seo.setStructuredData(this.jsonLD_250Gr);
@@ -199,6 +228,229 @@ export class CreatinasComponent {
     }
 
     this.loadSEO();
+  }
+
+  writeReview() {
+    if (!this.isLogged) {
+      const returnUrl = `/productos/creatinas/${this.slug}?review=true`;
+      this.router.navigate(['/login'], { queryParams: { returnUrl } });
+      return;
+    }
+
+    // Verificar si el usuario puede escribir una reseña para este producto
+    this.checkUserCanReview();
+  }
+
+  private checkUserCanReview() {
+    const productId = this.getProductId();
+    this.isCheckingReviewPermission = true;
+    
+    this._reviewService.canUserReviewProduct(productId).subscribe({
+      next: (response) => {
+        if (response.can_review) {
+          this.openReviewModal();
+        } else {
+          const message = response.message || 'Debes haber recibido este producto para poder escribir una reseña.';
+          this._toastService.error(
+            'No puedes escribir una reseña',
+            message
+          );
+        }
+      },
+      error: (error) => {
+        console.error('Error al verificar si puede escribir reseña:', error);
+        
+        // Si el endpoint no existe (404), usar método alternativo
+        if (error.status === 404) {
+          this.checkUserCanReviewAlternative();
+          return;
+        }
+        
+        let errorMessage = 'No se pudo verificar si puedes escribir una reseña. Intenta nuevamente.';
+        
+        if (error.status === 401) {
+          errorMessage = 'Necesitas iniciar sesión para escribir una reseña.';
+        }
+        
+        this._toastService.error('Error', errorMessage);
+      },
+      complete: () => {
+        this.isCheckingReviewPermission = false;
+      }
+    });
+  }
+
+  private checkUserCanReviewAlternative() {
+    const productId = this.getProductId();
+    
+    // Verificar tanto órdenes como suscripciones en paralelo
+    forkJoin({
+      orders: this._orderService.getMyOrders(1, 100), // Obtener todas las órdenes
+      subscriptions: this._subscriptionService.getMySubscriptions(1, 100) // Obtener todas las suscripciones
+    }).subscribe({
+      next: (response) => {
+        const hasReceivedProduct = this.checkIfUserReceivedProduct(productId, response.orders, response.subscriptions);
+        
+        if (hasReceivedProduct) {
+          this.openReviewModal();
+        } else {
+          this._toastService.error(
+            'No puedes escribir una reseña',
+            'Debes haber recibido este producto para poder escribir una reseña. Realiza una compra o suscríbete primero.'
+          );
+        }
+      },
+      error: (error) => {
+        console.error('Error al verificar órdenes y suscripciones:', error);
+        this._toastService.error(
+          'Error',
+          'No se pudo verificar tu historial de compras. Intenta nuevamente.'
+        );
+      },
+      complete: () => {
+        this.isCheckingReviewPermission = false;
+      }
+    });
+  }
+
+  private checkIfUserReceivedProduct(productId: string, ordersResponse: any, subscriptionsResponse: any): boolean {
+    // Verificar en órdenes entregadas
+    const deliveredOrders = ordersResponse.data?.orders?.filter((order: any) => 
+      order.status === OrderStatus.DELIVERED
+    ) || [];
+    
+    const hasProductInOrders = deliveredOrders.some((order: any) =>
+      order.orderItems?.some((item: any) => item.product_id === productId)
+    );
+    
+    if (hasProductInOrders) {
+      return true;
+    }
+    
+    // Verificar en suscripciones activas o que hayan tenido al menos un envío
+    const activeOrPastSubscriptions = subscriptionsResponse.data?.subscriptions?.filter((subscription: any) =>
+      subscription.status === 'ACTIVE' || 
+      subscription.status === 'PAUSED' || 
+      subscription.status === 'CANCELLED' ||
+      subscription.status === 'TO_CANCEL'
+    ) || [];
+    
+    // Para suscripciones, asumimos que si tiene una suscripción activa o pasada del producto, ha recibido al menos un envío
+    const hasProductInSubscriptions = activeOrPastSubscriptions.some((subscription: any) =>
+      subscription.subscription_plan?.product_id === productId ||
+      subscription.product_id === productId
+    );
+    
+    return hasProductInSubscriptions;
+  }
+
+  openReviewModal() {
+    this.isReviewModalOpen = true;
+    this.selectedRating = 0;
+    this.hoveredRating = 0;
+    this.reviewForm.reset();
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeReviewModal() {
+    this.isReviewModalOpen = false;
+    this.selectedRating = 0;
+    this.hoveredRating = 0;
+    this.reviewForm.reset();
+    document.body.style.overflow = 'auto';
+    
+    // Limpiar el parámetro review de la URL si existe
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: { review: null },
+      queryParamsHandling: 'merge'
+    });
+    this.router.navigateByUrl(urlTree);
+  }
+
+  setRating(rating: number) {
+    this.selectedRating = rating;
+    this.reviewForm.patchValue({ rating });
+  }
+
+  setHoveredRating(rating: number) {
+    this.hoveredRating = rating;
+  }
+
+  resetHoveredRating() {
+    this.hoveredRating = 0;
+  }
+
+  getRatingDisplay(star: number): number {
+    return this.hoveredRating > 0 ? this.hoveredRating : this.selectedRating;
+  }
+
+  get remainingCharacters(): number {
+    const comment = this.reviewForm.get('comment')?.value || '';
+    return 250 - comment.length;
+  }
+
+  get isCommentValid(): boolean {
+    const comment = this.reviewForm.get('comment')?.value || '';
+    return comment.length >= 10 && comment.length <= 250;
+  }
+
+  get isFormValid(): boolean {
+    return this.selectedRating > 0 && this.isCommentValid;
+  }
+
+  private getProductId(): string {
+    // Mapear el slug a un product_id (en un caso real esto vendría de una API o base de datos)
+    const productIdMap: { [key: string]: string } = {
+      'creatina-monohidratada-250-gr': '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
+      'creatina-monohidratada-100-gr': '00000002-50eb-4ac3-aa94-1b64fbf32b9c',
+      'creatina-monohidratada-3-kg': '00000004-50eb-4ac3-aa94-1b64fbf32b9c'
+    };
+    
+    return productIdMap[this.slug] || this.slug;
+  }
+
+  submitReview() {
+    if (!this.isFormValid || this.isSubmittingReview) {
+      return;
+    }
+
+    this.isSubmittingReview = true;
+
+    const reviewData = {
+      product_id: this.getProductId(),
+      rating: this.selectedRating,
+      title: 'Reseña de ' + this.productName,
+      comment: this.reviewForm.get('comment')?.value || ''
+    };
+
+    this._reviewService.createReview(reviewData).subscribe({
+      next: (response) => {
+        console.log('Review creada exitosamente:', response);
+        this._toastService.success(
+          '¡Reseña enviada!', 
+          'Tu reseña ha sido enviada exitosamente y será revisada antes de publicarse.'
+        );
+        this.closeReviewModal();
+      },
+      error: (error) => {
+        console.error('Error al enviar review:', error);
+        let errorMessage = 'Ocurrió un error al enviar tu reseña. Por favor, intenta nuevamente.';
+        
+        // Manejar errores específicos de la API
+        if (error.status === 401) {
+          errorMessage = 'Necesitas iniciar sesión para escribir una reseña.';
+        } else if (error.status === 400) {
+          errorMessage = 'Los datos de la reseña no son válidos. Verifica la información.';
+        } else if (error.status === 404) {
+          errorMessage = 'El producto no fue encontrado.';
+        }
+        
+        this._toastService.error('Error al enviar reseña', errorMessage);
+      },
+      complete: () => {
+        this.isSubmittingReview = false;
+      }
+    });
   }
 
   selectTap(tapNumber: number) {
@@ -250,23 +502,12 @@ export class CreatinasComponent {
           price: this.productPriceSubscription,
           imageUrl: this.principalImgFront,
           slug: this.slug,
-          // discountPercentage: 20,
-          // is_on_sale: true
         },
         quantity: 1
       });
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);
-      // this._summaryService.setChoosePlan({
-      //   selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
-      //   descriptionOne: 'Monohidratada 100%',
-      //   descriptionTwo: 'Plan mensual de S/47',
-      //   descrptionThree: 'Creatina 100g (gratis)',
-      //   quantity: 1
-      // })
-
-      // this._router.navigate(['registro/verificacion']);
     }
     else if (this.isSelectOnePurchase) {
       this._shoppingCartService.addProductToCart({
@@ -282,14 +523,6 @@ export class CreatinasComponent {
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);
-      // this._summaryService.setChoosePlan({
-      //   selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
-      //   descriptionOne: 'Monohidratada 100%',
-      //   descriptionTwo: 'Compra única de S/59',
-      //   quantity: 1
-      // })
-
-      // this._router.navigate(['registro/verificacion']);
     }
   }
 
@@ -336,7 +569,6 @@ export class CreatinasComponent {
     }
 
     this.router.navigate(['registro/crear-cuenta']);
-
   }
 
   private loadSEO() {
@@ -344,7 +576,6 @@ export class CreatinasComponent {
     const title = this.productName + ' Magrolabs.';
     const URL = 'https://magrolabs.com/productos/creatinas/' + this.slug;
     const image = 'https://magrolabs.com/' + this.principalImgFront;
-
 
     this._seo.title.setTitle(title);
     this._seo.setCanonicalURL(URL);
@@ -363,13 +594,10 @@ export class CreatinasComponent {
       locale: 'es_PE',
     });
     
-    // this._seo.meta.updateTag({ property: 'product:pretax_price:amount', content: '119.00' }, 'property="product:pretax_price:amount"');
-    // this._seo.meta.updateTag({ property: 'product:pretax_price:currency', content: 'PEN' }, 'property="product:pretax_price:currency"');
     this._seo.meta.updateTag({ property: 'product:condition', content: 'new' }, 'property="product:condition"');
     this._seo.meta.updateTag({ property: 'product:availability', content: this.isOutOfStock ? 'out of stock' : 'in stock' }, 'property="product:availability"');
     this._seo.meta.updateTag({ property: 'product:brand', content: 'Magrolabs' }, 'property="product:brand"');
     this._seo.meta.updateTag({ property: 'product:category', content: 'Suplementos' }, 'property="product:category"');
-    // this._seo.meta.updateTag({ property: 'product:retailer_item_id', content: '1' }, 'property="product:retailer_item_id"');
 
     this._seo.meta.updateTag({ property: 'product:plural_title', content: title }, 'property="product:plural_title"');
     this._seo.meta.updateTag({ property: 'product:price:amount', content: this.productPriceSubscription.toString() }, 'property="product:price:amount"');
@@ -391,5 +619,4 @@ export class CreatinasComponent {
       { lang: 'x-default', url: URL },
     ]);
   }
-
 }

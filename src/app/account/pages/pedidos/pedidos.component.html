@@ -134,8 +134,8 @@
 
                   <div class="mt-6 flex flex-col gap-2 w-fit">
                     <ml-button *ngIf="pedido.status === 'DELIVERED'"
-                      (click)="escribirResena(pedido.id, item.product_id); $event.stopPropagation()"
-                      name="Dejar reseña →" type="secondary">
+                      (click)="escribirResena(item.product.id); $event.stopPropagation()"
+                      name="Escribir reseña →" type="secondary">
                     </ml-button>
                   </div>
                 </div>

@@ -45,7 +45,7 @@ export class ToastService {
       this.appRef.detachView(componentRef.hostView);
       componentRef.destroy();
       this.toastClosed$.next(); // Emitir evento de cierre
-    }, 5000); // 5 segundos
+    }, 6000); // 5 segundos
   }
 
   success(title: string, message: string): void {

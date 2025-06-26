@@ -213,6 +213,6 @@ export class SubscriptionService {
   }
 } 
 export enum AtPeriodEnd {
-  IMMEDIATE = '0',
-  END_OF_PERIOD = '1'
+  IMMEDIATE = 0,
+  END_OF_PERIOD = 1
 }

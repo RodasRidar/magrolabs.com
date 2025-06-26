@@ -419,8 +419,17 @@ export class SuscripcionComponent implements OnInit {
   confirmCancellation(): void {
     if (!this.subscription() || !this.cancellationReason()) return;
 
-    // Ocultar modal de cancelación y mostrar modal de pausa
+    // Ocultar modal de cancelación
     this.showCancellationModal.set(false);
+    
+    // Si la suscripción está en período de prueba, ir directamente al modal de créditos
+    if (this.subscription()!.status === SubscriptionStatusEnum.TRIAL) {
+      this.calculateCancellationDates();
+      this.showFinalCancelModal.set(true);
+      return;
+    }
+
+    // Para suscripciones activas, mostrar el modal de pausa
     this.calculatePauseDates();
     this.showPauseModal.set(true);
   }
@@ -699,6 +708,12 @@ export class SuscripcionComponent implements OnInit {
 
     if (!this.subscription()) return;
 
+    // Si está en período de prueba, no hay último pago
+    if (this.subscription()!.status === SubscriptionStatusEnum.TRIAL) {
+      this.lastPaymentDate.set('');
+      return;
+    }
+
     // Obtener el día de facturación personal del usuario desde su fecha de inicio
     const subscriptionStartDate = new Date(this.subscription()!.start_date);
     const userBillingDay = subscriptionStartDate.getDate();
@@ -766,9 +781,11 @@ export class SuscripcionComponent implements OnInit {
   finallyCancel(): void {
     if (!this.subscription()) return;
 
-    const isToCancel = this.lastPaymentDate() != '';
+    const isTrialPeriod = this.subscription()!.status === SubscriptionStatusEnum.TRIAL;
+    const isToCancel = this.lastPaymentDate() != '' && !isTrialPeriod;
 
     console.log('isToCancel', isToCancel);
+    console.log('isTrialPeriod', isTrialPeriod);
     this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? this.nextPaymentDate() : undefined)
       .pipe(
         switchMap((response) => {

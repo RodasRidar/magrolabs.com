@@ -45,6 +45,7 @@ const apiMagroLabs = 'http://localhost:3000/api/v1';
 const useProxy = true;
 const cancelDiscout = 50;
 const flowCouponId50PercentDiscount = 874;
+const diasReembolsoCreditosLoyaltyWebshop = 14;
 
 export const environment = {
     production,
@@ -93,5 +94,6 @@ export const environment = {
     flowUrlReturnPagoPorAdmin,
     useProxy,
     cancelDiscout,
-    flowCouponId50PercentDiscount
+    flowCouponId50PercentDiscount,
+    diasReembolsoCreditosLoyaltyWebshop
 };

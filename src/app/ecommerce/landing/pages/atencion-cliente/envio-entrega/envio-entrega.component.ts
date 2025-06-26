@@ -13,11 +13,11 @@ export class EnvioEntregaComponent {
   list = [
     {
       title: '¿Cuándo recibiré mi creatina gratis?',
-      description: 'Recibirás tu creatina gratis de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max+' días hábiles. Tan pronto como completes tu registro, tu pedido se enviará de inmediato. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
+      description: 'Recibirás tu creatina gratis de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max+' días hábiles. Tan pronto como completes tu registro, tu pedido será enviado inmediatamente. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
     },
     {
       title: '¿Cuándo recibiré mis entregas mensuales?',
-      description: 'Las entregas mensuales las recibirás entre el día '+ this.ENV.plazoDeEntregaMensualesCreatina.min+' y el día '+ this.ENV.plazoDeEntregaMensualesCreatina.max+' de cada mes. En Magrolabs pagas por adelantado, por lo que recibirás la entrega mensual en el mes siguiente al pago. Todas las entregas se realizan dentro del mismo período y pueden llegar de forma separada si hay más de un producto en tu suscripción.',
+      description: 'Las entregas mensuales las recibirás en un plazo de '+ this.ENV.plazoDeEntregaDiasHabiles.max + ' días después de que se haya realizado tu pago automático. Todas las entregas se realizan dentro del mismo período y pueden llegar de forma separada si hay más de un producto en tu suscripción.',
     },
     {
       title: 'No he recibido mi(s) producto(s)',
@@ -25,7 +25,7 @@ export class EnvioEntregaComponent {
     },
     {
       title: 'He recibido el producto incorrecto',
-      description: '¡Lo sentimos! Si recibiste un producto incorrecto, puedes hacer una solicitud de cambio solo ponte en contacto con nosotros. Una vez procesada, recibirás la entrega correcta lo antes posible. Si necesitas ayuda adicional, nuestro equipo de atención al cliente está listo para ayudarte.',
+      description: '¡Lo sentimos! Si recibiste un producto incorrecto. En Magrolabs, no es necesario devolver un producto incorrecto. Si el producto llegó en buen estado, puedes compartirlo o regalarlo a alguien más. Nosotros no solicitamos devoluciones ni realizamos reembolsos en estos casos. En cambio, te enviaremos una nueva entrega del producto correcto sin costo adicional para ti. Si necesitas ayuda adicional, nuestro equipo de atención al cliente está listo para ayudarte.',
     }
   ];
 }

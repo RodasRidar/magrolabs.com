@@ -45,6 +45,7 @@ const flowUrlReturnPagoPorAdmin = 'https://develop.magrolabs.com/cuenta/pedidos'
 const useProxy = false;
 const cancelDiscout = 50;
 const flowCouponId50PercentDiscount = 873;
+const diasReembolsoCreditosLoyaltyWebshop = 14;
 
 export const environment = {
     production,
@@ -93,5 +94,6 @@ export const environment = {
     flowUrlReturnPagoPorAdmin,
     useProxy,
     cancelDiscout,
-    flowCouponId50PercentDiscount
+    flowCouponId50PercentDiscount,
+    diasReembolsoCreditosLoyaltyWebshop
 };

@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformServer } from '@angular/common';
+import { TransferState, makeStateKey } from '@angular/core';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
@@ -14,6 +15,8 @@ import { Subject } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/env';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { StarRatingComponent } from '../../../shared/ui/star-rating/star-rating.component';
+import { ReviewService } from '../../../shared/services/review.service';
 import { UserService } from '../../../shared/services/user.service';
 import { CreateCustomerRequest } from '../../../shared/models/flow.model';
 import { OrderService } from '../../../shared/services/order.service';
@@ -24,7 +27,7 @@ import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subsc
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })
@@ -41,9 +44,12 @@ export class SuscripcionComponent implements OnInit {
   private _creditTransactionService = inject(CreditTransactionService);
   private destroy$ = new Subject<void>();
   private userService = inject(UserService);
+  private reviewService = inject(ReviewService);
   private orderService = inject(OrderService);
   private subscriptionOrderService = inject(SubscriptionOrderService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  private transferState = inject(TransferState);
 
   reactivateType = ReactivateType;
   ENV = environment;
@@ -103,9 +109,34 @@ export class SuscripcionComponent implements OnInit {
   showSuccessCancellationModal = signal<boolean>(false);
   isPaymentVerified = signal<boolean>(false);
 
+  // Variables para reviews
+  averageRating = 4.5; // Valor por defecto
+  totalReviews = 0;
+
   ngOnInit(): void {
     this.loadSubscription();
     this.loadUserCredits();
+    
+    // Definir keys para Transfer State
+    const AVERAGE_RATING_KEY = makeStateKey<number>('suscripcion-average-rating');
+    const TOTAL_REVIEWS_KEY = makeStateKey<number>('suscripcion-total-reviews');
+    
+    if (isPlatformServer(this.platformId)) {
+      // En el servidor: cargar reviews y guardar en Transfer State
+      this.loadReviews().then(() => {
+        this.transferState.set(AVERAGE_RATING_KEY, this.averageRating);
+        this.transferState.set(TOTAL_REVIEWS_KEY, this.totalReviews);
+      });
+    } else {
+      // En el cliente: recuperar desde Transfer State
+      const savedRating = this.transferState.get(AVERAGE_RATING_KEY, 4.5);
+      const savedReviews = this.transferState.get(TOTAL_REVIEWS_KEY, 0);
+      
+      this.averageRating = savedRating;
+      this.totalReviews = savedReviews;
+      
+      console.log(`Cliente - Reviews recuperadas: ${this.totalReviews}, Rating: ${this.averageRating}`);
+    }
     this.authService.getCurrentUserObservable()?.subscribe(user => {
       if (user?.flowCustomerId) {
         // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
@@ -1349,6 +1380,37 @@ export class SuscripcionComponent implements OnInit {
     }
 
     this._toastService.error('Error', errorMessage);
+  }
+
+  private loadReviews(): Promise<void> {
+    console.log('loadReviews - Solo ejecutándose en servidor (SSR)');
+    // Producto ID para creatina
+    const productId = '00000001-50eb-4ac3-aa94-1b64fbf32b9c';
+    //TODO QUITAR EL MAS5
+    return new Promise((resolve, reject) => {
+      this.reviewService.getAllReviews({product_id: productId, is_approved: true}).subscribe({
+        next: (response) => {
+          console.log('Reviews cargadas desde servidor:', response);
+          if (response.data && response.data.reviews && response.data.reviews.length > 0) {
+            const reviews = response.data.reviews;
+            this.totalReviews = reviews.length + 5;
+            
+            // Calcular promedio de rating
+            const totalStars = reviews.reduce((sum: number, review: any) => sum + review.stars, 0);
+            const calculatedRating = Number((totalStars / reviews.length).toFixed(1));
+            this.averageRating = calculatedRating;
+            
+            console.log(`SSR - Reviews: ${reviews.length}, Rating promedio: ${calculatedRating}`);
+          }
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error al cargar reviews en SSR:', error);
+          // Mantener valores por defecto en caso de error
+          resolve(); // Resolver aunque haya error para continuar
+        }
+      });
+    });
   }
 }
 

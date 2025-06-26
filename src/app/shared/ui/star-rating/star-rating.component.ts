@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -19,21 +19,21 @@ import { CommonModule } from '@angular/common';
   `
 })
 export class StarRatingComponent {
-  @Input() rating: number = 0;
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  rating = input.required<number>();
+  size = input<'sm' | 'md' | 'lg'>('md');
 
   get starsArray(): { filled: boolean; index: number }[] {
     // Lógica de redondeo conservadora:
     // Si el decimal es exactamente .5, redondear hacia abajo
     // Si es mayor a .5, redondear hacia arriba
     // Si es menor a .5, redondear hacia abajo
-    const decimal = this.rating % 1;
+    const decimal = this.rating() % 1;
     let roundedRating: number;
     
     if (decimal === 0.5) {
-      roundedRating = Math.floor(this.rating); // 4.5 -> 4
+      roundedRating = Math.floor(this.rating()); // 4.5 -> 4
     } else {
-      roundedRating = Math.round(this.rating); // 4.6 -> 5, 4.4 -> 4
+      roundedRating = Math.round(this.rating()); // 4.6 -> 5, 4.4 -> 4
     }
     
     return Array.from({ length: 5 }, (_, index) => ({
@@ -43,7 +43,7 @@ export class StarRatingComponent {
   }
 
   get sizeClass(): string {
-    switch (this.size) {
+    switch (this.size()) {
       case 'sm': return 'h-4 w-4';
       case 'lg': return 'h-6 w-6';
       default: return 'h-5 w-5';

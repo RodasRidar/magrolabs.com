@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, PLATFORM_ID, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from "@angular/core";
 import { StepComponent } from "../../components/step/step.component";
 import { StepEnum } from "../../models/step.model";
 import { Information } from "../../components/information/information.component";
@@ -7,13 +7,16 @@ import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary
 import { ActivatedRoute, Router } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
 import { ButtonComponent } from "../../../../shared/ui/button/button.component";
+import { StarRatingComponent } from "../../../../shared/ui/star-rating/star-rating.component";
+import { ReviewService } from "../../../../shared/services/review.service";
 import { environment } from "../../../../../environments/env";
-import { CommonModule, CurrencyPipe, isPlatformBrowser } from "@angular/common";
+import { CommonModule, CurrencyPipe, isPlatformBrowser, isPlatformServer } from "@angular/common";
+import { TransferState, makeStateKey } from "@angular/core";
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, CurrencyPipe, CommonModule],
+  imports: [StepComponent, ButtonComponent, StarRatingComponent, CurrencyPipe, CommonModule],
   templateUrl: './plans.component.html',
 })
 
@@ -25,7 +28,9 @@ export class PlansComponent {
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _seo = inject(SeoService);
+  private _reviewService = inject(ReviewService);
   private platformId = inject(PLATFORM_ID);
+  private transferState = inject(TransferState);
 
   private nextUrl = '';
 
@@ -33,6 +38,10 @@ export class PlansComponent {
   isSelectSubscription = false;
   isSelectOnePurchase = false;
   stepEnum = StepEnum
+
+  averageRating = 4.5; // Valor por defecto
+  totalReviews = 0;
+  
   informationList: Information[] = [
     {
       name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' soles de crédito de compra cada mes.'
@@ -48,6 +57,27 @@ export class PlansComponent {
   ngOnInit(): void {
     let summary = this._summaryService.getSummary()
     this.loadSEO();
+    
+    // Definir keys para Transfer State
+    const AVERAGE_RATING_KEY = makeStateKey<number>('plans-average-rating');
+    const TOTAL_REVIEWS_KEY = makeStateKey<number>('plans-total-reviews');
+    
+    if (isPlatformServer(this.platformId)) {
+      // En el servidor: cargar reviews y guardar en Transfer State
+      this.loadReviews().then(() => {
+        this.transferState.set(AVERAGE_RATING_KEY, this.averageRating);
+        this.transferState.set(TOTAL_REVIEWS_KEY, this.totalReviews);
+      });
+    } else {
+      // En el cliente: recuperar desde Transfer State
+      const savedRating = this.transferState.get(AVERAGE_RATING_KEY, 4.5);
+      const savedReviews = this.transferState.get(TOTAL_REVIEWS_KEY, 0);
+      
+      this.averageRating = savedRating;
+      this.totalReviews = savedReviews;
+      
+      console.log(`Cliente - Reviews recuperadas: ${this.totalReviews}, Rating: ${this.averageRating}`);
+    }
     this._route.queryParams.subscribe(params => {
       this.nextUrl = params['next'] || '';
       // console.log('nextUrl', this.nextUrl);
@@ -181,6 +211,37 @@ export class PlansComponent {
 
   isButtonDisabled() {
     return !this.isSelectSubscription && !this.isSelectOnePurchase;
+  }
+
+  private loadReviews(): Promise<void> {
+    console.log('loadReviews - Solo ejecutándose en servidor (SSR)');
+    // Producto ID para creatina
+    const productId = '00000001-50eb-4ac3-aa94-1b64fbf32b9c';
+    //TODO QUITAR EL MAS5
+    return new Promise((resolve, reject) => {
+      this._reviewService.getAllReviews({product_id: productId, is_approved: true}).subscribe({
+        next: (response) => {
+          console.log('Reviews cargadas desde servidor:', response);
+          if (response.data && response.data.reviews && response.data.reviews.length > 0) {
+            const reviews = response.data.reviews;
+            this.totalReviews = reviews.length + 5; 
+            
+            // Calcular promedio de rating
+            const totalStars = reviews.reduce((sum: number, review: any) => sum + review.stars, 0);
+            const calculatedRating = Number((totalStars / reviews.length).toFixed(1));
+            this.averageRating = calculatedRating;
+            
+            console.log(`SSR - Reviews: ${this.totalReviews}, Rating promedio: ${this.averageRating}`);
+          }
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error al cargar reviews en SSR:', error);
+          // Mantener valores por defecto en caso de error
+          resolve(); // Resolver aunque haya error para continuar
+        }
+      });
+    });
   }
 
   ngAfterViewInit(): void {

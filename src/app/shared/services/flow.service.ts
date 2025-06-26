@@ -284,7 +284,7 @@ export class FlowService {
       const body = new HttpParams()
         .set('apiKey', this.apiKey)
         .set('subscriptionId', subscriptionId)
-        .set('at_period_end', atPeriodEnd.toString())
+        .set('at_period_end', atPeriodEnd)
         .set('s', this.getFlowSignature(toSign));
       
       return this.http.post<any>(url, body.toString(), { headers });

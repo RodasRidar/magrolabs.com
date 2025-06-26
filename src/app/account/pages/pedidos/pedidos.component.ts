@@ -209,7 +209,7 @@ export class PedidosComponent implements OnInit {
 
   escribirResena(productId: string): void {
     const slug = this.getSlug(productId);
-    this._router.navigate(['/productos/creatinas', slug], { queryParams: { review: 'true' } });
+    window.open(`/productos/creatinas/${slug}?review=true`, '_blank');
   }
 
   private getSlug(productId: string): string {

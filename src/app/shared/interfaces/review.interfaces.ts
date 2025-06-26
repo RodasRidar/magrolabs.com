@@ -7,30 +7,38 @@ export interface CreateReviewRequest {
 
 export interface Review {
   id: string;
-  product_id: string;
   user_id: string;
-  rating: number;
-  title: string;
-  comment: string;
-  is_approved: boolean;
-  is_deleted: boolean;
+  product_id: string;
+  review: string;
+  stars: number;
+  isAproved?: boolean;
   created_at: string;
   updated_at: string;
+  is_delete: boolean;
+  is_static?: boolean;
   user?: {
     id: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
+  };
+  product?: {
+    id: string;
+    name: string;
   };
 }
 
 export interface ReviewsResponse {
-  data: Review[];
-  meta?: {
-    total: number;
-    per_page: number;
-    current_page: number;
-    last_page: number;
+  data: {
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      total_pages: number;
+    };
+    reviews: Review[];
   };
+  status: string;
 }
 
 export interface ApproveReviewRequest {

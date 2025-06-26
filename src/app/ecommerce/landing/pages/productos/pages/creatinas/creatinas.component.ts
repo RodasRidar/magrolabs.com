@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { environment } from '../../../../../../../environments/env';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
@@ -12,6 +12,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { ReviewService } from '../../../../../../shared/services/review.service';
 import { ToastService } from '../../../../../../shared/services/toast.service';
+import { ReviewsListComponent } from '../../../../../../shared/ui/reviews-list/reviews-list.component';
+import { ReviewSkeletonComponent } from '../../../../../../shared/ui/review-skeleton/review-skeleton.component';
+import { StarRatingComponent } from '../../../../../../shared/ui/star-rating/star-rating.component';
 import { OrderService } from '../../../../../../shared/services/order.service';
 import { SubscriptionService } from '../../../../../../shared/services/subscription.service';
 import { forkJoin } from 'rxjs';
@@ -20,7 +23,7 @@ import { OrderStatus } from '../../../../../../shared/interfaces/order.interface
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, SinceDatePipe, ReactiveFormsModule],
+  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
@@ -69,13 +72,30 @@ export class CreatinasComponent {
   isCheckingReviewPermission = false;
   selectedRating = 0;
   hoveredRating = 0;
+  isLoadReviews = signal<boolean>(false);
 
-  reviewDate1 = new Date('2024-12-27')
-  reviewDate2 = new Date('2025-01-04')
-  reviewDate3 = new Date('2025-01-05')
-  reviewDate4 = new Date('2025-01-06')
-  reviewDate5 = new Date('2025-01-07')
-  reviewDate6 = new Date('2025-01-08')
+  // Review statistics - valores por defecto
+  reviewStats = {
+    totalReviews: 6,
+    averageRating: 4.5,
+    starDistribution: {
+      5: 4,
+      4: 2,
+      3: 0,
+      2: 0,
+      1: 0,
+    },
+    percentages: {
+      5: 67,
+      4: 33,
+      3: 0,
+      2: 0,
+      1: 0,
+    }
+  };
+
+  // Flag para saber si los datos ya se actualizaron
+  reviewStatsUpdated = false;
 
   // Review form
   reviewForm = this._formBuilder.group({
@@ -164,6 +184,29 @@ export class CreatinasComponent {
     }
   };
 
+  onLoadReviews(event: boolean) {
+    this.isLoadReviews.set(event);
+  }
+
+  /**
+   * Recibe las estadísticas de reviews del componente hijo
+   */
+  onReviewStatsReceived(stats: any) {
+    this.reviewStats = stats;
+    this.reviewStatsUpdated = true;
+    console.log('Review stats received in parent:', stats);
+  }
+
+  /**
+   * Notifica cuando las reviews se han cargado completamente
+   */
+  onReviewsLoaded(loaded: boolean) {
+    this.isLoadReviews.set(loaded);
+    console.log('Reviews loaded:', loaded);
+  }
+
+
+
   ngOnInit() {
     this._authService.isAuthenticated$.subscribe(isAuth => {
       this.isLogged = isAuth;
@@ -226,7 +269,6 @@ export class CreatinasComponent {
     else {
       this.router.navigate(['./404']);
     }
-
     this.loadSEO();
   }
 
@@ -398,7 +440,19 @@ export class CreatinasComponent {
     return this.selectedRating > 0 && this.isCommentValid;
   }
 
-  private getProductId(): string {
+  /**
+   * Obtiene un array de estrellas para mostrar en el template
+   * @param rating Calificación de la review
+   * @returns Array de objetos con información de las estrellas
+   */
+  getStarsArray(rating: number): { filled: boolean; index: number }[] {
+    return Array.from({ length: 5 }, (_, index) => ({
+      filled: index < rating,
+      index: index + 1
+    }));
+  }
+
+  public getProductId(): string {
     // Mapear el slug a un product_id (en un caso real esto vendría de una API o base de datos)
     const productIdMap: { [key: string]: string } = {
       'creatina-monohidratada-250-gr': '00000001-50eb-4ac3-aa94-1b64fbf32b9c',

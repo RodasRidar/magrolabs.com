@@ -390,8 +390,8 @@
                                 </div>
                                 <div
                                     class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button (click)="irRegistro()" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                                    <button (click)="irRegistro()" type="button" [disabled]="isButtonDisabled()"
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Lo quiero →'}}
                                     </button>
                                 </div>
@@ -403,8 +403,8 @@
                                 </div>
                                 <div
                                     class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button (click)="agregarCarrito()" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                                    <button (click)="agregarCarrito()" type="button" [disabled]="isButtonDisabled()"
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
                                     </button>
                                 </div>

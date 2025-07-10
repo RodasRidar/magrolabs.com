@@ -11,7 +11,6 @@ import { StarRatingComponent } from "../../../../shared/ui/star-rating/star-rati
 import { ReviewService } from "../../../../shared/services/review.service";
 import { environment } from "../../../../../environments/env";
 import { CommonModule, CurrencyPipe, isPlatformBrowser, isPlatformServer } from "@angular/common";
-import { TransferState, makeStateKey } from "@angular/core";
 
 @Component({
   selector: 'app-plans',
@@ -30,7 +29,6 @@ export class PlansComponent {
   private _seo = inject(SeoService);
   private _reviewService = inject(ReviewService);
   private platformId = inject(PLATFORM_ID);
-  private transferState = inject(TransferState);
 
   private nextUrl = '';
 
@@ -39,8 +37,31 @@ export class PlansComponent {
   isSelectOnePurchase = false;
   stepEnum = StepEnum
 
-  averageRating = 4.5; // Valor por defecto
-  totalReviews = 0;
+  // Sistema de reviews similar a creatinas.component.ts
+  isLoadReviews = signal<boolean>(false);
+  
+  // Review statistics - valores por defecto
+  reviewStats = {
+    totalReviews: 6,
+    averageRating: 4.5,
+    starDistribution: {
+      5: 4,
+      4: 2,
+      3: 0,
+      2: 0,
+      1: 0,
+    },
+    percentages: {
+      5: 67,
+      4: 33,
+      3: 0,
+      2: 0,
+      1: 0,
+    }
+  };
+
+  // Flag para saber si los datos ya se actualizaron
+  reviewStatsUpdated = false;
   
   informationList: Information[] = [
     {
@@ -55,46 +76,48 @@ export class PlansComponent {
   ]
 
   ngOnInit(): void {
-    let summary = this._summaryService.getSummary()
+    const summary = this._summaryService.getSummary();
     this.loadSEO();
-    
-    // Definir keys para Transfer State
-    const AVERAGE_RATING_KEY = makeStateKey<number>('plans-average-rating');
-    const TOTAL_REVIEWS_KEY = makeStateKey<number>('plans-total-reviews');
-    
-    if (isPlatformServer(this.platformId)) {
-      // En el servidor: cargar reviews y guardar en Transfer State
-      this.loadReviews().then(() => {
-        this.transferState.set(AVERAGE_RATING_KEY, this.averageRating);
-        this.transferState.set(TOTAL_REVIEWS_KEY, this.totalReviews);
-      });
-    } else {
-      // En el cliente: recuperar desde Transfer State
-      const savedRating = this.transferState.get(AVERAGE_RATING_KEY, 4.5);
-      const savedReviews = this.transferState.get(TOTAL_REVIEWS_KEY, 0);
-      
-      this.averageRating = savedRating;
-      this.totalReviews = savedReviews;
-      
-      console.log(`Cliente - Reviews recuperadas: ${this.totalReviews}, Rating: ${this.averageRating}`);
-    }
+    this.setupRouteParams();
+    this.initializePlanSelection(summary);
+  }
+
+  /**
+   * Recibe las estadísticas de reviews del componente hijo
+   */
+  onReviewStatsReceived(stats: any) {
+    this.reviewStats = stats;
+    this.reviewStatsUpdated = true;
+    console.log('Review stats received in parent:', stats);
+  }
+
+  /**
+   * Notifica cuando las reviews se han cargado completamente
+   */
+  onReviewsLoaded(loaded: boolean) {
+    this.isLoadReviews.set(loaded);
+    console.log('Reviews loaded:', loaded);
+  }
+
+  onLoadReviews(event: boolean) {
+    this.isLoadReviews.set(event);
+  }
+
+  private setupRouteParams(): void {
     this._route.queryParams.subscribe(params => {
       this.nextUrl = params['next'] || '';
-      // console.log('nextUrl', this.nextUrl);
-      // if (this.nextUrl == '') {
-      // this._router.navigate(['/registro'], { queryParams: { next: 'crear-cuenta' }});
-      // }
     });
+  }
 
-    let aux = <ChosePlanSummary>{}
-    aux.selection = SummaryEnum.CREATINA_250G_SUBSCRIPTION
-    this._summaryService.setChoosePlan(aux)
+  private initializePlanSelection(summary: any): void {
+    const aux = <ChosePlanSummary>{};
+    aux.selection = SummaryEnum.CREATINA_250G_SUBSCRIPTION;
+    this._summaryService.setChoosePlan(aux);
 
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isSelectSubscription = true;
       this.isSelectOnePurchase = false;
-    }
-    else if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+    } else if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
       this.isSelectSubscription = false;
       this.isSelectOnePurchase = true;
     } else {
@@ -129,19 +152,8 @@ export class PlansComponent {
     }
   }
 
-  // chosePlan(chosePlan: ChosePlanSummary) {
-  //   this._summaryService.setChoosePlan(chosePlan)
-  //   if (this.nextUrl !== '') {
-  //     this._router.navigate(['registro/' + this.nextUrl]);
-  //   }
-  //   else {
-  //     this._router.navigate(['registro/crear-cuenta'])
-  //   }
-  // }
-
   nextStep() {
     if (this.isSelectSubscription) {
-
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
@@ -169,11 +181,10 @@ export class PlansComponent {
   }
 
   private loadSEO() {
-    const description = 'Elige tu plan de suscripción a tu medida y comienza a disfrutar de la mejor creatina con envío gratis.';
+    const description = 'Elige tu plan de suscripción a tu medida y comienza a disfrutar de la mejor creatina con envío gratis.';
     const title = 'Registro | Escoge tu plan';
     const URL = 'https://magrolabs.com/registro';
     const image = 'https://magrolabs.com/image-meta.webp';
-
 
     this._seo.title.setTitle(title);
     this._seo.setCanonicalURL(URL);
@@ -213,40 +224,9 @@ export class PlansComponent {
     return !this.isSelectSubscription && !this.isSelectOnePurchase;
   }
 
-  private loadReviews(): Promise<void> {
-    console.log('loadReviews - Solo ejecutándose en servidor (SSR)');
-    // Producto ID para creatina
-    const productId = '00000001-50eb-4ac3-aa94-1b64fbf32b9c';
-    //TODO QUITAR EL MAS5
-    return new Promise((resolve, reject) => {
-      this._reviewService.getAllReviews({product_id: productId, is_approved: true}).subscribe({
-        next: (response) => {
-          console.log('Reviews cargadas desde servidor:', response);
-          if (response.data && response.data.reviews && response.data.reviews.length > 0) {
-            const reviews = response.data.reviews;
-            this.totalReviews = reviews.length + 5; 
-            
-            // Calcular promedio de rating
-            const totalStars = reviews.reduce((sum: number, review: any) => sum + review.stars, 0);
-            const calculatedRating = Number((totalStars / reviews.length).toFixed(1));
-            this.averageRating = calculatedRating;
-            
-            console.log(`SSR - Reviews: ${this.totalReviews}, Rating promedio: ${this.averageRating}`);
-          }
-          resolve();
-        },
-        error: (error) => {
-          console.error('Error al cargar reviews en SSR:', error);
-          // Mantener valores por defecto en caso de error
-          resolve(); // Resolver aunque haya error para continuar
-        }
-      });
-    });
-  }
-
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      let summary = this._summaryService.getSummary()
+      const summary = this._summaryService.getSummary();
       if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
         this.subscriptionElement.nativeElement.open = true;
       }

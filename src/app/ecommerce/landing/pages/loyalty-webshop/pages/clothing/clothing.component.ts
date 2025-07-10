@@ -44,18 +44,18 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Ropa',
     features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Negro', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: false
+    isOutOfStock: true
   },
   'shaker-negro-magrolabs': {
     slug: 'shaker-negro-magrolabs',
     name: 'Shaker Negro Magrolabs',
-    price: 20,
+    price: 80,
     description: 'Nuestro shaker es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
     image: 'LoyaltyWebShop/shaker_black.png',
     color: 'Negro',
     category: 'Accesorios',
     features: ['Resistente', 'Libre de BPA', 'Material: Plástico de alta calidad', 'Color: Negro', 'Capacidad: 600ml', 'Tapa hermética'],
-    isOutOfStock: false
+    isOutOfStock: true
   },
   'bolsa-negra-magrolabs': {
     slug: 'bolsa-negra-magrolabs',
@@ -66,7 +66,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Accesorios',
     features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Negro', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: false
+    isOutOfStock: true
   },
   'polera-desert-magrolabs': {
     slug: 'polera-desert-magrolabs',
@@ -77,7 +77,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Desert',
     category: 'Ropa',
     features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Desert', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: false
+    isOutOfStock: true
   },
   'bolsa-desert-magrolabs': {
     slug: 'bolsa-desert-magrolabs',
@@ -88,7 +88,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Desert',
     category: 'Accesorios',
     features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Desert', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: false
+    isOutOfStock: true
   }
 };
 

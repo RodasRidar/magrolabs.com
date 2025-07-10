@@ -268,7 +268,7 @@ export class SuscripcionComponent implements OnInit {
         switchMap(response => {
           if (response.data.subscriptions && response.data.subscriptions.length > 0) {
             console.log('response.data.subscriptions[0]', response.data.subscriptions[0]);
-            this.nextPaymentDate.set(new Date(response.data.subscriptions[0].next_billing_date || ''));
+            this.nextPaymentDate.set(new Date(response.data.subscriptions[0].next_billing_date!)); 
             this.subscription.set(response.data.subscriptions[0]);
             this.loadSubscriptionPlan(response.data.subscriptions[0].subscription_plan_id);
             this.loadPaymentMethod();

@@ -19,7 +19,7 @@
 
 <main class="max-w-7xl mx-auto sm:pb-16 sm:pt-4 sm:px-6 lg:px-8">
     <div class="max-w-2xl mx-auto lg:max-w-none">
-        <div class="sm:flex block mb-4 p-2 gap-1">
+        <div class="sm:flex block mb-4 p-2 gap-1 leading-tight">
             <div class="flex items-center">
                 <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900" routerLink="/" routerLinkActive="active">Inicio</a>
                 <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="#434343">
@@ -34,7 +34,7 @@
                     <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
                 </svg>
             </div>   
-            <span class="text-gray-700 text-sm font-extralight">{{productName}}</span>
+            <span class="text-gray-700 text-sm font-extralight">{{productName()}}</span>
         </div>
         <!-- Product -->
         <div class="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
@@ -48,8 +48,8 @@
                             aria-controls="tabs-2-panel-1" role="tab" type="button">
                             <span class="sr-only"> Angled view </span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
-                                <img ngSrc="https://imagedelivery.net/4fYuQyy-r8_rpBpcY7lH_A/falabellaPE/115874517_01/w=1500,h=1500,fit=pad"
-                                    [alt]="productName" class="w-full h-full object-center object-cover" height="60"
+                                <img [ngSrc]="productImage()"
+                                    [alt]="productName()" class="w-full h-full object-center object-cover" height="60"
                                     width="96" priority>
                             </span>
                             <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
@@ -65,8 +65,8 @@
                 <div class="w-full aspect-w-1 aspect-h-1">
                     <!-- Tab panel, show/hide based on tab state. -->
                     <div id="tabs-2-panel-1" aria-labelledby="tabs-2-tab-1" role="tabpanel" tabindex="0">
-                        <img src="https://imagedelivery.net/4fYuQyy-r8_rpBpcY7lH_A/falabellaPE/115874517_01/w=1500,h=1500,fit=pad"
-                            alt="Angled front view with bag zipped and handles upright"
+                        <img [ngSrc]="productImage()"
+                            [alt]="productName() + ' - Vista frontal'"
                             class="w-full h-full object-center object-cover sm:rounded-lg" height="60" width="96">
                     </div>
 
@@ -77,18 +77,58 @@
             <!-- Product info -->
             <div class="max-sm:mt-10 px-4 sm:px-0">
                 <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
-                    {{productName}}
+                    {{productName()}}
                 </h1>
 
                 <div class="mt-3">
                     <h2 class="sr-only">Product information</h2>
                     <p class="text-3xl text-gray-900 mb-3 font-extralight">
-                        {{productPrice | currency:'S/'}}
+                        {{productPrice() | currency:'S/'}}
                     </p>
-                    @if (!isLogged) {
-                    <a routerLink="/login" [queryParams]="{'redirect':'/loyalty-webshop/articulos/'+slug}"
-                        class="text-sm text-amber-700 hover:text-amber-800 hover:underline">Inicia sesión para ver tu
-                        crédito →</a>
+                    
+                    @if (!isLogged()) {
+                        <a routerLink="/login" [queryParams]="{'returnUrl':'/loyalty-webshop/articulos/'+slug()}"
+                            class="text-sm text-amber-700 hover:text-amber-800 hover:underline">
+                            Inicia sesión para ver tu crédito →
+                        </a>
+                    } @else {
+                        <div class="space-y-2">
+                            @if (isLoadingCredits()) {
+                                <div class="flex items-center space-x-2">
+                                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-600"></div>
+                                    <span class="text-sm text-gray-600">Cargando créditos...</span>
+                                </div>
+                            } @else if (creditsError()) {
+                                <div class="text-sm text-red-600">
+                                    {{creditsError()}}
+                                    <button (click)="refreshUserCredits()" 
+                                            class="ml-2 text-red-800 hover:underline">
+                                        Reintentar
+                                    </button>
+                                </div>
+                            } @else {
+                                <div class="text-sm space-y-1">
+                                    <p class="text-gray-600">
+                                        <span class="font-medium ">Tus créditos: </span> 
+                                        <span routerLink="/cuenta/credito" class="text-green-600 font-semibold hover:underline hover:text-green-700 cursor-pointer">{{userCredits() | currency:'S/'}}</span>
+                                    </p>
+                                    @if (canAffordProduct()) {
+                                        <p class="text-green-600 font-medium">
+                                            ✓ Tienes suficientes créditos
+                                            @if (creditsDifference() > 0) {
+                                                <span class="text-gray-500 font-normal">
+                                                    (sobran {{creditsDifference() | currency:'S/'}})
+                                                </span>
+                                            }
+                                        </p>
+                                    } @else {
+                                        <p class="text-red-700 font-medium">
+                                            Te faltan {{creditsDifference() | currency:'S/'}} créditos para este producto.
+                                        </p>
+                                    }
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
 
@@ -136,7 +176,7 @@
 
                     <div class="text-sm font-light text-gray-600 space-y-6">
                         <p>
-                            {{productDescription}}
+                            {{productDescription()}}
                         </p>
                     </div>
                 </div>
@@ -183,11 +223,14 @@
                     </div> -->
 
                     <div class="mt-10 flex sm:flex-col1">
-                        @if (isOutOfStock) {
+                        @if (isLogged() && !canAffordProduct()) {
+                        <ml-button name="Créditos insuficientes" [isDisabled]="true" type="secondary"></ml-button>
+                        } @else if (isOutOfStock()) {
                         <ml-button name="Agotado" [isDisabled]="true" type="secondary"></ml-button>
-                        }
-                        @else {
-                        <ml-button name="Agregar al carrito" [isDisabled]="false" type="secondary"></ml-button>
+                        } @else if(!isLogged()){
+
+                        } @else {
+                        <ml-button name="¡Lo quiero!" (click)="buyProduct()" [isProcessing]="isLoadingBuyProduct()" [isDisabled]="isLoadingBuyProduct()" type="primary"></ml-button>
                         }
                     </div>
                 </form>
@@ -232,11 +275,9 @@
                             </h3>
                             <div class="pb-6 prose prose-sm text-gray-500 text-xs" id="disclosure-1">
                                 <ul role="list">
-                                    <li>Resistente</li>
-                                    <li>Transpirable</li>
-                                    <li>Material: Cuero</li>
-                                    <li>Color: Negro</li>
-                                    <li>Talla: S, M, L, XL</li>
+                                    @for (feature of productFeatures(); track feature) {
+                                        <li>{{feature}}</li>
+                                    }
                                 </ul>
                             </div>
                         </div>

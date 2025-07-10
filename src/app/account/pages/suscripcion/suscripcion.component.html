@@ -22,13 +22,13 @@
                                 <h2 class="sr-only">Reviews</h2>
                                 <div class="flex items-center">
                                     <div>
-                                        <app-star-rating [rating]="averageRating"></app-star-rating>
+                                        <app-star-rating [rating]="reviewStats.averageRating"></app-star-rating>
                                         <p class="sr-only">4 out of 5 stars</p>
                                     </div>
                                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
                                         target="_blank"
                                         class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
-                                        ({{ENV.nroReviews}} reseñas)
+                                        ({{reviewStats.totalReviews}} reseñas)
                                     </a>
                                 </div>
                             </div>

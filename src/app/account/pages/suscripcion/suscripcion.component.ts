@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformServer } from '@angular/common';
-import { TransferState, makeStateKey } from '@angular/core';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
@@ -49,7 +48,6 @@ export class SuscripcionComponent implements OnInit {
   private subscriptionOrderService = inject(SubscriptionOrderService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-  private transferState = inject(TransferState);
 
   reactivateType = ReactivateType;
   ENV = environment;
@@ -109,34 +107,37 @@ export class SuscripcionComponent implements OnInit {
   showSuccessCancellationModal = signal<boolean>(false);
   isPaymentVerified = signal<boolean>(false);
 
-  // Variables para reviews
-  averageRating = 4.5; // Valor por defecto
-  totalReviews = 0;
+  // Sistema de reviews similar a creatinas.component.ts
+  isLoadReviews = signal<boolean>(false);
+  
+  // Review statistics - valores por defecto
+  reviewStats = {
+    totalReviews: 6,
+    averageRating: 4.5,
+    starDistribution: {
+      5: 4,
+      4: 2,
+      3: 0,
+      2: 0,
+      1: 0,
+    },
+    percentages: {
+      5: 67,
+      4: 33,
+      3: 0,
+      2: 0,
+      1: 0,
+    }
+  };
+
+  // Flag para saber si los datos ya se actualizaron
+  reviewStatsUpdated = false;
 
   ngOnInit(): void {
     this.loadSubscription();
     this.loadUserCredits();
+    this.loadReviewsOnServer();
     
-    // Definir keys para Transfer State
-    const AVERAGE_RATING_KEY = makeStateKey<number>('suscripcion-average-rating');
-    const TOTAL_REVIEWS_KEY = makeStateKey<number>('suscripcion-total-reviews');
-    
-    if (isPlatformServer(this.platformId)) {
-      // En el servidor: cargar reviews y guardar en Transfer State
-      this.loadReviews().then(() => {
-        this.transferState.set(AVERAGE_RATING_KEY, this.averageRating);
-        this.transferState.set(TOTAL_REVIEWS_KEY, this.totalReviews);
-      });
-    } else {
-      // En el cliente: recuperar desde Transfer State
-      const savedRating = this.transferState.get(AVERAGE_RATING_KEY, 4.5);
-      const savedReviews = this.transferState.get(TOTAL_REVIEWS_KEY, 0);
-      
-      this.averageRating = savedRating;
-      this.totalReviews = savedReviews;
-      
-      console.log(`Cliente - Reviews recuperadas: ${this.totalReviews}, Rating: ${this.averageRating}`);
-    }
     this.authService.getCurrentUserObservable()?.subscribe(user => {
       if (user?.flowCustomerId) {
         // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
@@ -163,6 +164,33 @@ export class SuscripcionComponent implements OnInit {
     this.isPaymentVerified.set(localStorage.getItem('isPaymentVerified') === 'true');
     if (this.isPaymentVerified()) {
       this.cardAddedSuccessfully(true);
+    }
+  }
+
+  /**
+   * Recibe las estadísticas de reviews del componente hijo
+   */
+  onReviewStatsReceived(stats: any) {
+    this.reviewStats = stats;
+    this.reviewStatsUpdated = true;
+    console.log('Review stats received in parent:', stats);
+  }
+
+  /**
+   * Notifica cuando las reviews se han cargado completamente
+   */
+  onReviewsLoaded(loaded: boolean) {
+    this.isLoadReviews.set(loaded);
+    console.log('Reviews loaded:', loaded);
+  }
+
+  onLoadReviews(event: boolean) {
+    this.isLoadReviews.set(event);
+  }
+
+  private loadReviewsOnServer(): void {
+    if (isPlatformServer(this.platformId)) {
+      this.loadReviews();
     }
   }
 
@@ -1410,12 +1438,10 @@ export class SuscripcionComponent implements OnInit {
           console.log('Reviews cargadas desde servidor:', response);
           if (response.data && response.data.reviews && response.data.reviews.length > 0) {
             const reviews = response.data.reviews;
-            this.totalReviews = reviews.length + 5;
             
             // Calcular promedio de rating
             const totalStars = reviews.reduce((sum: number, review: any) => sum + review.stars, 0);
             const calculatedRating = Number((totalStars / reviews.length).toFixed(1));
-            this.averageRating = calculatedRating;
             
             console.log(`SSR - Reviews: ${reviews.length}, Rating promedio: ${calculatedRating}`);
           }

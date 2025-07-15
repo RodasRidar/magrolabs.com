@@ -2,16 +2,11 @@
  * Interfaces para las órdenes de suscripción
  */
 
+import { OrderStatus } from "./order.interfaces";
+
 /**
  * Representa los estados posibles de una orden
  */
-export enum OrderStatusEnum {
-    PENDING = 'PENDING',
-    PROCESSING = 'PROCESSING',
-    SHIPPED = 'SHIPPED',
-    DELIVERED = 'DELIVERED',
-    CANCELLED = 'CANCELLED'
-  }
   
   /**
    * Información de la suscripción asociada a una orden
@@ -60,18 +55,26 @@ export enum OrderStatusEnum {
   /**
    * Representa una orden de suscripción completa
    */
+  /**
+   * Representa una orden de suscripción completa según el modelo actualizado
+   */
   export interface SubscriptionOrder {
     id: string;
     subscription_id: string;
-    subscription?: OrderSubscription;
     order_id: string;
-    order?: SubscriptionOrderDetail;
-    shipment_date?: string;
-    status: OrderStatusEnum;
-    tracking_number?: string;
-    notes?: string;
+    shipment_date: string;
+    tracking_number: string | null;
+    notes: string | null;
     created_at: string;
     updated_at: string;
+    is_delete: boolean;
+    order: {
+      id: string;
+      order_date: string;
+      total_amount: string;
+      status: OrderStatus;
+      shipping_address: string;
+    };
   }
   
   /**
@@ -81,7 +84,7 @@ export enum OrderStatusEnum {
     subscription_id: string;
     order_id: string;
     shipment_date?: string;
-    status?: OrderStatusEnum;
+    status?: OrderStatus;
     tracking_number?: string;
     notes?: string;
   }
@@ -91,7 +94,7 @@ export enum OrderStatusEnum {
    */
   export interface UpdateSubscriptionOrderRequest {
     shipment_date?: string;
-    status?: OrderStatusEnum;
+    status?: OrderStatus;
     tracking_number?: string;
     notes?: string;
   }
@@ -100,20 +103,23 @@ export enum OrderStatusEnum {
    * Información para actualizar el estado de una orden de suscripción desde el frontend
    */
   export interface UpdateSubscriptionOrderStatusRequest {
-    status: OrderStatusEnum;
+    status: OrderStatus;
   }
   
   /**
    * Respuesta paginada de órdenes de suscripción
    */
   export interface PaginatedSubscriptionOrdersResponse {
-    subscriptionOrders: SubscriptionOrder[];
-    pagination: {
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    };
+    status: string;
+    data:{
+      subscriptionOrders: SubscriptionOrder[];
+      pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    }
   }
   
   /**

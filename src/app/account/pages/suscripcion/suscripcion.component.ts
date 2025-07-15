@@ -4,7 +4,7 @@ import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subsc
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of, takeUntil, map, finalize, EMPTY, tap, Observable } from 'rxjs';
+import { switchMap, catchError, of, takeUntil, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse, FlowCreateSubscriptionRequest } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
@@ -814,42 +814,96 @@ export class SuscripcionComponent implements OnInit {
 
     console.log('isToCancel', isToCancel);
     console.log('isTrialPeriod', isTrialPeriod);
+
+    this.isLoading.set(true);
+
     this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? this.nextPaymentDate() : undefined)
       .pipe(
         switchMap((response) => {
-          // Si tenemos el Flow subscription ID, cancelar también en Flow
-          if (this.flowSubscriptionId() && !isToCancel) {
-            return this.flowService.cancelSubscription(this.flowSubscriptionId(), AtPeriodEnd.IMMEDIATE)
-              .pipe(
-                map(() => response),
-                catchError((flowError) => {
-                  this._toastService.error('Error', 'Error al cancelar la suscripción');
-                  this.isLoading.set(false);
-                  this.showFinalConfirmationModal.set(false);
-                  console.error('Error cancelando suscripción en Flow:', flowError);
-                  // Continuar con la respuesta original aunque falle en Flow
-                  return of(response);
-                })
-              );
-          }
-          return of(response);
+          // Cancelar suscripción en Flow si es necesario
+          const flowCancellation$ = this.flowSubscriptionId() && !isToCancel
+            ? this.flowService.cancelSubscription(this.flowSubscriptionId(), AtPeriodEnd.IMMEDIATE)
+                .pipe(
+                  map(() => response),
+                  catchError((flowError) => {
+                    this._toastService.error('Error', 'Error al cancelar la suscripción en Flow');
+                    console.error('Error cancelando suscripción en Flow:', flowError);
+                    return of(response);
+                  })
+                )
+            : of(response);
+
+          // Cancelar órdenes asociadas a la suscripción
+          const cancelOrders$ = this.subscriptionOrderService.getOrdersBySubscriptionId(this.subscription()!.id)
+            .pipe(
+              switchMap((ordersResponse) => {
+                if (ordersResponse.data.subscriptionOrders && ordersResponse.data.subscriptionOrders.length > 0) {
+                  // Obtener las órdenes que no están ya canceladas
+                  const ordersToCancel = ordersResponse.data.subscriptionOrders.filter(
+                    subOrder => subOrder.order.status == OrderStatus.PENDING_PAYMENT || subOrder.order.status == OrderStatus.PROCESSING
+                  );
+
+                  if (ordersToCancel.length > 0) {
+                    // Crear array de observables para cancelar cada orden
+                    const cancelOrderObservables = ordersToCancel.map(subOrder => {
+                      if (subOrder.order_id) {
+                        return this.orderService.cancelOrder(subOrder.order_id).pipe(
+                          tap(() => console.log(`Orden ${subOrder.order_id} cancelada exitosamente`)),
+                          catchError(error => {
+                            console.error(`Error cancelando orden ${subOrder.order_id}:`, error);
+                            // Continuar con las demás órdenes aunque una falle
+                            return of(null);
+                          })
+                        );
+                      }
+                      return of(null);
+                    });
+
+                    // Ejecutar todas las cancelaciones en paralelo
+                    return forkJoin(cancelOrderObservables);
+                  }
+                }
+                return of([]);
+              }),
+              catchError(error => {
+                console.error('Error obteniendo órdenes para cancelar:', error);
+                // Continuar con el proceso aunque falle la cancelación de órdenes
+                return of([]);
+              })
+            );
+
+          // Ejecutar ambas operaciones en paralelo
+          return forkJoin({
+            subscriptionResponse: flowCancellation$,
+            cancelledOrders: cancelOrders$
+          });
+        }),
+        finalize(() => {
+          this.isLoading.set(false);
+          this.showFinalConfirmationModal.set(false);
         })
       ).subscribe({
-        next: (response) => {
+        next: (result) => {
+          const response = result.subscriptionResponse;
+          
           // Actualizar los créditos a 0 ya que se pierden al cancelar
           response.data.subscription.credits = 0;
           this.userCredits.set(response.data.subscription.credits.toString());
           this.subscription.set(response.data.subscription);
-          this.isLoading.set(false);
-          this.showFinalConfirmationModal.set(false);
+          
           // Mostrar modal de confirmación exitosa
           this.showSuccessCancellationModal.set(true);
+          
+          // Mostrar mensaje de éxito
+          if (result.cancelledOrders && result.cancelledOrders.length > 0) {
+            this._toastService.success('Éxito', 'Suscripción y órdenes asociadas canceladas exitosamente');
+          } else {
+            this._toastService.success('Éxito', 'Suscripción cancelada exitosamente');
+          }
         },
         error: (err) => {
           this._toastService.error('Error', 'Error al cancelar la suscripción');
-          this.isLoading.set(false);
-          this.showFinalConfirmationModal.set(false);
-          console.error('Error pausando suscripción:', err);
+          console.error('Error en proceso de cancelación:', err);
         }
       });
   }

@@ -1,15 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/env';
 import { 
   CreateSubscriptionOrderRequest,
   UpdateSubscriptionOrderRequest,
   UpdateSubscriptionOrderStatusRequest,
-  OrderStatusEnum,
   PaginatedSubscriptionOrdersResponse,
   SubscriptionOrderResponse
 } from '../interfaces/subscription-order.interface';
+import { OrderStatus } from '../interfaces/order.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class SubscriptionOrderService {
     limit = 10,
     includeDeleted = false,
     subscriptionId?: string,
-    status?: OrderStatusEnum
+    status?: OrderStatus
   ): Observable<PaginatedSubscriptionOrdersResponse> {
     let params = new HttpParams()
       .set('page', page.toString())

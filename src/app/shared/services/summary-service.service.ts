@@ -73,6 +73,10 @@ export class SummaryService {
   clearSummary() {
     // this.summaryState.next(<Summary>{});
     this._cookieService.delete(this.cookieName, '/');
+    this._cookieService.delete(this.cookieName);
     this._cookieService.delete('promoCode');
+    this._cookieService.delete('auth_token');
+    this._cookieService.delete('refresh_token');
+    this._cookieService.delete('user_data');
   }
 }

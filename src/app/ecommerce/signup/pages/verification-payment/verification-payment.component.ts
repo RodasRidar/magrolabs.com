@@ -405,7 +405,7 @@ export class VerificationPaymentComponent {
   private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
     if(localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
       return {
-        planId: this.ENV.flowCreatina250Gr2025PlanId,
+        planId: this.ENV.flowPlanIdTest,
         customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
         trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
       };

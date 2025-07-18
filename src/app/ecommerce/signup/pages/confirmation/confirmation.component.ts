@@ -12,6 +12,7 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
+import { EmailService } from '../../../../shared/services/email.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -27,6 +28,7 @@ export class ConfirmationComponent {
   private _dialog = inject(MatDialog)
   private _seo = inject(SeoService)
   private _shoppingCartService = inject(ShoppingCartService)
+  private _emailService = inject(EmailService)
 
   ENV = environment
   confirmationStatusEnum= ConfirmationStatus
@@ -105,6 +107,7 @@ export class ConfirmationComponent {
       if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
         this.openWelcomeModal();
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
+        this.sendWelcomeEmail();
       }
       else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
@@ -147,6 +150,31 @@ export class ConfirmationComponent {
     let result = new Date();
     result.setDate(result.getDate() + days);
     return result.toLocaleDateString();
+  }
+
+  /**
+   * Envía email de bienvenida al usuario
+   */
+  private sendWelcomeEmail(): void {
+    const summary = this._summaryService.getSummary();
+    const userEmail = summary?.userData?.email;
+
+    if (!userEmail) {
+      console.warn('No se encontró email del usuario para enviar email de bienvenida');
+      return;
+    }
+
+    this._emailService.sendWelcomeEmailWithValidation(userEmail)
+      .subscribe({
+        next: (response) => {
+          console.log('Email de bienvenida enviado exitosamente:', response);
+        },
+        error: (error) => {
+          console.error('Error al enviar email de bienvenida:', error);
+          // No mostramos error al usuario ya que es un proceso en segundo plano
+          // El usuario ya completó exitosamente su registro
+        }
+      });
   }
 
 }

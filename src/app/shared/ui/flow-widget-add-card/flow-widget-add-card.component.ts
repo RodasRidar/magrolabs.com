@@ -44,10 +44,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
 
       const script = document.createElement('script');
       script.id = 'flow-script';
-      this.ENV.production ? script.src = 'https://www.flow.cl/app/elements/flow-1.1.0.min.js?20241202' :
-        script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202';
-        
-      script.src = 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202'
+      script.src = this.ENV.production ? 'https://www.flow.cl/app/elements/flow-1.1.0.min.js?20241202' : 'https://sandbox.flow.cl/app/elements/flow-1.1.0.min.js?20241202';
       script.onload = () => resolve();
       script.onerror = () => reject();
       document.body.appendChild(script);

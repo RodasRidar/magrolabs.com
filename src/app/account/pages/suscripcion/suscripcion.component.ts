@@ -22,6 +22,7 @@ import { OrderService } from '../../../shared/services/order.service';
 import { SubscriptionOrderService } from '../../../shared/services/subscription-order.service';
 import { CreateOrderRequest, OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
 import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subscription-order.interface';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-suscripcion',
@@ -48,6 +49,7 @@ export class SuscripcionComponent implements OnInit {
   private subscriptionOrderService = inject(SubscriptionOrderService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
+  private cookieService = inject(CookieService);
 
   reactivateType = ReactivateType;
   ENV = environment;
@@ -132,11 +134,16 @@ export class SuscripcionComponent implements OnInit {
 
   // Flag para saber si los datos ya se actualizaron
   reviewStatsUpdated = false;
+  isPorActivar = signal<boolean>(false);
+  isCardModifiedToReprocessPayment = signal<boolean>(false);
+
+
 
   ngOnInit(): void {
     this.loadSubscription();
     this.loadUserCredits();
     this.loadReviewsOnServer();
+    this.updateSignalsFromLocalStorage();
     
     this.authService.getCurrentUserObservable()?.subscribe(user => {
       if (user?.flowCustomerId) {
@@ -164,6 +171,11 @@ export class SuscripcionComponent implements OnInit {
     this.isPaymentVerified.set(localStorage.getItem('isPaymentVerified') === 'true');
     if (this.isPaymentVerified()) {
       this.cardAddedSuccessfully(true);
+    }
+  }
+  updateSignalsFromLocalStorage() {
+    if(this.cookieService.get('isCardModifiedToReprocessPayment') == 'true') {
+      this.isCardModifiedToReprocessPayment.set(true);
     }
   }
 
@@ -244,6 +256,10 @@ export class SuscripcionComponent implements OnInit {
     if ($event) {
       setTimeout(() => {
         this.isCardAdded = true;
+        this.showPaymentVerification.set(false);
+        localStorage.removeItem('last4CardDigits');
+        localStorage.removeItem('creditCardType');
+        localStorage.removeItem('isPaymentVerified');
       }, 2000);
       this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '')
       this.cardType.set(localStorage.getItem('creditCardType') || '')
@@ -253,6 +269,11 @@ export class SuscripcionComponent implements OnInit {
       this.labelCardRegisted += card;
       this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);
       this.isPaymentVerified.set(true);
+
+      if(this.isPorActivar()) {
+        this.cookieService.set('isCardModifiedToReprocessPayment', 'true', 0.25, '/');
+        this.isCardModifiedToReprocessPayment.set(true);
+      }
     }
     else {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
@@ -298,6 +319,7 @@ export class SuscripcionComponent implements OnInit {
       )
       .subscribe({
         next: (combinedResponse) => {
+          this.isPorActivar.set(combinedResponse.flowResponse?.data[0].status == '1');
           this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
         },
         error: (error) => {
@@ -929,6 +951,17 @@ export class SuscripcionComponent implements OnInit {
   keepCredits(): void {
     // Cerrar el modal y volver a la pantalla principal
     this.closeFinalCancelModal();
+  }
+
+  /**
+   * Cambiar método de pago
+   */
+  changePaymentMethod(): void {
+    if(this.openCardRegistration()){
+      return;
+    }
+    this.openCardRegistration.set(true);
+    this._toastService.info('Información', 'Agrega una nueva tarjeta de pago para continuar');
   }
 
   closeCancellationModal(): void {

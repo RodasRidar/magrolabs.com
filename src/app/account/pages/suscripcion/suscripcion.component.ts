@@ -678,7 +678,7 @@ export class SuscripcionComponent implements OnInit {
             const subscriptionStartDate = new Date(this.subscription()!.next_billing_date!);
             const formattedStartDate = this.formatDateToLimaTimezone(subscriptionStartDate);
             const flowSubscriptionData: FlowCreateSubscriptionRequest = {
-              planId: this.ENV.flowCreatina250Gr2025PlanId,
+              planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : this.ENV.flowCreatina250Gr2025PlanId,
               customerId: customerId,
               subscription_start: formattedStartDate,
               couponId: this.ENV.flowCouponId50PercentDiscount
@@ -1006,7 +1006,7 @@ export class SuscripcionComponent implements OnInit {
 
             if (reactivateType == ReactivateType.FROM_CANCELLATION) {
               flowSubscriptionData = {
-                planId: environment.flowCreatina250Gr2025PlanId,
+                planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
                 customerId: customerId,
                 subscription_start: this.formatDateToLimaTimezone(now), // Formato YYYY-MM-DD en hora peruana
               };
@@ -1014,7 +1014,7 @@ export class SuscripcionComponent implements OnInit {
             else if (reactivateType == ReactivateType.FROM_PAUSE) {
 
               flowSubscriptionData = {
-                planId: environment.flowCreatina250Gr2025PlanId,
+                planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
                 customerId: customerId,
                 subscription_start: this.formatDateToLimaTimezone(startDatePAUSE), // Formato YYYY-MM-DD en hora peruana
               };
@@ -1328,7 +1328,7 @@ export class SuscripcionComponent implements OnInit {
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
     const subscriptionPlan: FlowCreateSubscriptionRequest = {
-      planId: this.ENV.flowCreatina250Gr2025PlanId,
+      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
       customerId: user?.flowCustomerId ?? '',
     }
 

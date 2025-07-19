@@ -20,6 +20,21 @@ export interface WelcomeEmailResponse {
 }
 
 /**
+ * Interfaz para la solicitud de email de confirmación de orden
+ */
+export interface OrderConfirmationEmailRequest {
+  email: string;
+}
+
+/**
+ * Interfaz para la respuesta de email de confirmación de orden
+ */
+export interface OrderConfirmationEmailResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
  * Servicio para el manejo de emails
  */
 @Injectable({
@@ -66,6 +81,35 @@ export class EmailService {
     }
 
     return this.sendWelcomeEmail(email);
+  }
+
+  /**
+   * Envía un email de confirmación de orden al usuario
+   * @param email Email del usuario al cual enviar la confirmación de orden
+   * @returns Observable con la respuesta del envío
+   */
+  sendOrderConfirmationEmail(email: string): Observable<OrderConfirmationEmailResponse> {
+    const requestBody: OrderConfirmationEmailRequest = {
+      email: email
+    };
+
+    return this.http.post<OrderConfirmationEmailResponse>(`${this.apiUrl}/order-confirmation`, requestBody)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Método wrapper para confirmación de orden que incluye validación de email
+   * @param email Email del usuario
+   * @returns Observable con la respuesta del envío o error si el email es inválido
+   */
+  sendOrderConfirmationEmailWithValidation(email: string): Observable<OrderConfirmationEmailResponse> {
+    if (!this.isValidEmail(email)) {
+      throw new Error('Formato de email inválido');
+    }
+
+    return this.sendOrderConfirmationEmail(email);
   }
 
   /**

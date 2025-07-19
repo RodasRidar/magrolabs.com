@@ -114,6 +114,8 @@ export class ConfirmationComponent {
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
+        // Enviar email de confirmación de orden
+        this.sendOrderConfirmationEmail();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
@@ -173,6 +175,31 @@ export class ConfirmationComponent {
           console.error('Error al enviar email de bienvenida:', error);
           // No mostramos error al usuario ya que es un proceso en segundo plano
           // El usuario ya completó exitosamente su registro
+        }
+      });
+  }
+
+  /**
+   * Envía email de confirmación de orden al usuario
+   */
+  private sendOrderConfirmationEmail(): void {
+    const summary = this._summaryService.getSummary();
+    const userEmail = summary?.userData?.email;
+
+    if (!userEmail) {
+      console.warn('No se encontró email del usuario para enviar email de confirmación de orden');
+      return;
+    }
+
+    this._emailService.sendOrderConfirmationEmailWithValidation(userEmail)
+      .subscribe({
+        next: (response) => {
+          console.log('Email de confirmación de orden enviado exitosamente:', response);
+        },
+        error: (error) => {
+          console.error('Error al enviar email de confirmación de orden:', error);
+          // No mostramos error al usuario ya que es un proceso en segundo plano
+          // El usuario ya completó exitosamente su compra
         }
       });
   }

@@ -92,24 +92,6 @@ export class ReviewsListComponent implements OnInit {
     // Reviews estáticas
     private staticReviews: Review[] = [
         {
-            id: 'static-1',
-            user_id: 'user-1',
-            product_id: this.productId,
-            user: {
-                id: 'user-1',
-                first_name: 'Hugo',
-                last_name: 'Cortez L.',
-                email: 'hugo.cortez@example.com'
-            },
-            stars: 5,
-            review: 'La creatina es un golazo, no cae pesada como otras. Me gusta mucho que me pueda suscribir una vez y olvidarme de comprarla cada tanto.',
-            created_at: new Date('2025-01-08').toISOString(),
-            updated_at: new Date('2025-01-08').toISOString(),
-            isAproved: true,
-            is_delete: false,
-            is_static: true
-        },
-        {
             id: 'static-4',
             user_id: 'user-4',
             product_id: this.productId,

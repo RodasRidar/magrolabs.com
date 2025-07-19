@@ -319,7 +319,13 @@ export class SuscripcionComponent implements OnInit {
       )
       .subscribe({
         next: (combinedResponse) => {
-          this.isPorActivar.set(combinedResponse.flowResponse?.data[0].status == '1');
+          // Si el status es 1, es que la suscripción está pagada
+          if(combinedResponse.flowResponse?.data[0].status == '1') {
+            this.isPorActivar.set(false);
+          }
+          else {
+            this.isPorActivar.set(true);
+          }
           this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
         },
         error: (error) => {

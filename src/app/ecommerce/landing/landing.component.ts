@@ -34,7 +34,7 @@ export class LandingComponent {
     this._seo.setIndexFollow();
 
     this._seo.setKeywords('magrolabs, magrolab, magrolap, magro labs,magro laps, magrolaps, magrolap, creatina, suplementos, gym, fitness, salud, deporte, nutricion, entrenamiento, musculacion, crossfit, fisicoculturismo, bienestar, saludable,' +
-      'gimnasio, subscripción, creatina recurrente, creatina monohidratada, creatina 100%, creatina 3kg, creatina 250g, creatina 250gr,' +
+      'gimnasio, suscripción, creatina recurrente, creatina monohidratada, creatina 100%, creatina 3kg, creatina 250g, creatina 250gr,' +
       'creatina por subscripcion, calidad, peru, perú, envío gratis, gratis, envio, lima');
 
     this._seo.setOpenGraph({

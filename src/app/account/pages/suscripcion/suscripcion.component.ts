@@ -703,7 +703,7 @@ export class SuscripcionComponent implements OnInit {
               planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : this.ENV.flowCreatina250Gr2025PlanId,
               customerId: customerId,
               subscription_start: formattedStartDate,
-              couponId: this.ENV.flowCouponId50PercentDiscount
+              couponId: this.ENV.flowCouponId30PercentDiscount
             };
 
           return this.flowService.createSubscription(flowSubscriptionData)

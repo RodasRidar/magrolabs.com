@@ -48,6 +48,7 @@ const cancelDiscout = 30;
 const flowCouponId50PercentDiscount = 873;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
 const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/subscriptions/confirm-payment'
+const flowCouponId30PercentDiscount = 884;
 
 export const environment = {
     production,
@@ -99,5 +100,6 @@ export const environment = {
     flowCouponId50PercentDiscount,
     diasReembolsoCreditosLoyaltyWebshop,
     flowUrlConfirmationSubscription,
-    flowPlanIdTest
+    flowPlanIdTest,
+    flowCouponId30PercentDiscount
 };

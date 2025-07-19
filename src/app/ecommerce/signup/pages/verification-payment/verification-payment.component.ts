@@ -260,7 +260,7 @@ export class VerificationPaymentComponent {
     : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
 
     return {
-      amount: this.ENV.precioCreatinaOnePurchase,
+      amount: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? 2 : this.ENV.precioCreatinaOnePurchase,
       currency: 'PEN',
       commerceOrder: '',
       subject: 'Creatina Monohidratada Magrolabs de 250 gr.',

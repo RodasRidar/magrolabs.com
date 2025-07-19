@@ -110,24 +110,6 @@ export class ReviewsListComponent implements OnInit {
             is_static: true
         },
         {
-            id: 'static-3',
-            user_id: 'user-3',
-            product_id: this.productId,
-            user: {
-                id: 'user-3',
-                first_name: 'Luis',
-                last_name: 'Fernandez S.',
-                email: 'luis.fernandez@example.com'
-            },
-            stars: 5,
-            review: 'Buena creatina, la uso antes de entrenar y no me ha traído efectos secundarios ni nada, Pd: amo su diseño.',
-            created_at: new Date('2025-01-06').toISOString(),
-            updated_at: new Date('2025-01-06').toISOString(),
-            isAproved: true,
-            is_delete: false,
-            is_static: true
-        },
-        {
             id: 'static-4',
             user_id: 'user-4',
             product_id: this.productId,

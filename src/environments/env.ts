@@ -29,7 +29,7 @@ const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
 const flowPlanIdTest = 'TEST-PROD-TWO-SOLES';
-const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
+const flowApiUrl = 'https://www.dev-function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'http://localhost:4200/registro/confirmacion';
 const flowUrlReturnPagoPorAdmin = 'http://localhost:4200/cuenta/pedidos';
 const flowUrlConfirmation = 'http://localhost:3000/api/v1/orders/pagos/flow/confirmacion';
@@ -47,7 +47,7 @@ const useProxy = true;
 const cancelDiscout = 30;
 const flowCouponId50PercentDiscount = 874;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
-const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/subscriptions/confirm-payment'
+const flowUrlConfirmationSubscription = 'https://www.dev-api.magrolabs.com/api/v1/subscriptions/confirm-payment'
 
 export const environment = {
     production,

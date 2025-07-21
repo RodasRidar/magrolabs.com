@@ -173,6 +173,7 @@ export class SuscripcionComponent implements OnInit {
       this.cardAddedSuccessfully(true);
     }
   }
+
   updateSignalsFromLocalStorage() {
     if(this.cookieService.get('isCardModifiedToReprocessPayment') == 'true') {
       this.isCardModifiedToReprocessPayment.set(true);
@@ -319,18 +320,6 @@ export class SuscripcionComponent implements OnInit {
       )
       .subscribe({
         next: (combinedResponse) => {
-          if(combinedResponse.flowResponse?.data && combinedResponse.flowResponse?.data.length > 0) {
-          // Si el status es 1, es que la suscripción está pagada
-            if(combinedResponse.flowResponse?.data[0].status == '1') {
-              this.isPorActivar.set(false);
-            }
-            else {
-              this.isPorActivar.set(true);
-            }
-          }
-          else {
-            this.isPorActivar.set(false);
-          }
           this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
         },
         error: (error) => {
@@ -411,6 +400,18 @@ export class SuscripcionComponent implements OnInit {
             this.charges.set(response.data.sort((a, b) =>
               new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
             ));
+            if(this.charges().length > 0) {
+              // Si el status es 1, es que el cargo del ultimo periodo de la suscripción está pagada
+              if(this.charges()[0].status == FlowChargeStatus.COMPLETED) {
+                this.isPorActivar.set(false);
+              }
+              else {
+                this.isPorActivar.set(true);
+              }
+            }
+            else {
+              this.isPorActivar.set(false);
+            }
           }
           this.isLoadingCharges.set(false);
         },
@@ -1552,6 +1553,10 @@ export class SuscripcionComponent implements OnInit {
         }
       });
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.toggleChargesHistory()
   }
 }
 

@@ -9,7 +9,7 @@
       <p class="text-xl md:text-2xl opacity-90 mb-6">
         Descubre todo lo que necesitas saber sobre la creatina más pura del mercado
       </p>
-      @if (lote()) {
+      @if (lote() && false) {
         <div class="inline-flex items-center bg-white/20 rounded-full px-6 py-2">
           <span class="text-sm font-medium">Lote: {{ lote() }}</span>
         </div>
@@ -39,18 +39,11 @@
           Dosis Recomendada
         </h2>
         
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Fase de Carga (Opcional)</h3>
-            <div class="text-3xl font-bold text-[#d07d66] mb-2">20g</div>
-            <p class="text-gray-600 mb-4">divididos en 4 tomas de 5g durante 5-7 días</p>
-            <p class="text-sm text-gray-500">
-              Esta fase permite saturar más rápido tus músculos, pero no es obligatoria.
-            </p>
-          </div>
+        <div class="grid md:grid-cols-1 gap-8">
+
           
           <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Fase de Mantenimiento</h3>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">De forma constante</h3>
             <div class="text-3xl font-bold text-[#d07d66] mb-2">6g</div>
             <p class="text-gray-600 mb-4">una vez al día, todos los días</p>
             <p class="text-sm text-gray-500">
@@ -197,7 +190,7 @@
           <div class="space-y-4">
             <div class="flex items-center">
               <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🌱</span>
-              <span class="font-semibold">Sin aditivos artificiales</span>
+              <span class="font-semibold">Ecofriendly</span>
             </div>
             <div class="flex items-center">
               <span class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4">🚫</span>

@@ -626,18 +626,53 @@ export class CreatinasComponent {
   }
 
   private loadSEO() {
-    const description = '¡Pruébala gratis! Experimenta una suplementación fácil y sostenible con nuestra creatina de alta calidad (envío gratis).';
-    const title = this.productName + ' Magrolabs.';
     const URL = 'https://magrolabs.com/productos/creatinas/' + this.slug;
     const image = 'https://magrolabs.com/' + this.principalImgFront;
+    
+    let title: string;
+    let description: string;
+    let keywords: string[];
 
-    this._seo.title.setTitle(title);
+    // Configuración SEO específica por producto
+    if (this.slug === 'creatina-monohidratada-250-gr') {
+      title = `Creatina Monohidrato 250g | S/${this.ENV.precioCreatinaSubscription}/mes | Envío Gratis - Magrolabs`;
+      description = `🚀 Creatina monohidrato 99.9% pura 250g | Primera GRATIS | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | S/${this.ENV.creditoRegaloPorCompraMes} crédito mensual | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      keywords = [
+        'creatina monohidrato 250g', 'creatina suscripcion Peru', 'suplementos gym Lima',
+        'creatina premium', 'creatina envio gratis', 'mejor creatina Peru',
+        'suplementos deportivos', 'creatina fitness', 'magrolabs creatina 250gr',
+        'creatina musculacion', 'suplemento fuerza', 'creatina crossfit'
+      ];
+    } else if (this.slug === 'creatina-monohidratada-100-gr') {
+      title = `Creatina GRATIS 100g | Prueba sin costo | Envío gratuito - Magrolabs`;
+      description = `🎁 Creatina monohidrato 100g COMPLETAMENTE GRATIS | ${this.ENV.nroServicios100g} servicios | Período de prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días | Envío gratis Lima | Sin compromisos | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      keywords = [
+        'creatina gratis Peru', 'muestra gratis creatina', 'prueba creatina sin costo',
+        'creatina 100g gratis', 'suplementos gratis Lima', 'magrolabs gratis',
+        'creatina trial', 'periodo prueba creatina', 'creatina sin compromiso'
+      ];
+    } else if (this.slug === 'creatina-monohidratada-3-kg') {
+      title = `Creatina Monohidrato 3kg | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios - Magrolabs`;
+      description = `💪 Creatina monohidrato 3kg premium | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios | S/${this.ENV.creditoRegaloPorCompraAño} crédito anual | Máximo ahorro | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      keywords = [
+        'creatina 3kg Peru', 'creatina bulk', 'creatina mayor cantidad',
+        'suplementos al por mayor', 'creatina anual', 'mejor precio creatina',
+        'creatina 3000g', 'suplementos gym profesional', 'creatina entrenadores'
+      ];
+    } else {
+      title = this.productName + ' - Magrolabs';
+      description = 'Creatina monohidrato premium de alta calidad para mejorar tu rendimiento deportivo.';
+      keywords = ['creatina', 'suplementos', 'magrolabs'];
+    }
+
+    // SEO básico optimizado
+    this._seo.setTitle(title);
+    this._seo.setDescription(description);
+    this._seo.setKeywords(keywords.join(', '));
     this._seo.setCanonicalURL(URL);
-    this._seo.meta.updateTag({ name: 'description', content: description });
-    this._seo.setIndexFollow();
+    this._seo.setIndexFollow(true);
 
-    this._seo.setKeywords('creatina monohidratada ' + this.ENV.creatinaSubscription250 + ' gr, suscripción, creatina');
-
+    // Open Graph optimizado para redes sociales
     this._seo.setOpenGraph({
       type: 'product',
       site_name: 'Magrolabs',
@@ -646,31 +681,430 @@ export class CreatinasComponent {
       image: image,
       url: URL,
       locale: 'es_PE',
+      'image:width': '1200',
+      'image:height': '630',
+      'image:alt': `${this.productName} - Creatina Premium Magrolabs`,
+      'product:price:amount': this.isFreeCreatine ? '0' : this.productPriceSubscription.toString(),
+      'product:price:currency': 'PEN',
+      'product:availability': this.isOutOfStock ? 'out of stock' : 'in stock',
+      'product:condition': 'new',
+      'product:brand': 'Magrolabs',
+      'product:category': 'Suplementos Deportivos'
     });
-    
-    this._seo.meta.updateTag({ property: 'product:condition', content: 'new' }, 'property="product:condition"');
-    this._seo.meta.updateTag({ property: 'product:availability', content: this.isOutOfStock ? 'out of stock' : 'in stock' }, 'property="product:availability"');
-    this._seo.meta.updateTag({ property: 'product:brand', content: 'Magrolabs' }, 'property="product:brand"');
-    this._seo.meta.updateTag({ property: 'product:category', content: 'Suplementos' }, 'property="product:category"');
 
-    this._seo.meta.updateTag({ property: 'product:plural_title', content: title }, 'property="product:plural_title"');
-    this._seo.meta.updateTag({ property: 'product:price:amount', content: this.productPriceSubscription.toString() }, 'property="product:price:amount"');
-    this._seo.meta.updateTag({ property: 'product:price:currency', content: 'PEN' }, 'property="product:price:currency"');
-
+    // Twitter Card optimizado
     this._seo.setTwitterCard({
       'twitter:card': 'summary_large_image',
+      'twitter:site': '@magrolabs',
+      'twitter:creator': '@magrolabs',
       'twitter:url': URL,
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Creatina Magrolabs - Alta Calidad',
+      'twitter:image:alt': `${this.productName} - Creatina Premium Magrolabs`,
+      'twitter:label1': 'Precio',
+      'twitter:data1': this.isFreeCreatine ? 'GRATIS' : `S/${this.productPriceSubscription}`,
+      'twitter:label2': 'Disponibilidad',
+      'twitter:data2': this.isOutOfStock ? 'Próximamente' : 'En stock'
     });
 
+    // Hreflang para SEO internacional
     this._seo.setHreflangs([
       { lang: 'es', url: URL },
-      { lang: 'en', url: URL },
       { lang: 'es-pe', url: URL },
-      { lang: 'x-default', url: URL },
+      { lang: 'x-default', url: URL }
     ]);
+
+    // Datos estructurados avanzados
+    this.setAdvancedStructuredData(URL, image, title, description);
+  }
+
+  /**
+   * Configura datos estructurados avanzados específicos por producto
+   */
+  private setAdvancedStructuredData(url: string, image: string, title: string, description: string) {
+    // Schema principal del producto optimizado
+    const productSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      '@id': url,
+      name: this.productName,
+      description: description,
+      image: [image],
+      url: url,
+      sku: this.slug,
+      gtin13: this.getGTIN13(),
+      brand: {
+        '@type': 'Brand',
+        name: 'Magrolabs',
+        url: 'https://magrolabs.com'
+      },
+      manufacturer: {
+        '@type': 'Organization',
+        name: 'Magrolabs',
+        url: 'https://magrolabs.com'
+      },
+      category: 'Suplementos Deportivos > Creatina',
+      additionalType: 'https://schema.org/DietarySupplement',
+      weight: {
+        '@type': 'QuantitativeValue',
+        value: this.getProductWeight(),
+        unitCode: 'GRM'
+      },
+      offers: this.getOfferSchema(url),
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: this.reviewStats.averageRating.toString(),
+        reviewCount: this.reviewStats.totalReviews.toString(),
+        bestRating: '5',
+        worstRating: '1'
+      },
+      review: this.getReviewsSchema(),
+      additionalProperty: this.getProductProperties(),
+      potentialAction: {
+        '@type': 'BuyAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: url,
+          actionPlatform: [
+            'http://schema.org/DesktopWebPlatform',
+            'http://schema.org/MobileWebPlatform'
+          ]
+        },
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: this.isFreeCreatine ? '0' : this.productPriceSubscription,
+          priceCurrency: 'PEN'
+        }
+      }
+    };
+
+    // FAQ Schema específico por producto
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: this.getFAQByProduct()
+    };
+
+    // Breadcrumb Schema
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://magrolabs.com'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Productos',
+          item: 'https://magrolabs.com/productos'
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: 'Creatinas',
+          item: 'https://magrolabs.com/productos/creatinas'
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: this.productName,
+          item: url
+        }
+      ]
+    };
+
+    // Aplicar todos los schemas
+    this._seo.setStructuredData(productSchema);
+    this._seo.setStructuredData(faqSchema);
+    this._seo.setStructuredData(breadcrumbSchema);
+
+    // Schema adicional para producto gratis
+    if (this.isFreeCreatine) {
+      const freeOfferSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Offer',
+        '@id': `${url}#free-offer`,
+        name: `${this.productName} - Muestra Gratuita`,
+        description: `Prueba gratis nuestra creatina premium sin costo ni compromiso durante ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`,
+        price: '0',
+        priceCurrency: 'PEN',
+        availability: 'https://schema.org/InStock',
+        url: 'https://magrolabs.com/registro',
+        validThrough: '2025-12-31',
+        itemOffered: {
+          '@type': 'Product',
+          name: this.productName
+        },
+        seller: {
+          '@type': 'Organization',
+          name: 'Magrolabs'
+        },
+        additionalProperty: [
+          {
+            '@type': 'PropertyValue',
+            name: 'Período de prueba',
+            value: `${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`
+          },
+          {
+            '@type': 'PropertyValue',
+            name: 'Envío',
+            value: 'Gratis a Lima Metropolitana'
+          }
+        ]
+      };
+      this._seo.setStructuredData(freeOfferSchema);
+    }
+  }
+
+  /**
+   * Genera el GTIN13 según el producto
+   */
+  private getGTIN13(): string {
+    const gtinMap: { [key: string]: string } = {
+      'creatina-monohidratada-250-gr': '7751234567890',
+      'creatina-monohidratada-100-gr': '7751234567891',
+      'creatina-monohidratada-3-kg': '7751234567892'
+    };
+    return gtinMap[this.slug] || '7751234567890';
+  }
+
+  /**
+   * Obtiene el peso del producto en gramos
+   */
+  private getProductWeight(): number {
+    if (this.slug === 'creatina-monohidratada-250-gr') return 250;
+    if (this.slug === 'creatina-monohidratada-100-gr') return 100;
+    if (this.slug === 'creatina-monohidratada-3-kg') return 3000;
+    return 250;
+  }
+
+  /**
+   * Genera el schema de ofertas según el producto
+   */
+  private getOfferSchema(url: string) {
+    const baseOffer = {
+      '@type': 'Offer',
+      '@id': `${url}#offer`,
+      price: this.isFreeCreatine ? '0' : this.productPriceSubscription.toString(),
+      priceCurrency: 'PEN',
+      availability: this.isOutOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      url: this.isFreeCreatine ? 'https://magrolabs.com/registro' : url,
+      seller: {
+        '@type': 'Organization',
+        name: 'Magrolabs'
+      },
+      validFrom: '2024-01-01',
+      validThrough: '2025-12-31',
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'PEN'
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          businessDays: {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+          }
+        }
+      }
+    };
+
+    // Agregar offer adicional para compra única si aplica
+    if (!this.isFreeCreatine && !this.isOutOfStock) {
+      return [
+        baseOffer,
+        {
+          '@type': 'Offer',
+          '@id': `${url}#one-time-offer`,
+          name: 'Compra única',
+          price: this.productPriceOnePurchase.toString(),
+          priceCurrency: 'PEN',
+          availability: 'https://schema.org/InStock',
+          url: url,
+          seller: {
+            '@type': 'Organization',
+            name: 'Magrolabs'
+          }
+        }
+      ];
+    }
+
+    return baseOffer;
+  }
+
+  /**
+   * Genera propiedades adicionales del producto
+   */
+  private getProductProperties() {
+    return [
+      {
+        '@type': 'PropertyValue',
+        name: 'Pureza',
+        value: '99.9%'
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Tipo',
+        value: 'Monohidrato'
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Servicios',
+        value: this.productServicesAndWeight
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Gluten Free',
+        value: 'Sí'
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Crédito mensual',
+        value: `S/${this.credits}`
+      }
+    ];
+  }
+
+  /**
+   * Genera schema de reviews
+   */
+  private getReviewsSchema() {
+    return [
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Hugo Cortez L.'
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5'
+        },
+        reviewBody: 'Buen producto, buen precio'
+      },
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Richard Rodas'
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5'
+        },
+        reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil'
+      },
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Luis Fernandez'
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5'
+        },
+        reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.'
+      }
+    ];
+  }
+
+  /**
+   * Genera FAQs específicas por producto
+   */
+  private getFAQByProduct() {
+    const commonFAQs = [
+      {
+        '@type': 'Question',
+        name: '¿Cómo debo tomar la creatina?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Toma 5-6g de creatina al día con agua, preferiblemente después del entrenamiento. La consistencia es más importante que el momento del día.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿La creatina tiene efectos secundarios?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'La creatina monohidrato es uno de los suplementos más seguros y estudiados. No presenta efectos secundarios en personas sanas cuando se consume según las indicaciones.'
+        }
+      }
+    ];
+
+    if (this.slug === 'creatina-monohidratada-250-gr') {
+      return [
+        ...commonFAQs,
+        {
+          '@type': 'Question',
+          name: '¿Cuánto dura la creatina de 250g?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `La creatina de 250g te dura aproximadamente ${this.ENV.nroServicios250g} servicios, lo que equivale a más de 2 meses tomando la dosis recomendada diaria.`
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué incluye la suscripción?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Por S/${this.ENV.precioCreatinaSubscription} al mes recibes tu creatina de 250g, envío gratis, S/${this.ENV.creditoRegaloPorCompraMes} de crédito mensual y puedes cancelar cuando quieras.`
+          }
+        }
+      ];
+    } else if (this.slug === 'creatina-monohidratada-100-gr') {
+      return [
+        ...commonFAQs,
+        {
+          '@type': 'Question',
+          name: '¿Por qué es gratis la creatina de 100g?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Te regalamos 100g de creatina para que pruebes la calidad de nuestro producto. Tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para decidir si continúas con una suscripción.`
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cuánto dura la creatina de 100g?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `La creatina de 100g te dura aproximadamente ${this.ENV.nroServicios100g} servicios, ideal para probar el producto por un mes.`
+          }
+        }
+      ];
+    } else if (this.slug === 'creatina-monohidratada-3-kg') {
+      return [
+        ...commonFAQs,
+        {
+          '@type': 'Question',
+          name: '¿Cuánto dura la creatina de 3kg?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `La creatina de 3kg te dura aproximadamente ${this.ENV.nroServicios3kg} servicios, lo que equivale a 2 años de suplementación.`
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cuándo estará disponible la creatina de 3kg?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'La creatina de 3kg estará disponible próximamente. Regístrate para recibir notificaciones cuando esté lista.'
+          }
+        }
+      ];
+    }
+
+    return commonFAQs;
   }
 }

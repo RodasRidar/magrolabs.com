@@ -153,11 +153,11 @@ export class SuscripcionComponent implements OnInit {
           this.flowToken = (response as RegisterCardResponse).token;
           this.showPaymentVerification.set(true);
           //despues de 2 segundos redirigir a suscription [fragment]="'reviews'"
-          if (!this.isPaymentVerified()) {
+          /*if (!this.isPaymentVerified()) {
             setTimeout(() => {
               this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
-            }, 2000);
-          }
+            }, 500);
+          }*/
         });
       }
 

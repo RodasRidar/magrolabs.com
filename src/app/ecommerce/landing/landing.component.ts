@@ -27,16 +27,22 @@ export class LandingComponent {
     const title = 'Magrolabs Creatina';
     const URL = 'https://magrolabs.com';
     const image = 'https://magrolabs.com/image-meta.webp';
+    const keywords = [
+      'creatina monohidrato Peru', 'creatina premium Lima', 'suplementos deportivos Peru',
+      'creatina suscripcion', 'creatina envio gratis', 'mejor creatina Peru',
+      'creatina gimnasio', 'suplementos musculacion', 'creatina fitness',
+      'creatina crossfit', 'proteina creatina', 'suplementos alta calidad',
+      'magrolabs creatina', 'comprar creatina Peru', 'creatina delivery Lima'
+    ];
 
-    this._seo.title.setTitle(title);
+    // SEO básico optimizado
+    this._seo.setTitle(title);
+    this._seo.setDescription(description);
+    this._seo.setKeywords(keywords.join(', '));
     this._seo.setCanonicalURL(URL);
-    this._seo.meta.updateTag({ name: 'description', content: description });
-    this._seo.setIndexFollow();
+    this._seo.setIndexFollow(true);
 
-    this._seo.setKeywords('magrolabs, magrolab, magrolap, magro labs,magro laps, magrolaps, magrolap, creatina, suplementos, gym, fitness, salud, deporte, nutricion, entrenamiento, musculacion, crossfit, fisicoculturismo, bienestar, saludable,' +
-      'gimnasio, suscripción, creatina recurrente, creatina monohidratada, creatina 100%, creatina 3kg, creatina 250g, creatina 250gr,' +
-      'creatina por subscripcion, calidad, peru, perú, envío gratis, gratis, envio, lima');
-
+    // Open Graph optimizado para redes sociales
     this._seo.setOpenGraph({
       type: 'website',
       site_name: 'Magrolabs',
@@ -45,22 +51,268 @@ export class LandingComponent {
       image: image,
       url: URL,
       locale: 'es_PE',
+      'image:width': '1200',
+      'image:height': '628',
+      'image:alt': 'Creatina Monohidrato Premium Magrolabs - Primera gratis'
     });
 
+    // Twitter Cards optimizado
     this._seo.setTwitterCard({
       'twitter:card': 'summary_large_image',
+      'twitter:site': '@magrolabs',
+      'twitter:creator': '@magrolabs',
       'twitter:url': URL,
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Creatina Magrolabs - Alta Calidad',
+      'twitter:image:alt': 'Creatina Monohidrato Premium - Primera gratis con Magrolabs'
     });
 
+    // Hreflang para SEO internacional
     this._seo.setHreflangs([
       { lang: 'es', url: URL },
-      { lang: 'en', url: URL },
       { lang: 'es-pe', url: URL },
-      { lang: 'x-default', url: URL },
+      { lang: 'x-default', url: URL }
     ]);
+
+    // Schema.org - Datos estructurados para Organization
+    const organizationSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Magrolabs',
+      alternateName: 'Magro Labs',
+      url: URL,
+      logo: `${URL}/favicon.png`,
+      description: 'Líder en suplementos deportivos de alta calidad en Perú. Especialistas en creatina monohidrato premium.',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        telephone: `+${this.ENV.telefonoAtencionClientes}`,
+        contactType: 'customer service',
+        email: this.ENV.emailAtencionClientes,
+        availableLanguage: 'Spanish'
+      },
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'PE',
+        addressLocality: 'Lima'
+      },
+      sameAs: [
+        'https://www.facebook.com/magrolabs',
+        'https://www.instagram.com/magrolabs',
+        'https://twitter.com/magrolabs',
+        'https://www.tiktok.com/@magrolabs',
+      ],
+      foundingDate: '2025',
+      numberOfEmployees: '1-20',
+      industry: 'Health and Wellness',
+      serviceArea: {
+        '@type': 'Country',
+        name: 'Peru'
+      }
+    };
+
+         // Schema.org - Website
+     const websiteSchema = {
+       '@context': 'https://schema.org',
+       '@type': 'WebSite',
+       name: 'Magrolabs',
+       alternateName: 'Magrolabs Perú',
+       url: URL,
+       description: description,
+       publisher: {
+         '@type': 'Organization',
+         name: 'Magrolabs'
+       },
+       potentialAction: {
+         '@type': 'SearchAction',
+         target: {
+           '@type': 'EntryPoint',
+           urlTemplate: `${URL}/productos/creatinas/{search_term_string}`
+         },
+         'query-input': 'required name=search_term_string'
+       }
+     };
+
+    // Schema.org - Producto principal (Creatina)
+    const productSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Creatina Monohidrato Premium 250g',
+      description: 'Creatina 100% monohidratada, ideal para aumentar fuerza y masa muscular. Primera entrega gratuita.',
+      brand: {
+        '@type': 'Brand',
+        name: 'Magrolabs'
+      },
+      manufacturer: {
+        '@type': 'Organization',
+        name: 'Magrolabs'
+      },
+             category: 'Suplementos Deportivos',
+       sku: 'creatina-monohidratada-250-gr',
+       weight: {
+         '@type': 'QuantitativeValue',
+         value: '250',
+         unitCode: 'GRM'
+       },
+       offers: {
+         '@type': 'Offer',
+         price: this.ENV.precioCreatinaSubscription,
+         priceCurrency: 'PEN',
+         availability: 'https://schema.org/InStock',
+         url: `${URL}/productos/creatinas/creatina-monohidratada-250-gr`,
+        seller: {
+          '@type': 'Organization',
+          name: 'Magrolabs'
+        },
+        shippingDetails: {
+          '@type': 'OfferShippingDetails',
+          shippingRate: {
+            '@type': 'MonetaryAmount',
+            value: '0',
+            currency: 'PEN'
+          },
+          deliveryTime: {
+            '@type': 'ShippingDeliveryTime',
+            businessDays: {
+              '@type': 'OpeningHoursSpecification',
+              dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            }
+          }
+        }
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        reviewCount: this.ENV.nroReviews,
+        bestRating: '5',
+        worstRating: '1'
+      },
+      review: [
+        {
+          '@type': 'Review',
+          author: {
+            '@type': 'Person',
+            name: 'Hugo Cortez L.'
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: '5',
+            bestRating: '5'
+          },
+          reviewBody: 'Buen producto, buen precio'
+        },
+        {
+          '@type': 'Review',
+          author: {
+            '@type': 'Person',
+            name: 'Richard Rodas'
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: '5',
+            bestRating: '5'
+          },
+          reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil'
+        },
+        {
+          '@type': 'Review',
+          author: {
+            '@type': 'Person',
+            name: 'Luis Fernandez'
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: '5',
+            bestRating: '5'
+          },
+          reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.'
+        }
+      ]
+    };
+
+    // Schema.org - FAQ basado en las preguntas de la página
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Por qué recibo la primera creatina gratis?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Te regalamos la primera creatina porque queremos mostrarte y hacerte sentir que estás tomando la mejor decisión. Estamos muy convencidos de nuestra creatina de alta calidad.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cuándo recibiré mi creatina gratis?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Después de registrarte, tu creatina gratis estará en tu casa en un plazo de ${this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min} - ${this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max} días hábiles.`
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Hay un periodo de cancelación?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Después de recibir tu creatina gratis, tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para probarla como período de prueba. Si cancelas durante este tiempo, no pagarás nada. Después aplicamos un período de cancelación mensual.`
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cómo funciona el programa Loyalty?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Como miembro recibes automáticamente S/${this.ENV.creditoRegaloPorCompraMes} soles de crédito cada mes para canjear por artículos exclusivos de Magrolabs sin costo adicional.`
+          }
+        }
+      ]
+    };
+
+    // Schema.org - Oferta especial
+    const specialOfferSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Offer',
+      name: 'Primera Creatina Gratis + Suscripción Premium',
+      description: `Obtén tu primera creatina completamente gratis y únete a nuestra suscripción por solo S/${this.ENV.precioCreatinaSubscription} al mes`,
+      price: '0',
+      priceCurrency: 'PEN',
+      availability: 'https://schema.org/InStock',
+      url: `${URL}/registro`,
+      validThrough: '2025-12-31',
+      itemOffered: {
+        '@type': 'Product',
+        name: 'Creatina Monohidrato Premium 250g'
+      },
+      seller: {
+        '@type': 'Organization',
+        name: 'Magrolabs'
+      },
+      additionalProperty: [
+        {
+          '@type': 'PropertyValue',
+          name: 'Período de prueba',
+          value: `${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`
+        },
+        {
+          '@type': 'PropertyValue',
+          name: 'Envío',
+          value: 'Gratis a Lima Metropolitana'
+        },
+        {
+          '@type': 'PropertyValue',
+          name: 'Crédito mensual',
+          value: `S/${this.ENV.creditoRegaloPorCompraMes}`
+        }
+      ]
+    };
+
+    // Aplicar todos los schemas
+    this._seo.setStructuredData(organizationSchema);
+    this._seo.setStructuredData(websiteSchema);
+    this._seo.setStructuredData(productSchema);
+    this._seo.setStructuredData(faqSchema);
+    this._seo.setStructuredData(specialOfferSchema);
   }
 }

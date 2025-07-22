@@ -1,3 +1,5 @@
 /productos/creatinas/creatina-monohidratada-250-gr
 /productos/creatinas/creatina-monohidratada-100-gr
 /productos/creatinas/creatina-monohidratada-3-kg
+/mi-primera-creatina
+/

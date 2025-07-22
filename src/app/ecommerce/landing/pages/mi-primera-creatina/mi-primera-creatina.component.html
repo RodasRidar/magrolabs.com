@@ -1,10 +1,10 @@
 <app-navbar [isCheckout]="false" [type]="NavbarTypeEnum.LANDING "></app-navbar>
 <main class="min-h-screen bg-white">
   <!-- Header -->
-  <header class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white py-16">
+  <header class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">
-        ¡Tu Primera Creatina Magrolabs!
+        ¿Es tu primera vez tomando creatina?
       </h1>
       <p class="text-xl md:text-2xl opacity-90 mb-6">
         Descubre todo lo que necesitas saber sobre la creatina más pura del mercado
@@ -41,11 +41,39 @@
         
         <div class="grid md:grid-cols-1 gap-8">
 
+          <!-- Dosis para principiantes -->
+          <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 shadow-sm border-2 border-yellow-200">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              Hazlo profesionalmente
+            </h3>
+            <div class="mb-4">
+              <div class="text-2xl font-bold text-[#d07d66] mb-2">0.10g por cada kg de peso</div>
+              <p class="text-gray-600 mb-4">Para sacar el máximo provecho de tu creatina en tus entrenamientos.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg p-4 mb-4">
+              <h4 class="font-semibold text-gray-900 mb-2">📊 Ejemplo práctico:</h4>
+              <div class="space-y-2 text-sm">
+                <p class="flex justify-between">
+                  <span>Si pesas 70 kg:</span>
+                  <span class="font-semibold">70 × 0.10 = 7g al día</span>
+                </p>
+                <p class="flex justify-between">
+                  <span>Si pesas 80 kg:</span>
+                  <span class="font-semibold">80 × 0.10 = 8g al día</span>
+                </p>
+                <p class="flex justify-between">
+                  <span>Si pesas 60 kg:</span>
+                  <span class="font-semibold">60 × 0.10 = 6g al día</span>
+                </p>
+              </div>
+            </div>
+          </div>
           
           <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">De forma constante</h3>
-            <div class="text-3xl font-bold text-[#d07d66] mb-2">6g</div>
-            <p class="text-gray-600 mb-4">una vez al día, todos los días</p>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Dosis estándar</h3>
+            <div class="text-3xl font-bold text-[#d07d66] mb-2">5g</div>
+            <p class="text-gray-600 mb-4">Una vez al día, todos los días.</p>
             <p class="text-sm text-gray-500">
               Mantiene los niveles óptimos de creatina en tus músculos.
             </p>
@@ -55,8 +83,8 @@
         <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
           <h4 class="font-semibold text-blue-900 mb-2">💡 Consejo Pro:</h4>
           <p class="text-blue-800">
-            Toma tu creatina con agua o jugo post-entreno para mejor absorción. 
-            También puedes tomarla en cualquier momento del día, lo importante es la constancia.
+            Toma tu creatina con agua o un jugo después de entrenar para una mejor absorción. 
+            Puedes tomarla en cualquier momento del día, lo importante es la constancia.
           </p>
         </div>
       </div>
@@ -217,7 +245,7 @@
             <span class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">💧</span>
             <div>
               <h3 class="font-semibold text-gray-900 mb-2">Hidrátate bien</h3>
-              <p class="text-gray-600">Bebe al menos 2.5-3 litros de agua al día para optimizar la función de la creatina.</p>
+              <p class="text-gray-600">Bebe entre 2.5 y 3 litros de agua al día para optimizar la función de la creatina.</p>
             </div>
           </div>
           
@@ -235,7 +263,7 @@
             <span class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-4 text-xl shrink-0">⏰</span>
             <div>
               <h3 class="font-semibold text-gray-900 mb-2">Sé consistente</h3>
-              <p class="text-gray-600">Los resultados se notan después de 2-4 semanas de uso constante.</p>
+              <p class="text-gray-600">Los resultados se notan después de 4 semanas de uso constante.</p>
             </div>
           </div>
           

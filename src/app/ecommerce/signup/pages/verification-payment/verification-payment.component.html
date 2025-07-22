@@ -16,6 +16,43 @@
 </div>
 }
 
+<!-- Aviso para direcciones fuera de Lima Metropolitana -->
+@if (isOutsideLimaMetropolitana) {
+<div class="mx-auto text-pretty max-w-3xl mt-4">
+    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-6 rounded-r-lg">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-lg font-semibold text-yellow-800">
+                    Coordinación especial requerida
+                </h3>
+                <div class="mt-2 text-yellow-700">
+                    <p class="text-sm leading-relaxed">
+                        Tu dirección está <strong>fuera de Lima Metropolitana</strong>. Despues de tu pago, nuestro equipo se comunicará contigo dentro de las próximas 24 horas para coordinar:
+                    </p>
+                    <ul class="mt-3 list-disc list-inside text-sm space-y-1">
+                        <li>Opciones de pago disponibles para tu zona</li>
+                        <li>Costos y tiempos de envío específicos</li>
+                        <li>Confirmación de tu pedido personalizado</li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-white bg-opacity-60 rounded-md">
+                        <p class="text-sm">
+                            <span class="font-semibold">📧 Contacto:</span> {{ENV.emailAtencionClientes}}
+                            <br>  
+                            <span class="font-semibold">📱 WhatsApp:</span> +{{ENV.telefonoAtencionClientes}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
 <div class="mx-auto text-pretty max-w-3xl mt-2 pb-12 sm:mt-2 sm:pb-16 lg:mt-2 lg:pb-24">
     <div class="relative text-gray-600 px-5">
         <div class="pb-4 lg:px-0 text-pretty">

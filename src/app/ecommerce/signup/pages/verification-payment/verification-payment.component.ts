@@ -12,7 +12,7 @@ import { environment } from '../../../../../environments/env';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ConfirmationStatus, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
+import { AddressSummary, ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -71,6 +71,7 @@ export class VerificationPaymentComponent {
   labelCardRegisted = '**** **** **** ';
   stepEnum = StepEnum;
   isCreatinaGratis = false;
+  isOutsideLimaMetropolitana = false;
 
   form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
@@ -91,6 +92,24 @@ export class VerificationPaymentComponent {
     }
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaGratis = true;
+    }
+
+    // Validar si la dirección está fuera de Lima Metropolitana
+    this.validateAddressLocation(summary!);
+  }
+
+  /**
+   * Valida si la dirección del usuario está fuera de Lima Metropolitana
+   */
+  private validateAddressLocation(summary: Summary): void {
+    if (summary) {
+      // Verificar si NO es Lima Metropolitana
+      // Lima Metropolitana = departamento "Lima" y provincia "Lima"
+      if (summary.address?.department?.toLowerCase() !== '3926' || summary.address?.provincia?.toLowerCase() !== '3927') {
+        this.isOutsideLimaMetropolitana = true;
+      } else {
+        this.isOutsideLimaMetropolitana = false;
+      }
     }
     if (this._cookieService.get('promoCode')) {
       this.isPaymentVerified = true;

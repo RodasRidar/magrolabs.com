@@ -989,14 +989,14 @@ export class SuscripcionComponent implements OnInit {
   }
 
   reactivateSubscription(reactivateType: ReactivateType): void {
-    if (!this.subscription()) return;
-
+    alert('Ups!, lamentamos los inconvenientes. Si deseas reactivar tu suscripción, por favor, contacta a nuestro equipo de soporte en el siguiente correo: hola@magrolabs.com');
+    return;
     this.isLoading.set(true);
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if(!customerId || !this.subscription()) return;
 
-    // Calcular el próximo pago basado en la fecha personal de facturación
+    let flowSubscriptionData: FlowCreateSubscriptionRequest = <FlowCreateSubscriptionRequest>{};
     const now = new Date();
-    const subscriptionStartDate = new Date(this.subscription()!.start_date);
-    const userBillingDay = subscriptionStartDate.getDate()
 
     let nextBillingMonth = now.getMonth();
     let nextBillingYear = now.getFullYear();
@@ -1009,18 +1009,17 @@ export class SuscripcionComponent implements OnInit {
     }
 
     //PAUSA
-    let nextPaymentDate: Date | undefined = new Date(now.getFullYear(), now.getMonth(), userBillingDay, now.getHours(), now.getMinutes(), now.getSeconds());
+    let nextPaymentDate: Date | undefined = new Date(
+    now.getFullYear(), //Año
+    now.getMonth(),  //Mes
+    new Date(this.subscription()!.start_date).getDate(), //Día
+    now.getHours(), //Hora
+    now.getMinutes(), //Minuto
+    now.getSeconds(), //Segundo
+    );
 
-    let sumaMes = 1;
-    let startDatePAUSE: Date = new Date();
-    if (now > nextPaymentDate!) {
-      startDatePAUSE = new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' }));
-    } else {
-      startDatePAUSE = new Date(nextPaymentDate!.toLocaleString('en-US', { timeZone: 'America/Lima' }));
-      sumaMes = 0;
-    }
 
-    //CANCELACIÓN
+    //DE UNA SUSCRIPCION CANCELADA
     if (reactivateType === ReactivateType.FROM_CANCELLATION) {
       const currentDate = new Date();
       nextPaymentDate = new Date(
@@ -1031,40 +1030,44 @@ export class SuscripcionComponent implements OnInit {
         now.getMinutes(),
         now.getSeconds()
       );
+      flowSubscriptionData = {
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+        customerId: customerId || '',
+        subscription_start: this.formatDateToLimaTimezone(now), // Formato YYYY-MM-DD en hora peruana
+      };
     }
-    // POR CANCELAR
+    // DE UNA SUSCRIPCION POR CANCELAR
     if (reactivateType === ReactivateType.FROM_TO_CANCEL) {
       nextPaymentDate = undefined;
     }
+    // DE UNA SUSCRIPCION PAUSADA
+    if(reactivateType === ReactivateType.FROM_PAUSE){
+      let sumaMes = 1;
+      let startDatePAUSE: Date = new Date();
 
-    this.subscriptionService.reactivateSubscription(this.subscription()!.id,
-      reactivateType === ReactivateType.FROM_PAUSE ?
-        new Date(now.getFullYear(), now.getMonth() + sumaMes, startDatePAUSE.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
-        : nextPaymentDate)
+      // Si la fecha de la suscripción es mayor a la fecha actual, se usa la fecha actual
+      if (now > nextPaymentDate!) {
+        startDatePAUSE = new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' }));
+      } else {
+        startDatePAUSE = new Date(nextPaymentDate!.toLocaleString('en-US', { timeZone: 'America/Lima' }));
+        sumaMes = 0;
+      }
+
+      nextPaymentDate = new Date(now.getFullYear(), now.getMonth() + sumaMes, startDatePAUSE.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+
+      flowSubscriptionData = {
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+        customerId: customerId || '',
+        subscription_start: this.formatDateToLimaTimezone(startDatePAUSE), // Formato YYYY-MM-DD en hora peruana
+      };
+    }
+
+    this.subscriptionService.reactivateSubscription(this.subscription()!.id, nextPaymentDate)
       .pipe(
         switchMap((response) => {
-          // Crear suscripción en Flow después de reactivar en backend
-          const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-          if (customerId && reactivateType !== ReactivateType.FROM_TO_CANCEL) {
 
-            let flowSubscriptionData: FlowCreateSubscriptionRequest = <FlowCreateSubscriptionRequest>{};
-
-            if (reactivateType == ReactivateType.FROM_CANCELLATION) {
-              flowSubscriptionData = {
-                planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
-                customerId: customerId,
-                subscription_start: this.formatDateToLimaTimezone(now), // Formato YYYY-MM-DD en hora peruana
-              };
-            }
-            else if (reactivateType == ReactivateType.FROM_PAUSE) {
-
-              flowSubscriptionData = {
-                planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
-                customerId: customerId,
-                subscription_start: this.formatDateToLimaTimezone(startDatePAUSE), // Formato YYYY-MM-DD en hora peruana
-              };
-            };
-
+          // Crear suscripción en Flow después de reactivar en backend, 
+          if (reactivateType !== ReactivateType.FROM_TO_CANCEL) {    
             return this.flowService.createSubscription(flowSubscriptionData)
               .pipe(
                 map((flowResponse) => ({ backendResponse: response, flowResponse })),

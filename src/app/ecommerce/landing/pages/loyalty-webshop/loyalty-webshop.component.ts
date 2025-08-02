@@ -27,7 +27,7 @@ export class LoyaltyWebshopComponent {
   private loadSEO() {
     const description = 'Cada miembro recibe S/10 de crédito al mes. Acumular crédito para compras es muy fácil, regístrate ahora y recibe S/10 !';
                         
-    const title = 'Magrolabs | Loyalty Webshop';
+    const title = 'Magrolabs | Webshop';
     const URL = 'https://magrolabs.com/loyalty-webshop';
     const image = 'https://magrolabs.com/loyalty-web-shop-banner_c.webp';
 
@@ -37,7 +37,7 @@ export class LoyaltyWebshopComponent {
     this._seo.meta.updateTag({ name: 'description', content: description });
     this._seo.setIndexFollow();
 
-    this._seo.setKeywords('loyalty webshop, webshop, articulos de gym');
+    this._seo.setKeywords('Webshop, articulos de gym');
 
     this._seo.setOpenGraph({
       type: 'website',
@@ -55,7 +55,7 @@ export class LoyaltyWebshopComponent {
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Loyalty Webshop Imagen',
+      'twitter:image:alt': 'Webshop Imagen',
     });
 
     this._seo.setHreflangs([

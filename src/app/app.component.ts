@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
+import { ModuleRetryService } from './shared/services/module-retry.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banne
 })
 export class AppComponent {
   private _router = inject(Router);
+  private moduleRetryService = inject(ModuleRetryService);
   title = 'Magrolabs';
   ENV = environment;
   isButtonVisible = false;
@@ -23,6 +25,9 @@ export class AppComponent {
       window.addEventListener('scroll', () => {
         this.wasScroll.set(true);
       });
+
+      // Manejar errores de carga de chunks/módulos
+      this.setupChunkErrorHandler();
     })
   }
 
@@ -36,7 +41,39 @@ export class AppComponent {
         } else {
           this.isButtonVisible = false;
         }
+
+        // Limpiar contadores de reintentos en navegación exitosa
+        this.moduleRetryService.clearRetryCount(event.url);
       }
     });
+  }
+
+  private setupChunkErrorHandler(): void {
+    // Manejar errores de carga de chunks de forma global
+    window.addEventListener('error', (event) => {
+      if (this.isChunkLoadError(event)) {
+        event.preventDefault();
+        this.moduleRetryService.handleModuleLoadError(event.error, event.filename);
+      }
+    });
+
+    // Manejar promesas rechazadas (para dynamic imports)
+    window.addEventListener('unhandledrejection', (event) => {
+      if (this.isChunkLoadError(event)) {
+        event.preventDefault();
+        this.moduleRetryService.handleModuleLoadError(event.reason);
+      }
+    });
+  }
+
+  private isChunkLoadError(event: any): boolean {
+    const error = event.error || event.reason;
+    return error && (
+      error.message?.includes('Loading chunk') ||
+      error.message?.includes('Failed to fetch dynamically imported module') ||
+      error.message?.includes('Loading CSS chunk') ||
+      error.message?.includes('ChunkLoadError') ||
+      (event.filename && event.filename.includes('chunk-'))
+    );
   }
 }

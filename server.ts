@@ -24,10 +24,20 @@ export function app(): express.Express {
 
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
+  
   // Serve static files from /browser
-  server.get('**', express.static(browserDistFolder, {
+  server.use(express.static(browserDistFolder, {
     maxAge: '1y',
-    index: 'index.html',
+    index: false,
+    setHeaders: (res, path) => {
+      // Ensure proper MIME types for JavaScript files
+      if (path.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript');
+      }
+      if (path.endsWith('.mjs')) {
+        res.setHeader('Content-Type', 'application/javascript');
+      }
+    }
   }));
 
   // All regular routes use the Angular engine

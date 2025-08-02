@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/env';
-import { HeaderComponent } from '../../../signup/components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { SeoService } from '../../../../shared/services/seo.service';
@@ -10,7 +9,7 @@ import { SeoService } from '../../../../shared/services/seo.service';
 @Component({
   selector: 'app-mi-primera-creatina',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, NavbarComponent],
+  imports: [CommonModule, FooterComponent, NavbarComponent],
   templateUrl: './mi-primera-creatina.component.html',
   styleUrl: './mi-primera-creatina.component.css'
 })

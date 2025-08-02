@@ -261,7 +261,7 @@ export class LandingComponent {
         },
         {
           '@type': 'Question',
-          name: '¿Cómo funciona el programa Loyalty?',
+          name: '¿Cómo funciona el programa de lealtad?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: `Como miembro recibes automáticamente S/${this.ENV.creditoRegaloPorCompraMes} soles de crédito cada mes para canjear por artículos exclusivos de Magrolabs sin costo adicional.`

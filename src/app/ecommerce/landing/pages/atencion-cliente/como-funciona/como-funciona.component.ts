@@ -31,7 +31,7 @@ export class ComoFuncionaComponent implements OnInit {
     },
     {
       title: '¿Que es Magrolabs?',
-      description: 'Magrolabs nació con la idea de revolucionar la suplementación deportiva y hoy ofrece planes de suscripción mensuales adaptados a distintos estilos de vida y lo mejor de todo es que somos ecofriendly 🌱. Como miembro, recibirás un suplemento único cada mes directamente en tu hogar. Ofrecemos planes para diferentes objetivos: desde creatina pura para fuerza y resistencia, hasta combinaciones funcionales para enfoque, energía o recuperación. ¿Quieres más de un producto? Después de registrarte, puedes añadir fácilmente suplementos adicionales a tu suscripción y mantener siempre tu rendimiento al máximo.',
+      description: 'Magrolabs nació con la idea de revolucionar la suplementación deportiva y hoy ofrece planes de suscripción mensuales adaptados a distintos estilos de vida y lo mejor de todo es que somos eco amigable 🌱. Como miembro, recibirás un suplemento único cada mes directamente en tu hogar. Ofrecemos planes para diferentes objetivos: desde creatina pura para fuerza y resistencia, hasta combinaciones funcionales para enfoque, energía o recuperación. ¿Quieres más de un producto? Después de registrarte, puedes añadir fácilmente suplementos adicionales a tu suscripción y mantener siempre tu rendimiento al máximo.',
     },
     {
       title: '¿Cómo funciona una suscripción de Magrolabs?',

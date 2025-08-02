@@ -12,12 +12,12 @@ export class ProgramaLoyaltyComponent {
   ENV = environment
   list = [
     {
-      title: '¿Para quién es el Programa Loyalty?',
-      description: 'El Programa Loyalty de Magrolabs es nuestro programa de fidelización para todos nuestros clientes registrados. Al unirte, acumulas créditos automáticamente y sin costo alguno. Cada mes, recibes S/'+this.ENV.creditoRegaloPorCompraMes +' de crédito en nuestra Loyalty Webshop, que puedes usar para comprar nuestros productos exclusivos. ¡Mientras más tiempo seas parte del programa, más beneficios recibirás!',
+      title: '¿Para quién es el Programa de Lealtad?',
+      description: 'El Programa de Lealtad de Magrolabs es nuestro programa de fidelización para todos nuestros clientes registrados. Al unirte, acumulas créditos automáticamente y sin costo alguno. Cada mes, recibes S/'+this.ENV.creditoRegaloPorCompraMes +' de crédito en nuestra Webshop de Lealtad, que puedes usar para comprar nuestros productos exclusivos. ¡Mientras más tiempo seas parte del programa, más beneficios recibirás!',
     },
     {
-      title: '¿Cómo funciona el Programa Loyalty?',
-      description: 'Al registrarte en Magrolabs, participas automáticamente en el Programa Loyalty. Recibes S/'+this.ENV.creditoRegaloPorCompraMes +' crédito en crédito mensual que se deposita en tu cuenta Magrolabs después de una compra exitosa. El crédito se acumula en Magrolabs y puedes canjearlo por productos exclusivos. Puedes ganar créditos extra invitando amigos con tu enlace personal (hasta S/'+(2*this.ENV.creditoRegaloPorCompraMes) +' por referir). El crédito no es reembolsable en efectivo ni se puede transferir entre cuentas. Si cancelas, el crédito caduca. Si pausas, el crédito se congela. Los costos de envío deben pagarse en efectivo.',
+      title: '¿Cómo funciona el Programa de Lealtad?',
+      description: 'Al registrarte en Magrolabs, participas automáticamente en el Programa de Lealtad. Recibes S/'+this.ENV.creditoRegaloPorCompraMes +' crédito en crédito mensual que se deposita en tu cuenta Magrolabs después de una compra exitosa. El crédito se acumula en Magrolabs y puedes canjearlo por productos exclusivos. Puedes ganar créditos extra invitando amigos con tu enlace personal (hasta S/'+(2*this.ENV.creditoRegaloPorCompraMes) +' por referir). El crédito no es reembolsable en efectivo ni se puede transferir entre cuentas. Si cancelas, el crédito caduca. Si pausas, el crédito se congela. Los costos de envío deben pagarse en efectivo.',
     },
     {
       title: '¿Qué puedo hacer con el crédito?',
@@ -29,7 +29,7 @@ export class ProgramaLoyaltyComponent {
     },
     {
       title: '¿Qué puedo hacer con el crédito?',
-      description: 'Puedes canjear el crédito acumulado por artículos exclusivos en la Loyalty Webshop de Magrolabs, como ropa deportiva, accesorios y productos seleccionados. El crédito no se puede canjear por efectivo ni utilizar para pagos pendientes de una suscripción, y no puede combinarse entre varias cuentas.',
+      description: 'Puedes canjear el crédito acumulado por artículos exclusivos en la Webshop de Magrolabs, como ropa deportiva, accesorios y productos seleccionados. El crédito no se puede canjear por efectivo ni utilizar para pagos pendientes de una suscripción, y no puede combinarse entre varias cuentas.',
     },
     {
       title: '¿Qué sucede si hago una pausa?',
@@ -41,7 +41,7 @@ export class ProgramaLoyaltyComponent {
     },
     {
       title: '¿Puedo comprar productos usando solo crédito?',
-      description: 'Sí, puedes usar exclusivamente el crédito acumulado para comprar productos de la Loyalty Webshop de Magrolabs. Sin embargo, los gastos de envío no se cubren con crédito y deben pagarse con dinero real durante el proceso de compra.',
+      description: 'Sí, puedes usar exclusivamente el crédito acumulado para comprar productos de la Webshop de Magrolabs. Sin embargo, los gastos de envío no se cubren con crédito y deben pagarse con dinero real durante el proceso de compra.',
     }
     
   ];

@@ -80,7 +80,7 @@ export class TerminosYCondicionesComponent {
     {
       title: 'Artículo 9 - El precio',
       description: [
-        'Todos los precios de los productos en el Sitio Web están expresados en "Nuevos soles". A excepción de los productos de la Loyalty webshop que se venden en "Créditos", que son la única forma de pago aceptada y se obtienen a través del programa de lealtad de Magrolabs.',
+        'Todos los precios de los productos en el Sitio Web están expresados en "Nuevos soles". A excepción de los productos de la Webshop que se venden en "Créditos", que son la única forma de pago aceptada y se obtienen a través del programa de lealtad de Magrolabs.',
         'Los precios en Créditos incluyen el Impuesto General a las Ventas (IGV) y demás tributos aplicables. Los costos de envío no están incluidos, a excepción de las promociones específicas como el envío gratuito a Lima Metropolitana.'
       ]
     },
@@ -110,7 +110,7 @@ export class TerminosYCondicionesComponent {
       title: 'Artículo 13 - Pago',
       description: [
         'El pago de los productos se realizará con tarjeta de crédito o débito, o con transferencia bancaria, o con pago en efectivo, o con billeteras electrónicas.',
-        'El pago de los productos de la Loyalty webshop se realizará única y exclusivamente mediante el uso de los "Créditos" acumulados en la cuenta del Miembro.',
+        'El pago de los productos de la Webshop se realizará única y exclusivamente mediante el uso de los "Créditos" acumulados en la cuenta del Miembro.',
         'El pedido no será procesado hasta que el sistema haya debitado exitosamente el monto total en Créditos del saldo de la cuenta del Usuario.'
       ]
     },

@@ -110,7 +110,7 @@ export class CreatinasComponent {
     "image": [
       "https://magrolabs.com/package-image.png"
     ],
-    "description": "Creatina Monohidratada de 250 gr ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "description": "Creatina Monohidratada de 250 gr eco amigable para mejorar el rendimiento durante entrenamientos intensos.",
     "sku": "CREATINA250GR",
     "brand": {
       "@type": "Brand",
@@ -137,7 +137,7 @@ export class CreatinasComponent {
     "image": [
       "https://magrolabs.com/package-image.png"
     ],
-    "description": "Creatina Monohidratada de 100 gr ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "description": "Creatina Monohidratada de 100 gr eco amigable para mejorar el rendimiento durante entrenamientos intensos.",
     "sku": "CREATINA100GR",
     "brand": {
       "@type": "Brand",
@@ -164,7 +164,7 @@ export class CreatinasComponent {
     "image": [
       "https://magrolabs.com/package-image.png"
     ],
-    "description": "Creatina Monohidratada de 3 kg ecofriendly para mejorar el rendimiento durante entrenamientos intensos.",
+    "description": "Creatina Monohidratada de 3 kg eco amigable para mejorar el rendimiento durante entrenamientos intensos.",
     "sku": "CREATINA3GR",
     "brand": {
       "@type": "Brand",

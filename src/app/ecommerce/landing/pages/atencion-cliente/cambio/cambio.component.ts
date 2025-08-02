@@ -26,7 +26,7 @@ export class CambioComponent {
       description: 'En Magrolabs, no es necesario devolver un producto incorrecto. Si el producto llegó en buen estado, puedes compartirlo o regalarlo a alguien más. Nosotros no solicitamos devoluciones ni realizamos reembolsos en estos casos. En cambio, te enviaremos una nueva entrega del producto correcto sin costo adicional para ti.'
     },
     {
-      title : '¿Cómo devuelvo un producto de la Loyalty Webshop?',
+      title : '¿Cómo devuelvo un producto de la Webshop?',
       description: 'Magrolabs ha implementado un programa de lealtad en el que los clientes pueden solicitar la devolución de productos a través de el contacto de atención al cliente de WhatsApp, completando un formulario y enviando el paquete con el formulario adjunto. Los gastos de devolución serán cubiertos por el cliente. Solo se aceptan productos no usados y con la etiqueta original. Una vez recibida la devolución, se reembolsará el crédito en un plazo de '+this.ENV.diasReembolsoCreditosLoyaltyWebshop+' días, el cual podrá ser utilizado para adquirir otros productos dentro del programa de lealtad. No se permiten cambios solo devoluciones.'
     }
   ]

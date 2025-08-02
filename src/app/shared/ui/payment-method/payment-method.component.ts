@@ -49,13 +49,14 @@ export class PaymentMethodComponent {
       description: 'Paga con Yape y otras billeteras.',
       icon: `YAPE`,
       id: FlowPaymentMethod.YAPE,
-    },
+    }
+    /*,
     {
       name: 'Pago Efectivo',
       description: 'Pagos vía banca móvil, agentes y bodegas.',
       icon: `PAGO_EFECTIVO`,
       id: FlowPaymentMethod.PAGO_EFECTIVO,
-    },
+    }*/,
     {
       name: 'Suscripción mensual',
       // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',

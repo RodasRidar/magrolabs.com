@@ -491,9 +491,14 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
+    //TODO: Corregir logica de reactivacion tras pausa, de momento no se podra pausar
+     this.calculateCancellationDates();
+      this.showFinalCancelModal.set(true);
+      return;
+
     // Para suscripciones activas, mostrar el modal de pausa
-    this.calculatePauseDates();
-    this.showPauseModal.set(true);
+    //this.calculatePauseDates();
+    //this.showPauseModal.set(true);
   }
 
   calculatePauseDates(): void {
@@ -989,80 +994,64 @@ export class SuscripcionComponent implements OnInit {
   }
 
   reactivateSubscription(reactivateType: ReactivateType): void {
-    alert('Ups!, lamentamos los inconvenientes. Si deseas reactivar tu suscripción, por favor, contacta a nuestro equipo de soporte en el siguiente correo: hola@magrolabs.com');
-    return;
     this.isLoading.set(true);
     const customerId = this.authService.getCurrentUser()?.flowCustomerId;
     if(!customerId || !this.subscription()) return;
 
     let flowSubscriptionData: FlowCreateSubscriptionRequest = <FlowCreateSubscriptionRequest>{};
-    const now = new Date();
+    const reactivationDate = new Date();
+    let monthPaymentDate: Date | undefined = undefined;
 
-    let nextBillingMonth = now.getMonth();
-    let nextBillingYear = now.getFullYear();
+    // DE UNA SUSCRIPCION PAUSADA
+    if(reactivateType === ReactivateType.FROM_PAUSE){
+      const subscriptionStartDate = new Date(this.subscription()!.start_date);
+      const pausedAt = new Date(this.subscription()!.updated_at!);
+      
+      const reactivationResult = this.calculateReactivationBilling({
+        subscriptionStartDate,
+        pausedAt,
+        reactivationDate,
+        gracePeriodDays: environment.diasAntesDeSiguienteCobroSubscripcion
+      });
 
-    // La próxima facturación será el próximo mes en el día personal del usuario
-    nextBillingMonth++;
-    if (nextBillingMonth > 11) {
-      nextBillingMonth = 0;
-      nextBillingYear++;
+      monthPaymentDate = reactivationResult.nextBillingDate;
+
+      flowSubscriptionData = {
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+        customerId: customerId || '',
+        subscription_start: this.formatDateToLimaTimezone(reactivationResult.nextBillingDate),
+      };
+
+      // Si se requiere cobro inmediato, se puede manejar aquí
+      if (reactivationResult.chargeNow) {
+        console.log('Se requiere cobro inmediato al reactivar');
+      }
     }
-
-    //PAUSA
-    let nextPaymentDate: Date | undefined = new Date(
-    now.getFullYear(), //Año
-    now.getMonth(),  //Mes
-    new Date(this.subscription()!.start_date).getDate(), //Día
-    now.getHours(), //Hora
-    now.getMinutes(), //Minuto
-    now.getSeconds(), //Segundo
-    );
-
-
     //DE UNA SUSCRIPCION CANCELADA
     if (reactivateType === ReactivateType.FROM_CANCELLATION) {
-      const currentDate = new Date();
-      nextPaymentDate = new Date(
+      const nextBillingMonth = reactivationDate.getMonth() + 1 > 11 ? 0 : reactivationDate.getMonth() + 1;
+      const nextBillingYear = reactivationDate.getMonth() + 1 > 11 ? reactivationDate.getFullYear() + 1 : reactivationDate.getFullYear();
+      
+      monthPaymentDate = new Date(
         nextBillingYear,
         nextBillingMonth,
-        currentDate.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds()
+        reactivationDate.getDate(),
+        reactivationDate.getHours(),
+        reactivationDate.getMinutes(),
+        reactivationDate.getSeconds()
       );
       flowSubscriptionData = {
         planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
         customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(now), // Formato YYYY-MM-DD en hora peruana
+        subscription_start: this.formatDateToLimaTimezone(reactivationDate),
       };
     }
     // DE UNA SUSCRIPCION POR CANCELAR
     if (reactivateType === ReactivateType.FROM_TO_CANCEL) {
-      nextPaymentDate = undefined;
-    }
-    // DE UNA SUSCRIPCION PAUSADA
-    if(reactivateType === ReactivateType.FROM_PAUSE){
-      let sumaMes = 1;
-      let startDatePAUSE: Date = new Date();
-
-      // Si la fecha de la suscripción es mayor a la fecha actual, se usa la fecha actual
-      if (now > nextPaymentDate!) {
-        startDatePAUSE = new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' }));
-      } else {
-        startDatePAUSE = new Date(nextPaymentDate!.toLocaleString('en-US', { timeZone: 'America/Lima' }));
-        sumaMes = 0;
-      }
-
-      nextPaymentDate = new Date(now.getFullYear(), now.getMonth() + sumaMes, startDatePAUSE.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
-
-      flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
-        customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(startDatePAUSE), // Formato YYYY-MM-DD en hora peruana
-      };
+      monthPaymentDate = undefined;
     }
 
-    this.subscriptionService.reactivateSubscription(this.subscription()!.id, nextPaymentDate)
+    this.subscriptionService.reactivateSubscription(this.subscription()!.id, monthPaymentDate)
       .pipe(
         switchMap((response) => {
 
@@ -1136,6 +1125,179 @@ export class SuscripcionComponent implements OnInit {
           console.error('Error reactivando suscripción:', err);
         }
       });
+  }
+
+  /**
+   * Calcula la lógica de facturación para reactivación de suscripción pausada
+   * Maneja todas las casuísticas de reactivación con período de gracia de 5 días
+   */
+  calculateReactivationBilling({
+    subscriptionStartDate,
+    pausedAt,
+    reactivationDate,
+    gracePeriodDays
+  }: {
+    subscriptionStartDate: Date,
+    pausedAt: Date,
+    reactivationDate: Date,
+    gracePeriodDays: number
+  }): { nextBillingDate: Date, chargeNow: boolean, updateBillingDate: boolean } {
+
+    // Obtener el día de facturación personal del usuario desde su fecha de inicio
+    const userBillingDay = new Date(subscriptionStartDate.toLocaleString('en-US', { timeZone: 'America/Lima' })).getDate();
+    
+    // Calcular la próxima fecha de facturación original basada en la fecha de inicio
+    let nextOriginalBillingMonth = reactivationDate.getMonth();
+    let nextOriginalBillingYear = reactivationDate.getFullYear();
+
+    // Si ya pasó el día de facturación de este mes, la próxima facturación sería el próximo mes
+    if (reactivationDate.getDate() > userBillingDay) {
+      nextOriginalBillingMonth++;
+      if (nextOriginalBillingMonth > 11) {
+        nextOriginalBillingMonth = 0;
+        nextOriginalBillingYear++;
+      }
+    }
+
+    const nextOriginalBillingDate = new Date(
+      nextOriginalBillingYear, 
+      nextOriginalBillingMonth, 
+      userBillingDay,
+      reactivationDate.getHours(),
+      reactivationDate.getMinutes(),
+      reactivationDate.getSeconds()
+    );
+
+    // Calcular el período de gracia (5 días antes de la próxima facturación)
+    const graceDeadline = new Date(nextOriginalBillingDate);
+    graceDeadline.setDate(graceDeadline.getDate() - gracePeriodDays);
+
+    // Determinar si la pausa ocurrió dentro del período de gracia
+    const pausedWithinGrace = pausedAt >= graceDeadline;
+    
+    // Calcular si han pasado más de un ciclo completo desde la pausa
+    const monthsSincePause = this.getMonthsDifference(pausedAt, reactivationDate);
+    const hasSkippedCompleteCycle = monthsSincePause >= 1;
+
+    // Caso 1: Pausa < 1 ciclo - Reactiva dentro del ciclo ya pagado
+    if (!hasSkippedCompleteCycle && reactivationDate <= nextOriginalBillingDate) {
+      return {
+        nextBillingDate: nextOriginalBillingDate,
+        chargeNow: false,
+        updateBillingDate: false
+      };
+    }
+
+    // Caso 2: Pausa antes del cobro - Reactiva antes del próximo cobro (ciclo vigente aún)
+    if (!pausedWithinGrace && reactivationDate <= nextOriginalBillingDate) {
+      return {
+        nextBillingDate: nextOriginalBillingDate,
+        chargeNow: false,
+        updateBillingDate: false
+      };
+    }
+
+    // Caso 3 y 6: Pausa > 1 ciclo completo O pausa fue prolongada - Actualizar fecha de facturación
+    if (hasSkippedCompleteCycle || reactivationDate > nextOriginalBillingDate) {
+      const newBillingDate = new Date(
+        reactivationDate.getFullYear(),
+        reactivationDate.getMonth() + 1, // Próximo mes desde reactivación
+        reactivationDate.getDate(),
+        reactivationDate.getHours(),
+        reactivationDate.getMinutes(),
+        reactivationDate.getSeconds()
+      );
+
+      return {
+        nextBillingDate: newBillingDate,
+        chargeNow: true,
+        updateBillingDate: true
+      };
+    }
+
+    // Caso 4: Nunca tuvo ciclo cobrado - Usuario pausó antes del primer cobro
+    const isFirstCycle = this.isFirstBillingCycle(subscriptionStartDate, pausedAt);
+    if (isFirstCycle && !pausedWithinGrace) {
+      return {
+        nextBillingDate: nextOriginalBillingDate,
+        chargeNow: false,
+        updateBillingDate: false
+      };
+    }
+
+    // Caso 5: Pausó el mismo día - Pausó y reactivó el mismo día
+    const sameDay = this.isSameDay(pausedAt, reactivationDate);
+    if (sameDay) {
+      return {
+        nextBillingDate: nextOriginalBillingDate,
+        chargeNow: false,
+        updateBillingDate: false
+      };
+    }
+
+    // Caso por defecto: mantener fecha original
+    return {
+      nextBillingDate: nextOriginalBillingDate,
+      chargeNow: pausedWithinGrace,
+      updateBillingDate: false
+    };
+  }
+
+  /**
+   * Calcula la diferencia en meses entre dos fechas
+   */
+  private getMonthsDifference(startDate: Date, endDate: Date): number {
+    const yearDiff = endDate.getFullYear() - startDate.getFullYear();
+    const monthDiff = endDate.getMonth() - startDate.getMonth();
+    return yearDiff * 12 + monthDiff;
+  }
+
+  /**
+   * Verifica si la pausa ocurrió antes del primer ciclo de facturación
+   */
+  private isFirstBillingCycle(subscriptionStartDate: Date, pausedAt: Date): boolean {
+    const firstBillingDate = new Date(subscriptionStartDate);
+    firstBillingDate.setMonth(firstBillingDate.getMonth() + 1);
+    return pausedAt < firstBillingDate;
+  }
+
+  /**
+   * Verifica si dos fechas son el mismo día
+   */
+  private isSameDay(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+  }
+
+  getNextBillingDateOnReactivation({
+    lastBillingDate,
+    pausedAt,
+    reactivatedAt
+  }: {
+    lastBillingDate: Date,
+    pausedAt: Date,
+    reactivatedAt: Date
+  }): { nextBillingDate: Date, chargeNow: boolean } {
+
+    const oneMonthLater = addOneMonth(lastBillingDate); // Ej: 10 ago
+    const graceDeadline = subDays(oneMonthLater, this.ENV.diasAntesDeSiguienteCobroSubscripcion);     // Ej: 5 ago
+
+    // Caso 1: Reactiva dentro del ciclo ya pagado
+    if (reactivatedAt <= oneMonthLater) {
+      return {
+        nextBillingDate: new Date(oneMonthLater.toLocaleString('en-US', { timeZone: 'America/Lima' })),
+        chargeNow: false
+      };
+    }
+
+    // Caso 2: Si pausa fue dentro del período de gracia, igual se cobra
+    const pausedWithinGrace = pausedAt >= graceDeadline;
+
+    return {
+      nextBillingDate: new Date(reactivatedAt.toLocaleString('en-US', { timeZone: 'America/Lima' })),
+      chargeNow: pausedWithinGrace
+    };
   }
 
   closeReactivationModal(): void {
@@ -1558,6 +1720,23 @@ export class SuscripcionComponent implements OnInit {
     });
   }
 
+  getAdjustedDay(): number {
+    const reactivationDate = new Date();
+    // Obtener la fecha de inicio de la suscripción
+    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const originalDay = subscriptionStartDate.getDate();
+    
+    // Calcular el último día del mes de reactivación
+    const lastDayOfMonth = new Date(
+      reactivationDate.getFullYear(), // 2025
+      reactivationDate.getMonth() + 1,// 7 + 1 = 8 → agosto
+      0// día 0 del mes de agosto → 31 de julio
+    ).getDate();// → 31
+    
+    // Ajustar el día si el mes actual no tiene suficientes días
+    return Math.min(originalDay, lastDayOfMonth);
+}
+
   ngAfterViewInit(): void {
     this.toggleChargesHistory()
   }
@@ -1569,3 +1748,15 @@ export enum ReactivateType {
   FROM_PAUSE = 1,
   FROM_TO_CANCEL = 2
 }
+
+function addOneMonth(lastBillingDate: Date) {
+  const newDate = new Date(lastBillingDate);
+  newDate.setMonth(newDate.getMonth() + 1);
+  return newDate;
+}
+function subDays(oneMonthLater: Date, days: number) {
+  const newDate = new Date(oneMonthLater);
+  newDate.setDate(newDate.getDate() - days);
+  return newDate;
+}
+

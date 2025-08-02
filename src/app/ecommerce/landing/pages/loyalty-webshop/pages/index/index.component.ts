@@ -29,7 +29,7 @@ export class IndexComponent {
       slug: 'shaker-negro-magrolabs',
       name: 'Shaker Magrolabs',
       price: 80,
-      description: 'Nuestro shaker es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
+      description: 'Nuestra botella es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
       imageUrl: 'LoyaltyWebShop/shaker_black.png',
       color: 'Negro'
     },

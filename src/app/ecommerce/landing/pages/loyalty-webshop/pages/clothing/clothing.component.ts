@@ -50,7 +50,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     slug: 'shaker-negro-magrolabs',
     name: 'Shaker Negro Magrolabs',
     price: 80,
-    description: 'Nuestro shaker es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
+    description: 'Nuestro botella es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
     image: 'LoyaltyWebShop/shaker_black.png',
     color: 'Negro',
     category: 'Accesorios',

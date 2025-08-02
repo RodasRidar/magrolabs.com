@@ -62,7 +62,7 @@
                         </div> -->
                         <div class="flex justify-between">
                             <dt>Envío</dt>
-                            <dd class="text-gray-900">Gratis</dd>
+                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ ENV.precioEnvioFueraLimaMetropolitana : 'Gratis'}}</dd>
                         </div>
                         <p
                             class="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-3 mt-3">
@@ -117,7 +117,7 @@
                                 </div> -->
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
-                                    <dd class="text-gray-900">Gratis</dd>
+                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ ENV.precioEnvioFueraLimaMetropolitana : 'Gratis'}}</dd>
                                 </div>
                                 <div
                                     class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6 text-base">

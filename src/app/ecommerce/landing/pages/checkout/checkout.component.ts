@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
@@ -13,7 +13,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { environment } from '../../../../../environments/env';
 import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
-import { AddressSummary, ConfirmationStatus, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
+import { AddressSummary, ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
@@ -42,6 +42,7 @@ export class CheckoutComponent implements OnDestroy {
   ENV = environment;
   cartHas250Creatine = false;
   isProcessing = false;
+  isOutsideLimaMetropolitana = signal(false);
 
   private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
@@ -206,6 +207,20 @@ export class CheckoutComponent implements OnDestroy {
     });
 
     this.setValuesInFormFromSummary();
+    let summary = this._summaryService.getSummary();
+    // Validar si la dirección está fuera de Lima Metropolitana
+    this.validateAddressLocation(summary?.address!);
+
+    this.form.get('district')?.valueChanges.subscribe(() => {
+      this.validateAddressLocation({
+        tipoVia: this.form.get('tipoVia')?.value ?? '',
+        nombreVia: this.form.get('nombreVia')?.value ?? '',
+        codigoPostal: this.form.get('codigoPostal')?.value ?? '',
+        department: this.form.get('department')?.value ?? '',
+        distrito: this.form.get('district')?.value ?? '',
+        provincia: this.form.get('province')?.value ?? ''
+      } as AddressSummary);
+      });
   }
 
   ngOnDestroy(): void {
@@ -1038,4 +1053,22 @@ export class CheckoutComponent implements OnDestroy {
 
     return orderDetails;
   }
+
+    /**
+     * Valida si la dirección del usuario está fuera de Lima Metropolitana
+     */
+    private validateAddressLocation(addressSummary: AddressSummary): void {
+      console.log('Validating address location:', addressSummary);
+      if (addressSummary) {
+        // Verificar si NO es Lima Metropolitana
+        // Lima Metropolitana = departamento "Lima" y provincia "Lima"
+        if (addressSummary.department?.toLowerCase() !== '3926' || addressSummary.provincia?.toLowerCase() !== '3927') {
+          this.isOutsideLimaMetropolitana.set(true);
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.ENV.precioEnvioFueraLimaMetropolitana;
+        } else {
+          this.isOutsideLimaMetropolitana.set(false);
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+        }
+      }
+    }          
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
@@ -32,17 +32,26 @@ import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent implements OnDestroy {
+export class CheckoutComponent implements OnDestroy, AfterViewInit {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
   @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
   @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cellphoneInput') cellphoneInput!: ElementRef<HTMLInputElement>;
   paymentMethod: FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+    let summary = this._summaryService.getSummary();
+    // Validar si la dirección está fuera de Lima Metropolitana
+    this.validateAddressLocation(summary?.address!);
+    }
+  }
   navbarTypeEnum = NavbarTypeEnum;
   ENV = environment;
-  cartHas250Creatine = false;
-  isProcessing = false;
+  cartHas250Creatine = signal(false);
+  isProcessing =  signal(false);
   isOutsideLimaMetropolitana = signal(false);
+  precioEnvioFueraLimaMetropolitana = signal(this.ENV.precioEnvioFueraLimaMetropolitana);
 
   private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
@@ -104,6 +113,26 @@ export class CheckoutComponent implements OnDestroy {
   });
   buttonName = 'Pagar →';
 
+  constructor() {
+    // Effect para deshabilitar/habilitar el formulario cuando isProcessing cambia
+    effect(() => {
+      if (this.isProcessing()) {
+        this.form.disable();
+      } else {
+        this.form.enable();
+        
+        // Re-aplicar el estado de disable específico para province y district
+        // si no hay departamento seleccionado
+        if (!this.departmentUbigeo) {
+          this.form.get('province')?.disable();
+        }
+        if (!this.provinceUbigeo) {
+          this.form.get('district')?.disable();
+        }
+      }
+    });
+  }
+
   ngOnInit() {
 
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
@@ -114,7 +143,7 @@ export class CheckoutComponent implements OnDestroy {
         this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
         this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
         if (shoppingCart.items.find(item => item.product.name === 'Creatina Monohidratada 250 gr')) {
-          this.cartHas250Creatine = true;
+          this.cartHas250Creatine.set(true);
         }
       }
       else {
@@ -207,9 +236,6 @@ export class CheckoutComponent implements OnDestroy {
     });
 
     this.setValuesInFormFromSummary();
-    let summary = this._summaryService.getSummary();
-    // Validar si la dirección está fuera de Lima Metropolitana
-    this.validateAddressLocation(summary?.address!);
 
     this.form.get('district')?.valueChanges.subscribe(() => {
       this.validateAddressLocation({
@@ -276,12 +302,12 @@ export class CheckoutComponent implements OnDestroy {
 
   // Validar email con el servidor
   private validateEmailWithServer(email: string): void {
-    this.isProcessing = true;
+    this.isProcessing.set(true);
     const control = this.form.get('email');
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing.set(false))
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
@@ -293,12 +319,12 @@ export class CheckoutComponent implements OnDestroy {
   }
 
   private validatePhoneWithServer(phone: string): void {
-    this.isProcessing = true;
+    this.isProcessing.set(true);
     const control = this.form.get('cellphone');
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing.set(false))
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ cellphoneExists: true });
@@ -308,14 +334,14 @@ export class CheckoutComponent implements OnDestroy {
   }
 
   private validateDocumentWithServer(document: string): void {
-    this.isProcessing = true;
+    this.isProcessing.set(true);
     const control = this.form.get('nroDocument');
     const typeDoc = this.form.get('typeDocument')?.value;
 
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing.set(false))
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
@@ -329,10 +355,20 @@ export class CheckoutComponent implements OnDestroy {
   quantityValueChanged(value: number, product: ItemShoppingCart) {
     product.quantity = value
     this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
-    this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
     this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
     this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
     this._shoppingCartService.setShoppingCart(this.shoppingCart);
+    if(this.isOutsideLimaMetropolitana()){
+    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
+    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
+    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
+    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
+
+    this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.precioEnvioFueraLimaMetropolitana();
+    }
+    else{
+      this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+    }
   }
 
   deleteItem(product: ItemShoppingCart) {
@@ -483,7 +519,7 @@ export class CheckoutComponent implements OnDestroy {
       return;
     }
 
-    this.isProcessing = true;
+    this.isProcessing.set(true);
 
     if (this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.handleRecurrentPaymentOption();
@@ -568,7 +604,7 @@ export class CheckoutComponent implements OnDestroy {
         return this._flowService.createPayment(createPaymentRequest);
       }),
       finalize(() => {
-        this.isProcessing = false;
+        this.isProcessing.set(false);
       })
     ).subscribe({
       next: (paymentResponse) => {
@@ -693,40 +729,77 @@ export class CheckoutComponent implements OnDestroy {
           });
         }
       }),
-      //Actualizar direccion
+      //Crear o actualizar direccion
       switchMap(() => {
-        return this._addressApiService.updateAddress(
-          this._summaryService.getSummary()?.address?.id ?? '',
-          this.createAddressRequest()
-        ).pipe(
-          tap(response => {
-            // Actualizar addressData inmediatamente después de actualizar la dirección
-            const addressData = this._summaryService.getSummary()?.address;
-            if (addressData) {
-              this._summaryService.setAddress({
-                ...addressData,
-                id: response.data.address.id,
-              });
-            }
-          })
-        );
+        const addressId = this._summaryService.getSummary()?.address?.id;
+        
+        if (addressId) {
+          // Si existe ID, actualizar dirección existente
+          return this._addressApiService.updateAddress(
+            addressId,
+            this.createAddressRequest()
+          ).pipe(
+            tap(response => {
+              // Actualizar addressData inmediatamente después de actualizar la dirección
+              const addressData = this._summaryService.getSummary()?.address;
+              if (addressData) {
+                this._summaryService.setAddress({
+                  ...addressData,
+                  id: response.data.address.id,
+                });
+              }
+            })
+          );
+        } else {
+          // Si no existe ID, crear nueva dirección
+          return this._addressApiService.createAddress(this.createAddressRequest()).pipe(
+            tap(addressResponse => {
+              // Actualizar addressData inmediatamente después de crear la dirección
+              const addressData = this._summaryService.getSummary()?.address;
+              if (addressData) {
+                this._summaryService.setAddress({
+                  ...addressData,
+                  id: addressResponse.data.address.id,
+                });
+              }
+            })
+          );
+        }
       }),
-      //Actualizar direccion de usuario
+      //Actualizar o crear orden
       switchMap(() => {
-        const orderDetails = this.createOrderDetailsWithPaymentMethod();
-        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-        return this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
-          tap(orderResponse => {
-            // Actualizar userData con el orderId
-            const userData = this._summaryService.getSummary()?.userData;
-            if (userData) {
-              this._summaryService.setUserData({
-                ...userData,
-                orderId: orderResponse.data.order.id,
-              });
-            }
-          })
-        );
+        const orderId = this._summaryService.getSummary()?.userData?.orderId;
+        
+        if (orderId) {
+          // Si existe orderId, actualizar orden existente
+          const orderDetails = this.createOrderDetailsWithPaymentMethod();
+          return this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
+            tap(orderResponse => {
+              // Actualizar userData con el orderId
+              const userData = this._summaryService.getSummary()?.userData;
+              if (userData) {
+                this._summaryService.setUserData({
+                  ...userData,
+                  orderId: orderResponse.data.order.id,
+                });
+              }
+            })
+          );
+        } else {
+          // Si no existe orderId, crear nueva orden
+          return this._orderService.createOrder(this.createOrderRequest()).pipe(
+            tap(orderResponse => {
+              // Actualizar userData con el orderId
+              const userData = this._summaryService.getSummary()?.userData;
+              if (userData) {
+                this._summaryService.setUserData({
+                  ...userData,
+                  orderId: orderResponse.data.order.id,
+                });
+              }
+            })
+          );
+        }
       }),
       //Crear pago en flow
       switchMap((orderResponse) => {
@@ -735,7 +808,7 @@ export class CheckoutComponent implements OnDestroy {
         return this._flowService.createPayment(createPaymentRequest);
       }),
       finalize(() => {
-        this.isProcessing = false;
+        this.isProcessing.set(false);
       })
     ).subscribe({
       next: (paymentResponse) => {
@@ -785,6 +858,7 @@ export class CheckoutComponent implements OnDestroy {
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
+    this.form.get('termsAccepted')?.setValue(summary?.userData?.isTermsAccepted ?? false);
 
     if (summary && summary?.address?.nombreVia) {
       this.hideSearching = true;
@@ -851,7 +925,7 @@ export class CheckoutComponent implements OnDestroy {
 
     if (totalItems > 1) {
       this._toastService.warning('Lo sentimos!', 'Solo puedes suscribirte a un producto por vez.');
-      this.isProcessing = false;
+      this.isProcessing.set(false);
       return;
     }
     // Validar si el checkbox de registro está marcado y la contraseña está completa
@@ -906,7 +980,7 @@ export class CheckoutComponent implements OnDestroy {
             return this._userService.updateUser(userId, { address_id: addressId });
           }),
           finalize(() => {
-            this.isProcessing = false;
+            this.isProcessing.set(false);
           })
         ).subscribe({
           next: () => {
@@ -931,7 +1005,7 @@ export class CheckoutComponent implements OnDestroy {
 
     }
     else {
-      this.isProcessing = false;
+      this.isProcessing.set(false);
       localStorage.setItem('passwordSignal', 'true');
       this._toastService.warning('Ups!', 'Necesitas completar la contraseña para suscribirte.');
       this.focusAndErrorInput(this.isSignUpAceptedInput, 'isSignUpAcepted');
@@ -944,7 +1018,7 @@ export class CheckoutComponent implements OnDestroy {
       : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
 
     return {
-      amount: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? 2 : this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart),
+      amount: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? 2 : this.shoppingCart.total,
       currency: 'PEN',
       commerceOrder: '',
       subject: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) + ' x Creatina Monohidratada Magrolabs de 250g.',
@@ -975,6 +1049,7 @@ export class CheckoutComponent implements OnDestroy {
       password: this.form.get('password')?.value ?? '',
       customerId: customerId,
       isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+      isTermsAccepted: this.form.get('termsAccepted')?.value ?? false,
     });
 
     this._summaryService.setChoosePlan({
@@ -1010,6 +1085,7 @@ export class CheckoutComponent implements OnDestroy {
       typeDocument: this.form.get('typeDocument')?.value ?? 'DNI',
       password: this.form.get('password')?.value ?? '',
       isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
+      isTermsAccepted: this.form.get('termsAccepted')?.value ?? false,
     });
 
     this._summaryService.setChoosePlan({
@@ -1064,7 +1140,13 @@ export class CheckoutComponent implements OnDestroy {
         // Lima Metropolitana = departamento "Lima" y provincia "Lima"
         if (addressSummary.department?.toLowerCase() !== '3926' || addressSummary.provincia?.toLowerCase() !== '3927') {
           this.isOutsideLimaMetropolitana.set(true);
-          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.ENV.precioEnvioFueraLimaMetropolitana;
+          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
+          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
+          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
+          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
+
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.precioEnvioFueraLimaMetropolitana();
+          
         } else {
           this.isOutsideLimaMetropolitana.set(false);
           this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);

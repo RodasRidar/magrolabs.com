@@ -28,6 +28,7 @@ export interface UserDataSummary {
     last4CardDigits?: string,//Flow
     creditCardType?: string,//Flow
     isSignUpAcepted?: boolean,
+    isTermsAccepted?: boolean,
     orderId?: string,
     subscriptionId?: string, //Flow
     referralCode?: string,

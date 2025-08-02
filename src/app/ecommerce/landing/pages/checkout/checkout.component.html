@@ -62,7 +62,7 @@
                         </div> -->
                         <div class="flex justify-between">
                             <dt>Envío</dt>
-                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ ENV.precioEnvioFueraLimaMetropolitana : 'Gratis'}}</dd>
+                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                         </div>
                         <p
                             class="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-3 mt-3">
@@ -117,7 +117,7 @@
                                 </div> -->
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
-                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ ENV.precioEnvioFueraLimaMetropolitana : 'Gratis'}}</dd>
+                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                                 </div>
                                 <div
                                     class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6 text-base">
@@ -155,7 +155,7 @@
                                                     <input type="text" name="first-name" id="first-name"
                                                         autocomplete="given-name" formControlName="firtName"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
 
                                                 </div>
                                                 <div class="p-2">
@@ -176,7 +176,7 @@
                                                     <input type="text" name="last-name" id="last-name"
                                                         autocomplete="family-name" formControlName="lastName"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                 </div>
                                                 <div class="p-2">
                                                     @if(hasRequiredError('lastName')) {
@@ -203,7 +203,7 @@
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
                                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
                                                          block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
-                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
+                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                         formControlName="cellphone" />
                                                 </div>
                                                 <div class="p-2">
@@ -231,7 +231,7 @@
                                                 <div class="mt-2 flex items-center">
                                                     <div class="flex items-center">
                                                         <select formControlName="typeDocument"
-                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-[#d07d66]">
+                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-[#d07d66] disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                             <option value="DNI">DNI</option>
                                                             <option value="CE">Carnet Ext.</option>
                                                             <option value="PASSPORT">Pasaporte</option>
@@ -243,7 +243,7 @@
                                                         (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
                                                         class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
                                                          block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
-                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
+                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
                                                         formControlName="nroDocument" />
                                                 </div>
@@ -282,7 +282,7 @@
                                                     <input formControlName="email" #emailInput id="email" name="email"
                                                         type="email" autocomplete="email" placeholder="tu@example.com"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasInvalidEmail() || hasValidatorError('email')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                 </div>
                                                 @if(hasRequiredError('email') || hasValidatorError('email') || hasExistEmail() || hasInvalidEmail()) {
                                                 <div class="p-2">
@@ -312,7 +312,7 @@
                                                 <div class="mt-2">
                                                     <input formControlName="password" name="password" type="password"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                 </div>
                                                 @if(hasRequiredError('password') || hasValidatorError('password')) {
                                                 <div class="p-2">
@@ -332,12 +332,13 @@
                                                 }
                                             </div>
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
-                                                <label class="inline-flex items-center my-2 cursor-pointer">
+                                                <label class="inline-flex items-center my-2 cursor-pointer" 
+                                                       [ngClass]="{'cursor-not-allowed opacity-60': form.get('isSignUpAcepted')?.disabled}">
                                                     <input #isSignUpAceptedInput type="checkbox" (change)="isSignUpAceptedChange()"
                                                         formControlName="isSignUpAcepted"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
-                                                        class="sr-only peer">
-                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
+                                                        class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
+                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted'), 'opacity-60': form.get('isSignUpAcepted')?.disabled}"
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                     <span
@@ -350,11 +351,12 @@
                                             
                                             <!-- Checkbox de aceptación de términos y condiciones -->
                                             <div class="sm:col-span-6 col-span-6 flex items-end pb-2">
-                                                <label class="inline-flex items-center my-2 cursor-pointer">
+                                                <label class="inline-flex items-center my-2 cursor-pointer"
+                                                       [ngClass]="{'cursor-not-allowed opacity-60': form.get('termsAccepted')?.disabled}">
                                                     <input type="checkbox" formControlName="termsAccepted"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
-                                                        class="sr-only peer">
-                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
+                                                        class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
+                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted'), 'opacity-60': form.get('termsAccepted')?.disabled}"
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                     <span
@@ -415,7 +417,7 @@
                                                     </div>
                                                     <div class="relative">
                                                         <input
-                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
+                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
                                                             type="text" role="combobox" aria-expanded="false"
                                                             placeholder="Encuentra tu dirección de entrega" value=""
                                                             formControlName="searchAddress">
@@ -471,7 +473,7 @@
                                                     <div class="mt-2">
                                                         <input type="text" autocomplete="street-address"
                                                             (input)="limitDigits(70, 'streetAddress')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress') || hasValidatorError('streetAddress')}"
                                                             formControlName="streetAddress">
 
@@ -496,7 +498,7 @@
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('department')}"
                                                             (change)="selectDepartment($event)"
                                                             formControlName="department" [value]="departmentUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                             @if (departments$ | async; as departmentsList) {
                                                             @for (item of departmentsList; track $index) {
                                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
@@ -525,7 +527,7 @@
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('province')}"
                                                             (change)="selectProvince($event)" formControlName="province"
                                                             [value]="provinceUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                             @if (provinces$ | async; as provincesList) {
                                                             @for (item of provincesList; track $index) {
                                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
@@ -551,7 +553,7 @@
                                                         <select
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
                                                             formControlName="district" [value]="districtUbigeo" (change)="selectDistrict($event)"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]  sm:text-sm/6">
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                             @if (districts$ | async; as districtsList) {
                                                             @for (item of districtsList; track $index) {
                                                             <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
@@ -575,7 +577,7 @@
                                                         Postal</label>
                                                     <div class="mt-2">
                                                         <input type="text" (input)="limitDigits(5, 'postalCode')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('postalCode')}"
                                                             formControlName="postalCode">
                                                     </div>
@@ -595,7 +597,7 @@
                                                         class="block text-sm/6 font-medium text-gray-900">Número</label>
                                                     <div class="mt-2">
                                                         <input type="text" (input)="limitDigits(6, 'number')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                             formControlName="number"
                                                             [ngClass]="{'ring-red-500 ring-2': hasValidatorError('number')}">
                                                     </div>
@@ -613,7 +615,7 @@
                                                     <div class="mt-2">
                                                         <input type="text" formControlName="reference"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('reference')}"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6">
+                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                     </div>
                                                     <div class="p-2">
                                                         @if(hasValidatorError('reference')) {
@@ -651,8 +653,8 @@
 
                                                 <div class="my-6 lg:w-72">
                                                     <ml-button [name]="buttonName"
-                                                        [isDisabled]="isProcessing || (!form.valid) "
-                                                        [isProcessing]="isProcessing"
+                                                        [isDisabled]="isProcessing() || (!form.valid) "
+                                                        [isProcessing]="isProcessing()"
                                                         (click)="nextStep()"></ml-button>
                                                 </div>
 

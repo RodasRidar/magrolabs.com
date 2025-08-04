@@ -107,39 +107,5 @@ export class MiPrimeraCreatinaComponent implements OnInit {
     };
 
     this.seoService.setStructuredData(structuredData);
-
-    // FAQ Schema adicional para preguntas frecuentes
-    const faqSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: '¿Cuál es la dosis ideal de creatina para principiantes?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Para principiantes, la dosis ideal es 0.10g por cada kg de peso corporal. Por ejemplo, si pesas 70kg, debes tomar 7g al día durante los primeros días.'
-          }
-        },
-        {
-          '@type': 'Question',
-          name: '¿La creatina daña los riñones?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'No, múltiples estudios científicos han demostrado que la creatina es segura para personas sanas. Es uno de los suplementos más estudiados y seguros del mercado.'
-          }
-        },
-        {
-          '@type': 'Question',
-          name: '¿Cuándo se notan los resultados de la creatina?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Los resultados se notan después de 4 semanas de uso constante. La consistencia es clave para obtener los máximos beneficios.'
-          }
-        }
-      ]
-    };
-
-    this.seoService.setStructuredData(faqSchema);
   }
 } 

@@ -700,13 +700,6 @@ export class CreatinasComponent {
       }
     };
 
-    // FAQ Schema específico por producto
-    const faqSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: this.getFAQByProduct()
-    };
-
     // Breadcrumb Schema
     const breadcrumbSchema = {
       '@context': 'https://schema.org',
@@ -741,7 +734,6 @@ export class CreatinasComponent {
 
     // Aplicar todos los schemas
     this._seo.setStructuredData(productSchema);
-    this._seo.setStructuredData(faqSchema);
     this._seo.setStructuredData(breadcrumbSchema);
 
     // Schema adicional para producto gratis
@@ -894,91 +886,4 @@ export class CreatinasComponent {
     ];
   }
 
-  /**
-   * Genera FAQs específicas por producto
-   */
-  private getFAQByProduct() {
-    const commonFAQs = [
-      {
-        '@type': 'Question',
-        name: '¿Cómo debo tomar la creatina?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Toma 5-6g de creatina al día con agua, preferiblemente después del entrenamiento. La consistencia es más importante que el momento del día.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿La creatina tiene efectos secundarios?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'La creatina monohidrato es uno de los suplementos más seguros y estudiados. No presenta efectos secundarios en personas sanas cuando se consume según las indicaciones.'
-        }
-      }
-    ];
-
-    if (this.slug === 'creatina-monohidratada-250-gr') {
-      return [
-        ...commonFAQs,
-        {
-          '@type': 'Question',
-          name: '¿Cuánto dura la creatina de 250g?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: `La creatina de 250g te dura aproximadamente ${this.ENV.nroServicios250g} servicios, lo que equivale a más de 2 meses tomando la dosis recomendada diaria.`
-          }
-        },
-        {
-          '@type': 'Question',
-          name: '¿Qué incluye la suscripción?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: `Por S/${this.ENV.precioCreatinaSubscription} al mes recibes tu creatina de 250g, envío gratis, S/${this.ENV.creditoRegaloPorCompraMes} de crédito mensual y puedes cancelar cuando quieras.`
-          }
-        }
-      ];
-    } else if (this.slug === 'creatina-monohidratada-100-gr') {
-      return [
-        ...commonFAQs,
-        {
-          '@type': 'Question',
-          name: '¿Por qué es gratis la creatina de 100g?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: `Te regalamos 100g de creatina para que pruebes la calidad de nuestro producto. Tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para decidir si continúas con una suscripción.`
-          }
-        },
-        {
-          '@type': 'Question',
-          name: '¿Cuánto dura la creatina de 100g?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: `La creatina de 100g te dura aproximadamente ${this.ENV.nroServicios100g} servicios, ideal para probar el producto por un mes.`
-          }
-        }
-      ];
-    } else if (this.slug === 'creatina-monohidratada-3-kg') {
-      return [
-        ...commonFAQs,
-        {
-          '@type': 'Question',
-          name: '¿Cuánto dura la creatina de 3kg?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: `La creatina de 3kg te dura aproximadamente ${this.ENV.nroServicios3kg} servicios, lo que equivale a 2 años de suplementación.`
-          }
-        },
-        {
-          '@type': 'Question',
-          name: '¿Cuándo estará disponible la creatina de 3kg?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'La creatina de 3kg estará disponible próximamente. Regístrate para recibir notificaciones cuando esté lista.'
-          }
-        }
-      ];
-    }
-
-    return commonFAQs;
-  }
 }

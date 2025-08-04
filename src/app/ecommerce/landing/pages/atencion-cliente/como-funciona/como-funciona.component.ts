@@ -87,21 +87,19 @@ export class ComoFuncionaComponent implements OnInit {
       { lang: 'x-default', url: URL },
     ]);
 
-    // Structured Data (JSON-LD) para FAQ
+    // Structured Data (JSON-LD) para Service (sin FAQPage para evitar duplicación)
     const structuredData = {
       '@context': 'https://schema.org',
-      '@type': 'FAQPage',
+      '@type': 'Service',
       name: title,
       url: URL,
       description: description,
-      mainEntity: this.list.map((item, index) => ({
-        '@type': 'Question',
-        name: item.title,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.description
-        }
-      })),
+      provider: {
+        '@type': 'Organization',
+        name: 'Magrolabs',
+        url: 'https://magrolabs.com'
+      },
+      serviceType: 'Suplementos de Creatina por Suscripción',
       breadcrumb: {
         '@type': 'BreadcrumbList',
         itemListElement: [

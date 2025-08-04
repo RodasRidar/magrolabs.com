@@ -197,53 +197,6 @@ export class LandingComponent {
         bestRating: '5',
         worstRating: '1'
       },
-      review: [
-        {
-          '@type': 'Review',
-          '@id': `${URL}#review1`,
-          author: {
-            '@type': 'Person',
-            name: 'Hugo Cortez L.'
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: '5',
-            bestRating: '5'
-          },
-          reviewBody: 'Buen producto, buen precio',
-          datePublished: '2024-06-15'
-        },
-        {
-          '@type': 'Review',
-          '@id': `${URL}#review2`,
-          author: {
-            '@type': 'Person',
-            name: 'Richard Rodas'
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: '5',
-            bestRating: '5'
-          },
-          reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil',
-          datePublished: '2024-07-10'
-        },
-        {
-          '@type': 'Review',
-          '@id': `${URL}#review3`,
-          author: {
-            '@type': 'Person',
-            name: 'Luis Fernandez'
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: '5',
-            bestRating: '5'
-          },
-          reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.',
-          datePublished: '2024-07-20'
-        }
-      ],
       additionalProperty: [
         {
           '@type': 'PropertyValue',

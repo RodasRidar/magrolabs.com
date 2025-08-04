@@ -681,7 +681,6 @@ export class CreatinasComponent {
         bestRating: '5',
         worstRating: '1'
       },
-      review: this.getReviewsSchema(),
       additionalProperty: this.getProductProperties(),
       potentialAction: {
         '@type': 'BuyAction',
@@ -891,53 +890,6 @@ export class CreatinasComponent {
         '@type': 'PropertyValue',
         name: 'Crédito mensual',
         value: `S/${this.credits}`
-      }
-    ];
-  }
-
-  /**
-   * Genera schema de reviews
-   */
-  private getReviewsSchema() {
-    return [
-      {
-        '@type': 'Review',
-        author: {
-          '@type': 'Person',
-          name: 'Hugo Cortez L.'
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5'
-        },
-        reviewBody: 'Buen producto, buen precio'
-      },
-      {
-        '@type': 'Review',
-        author: {
-          '@type': 'Person',
-          name: 'Richard Rodas'
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5'
-        },
-        reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil'
-      },
-      {
-        '@type': 'Review',
-        author: {
-          '@type': 'Person',
-          name: 'Luis Fernandez'
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5'
-        },
-        reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.'
       }
     ];
   }

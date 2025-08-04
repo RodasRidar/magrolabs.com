@@ -92,7 +92,9 @@ export class IndexComponent implements OnInit {
                 '@type': 'Organization',
                 name: 'Magrolabs'
               }
-            }
+            },
+            price: this.ENV.precioCreatinaSubscription.toString(),
+            priceCurrency: 'PEN',
           }
         ]
       },

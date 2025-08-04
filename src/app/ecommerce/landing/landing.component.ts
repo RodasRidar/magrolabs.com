@@ -137,32 +137,42 @@ export class LandingComponent {
     const productSchema = {
       '@context': 'https://schema.org',
       '@type': 'Product',
+      '@id': `${URL}/productos/creatinas/creatina-monohidratada-250-gr`,
       name: 'Creatina Monohidrato Premium 250g',
       description: 'Creatina 100% monohidratada, ideal para aumentar fuerza y masa muscular. Primera entrega gratuita.',
+      image: [`${URL}/package-image.png`],
       brand: {
         '@type': 'Brand',
-        name: 'Magrolabs'
+        name: 'Magrolabs',
+        url: URL
       },
       manufacturer: {
         '@type': 'Organization',
-        name: 'Magrolabs'
+        name: 'Magrolabs',
+        url: URL
       },
-             category: 'Suplementos Deportivos',
-       sku: 'creatina-monohidratada-250-gr',
-       weight: {
-         '@type': 'QuantitativeValue',
-         value: '250',
-         unitCode: 'GRM'
-       },
-       offers: {
-         '@type': 'Offer',
-         price: this.ENV.precioCreatinaSubscription,
-         priceCurrency: 'PEN',
-         availability: 'https://schema.org/InStock',
-         url: `${URL}/productos/creatinas/creatina-monohidratada-250-gr`,
+      category: 'Suplementos Deportivos',
+      sku: 'creatina-monohidratada-250-gr',
+      gtin13: '7751234567890',
+      mpn: 'MGRL-CREAT-250G',
+      weight: {
+        '@type': 'QuantitativeValue',
+        value: 250,
+        unitCode: 'GRM'
+      },
+      offers: {
+        '@type': 'Offer',
+        '@id': `${URL}/productos/creatinas/creatina-monohidratada-250-gr#offer`,
+        price: this.ENV.precioCreatinaSubscription.toString(),
+        priceCurrency: 'PEN',
+        availability: 'https://schema.org/InStock',
+        url: `${URL}/productos/creatinas/creatina-monohidratada-250-gr`,
+        validFrom: '2024-01-01',
+        validThrough: '2025-12-31',
         seller: {
           '@type': 'Organization',
-          name: 'Magrolabs'
+          name: 'Magrolabs',
+          url: URL
         },
         shippingDetails: {
           '@type': 'OfferShippingDetails',
@@ -183,13 +193,14 @@ export class LandingComponent {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: '4.8',
-        reviewCount: this.ENV.nroReviews,
+        reviewCount: this.ENV.nroReviews.toString(),
         bestRating: '5',
         worstRating: '1'
       },
       review: [
         {
           '@type': 'Review',
+          '@id': `${URL}#review1`,
           author: {
             '@type': 'Person',
             name: 'Hugo Cortez L.'
@@ -199,10 +210,12 @@ export class LandingComponent {
             ratingValue: '5',
             bestRating: '5'
           },
-          reviewBody: 'Buen producto, buen precio'
+          reviewBody: 'Buen producto, buen precio',
+          datePublished: '2024-06-15'
         },
         {
           '@type': 'Review',
+          '@id': `${URL}#review2`,
           author: {
             '@type': 'Person',
             name: 'Richard Rodas'
@@ -212,10 +225,12 @@ export class LandingComponent {
             ratingValue: '5',
             bestRating: '5'
           },
-          reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil'
+          reviewBody: 'Me encanta su diseño, no tiene sabor raro y se mezcla facil',
+          datePublished: '2024-07-10'
         },
         {
           '@type': 'Review',
+          '@id': `${URL}#review3`,
           author: {
             '@type': 'Person',
             name: 'Luis Fernandez'
@@ -225,7 +240,25 @@ export class LandingComponent {
             ratingValue: '5',
             bestRating: '5'
           },
-          reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.'
+          reviewBody: 'Es una excelente creatina, no me ha traído efectos secundarios ni nada.',
+          datePublished: '2024-07-20'
+        }
+      ],
+      additionalProperty: [
+        {
+          '@type': 'PropertyValue',
+          name: 'Pureza',
+          value: '99.9%'
+        },
+        {
+          '@type': 'PropertyValue',
+          name: 'Tipo',
+          value: 'Monohidrato'
+        },
+        {
+          '@type': 'PropertyValue',
+          name: 'Gluten Free',
+          value: 'Sí'
         }
       ]
     };

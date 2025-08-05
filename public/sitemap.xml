@@ -7,14 +7,14 @@
 
   <url>
     <loc>https://magrolabs.com/</loc>
-    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <lastmod>2025-08-04T10:00:00+00:00</lastmod>
     <priority>1.00</priority>
   </url>
 
   <!-- Registro -->
   <url>
     <loc>https://magrolabs.com/registro</loc>
-    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
+    <lastmod>2025-08-04T10:00:00+00:00</lastmod>
     <priority>0.85</priority>
   </url>
   <url>
@@ -41,8 +41,8 @@
   <!-- Login -->
   <url>
     <loc>https://magrolabs.com/login</loc>
-    <lastmod>2024-11-22T21:16:34+00:00</lastmod>
-    <priority>0.90</priority>
+    <lastmod>2025-08-04T10:00:00+00:00</lastmod>
+    <priority>0.50</priority>
   </url>
 
   <!-- Políticas -->

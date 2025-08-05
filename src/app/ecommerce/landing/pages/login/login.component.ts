@@ -9,6 +9,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { finalize } from 'rxjs/operators';
+import { SeoService } from '../../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
   private _toastService = inject(ToastService);
   private _authService = inject(AuthService);
   private _destroyRef = inject(DestroyRef);
+  private _seo = inject(SeoService);
 
   ENV = environment;
   isProcessing = false;
@@ -41,6 +43,8 @@ export class LoginComponent implements OnInit {
   })
 
   ngOnInit() {
+    this.loadSEO();
+    
     // Obtener returnUrl de los query parameters
     const returnUrlParam = this._route.snapshot.queryParams['returnUrl'];
     if (returnUrlParam) {
@@ -102,5 +106,50 @@ export class LoginComponent implements OnInit {
           console.error('Error en login:', error);
         }
       });
+  }
+  
+  private loadSEO() {
+    const title = 'Iniciar Sesión | Magrolabs';
+    const description = 'Accede a tu cuenta de Magrolabs para gestionar tu suscripción, ver pedidos y disfrutar de beneficios exclusivos. Primera creatina gratis y envío sin costo.';
+    const URL = 'https://magrolabs.com/login';
+    const image = 'https://magrolabs.com/image-meta.webp';
+    const keywords = [
+      'login magrolabs', 'acceso cuenta creatina', 'iniciar sesión suplementos',
+      'cuenta usuario magrolabs', 'acceso suscripción creatina', 'login Peru',
+      'mi cuenta magrolabs', 'acceso productos deportivos'
+    ];
+
+    // SEO básico optimizado
+    this._seo.setTitle(title);
+    this._seo.setDescription(description);
+    this._seo.setKeywords(keywords.join(', '));
+    this._seo.setCanonicalURL(URL);
+    this._seo.setIndexFollow(false); // No indexar página de login por seguridad
+
+    // Open Graph optimizado
+    this._seo.setOpenGraph({
+      type: 'website',
+      site_name: 'Magrolabs',
+      title: title,
+      description: description,
+      image: image,
+      url: URL,
+      locale: 'es_PE',
+      'image:width': '1200',
+      'image:height': '628',
+      'image:alt': 'Magrolabs - Iniciar Sesión en Cuenta'
+    });
+
+    // Twitter Card optimizado
+    this._seo.setTwitterCard({
+      'twitter:card': 'summary_large_image',
+      'twitter:site': '@magrolabs',
+      'twitter:creator': '@magrolabs',
+      'twitter:url': URL,
+      'twitter:title': title,
+      'twitter:description': description,
+      'twitter:image': image,
+      'twitter:image:alt': 'Magrolabs - Acceso a Cuenta'
+    });
   }
 }

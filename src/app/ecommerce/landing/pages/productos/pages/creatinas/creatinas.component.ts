@@ -673,7 +673,7 @@ export class CreatinasComponent {
         value: this.getProductWeight(),
         unitCode: 'GRM'
       },
-      offers: this.getOfferSchema(url),
+      offers: this.getOfferSchema(url, image),
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: this.reviewStats.averageRating.toString(),
@@ -751,7 +751,8 @@ export class CreatinasComponent {
         validThrough: '2025-12-31',
         itemOffered: {
           '@type': 'Product',
-          name: this.productName
+          name: this.productName,
+          image: [image]
         },
         seller: {
           '@type': 'Organization',
@@ -799,7 +800,7 @@ export class CreatinasComponent {
   /**
    * Genera el schema de ofertas según el producto
    */
-  private getOfferSchema(url: string) {
+  private getOfferSchema(url: string, image: string) {
     const baseOffer = {
       '@type': 'Offer',
       '@id': `${url}#offer`,
@@ -845,6 +846,11 @@ export class CreatinasComponent {
           seller: {
             '@type': 'Organization',
             name: 'Magrolabs'
+          },
+          itemOffered: {
+            '@type': 'Product',
+            name: this.productName,
+            image: [image]
           }
         }
       ];

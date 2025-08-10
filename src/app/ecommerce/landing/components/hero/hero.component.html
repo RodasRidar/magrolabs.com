@@ -1,10 +1,41 @@
 <main class="lg:relative">
   <div class="mx-auto max-w-7xl w-full pt-4 pb-4 text-center lg:py-48 lg:text-left">
     <div class="px-4 lg:w-1/2 sm:px-8 xl:pr-16">
-      <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
+      <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl animate-fade-in-up">
         <span class="block text-[#d07d66] xl:inline">Suplementación</span>
-        <span class="block xl:inline"> fácil y eco amigable</span>
+        <span class="block xl:inline animate-bounce-subtle"> fácil y eco amigable</span>
       </h1>
+      
+      <style>
+        @keyframes fadeInUp {
+          from {
+        opacity: 0;
+        transform: translateY(30px);
+          }
+          to {
+        opacity: 1;
+        transform: translateY(0);
+          }
+        }
+        
+        @keyframes bounceSuttle {
+          0%, 100% {
+        transform: translateY(0);
+          }
+          50% {
+        transform: translateY(-5px);
+          }
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 1s ease-out;
+        }
+        
+        .animate-bounce-subtle {
+          animation: bounceSuttle 2s ease-in-out infinite;
+          animation-delay: 0.5s;
+        }
+      </style>
       <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
         Con una suscripción de Magrolabs, recibe en tu
         casa un paquete de creatina por solo <strong>S/{{ENV.precioCreatinaSubscription}}</strong> al mes<span class="text-base tracking-tighter">**</span> 
@@ -34,7 +65,7 @@
     </div>
   </div>
   <div class="max-lg:mt-8 relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full bg-gradient-to-r from-[#94716B] to-[#C4A39C]">
-    <img class="absolute inset-0 h-[70%] self-center object-cover mx-auto"
+    <img class="absolute inset-0 h-[60%] self-center object-cover mx-auto"
       src="/banner_2.png"
       alt="banner-landing" />
   </div>

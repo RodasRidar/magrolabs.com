@@ -10,7 +10,7 @@ import { ButtonComponent } from "../../shared/ui/button/button.component";
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, ButtonComponent],
+  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {

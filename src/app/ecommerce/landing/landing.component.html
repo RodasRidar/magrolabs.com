@@ -1,14 +1,41 @@
-<app-navbar [type]="navbarTypeEnum.LANDING" [isCheckout]="false"/>
+<!-- Barra de Urgencia Superior -->
+<div class="bg-black h-[30px] flex items-center justify-center px-4 sm:px-6 lg:px-8 text-white text-sm font-medium overflow-hidden shadow-lg fixed top-0 left-0 right-0 z-40">
+    <!-- Elemento decorativo sutil -->
+    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+    
+    <!-- Contenido centrado -->
+    <div class="relative z-10 flex items-center space-x-2 text-center">
+        <div class="w-2 h-2 bg-[#d07d66] rounded-full animate-pulse"></div>
+        <span class="text-gray-200">
+            <strong class="text-white max-sm:hidden">Oferta limitada:</strong> Solo quedan <strong class="text-[#d07d66]">10 unidades</strong> gratis!
+        </span>
+    </div>
+</div>
+
+<!-- Espaciador para compensar la barra fija -->
+<div class="h-[30px]"></div>
+
+<!-- Navbar fijo -->
+<div class="fixed top-[30px] left-0 right-0 z-40">
+    <app-navbar [type]="navbarTypeEnum.LANDING" [isCheckout]="false"/>
+</div>
+
+<!-- Espaciador para compensar el navbar fijo (ajustar altura según el navbar) -->
+<div class="h-[60px]"></div>
+
 <app-hero />
 
 <!-- Lo que necesitas cada mes. -->
-<div class="overflow-hidden bg-white py-10 sm:py-10">
+<section class="overflow-hidden bg-white py-10 sm:py-10" id="beneficios">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-4 gap-y-4 sm:gap-y-4 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div class="lg:pr-8 lg:pt-4">
                 <div class="lg:max-w-lg">
-                    <p class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:text-left text-center">
                         Lo que necesitas cada mes.
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 sm:text-left text-center">
+                        La creatina más pura y eco amigable del mercado peruano, con envío gratis y la mejor relación calidad precio.
                     </p>
                     <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-gray-600 lg:max-w-none">
                         <div class="relative pl-2">
@@ -61,7 +88,7 @@
                         </div>
                     </dl>
                 </div>
-                <div class="mt-10 w-fit pl-2">
+                <div class="mt-10 w-fit pl-2 sm:justify-self-start justify-self-center">
                     <button type="button" [routerLink]="'/registro'"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
                         Regístrate ahora
@@ -72,20 +99,20 @@
                 </div>
             </div>
             <img src="banner-landing_2.png"
-                alt="Product screenshot"
-                class="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[26rem] md:-ml-4 lg:-ml-0"
+                alt="Creatina Monohidratada Magrolabs - Suplemento de alta calidad 250gr"
+                class="w-full max-sm:hidden sm:w-[26rem] lg:w-[30rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 md:-ml-4 lg:-ml-0"
                 width="2432" height="1442" />
         </div>
     </div>
-</div>
+</section>
 
-<!-- Recibe 10 soles de crédito al mes  -->
-<div class="bg-white sm:py-10">
+<!-- Programa de Lealtad - Recibe crédito cada mes  -->
+<section class="bg-white sm:py-10" id="programa-lealtad">
     <div class="mx-auto text-center max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl lg:text-center">
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Recibe S/{{ENV.creditoRegaloPorCompraMes}} de crédito cada mes.
-            </p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                Recibe S/{{ENV.creditoRegaloPorCompraMes}} cada mes.
+            </h2>
             <p class="text-center mt-10 text-lg leading-6 text-gray-600">
                 Como miembro, eres automáticamente parte de nuestro Programa de Lealtad.
                 Cada mes recibes {{ENV.creditoRegaloPorCompraMes}}  soles de crédito, con el que acumulas para artículos
@@ -232,14 +259,17 @@
             Descubre más →
         </a>
     </div>
-</div>
+</section>
 
 <!-- Testimonios -->
-<section class="bg-white">
+<section class="bg-white" id="testimonios">
     <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <h2 class="text-center text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             Reseñas de nuestros clientes
         </h2>
+        <p class="text-center mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            Nuestros clientes satisfechos han transformado sus entrenamientos con nuestra creatina monohidratada de alta calidad.
+        </p>
         <div class="mt-8 mb-8 text-pretty grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
             <!-- Testimonio 1 -->
             <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
@@ -386,17 +416,21 @@
 </section>
 
 <!-- Por que Magrolabs. -->
-<div class="overflow-hidden bg-white py-10 sm:py-10">
+<section class="overflow-hidden bg-white py-10 sm:py-10" id="por-que-magrolabs">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div
             class="mx-auto grid max-w-2xl grid-cols-1 gap-x-16 gap-y-4 sm:gap-y-4 lg:mx-2 lg:max-w-none lg:grid-cols-2">
             <img src="/beneficios-creatina.webp"
-                alt="Product screenshot" class="w-full rounded-xl shadow-xl left-1 ring-gray-400/10 sm:w-[57rem]"
+                alt="Beneficios de la Creatina Monohidratada Magrolabs para el rendimiento deportivo" 
+                class="w-full rounded-xl shadow-xl left-1 ring-gray-400/10 sm:w-[57rem]"
                 width="1440" height="1440" />
             <div class="lg:pr-8 lg:pt-4">
                 <div class="lg:max-w-lg">
-                    <p class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        ¿Por qué Magrolabs?
+                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center sm:text-left">
+                        ¿Por qué elegir Magrolabs?
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 max-sm:text-center">
+                        Somos la marca de creatina eco amigable del Perú, nuestros clientes están satisfechos y los resultados son comprobados.
                     </p>
                     <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-gray-600 lg:max-w-none">
                         <div class="relative pl-2">
@@ -485,7 +519,7 @@
                         </div>
                     </dl>
                 </div>
-                <div class="mt-10 w-fit pl-2">
+                <div class="mt-10 w-fit pl-2 sm:justify-self-start justify-self-center">
                     <button type="button" [routerLink]="['/registro']"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
                         Lo quiero!
@@ -497,14 +531,14 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Energízate con Magrolabs -->
-<div class="overflow-hidden bg-white py-16 sm:py-20">
+<div class="overflow-hidden bg-[#f6f6f6] py-16 sm:py-20">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Energízate con Magrolabs
+                ¡Energízate con Magrolabs!
             </h2>
             <p class="mt-6 text-lg leading-8 text-gray-600">
                 Completa tu entrenamiento con nuestra playlist oficial. La música perfecta para tus entrenamientos más intensos.
@@ -533,7 +567,7 @@
                         ¿Tienes una canción que te motiva?
                     </h3>
                     <p class="text-gray-600 mb-6">
-                        Ayúdanos a crear la playlist perfecta. Comparte tus canciones favoritas para entrenar y podrían ser parte de nuestra próxima actualización.
+                        Ayúdanos a crear la playlist perfecta. Sube una historia en Instagram etiquetando a Magrolabs con la música que quieres que agreguemos. Las mejores canciones serán parte de nuestra próxima actualización.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <a href="https://instagram.com/magrolabs" target="_blank" 
@@ -543,13 +577,6 @@
                             </svg>
                             Sugerir en Instagram
                         </a>
-                        <a href="mailto:hola@magrolabs.com?subject=Sugerencia de canción para playlist&body=Hola! Me gustaría sugerir la siguiente canción para la playlist de Magrolabs:" 
-                           class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            Enviar por email
-                        </a>
                     </div>
                 </div>
             </div>
@@ -558,11 +585,19 @@
 </div>
 
 <!-- FAQs -->
-<div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10 bg-white">
+<section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-white" id="preguntas-frecuentes">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Preguntas Frecuentes
+        </h2>
+        <p class="mt-4 text-lg text-gray-600">
+            Resolvemos todas tus dudas sobre la creatina monohidratada y nuestro servicio de suscripción.
+        </p>
+    </div>
     <div class="space-y-4">
         <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h2>
+                <h3 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h3>
                 <span class="relative size-5 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none" viewBox="0 0 24 24"
@@ -570,7 +605,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -579,25 +613,22 @@
                     </svg>
                 </span>
             </summary>
-
             <p class="mt-4 leading-relaxed text-gray-700">
-                Te regalamos la primera creatina.
-                ¿Por qué? Queremos mostrarte y hacerte sentir que estás tomando la mejor decisión. ¡Estamos muy
-                convencidos de nuestra creatina!
+                Te regalamos la primera creatina porque estamos 100% convencidos de la calidad de nuestro producto. 
+                Queremos que experimentes los beneficios reales de una creatina monohidratada pura antes de cualquier compromiso. 
+                Es nuestra forma de demostrar confianza en lo que ofrecemos.
             </p>
         </details>
 
         <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h2>
-
+                <h3 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h3>
                 <span class="relative size-5 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -605,23 +636,21 @@
                     </svg>
                 </span>
             </summary>
-
             <p class="mt-4 leading-relaxed text-gray-700">
-                Después de registrarte, tu creatina gratis estará en tu casa en un plazo de {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}} - {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles.
+                Después de completar tu registro, tu creatina gratis llegará a tu casa en {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}} - {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días hábiles. 
+                Te enviaremos el código de seguimiento para que puedas rastrear tu paquete en tiempo real.
             </p>
         </details>
 
         <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">¿Hay un periodo de cancelación?</h2>
-
+                <h3 class="font-semibold">¿Qué hace diferente a la creatina de Magrolabs?</h3>
                 <span class="relative size-5 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -629,17 +658,84 @@
                     </svg>
                 </span>
             </summary>
-
             <p class="mt-4 leading-relaxed text-gray-700">
-                Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla,
-                este es tu período de prueba.
-                Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
-                Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un período de cancelación mensual.
-                ¿Cancelas antes de {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días de tu fecha de facturación? Entonces no habrá un pago ni entrega, caso contrario, habrá un pago y una entrega más.
+                Nuestra creatina es 100% monohidratada pura, sin rellenos ni aditivos. Tiene una solubilidad superior, 
+                no deja sabor residual y es más fácil de absorber por el organismo. Además, nuestro empaque es eco amigable 
+                y cada lote está certificado por laboratorios independientes.
+            </p>
+        </details>
+
+        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                <h3 class="font-semibold">¿Hay un periodo de cancelación o compromiso mínimo?</h3>
+                <span class="relative size-5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+            </summary>
+            <p class="mt-4 leading-relaxed text-gray-700">
+                <strong>No hay compromiso mínimo.</strong> Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo. 
+                Si cancelas durante este período de prueba, no pagas nada. Después del período de prueba, 
+                puedes cancelar cuando quieras, solo asegúrate de hacerlo {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días antes de tu próxima fecha de facturación.
+            </p>
+        </details>
+
+        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                <h3 class="font-semibold">¿Cuántos gramos debo tomar al día y cuánto dura un paquete?</h3>
+                <span class="relative size-5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+            </summary>
+            <p class="mt-4 leading-relaxed text-gray-700">
+                La dosis recomendada es de 5 gramos diarios (aproximadamente una cucharada) o si eres más avanzado
+                1 gramo por cada kilogramo de peso. 
+                Nuestro paquete de 250gr te durará aproximadamente 1 mes, dependiendo de tu dosis. 
+                Por eso nuestras entregas son mensuales, siempre tendrás creatina disponible.
+            </p>
+        </details>
+
+        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+                <h3 class="font-semibold">¿El envío es realmente gratis y a qué zonas llegan?</h3>
+                <span class="relative size-5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+            </summary>
+            <p class="mt-4 leading-relaxed text-gray-700">
+                Sí, el envío es completamente gratis para {{ENV.envioGratisA.LIMA_METRO}}. 
+                Realizamos envíos a todo el Perú con un costo adicional que se calcula según la zona. 
+                Trabajamos con couriers confiables y tu pedido siempre viene con código de seguimiento.
             </p>
         </details>
     </div>
-</div>
+</section>
 
 <!-- Footer -->
 <app-footer/>

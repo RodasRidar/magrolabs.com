@@ -1,72 +1,90 @@
 <main class="lg:relative">
-  <div class="mx-auto max-w-7xl w-full pt-4 pb-4 text-center lg:py-48 lg:text-left">
+  <div class="mx-auto max-w-7xl w-full pt-4 pb-4 text-center lg:py-32 lg:text-left">
     <div class="px-4 lg:w-1/2 sm:px-8 xl:pr-16">
-      <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl animate-fade-in-up">
+      <h1
+        class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl animate-fade-in-up"
+        style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
         <span class="block text-[#d07d66] xl:inline">Suplementación</span>
-        <span class="block xl:inline animate-bounce-subtle"> fácil y eco amigable</span>
+        <span class="block xl:inline"> fácil y eco amigable</span>
       </h1>
-      
+
       <style>
         @keyframes fadeInUp {
           from {
-        opacity: 0;
-        transform: translateY(30px);
+            opacity: 0;
+            transform: translateY(30px);
           }
+
           to {
-        opacity: 1;
-        transform: translateY(0);
+            opacity: 1;
+            transform: translateY(0);
           }
         }
-        
+
         @keyframes bounceSuttle {
-          0%, 100% {
-        transform: translateY(0);
+
+          0%,
+          100% {
+            transform: translateY(0);
           }
+
           50% {
-        transform: translateY(-5px);
+            transform: translateY(-5px);
           }
         }
-        
+
         .animate-fade-in-up {
           animation: fadeInUp 1s ease-out;
         }
-        
+
         .animate-bounce-subtle {
           animation: bounceSuttle 2s ease-in-out infinite;
           animation-delay: 0.5s;
         }
       </style>
-      <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
-        Con una suscripción de Magrolabs, recibe en tu
-        casa un paquete de creatina por solo <strong>S/{{ENV.precioCreatinaSubscription}}</strong> al mes<span class="text-base tracking-tighter">**</span> 
-      </h2>
-      <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
-        Regístrate ahora y recibe tu primera creatina gratis<span class="text-base tracking-tighter">*</span>!
-      </h2>
+      
+      <div class="animate-fade-in-up">
+        <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
+          Con nuestra suscripción mensual, recibe un paquete de <strong class="text-[#d07d66]">Creatina 250gr</strong>
+          por solo <strong class="text-[#d07d66]">S/{{ENV.precioCreatinaSubscription}}</strong><span
+            class="text-base tracking-tighter">.*</span>
+        </h2>
+        <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
+          Envío gratis para siempre<span class="text-base tracking-tighter">!**</span>
+        </h2>
+        <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
+          Regístrate ahora y recibe tu primera creatina gratis y un regalo de <strong class="text-[#d07d66]">S/{{ENV.creditoRegaloPorCompraMes}}</strong><span class="text-base tracking-tighter">.***</span>
+        </h2>
 
-      <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
-        <div class="rounded-md shadow">
-          <a [routerLink]="'/registro'"
-            class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] md:py-4 md:text-lg md:px-10">
-            Prueba gratis de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días →
-          </a>
+        <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
+          <div class="rounded-md transition-all duration-300"
+            style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
+            <a [routerLink]="'/registro'"
+              class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] md:py-4 md:text-lg md:px-10">
+              Prueba gratis de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días →
+            </a>
+          </div>
+        </div>
+        <div class="text-left"> 
+          <p class="tracking-tighter mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+            * Precio de S/{{ENV.precioCreatinaSubscription}} corresponde al plan mensual de
+            {{ENV.creatinaSubscription250}} gr de
+            creatina.
+          </p>
+          <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+            ** Envío gratis solo para Lima Metropolitana.
+          </p>
+          <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+            *** Creatina gratis ({{ENV.creatinaFreeGramos}} gr) se entrega en un plazo de
+            {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días
+            hábiles; los S/{{ENV.creditoRegaloPorCompraMes}} de créditos solo podrán ser utilizados en nuestra Webshop.
+          </p>
         </div>
       </div>
-      <p class="tracking-tighter mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
-        ** Precio de S/{{ENV.precioCreatinaSubscription}} corresponde al plan mensual de
-        {{ENV.creatinaSubscription250}} gr de
-        creatina.
-      </p>
-      <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
-        * Creatina gratis ({{ENV.creatinaFreeGramos}} gr) se entrega en un plazo de
-        {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.min}} a {{ENV.plazoDeEntregaDiasHabilesCreatinaFree.max}} días
-        hábiles.
-      </p>
     </div>
   </div>
-  <div class="max-lg:mt-8 relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full bg-gradient-to-r from-[#94716B] to-[#C4A39C]">
-    <img class="absolute inset-0 h-[60%] self-center object-cover mx-auto"
-      src="/banner_2.png"
-      alt="banner-landing" />
+  <div
+    class=" animate-fade-in-up max-lg:mt-8 relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full bg-gradient-to-r from-[#94716B] to-[#C4A39C]">
+    <img class="absolute inset-0 h-[60%] self-center object-cover mx-auto" src="/banner_2.png" alt="banner-landing" />
   </div>
 </main>

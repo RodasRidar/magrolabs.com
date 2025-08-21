@@ -1,6 +1,15 @@
 <header>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mis Créditos</h1>
+        <h1 class="text-3xl font-bold leading-tight text-gray-900 mb-4">Mis Magropuntos</h1>
+        @if (tierDisplayName() != 'Carbon') {
+
+            <p class="mt-2 text-lg text-gray-600">
+                ¡Felicitaciones eres un miembro <strong>{{ tierDisplayName() }}</strong>!
+            </p>
+        }
+        <p class="mt-0 text-base text-gray-500">
+            Has acumulado <strong>{{ totalEarningsCredits }} Magropuntos</strong> a lo largo de tu suscripción.
+        </p>
     </div>
 </header>
 
@@ -10,9 +19,16 @@
         <div class="bg-[#f5f5f0] overflow-hidden shadow rounded-lg mb-8">
             <div class="px-6 py-8 sm:p-8 flex flex-col md:flex-row justify-between items-center">
                 <div class="flex-1">
-                    <h2 class="text-xl text-gray-600 font-medium">Tu crédito para compras</h2>
+                    <h2 class="text-xl text-gray-600 font-medium">Tus Magropuntos para compras</h2>
                     <div class="mt-2 flex items-baseline">
-                        <span class="text-6xl font-extrabold text-gray-900">S/{{ isLoadingCredits ? '0' : totalCredits }}</span>
+                        <span class="text-6xl font-extrabold text-gray-900 flex items-center">
+                            @if (isLoadingTier) {
+                                <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.svg" alt="tierDisplayName" class="w-16 h-16 mx-2  select-none">
+                            } @else {
+                                <img [src]="tierImageRoutes?.pngComprimido" [alt]="tierDisplayName()" class="w-16 h-16 mx-2 select-none">
+                            }
+                            {{ isLoadingCredits ? '0' : totalCredits }}
+                        </span>
                     </div>
                     
                     <div class="mt-6 flex flex-col sm:flex-row gap-4">
@@ -45,7 +61,7 @@
                 <div class="flex-1 text-pretty">
                     <h2 class="text-2xl font-bold text-gray-900">Estás ahorrando para artículos exclusivos.</h2>
                     <p class="mt-4 text-gray-600">
-                        Como miembro, recibes S/{{ env.creditoRegaloPorCompraMes }} de crédito para compras cada mes. Con este crédito, 
+                        Como miembro, recibes {{ env.creditoRegaloPorCompraMes }} Magropuntos para compras cada mes. Con este crédito, 
                         ahorras para artículos exclusivos de Magrolabs. Participas automáticamente en 
                         nuestro Programa de Lealtad, sin costos adicionales. ¿Quieres ahorrar más 
                         rápido? ¡Mira cómo a continuación!
@@ -68,7 +84,7 @@
                     </div>
                     
                     <div *ngIf="!isLoadingTransactions && transactionHistory.length === 0" class="text-center py-8">
-                        <p class="text-gray-500">Aún no tienes transacciones de crédito.</p>
+                        <p class="text-gray-500">Aún no tienes transacciones.</p>
                     </div>
                     
                     <ul *ngIf="!isLoadingTransactions && transactionHistory.length > 0" 
@@ -98,8 +114,8 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Tus invitaciones</h3>
                     <p class="text-gray-600 mt-2">
                         {{ invitationCredits > 0 ? 
-                            'Has ganado S/' + invitationCredits + ' de crédito de compra extra.' : 
-                            'Aún no has ganado ningún crédito de compra extra.' }}
+                            'Has ganado ' + invitationCredits + ' Magropuntos extra.' : 
+                            'Aún no has ganado ningún Magropunto extra.' }}
                     </p>
                 </div>
                 
@@ -110,8 +126,7 @@
                     
                     <div *ngIf="!isLoadingInvitations" class="py-3">
                         <p class="mt-2 text-gray-600">
-                            Invita ahora a tus amigos y ¡consigue hasta S/{{ maxInvitationCredits }} de 
-                            crédito de compra adicional!
+                            Invita ahora a tus amigos y ¡Consigue hasta {{ maxInvitationCredits }} Magropuntos adicionales para tus compras!
                         </p>
                         
                         <div class="mt-6">
@@ -131,14 +146,14 @@
                             <ul class="mt-6 space-y-2">
                                 <li class="text-sm text-gray-500">•  Invita a tus amigos a unirse a Magrolabs a travez de tu enlace único.</li>
                                 <li class="text-sm text-gray-500">• Tu amigo acepta tu invitación y recibe una creatina gratis de Magrolabs.</li>
-                                <li class="text-sm text-gray-500">• Ambos reciben S/{{ENV.creditoRegaloPorCompraMes}} de crédito para compras.</li>
+                                <li class="text-sm text-gray-500">• Ambos reciben {{ENV.creditoRegaloPorCompraMes}} Magropuntos para compras.</li>
                             </ul>
 
                         </div>
                         
                         <div class="mt-6">
                             <p class="text-xs text-gray-500">
-                                Tus amigos deben registrarse utilizando tu enlace de invitación y suscribirse para que puedas recibir el crédito de recompensa.
+                                Tus amigos deben registrarse utilizando tu enlace de invitación y suscribirse para que puedas recibir los Magropuntos de recompensa.
                             </p>
                         </div>
                     </div>

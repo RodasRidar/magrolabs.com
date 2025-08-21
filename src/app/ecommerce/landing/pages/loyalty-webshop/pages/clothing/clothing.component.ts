@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
@@ -8,6 +8,10 @@ import { catchError, finalize, of } from 'rxjs';
 import { UserResponse } from '../../../../../../shared/interfaces/auth.interfaces';
 import { ToastService } from '../../../../../../shared/services/toast.service';
 import { environment } from '../../../../../../../environments/env';
+import { LoyaltyTierImageRoutes } from '../../../../../../shared/interfaces/loyalty.interfaces';
+import { LoyaltyService } from '../../../../../../shared/services/loyalty.service';
+import { UserDetailResponse } from '../../../../../../shared/interfaces/user.interfaces';
+import { UserService } from '../../../../../../shared/services/user.service';
 
 // Interfaz para el producto
 interface LoyaltyProduct {
@@ -20,6 +24,8 @@ interface LoyaltyProduct {
   category: string;
   features: string[];
   isOutOfStock: boolean;
+  tier: string;
+  magropointImg: string;
 }
 
 // Configuración estática de productos
@@ -33,7 +39,9 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Accesorios',
     features: ['Resistente', 'Transpirable', 'Material: Cuero sintético', 'Color: Negro', 'Talla: S, M, L, XL', 'Correa de soporte para muñeca'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'PLATA',
+    magropointImg: '/Magropoints/PLATA/magropoints_plata_cc_254x254.png'
   },
   'polera-negra-magrolabs': {
     slug: 'polera-negra-magrolabs',
@@ -44,7 +52,9 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Ropa',
     features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Negro', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'DIAMANTE',
+    magropointImg: '/Magropoints/DIAMANTE/magropoints_diamante_cc_254x254.png'
   },
   'shaker-negro-magrolabs': {
     slug: 'shaker-negro-magrolabs',
@@ -55,7 +65,9 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Accesorios',
     features: ['Resistente', 'Libre de BPA', 'Material: Plástico de alta calidad', 'Color: Negro', 'Capacidad: 600ml', 'Tapa hermética'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'BRONCE',
+    magropointImg: '/Magropoints/BRONCE/magropuntos_bronce_cc_254x254.png'
   },
   'bolsa-negra-magrolabs': {
     slug: 'bolsa-negra-magrolabs',
@@ -66,7 +78,9 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Negro',
     category: 'Accesorios',
     features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Negro', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'ORO',
+    magropointImg: '/Magropoints/ORO/magropoints_oro_cc_254x254.png'
   },
   'polera-desert-magrolabs': {
     slug: 'polera-desert-magrolabs',
@@ -77,7 +91,9 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Desert',
     category: 'Ropa',
     features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Desert', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'DIAMANTE',
+    magropointImg: '/Magropoints/DIAMANTE/magropoints_diamante_cc_254x254.png'
   },
   'bolsa-desert-magrolabs': {
     slug: 'bolsa-desert-magrolabs',
@@ -88,14 +104,16 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
     color: 'Desert',
     category: 'Accesorios',
     features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Desert', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: true
+    isOutOfStock: true,
+    tier: 'PLATINO',
+    magropointImg: '/Magropoints/PLATINO/magropoints_platinos_cc_254x254.svg'
   }
 };
 
 @Component({
   selector: 'app-clothing',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink],
+  imports: [ButtonComponent, NgOptimizedImage, RouterLink],
   templateUrl: './clothing.component.html',
   styleUrl: './clothing.component.css'
 })
@@ -106,6 +124,8 @@ export class ClothingComponent implements OnInit {
   private authService = inject(AuthService);
   private creditService = inject(CreditTransactionService);
   private _toastService = inject(ToastService);
+  private _loyaltyService = inject(LoyaltyService);
+  private _userService = inject(UserService);
 
   // Signals para el estado del componente
   readonly slug = signal<string>('');
@@ -126,6 +146,45 @@ export class ClothingComponent implements OnInit {
   readonly productFeatures = computed(() => this.currentProduct()?.features || []);
   readonly isOutOfStock = computed(() => this.currentProduct()?.isOutOfStock || false);
   readonly isLogged = computed(() => this.isAuthenticated());
+  readonly magropointImg = computed(() => this.currentProduct()?.magropointImg || '');
+  readonly tier = computed(() => this.currentProduct()?.tier || '');
+  readonly isTierValid = computed(() => {
+    switch (this.currentProduct()?.tier.toLocaleLowerCase()) {
+      case 'oro':
+        console.log('isTierValid', this.tierDisplayName());
+        if(this.tierDisplayName() == 'carbon' || this.tierDisplayName() == 'bronce' || this.tierDisplayName() == 'plata') {
+          return false
+        }else{
+          return true
+        }
+      case 'platino':
+        if(this.tierDisplayName() == 'carbon' || this.tierDisplayName() == 'bronce' || this.tierDisplayName() == 'plata' || this.tierDisplayName() == 'oro') {
+          return false
+        }else{
+          return true
+        }
+      case 'diamante':
+        if(this.tierDisplayName() == 'diamante' ) {
+          return true
+        }else{
+          return false
+        }
+      case 'plata':
+        if(this.tierDisplayName() == 'carbon' || this.tierDisplayName() == 'bronce') {
+          return false
+        }else{
+          return true
+        }
+      case 'bronce':
+        if(this.tierDisplayName() == 'carbon') {
+          return false
+        }else{
+          return true
+        }
+      default:
+        return false;
+    }
+  });
 
   // Computed para mostrar información de créditos
   readonly canAffordProduct = computed(() => {
@@ -140,6 +199,12 @@ export class ClothingComponent implements OnInit {
     return product ? Math.abs(credits - product.price) : 0;
   });
 
+     user: UserDetailResponse | null = null;
+    // Tier y imagen dinámica
+    tierImageRoutes: LoyaltyTierImageRoutes | null = null;
+    tierDisplayName = signal<string>('MagroPoints');
+    isLoadingTier = true;
+  
   constructor() {
     // Effect para cargar créditos cuando el usuario cambia
     effect(() => {
@@ -153,6 +218,7 @@ export class ClothingComponent implements OnInit {
   ngOnInit(): void {
     this.loadRouteData();
     this.loadAuthState();
+    this.loadUserData();
   }
 
   buyProduct() {
@@ -235,6 +301,44 @@ export class ClothingComponent implements OnInit {
     const user = this.currentUser();
     if (user) {
       this.loadUserCredits(user.id);
+    }
+  }
+
+    private loadUserData() {
+    this._userService.getCurrentUser().subscribe({
+      next: (user) => {
+        console.log('user', user);
+        this.user = user;
+        // Cargar créditos y tier después de obtener el usuario
+        this.loadUserTier();
+      },
+      error: (error) => {
+        console.error('Error al cargar datos del usuario:', error);
+      }
+    });
+  }
+
+    private loadUserTier() {
+    this.isLoadingTier = true;
+    const userId = this.user?.id;
+    
+    if (userId) {
+      this._loyaltyService.getUserTierInfo(userId).subscribe({
+        next: (tierInfo) => {
+          this.tierImageRoutes = tierInfo.imageRoutes;
+          this.tierDisplayName.set(tierInfo.displayName.toLocaleLowerCase());
+          this.isLoadingTier = false;
+        },
+        error: (error) => {
+          console.error('Error al obtener tier del usuario:', error);
+          // Mantener valores por defecto en caso de error
+          this.tierImageRoutes = null;
+          this.tierDisplayName.set('MagroPoints');
+          this.isLoadingTier = false;
+        }
+      });
+    } else {
+      this.isLoadingTier = false;
     }
   }
 }

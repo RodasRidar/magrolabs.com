@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CreditTransactionService, CreditTransaction, TransactionType } from '../../../shared/services/credit-transactions.service';
@@ -7,6 +7,8 @@ import { Subject } from 'rxjs';
 import { AuthService } from '../../../shared/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/env';
+import { LoyaltyService } from '../../../shared/services/loyalty.service';
+import { LoyaltyTier, LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 
 interface TransactionHistoryItem {
   date: Date;
@@ -24,6 +26,7 @@ interface TransactionHistoryItem {
 })
 export class CreditoComponent implements OnInit {
   private _creditTransactionService = inject(CreditTransactionService);
+  private _loyaltyService = inject(LoyaltyService);
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
@@ -31,7 +34,13 @@ export class CreditoComponent implements OnInit {
   ENV = environment;
   // Crédito disponible
   totalCredits = '0';
+  totalEarningsCredits = 0;
   isLoadingCredits = true;
+
+  // Tier y imagen dinámica
+  tierImageRoutes: LoyaltyTierImageRoutes | null = null;
+  tierDisplayName = signal<string>('Carbon');
+  isLoadingTier = true;
 
   // Historial de transacciones
   transactions: CreditTransaction[] = [];
@@ -55,6 +64,7 @@ export class CreditoComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserCredits();
     this.loadTransactions();
+    this.loadUserTier();
 
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
@@ -172,9 +182,9 @@ export class CreditoComponent implements OnInit {
   formatAmount(amount: number, type: TransactionType): string {
     const formatted = Math.abs(amount).toFixed(2);
     if (amount >= 0 && type === TransactionType.EARNED) {
-      return `+ S/${formatted}`;
+      return `+ ${formatted}`;
     } else {
-      return `- S/${formatted}`;
+      return `- ${formatted}`;
     }
   }
 
@@ -183,6 +193,34 @@ export class CreditoComponent implements OnInit {
       return 'text-green-700';
     } else {
       return 'text-red-700';
+    }
+  }
+
+  private loadUserTier(): void {
+    this.isLoadingTier = true;
+    const userId = this.getLoggedUserId();
+    
+    if (userId) {
+      this._loyaltyService.getUserTierInfo(userId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (tierInfo) => {
+            this.tierImageRoutes = tierInfo.imageRoutes;
+            this.tierDisplayName.set(tierInfo.displayName);
+            this.totalEarningsCredits = tierInfo.tierData.totalEarnedCredits;
+            this.isLoadingTier = false;
+          },
+          error: (error) => {
+            console.error('Error al obtener tier del usuario:', error);
+            // Mantener valores por defecto en caso de error
+            this.tierImageRoutes = null;
+            this.tierDisplayName.set('Carbon');
+            this.totalEarningsCredits = 0;
+            this.isLoadingTier = false;
+          }
+        });
+    } else {
+      this.isLoadingTier = false;
     }
   }
 }

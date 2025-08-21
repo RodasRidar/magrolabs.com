@@ -6,6 +6,8 @@ import { UserDetailResponse } from '../shared/interfaces/user.interfaces';
 import { CommonModule } from '@angular/common';
 import { CreditTransactionService } from '../shared/services/credit-transactions.service';
 import { TooltipComponent } from '../shared/ui/tooltip/tooltip.component';
+import { LoyaltyService } from '../shared/services/loyalty.service';
+import { LoyaltyTierImageRoutes } from '../shared/interfaces/loyalty.interfaces';
 
 @Component({
   selector: 'app-account',
@@ -18,6 +20,7 @@ export class AccountComponent implements OnInit {
   private _authService = inject(AuthService);
   private _userService = inject(UserService);
   private _creditTransactionService = inject(CreditTransactionService);
+  private _loyaltyService = inject(LoyaltyService);
 
   user: UserDetailResponse | null = null;
   isUserMenuOpen = false;
@@ -29,11 +32,14 @@ export class AccountComponent implements OnInit {
   maxLoyaltyPoints = 200;
   totalCredits = '0';
   isLoadingCredits = true;
+  
+  // Tier y imagen dinámica
+  tierImageRoutes: LoyaltyTierImageRoutes | null = null;
+  tierDisplayName = 'MagroPoints';
+  isLoadingTier = true;
 
   ngOnInit() {
     this.loadUserData();
-    this.loadSubscriptionData();
-    this.loadLastOrder();
     
     // Iniciar con 0% y luego animar hasta el porcentaje actual
     setTimeout(() => {
@@ -69,27 +75,14 @@ export class AccountComponent implements OnInit {
       next: (user) => {
         console.log('user', user);
         this.user = user;
-        // Cargar créditos después de obtener el usuario
+        // Cargar créditos y tier después de obtener el usuario
         this.loadUserCredits();
+        this.loadUserTier();
       },
       error: (error) => {
         console.error('Error al cargar datos del usuario:', error);
       }
     });
-  }
-
-  private loadSubscriptionData() {
-    // TODO: Implementar carga de datos de suscripción
-    this.subscription = {
-      status: 'Activa'
-    };
-  }
-
-  private loadLastOrder() {
-    // TODO: Implementar carga del último pedido
-    this.lastOrder = {
-      status: 'En proceso'
-    };
   }
 
   private loadUserCredits() {
@@ -111,6 +104,30 @@ export class AccountComponent implements OnInit {
       });
     } else {
       this.isLoadingCredits = false;
+    }
+  }
+
+  private loadUserTier() {
+    this.isLoadingTier = true;
+    const userId = this.user?.id;
+    
+    if (userId) {
+      this._loyaltyService.getUserTierInfo(userId).subscribe({
+        next: (tierInfo) => {
+          this.tierImageRoutes = tierInfo.imageRoutes;
+          this.tierDisplayName = tierInfo.displayName;
+          this.isLoadingTier = false;
+        },
+        error: (error) => {
+          console.error('Error al obtener tier del usuario:', error);
+          // Mantener valores por defecto en caso de error
+          this.tierImageRoutes = null;
+          this.tierDisplayName = 'MagroPoints';
+          this.isLoadingTier = false;
+        }
+      });
+    } else {
+      this.isLoadingTier = false;
     }
   }
 }

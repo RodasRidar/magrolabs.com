@@ -256,7 +256,7 @@ export class CreateAccountComponent implements OnDestroy {
 
   informationList: Information[] = [
     {
-      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' soles de crédito de compra cada mes.',
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos cada mes.',
     },
     {
       name: ' Acumula automáticamente, sin costo adicional.',

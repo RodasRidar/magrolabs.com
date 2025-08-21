@@ -23,7 +23,7 @@
                     <a [routerLink]="[ '/' ]" class="flex items-center">
                         <span class="sr-only">Magrolabs</span>
                         <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
-                            class="sm:h-12 h-8 w-auto" />
+                            class="sm:h-12 h-8 w-auto" priority />
                     </a>
                 </div>
 
@@ -53,15 +53,15 @@
                                 <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
-                            <a routerLink="/cuenta/perfil"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                tabindex="-1" id="user-menu-item-0">
-                                Mi Perfil
-                            </a>
                             <a routerLink="/cuenta/mi-cuenta"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
                                 Mi Cuenta
+                            </a>
+                            <a routerLink="/cuenta/perfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-0">
+                                Configuración del Perfil
                             </a>
                             <a (click)="logout()"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -129,7 +129,7 @@
                         </div>
 
                         <div>
-                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" />
+                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority/>
                         </div>
 
                     </div>
@@ -179,7 +179,7 @@
 
                     <a [routerLink]="[ '/' ]" class="flex items-center">
                         <span class="sr-only">Magrolabs</span>
-                        <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
+                        <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority
                             class="sm:h-12 h-8 w-auto" />
                     </a>
                 </div>
@@ -210,15 +210,15 @@
                                 <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
-                            <a routerLink="/cuenta/perfil"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                tabindex="-1" id="user-menu-item-0">
-                                Mi Perfil
-                            </a>
                             <a routerLink="/cuenta/mi-cuenta"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
                                 Mi Cuenta
+                            </a>
+                            <a routerLink="/cuenta/perfil"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                tabindex="-1" id="user-menu-item-0">
+                                Configuración del Perfil
                             </a>
                             <a (click)="logout()"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -299,14 +299,14 @@
                             <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
                             </div>
                         </div>
-                        <a routerLink="/cuenta/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem" tabindex="-1" id="user-menu-item-0">
-                            Mi Perfil
-                        </a>
                         <a routerLink="/cuenta/mi-cuenta"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                             tabindex="-1" id="user-menu-item-1">
                             Mi Cuenta
+                        </a>
+                        <a routerLink="/cuenta/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            role="menuitem" tabindex="-1" id="user-menu-item-0">
+                            Configuración del perfil
                         </a>
                         <a (click)="logout()"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -368,7 +368,7 @@
                         </div>
 
                         <div>
-                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" />
+                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority/>
                         </div>
 
                     </div>
@@ -400,7 +400,7 @@
     <div class="flex justify-between items-center max-sm:py-1 py-2 lg:justify-start md:space-x-10">
         <a [routerLink]="[ '/' ]" class="flex items-center mx-auto">
             <span class="sr-only">Magrolabs</span>
-            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
+            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority
                 class="sm:h-12 h-8 w-auto" />
         </a>
     </div>

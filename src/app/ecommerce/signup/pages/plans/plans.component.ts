@@ -65,7 +65,7 @@ export class PlansComponent {
   
   informationList: Information[] = [
     {
-      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' soles de crédito de compra cada mes.'
+      name: 'Recibe ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos cada mes.'
     },
     {
       name: 'Acumula automáticamente, sin costo adicional.'
@@ -157,7 +157,7 @@ export class PlansComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
-        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1

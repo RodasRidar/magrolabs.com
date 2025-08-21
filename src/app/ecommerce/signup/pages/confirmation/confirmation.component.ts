@@ -35,7 +35,7 @@ export class ConfirmationComponent {
   stepEnum = StepEnum;
   clientName = '';
   status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
-  creditos = 'S/{{ENV.creditoRegaloPorCompraMes}}';
+  creditos = '{{ENV.creditoRegaloPorCompraMes}} Magropuntos';
 
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
@@ -99,7 +99,9 @@ export class ConfirmationComponent {
       return;
     }
 
-    this.creditos = summary?.chosePlan?.selection == SummaryEnum.CREATINA_3KG ? 'S/' + this.ENV.creditoRegaloPorCompraAño : 'S/' + this.ENV.creditoRegaloPorCompraMes;
+    this.creditos = summary?.chosePlan?.selection ==
+    SummaryEnum.CREATINA_3KG ? this.ENV.creditoRegaloPorCompraAño + ' Magropuntos'
+    : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {

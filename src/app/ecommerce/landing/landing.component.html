@@ -111,11 +111,11 @@
     <div class="mx-auto text-center max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl lg:text-center">
             <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Recibe S/{{ENV.creditoRegaloPorCompraMes}} cada mes.
+                Recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos cada mes.
             </h2>
             <p class="text-center mt-10 text-lg leading-6 text-gray-600">
                 Como miembro, eres automáticamente parte de nuestro Programa de Lealtad.
-                Cada mes recibes {{ENV.creditoRegaloPorCompraMes}}  soles de crédito, con el que acumulas para artículos
+                Cada mes recibes {{ENV.creditoRegaloPorCompraMes}} Magropuntos, con el que acumulas para artículos
                 exclusivos de Magrolabs. ¿Quieres saber qué tenemos para ti? Mira
                 algunos de nuestros productos más vendidos a continuación.
             </p>
@@ -129,7 +129,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                         <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                            Recibe {{ENV.creditoRegaloPorCompraMes}} soles de crédito de compra cada mes.
+                            Recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos cada mes.
                         </p>
                     </dt>
                 </div>
@@ -476,8 +476,10 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    Te regalamos S/{{ENV.creditoRegaloPorCompraMes}} de crédito cada mes.
+                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700 flex items-center">
+                                    Te regalamos {{ENV.creditoRegaloPorCompraMes}}
+                                    <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.png" alt="Magro Puntos" class="w-8 h-8 mx-1 select-none">
+                                    cada mes.
                                 </p>
                             </dt>
                         </div>

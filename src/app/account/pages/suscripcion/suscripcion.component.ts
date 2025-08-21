@@ -23,6 +23,8 @@ import { SubscriptionOrderService } from '../../../shared/services/subscription-
 import { CreateOrderRequest, OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
 import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subscription-order.interface';
 import { CookieService } from 'ngx-cookie-service';
+import { LoyaltyService } from '../../../shared/services/loyalty.service';
+import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 
 @Component({
   selector: 'app-suscripcion',
@@ -50,6 +52,7 @@ export class SuscripcionComponent implements OnInit {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private cookieService = inject(CookieService);
+  private _loyaltyService = inject(LoyaltyService);
 
   reactivateType = ReactivateType;
   ENV = environment;
@@ -69,6 +72,11 @@ export class SuscripcionComponent implements OnInit {
   // Información de créditos
   userCredits = signal<string>('0');
   isLoadingCredits = signal<boolean>(false);
+
+  // Tier y imagen dinámica
+  tierImageRoutes: LoyaltyTierImageRoutes | null = null;
+  tierDisplayName = 'MagroPoints';
+  isLoadingTier = true;
 
   // Historial de pagos
   charges = signal<FlowCharge[]>([]);
@@ -142,6 +150,7 @@ export class SuscripcionComponent implements OnInit {
   ngOnInit(): void {
     this.loadSubscription();
     this.loadUserCredits();
+    this.loadUserTier();
     this.loadReviewsOnServer();
     this.updateSignalsFromLocalStorage();
     
@@ -250,6 +259,32 @@ export class SuscripcionComponent implements OnInit {
         });
     } else {
       this.isLoadingCredits.set(false);
+    }
+  }
+
+  loadUserTier(): void {
+    this.isLoadingTier = true;
+    
+    const user = this.authService.getCurrentUser();
+    if (user && user.id) {
+      this._loyaltyService.getUserTierInfo(user.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (tierInfo) => {
+            this.tierImageRoutes = tierInfo.imageRoutes;
+            this.tierDisplayName = tierInfo.displayName;
+            this.isLoadingTier = false;
+          },
+          error: (error) => {
+            console.error('Error al obtener tier del usuario:', error);
+            // Mantener valores por defecto en caso de error
+            this.tierImageRoutes = null;
+            this.tierDisplayName = 'MagroPoints';
+            this.isLoadingTier = false;
+          }
+        });
+    } else {
+      this.isLoadingTier = false;
     }
   }
 

@@ -198,7 +198,7 @@
                                                                 d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
                                                         </svg>
                                                         <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Recibes S/{{ENV.creditoRegaloPorCompraMes}} de crédito
+                                                            Recibes {{ENV.creditoRegaloPorCompraMes}} Magropuntos
                                                         </p>
                                                     </div>
                                                 </div>
@@ -568,12 +568,18 @@
                                 </div>
 
                                 <div>
-                                    <dt class="text-sm font-medium text-gray-500">Mi Crédito</dt>
+                                    <dt class="text-sm font-medium text-gray-500">Magropuntos</dt>
                                     <dd class="mt-1 text-sm text-gray-900">
                                         <span *ngIf="isLoadingCredits()">Cargando...</span>
                                         <a *ngIf="!isLoadingCredits()" routerLink="/cuenta/credito"
-                                            class="hover:text-[#d07d66] hover:underline">{{ userCredits() |
-                                            currency:'S/'}}</a>
+                                            class="hover:text-[#d07d66] hover:underline flex items-center">
+                                            {{ userCredits()}}
+                                            @if (isLoadingTier) {
+                                                <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
+                                            } @else {
+                                                <img [src]="tierImageRoutes?.svg" [alt]="tierDisplayName" class="w-6 h-6 mx-1 select-none">
+                                            }
+                                        </a>
                                     </dd>
                                 </div>
 
@@ -1094,13 +1100,20 @@
 
                     <!-- Contenido del modal -->
                     <div class="text-center">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tu crédito
-                            acumulado...</h3>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tus Magropuntos
+                            acumulados...</h3>
 
                         <!-- Tarjeta de crédito de compras -->
-                        <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6">
-                            <p class="text-lg font-semibold mb-2">Tu crédito de compras</p>
-                            <p class="text-6xl font-bold mb-6">{{userCredits() | currency:'S/'}}</p>
+                        <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6 justify-items-center">
+                            <p class="text-lg font-semibold mb-2">Tu Magropuntos para compras</p>
+                            <p class="text-6xl font-bold mb-6 flex items-center">
+                                {{userCredits()}}
+                                            @if (isLoadingTier) {
+                                                <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
+                                            } @else {
+                                                <img [src]="tierImageRoutes?.png245x254" [alt]="tierDisplayName" class="w-14 h-14 mx-1 select-none">
+                                            }
+                            </p>
 
                         </div>
 
@@ -1115,7 +1128,7 @@
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <ml-button name="Mantener mi crédito" (click)="keepCredits()" ></ml-button>
+                    <ml-button name="Mantener" (click)="keepCredits()" ></ml-button>
                     <ml-button name="Continuar con la cancelación" (click)="finalConfirmCancellation()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
@@ -1225,7 +1238,7 @@
                             <ul class="space-y-2 text-gray-700">
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                    Tu crédito de {{userCredits() | currency:'S/'}}
+                                    Tus {{userCredits()}} Magropuntos acumulados
                                 </li>
                                 @if(subscription()?.discount && subscription()?.discount! > 0) {
                                 <li class="flex items-center">
@@ -1260,7 +1273,7 @@
                                 </p>
                             } @else {
                                 <p class="text-gray-700 text-sm leading-relaxed">
-                                    ¿Quieres recibir mensualmente una nueva creatina en tu buzón de nuevo?
+                                    ¿Quieres recibir mensualmente una nueva creatina en tu casa de nuevo?
                                     Puedes volver a activar tu suscripción en cualquier momento desde tu cuenta.
                                 </p>
                             }

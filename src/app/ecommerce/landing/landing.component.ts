@@ -250,7 +250,7 @@ export class LandingComponent {
           name: '¿Cómo funciona el programa de lealtad?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Como miembro recibes automáticamente S/${this.ENV.creditoRegaloPorCompraMes} soles de crédito cada mes para canjear por artículos exclusivos de Magrolabs sin costo adicional.`
+            text: `Como miembro recibes automáticamente ${this.ENV.creditoRegaloPorCompraMes} Magropuntos cada mes para canjear por artículos exclusivos de Magrolabs sin costo adicional.`
           }
         }
       ]
@@ -289,7 +289,7 @@ export class LandingComponent {
         {
           '@type': 'PropertyValue',
           name: 'Crédito mensual',
-          value: `S/${this.ENV.creditoRegaloPorCompraMes}`
+          value: `${this.ENV.creditoRegaloPorCompraMes} Magropuntos`
         }
       ]
     };

@@ -517,7 +517,7 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
-        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
@@ -527,7 +527,7 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina500gSubscription + '.',
-        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraMes + ' de crédito.',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1,
@@ -537,7 +537,7 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina3kgSubscription + '.',
-        descriptionTwo: 'Ganas S/'+ this.ENV.creditoRegaloPorCompraAño + ' de crédito.',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraAño + ' Magropuntos.',
         descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
@@ -558,7 +558,7 @@ export class CreatinasComponent {
     // Configuración SEO específica por producto
     if (this.slug === 'creatina-monohidratada-250-gr') {
       title = `Creatina Monohidrato 250g | S/${this.ENV.precioCreatinaSubscription}/mes | Envío Gratis - Magrolabs`;
-      description = `🚀 Creatina monohidrato 99.9% pura 250g | Primera GRATIS | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | S/${this.ENV.creditoRegaloPorCompraMes} crédito mensual | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      description = `🚀 Creatina monohidrato 99.9% pura 250g | Primera GRATIS | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | ${this.ENV.creditoRegaloPorCompraMes} Magropuntos mensuales | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
         'creatina monohidrato 250g', 'creatina suscripcion Peru', 'suplementos gym Lima',
         'creatina premium', 'creatina envio gratis', 'mejor creatina Peru',
@@ -575,7 +575,7 @@ export class CreatinasComponent {
       ];
     } else if (this.slug === 'creatina-monohidratada-3-kg') {
       title = `Creatina Monohidrato 3kg | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios - Magrolabs`;
-      description = `💪 Creatina monohidrato 3kg premium | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios | S/${this.ENV.creditoRegaloPorCompraAño} crédito anual | Máximo ahorro | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      description = `💪 Creatina monohidrato 3kg premium | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios | ${this.ENV.creditoRegaloPorCompraAño} Magropuntos anuales | Máximo ahorro | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
         'creatina 3kg Peru', 'creatina bulk', 'creatina mayor cantidad',
         'suplementos al por mayor', 'creatina anual', 'mejor precio creatina',
@@ -886,8 +886,8 @@ export class CreatinasComponent {
       },
       {
         '@type': 'PropertyValue',
-        name: 'Crédito mensual',
-        value: `S/${this.credits}`
+        name: 'Magropuntos mensuales',
+        value: `${this.credits} Magropuntos`
       }
     ];
   }

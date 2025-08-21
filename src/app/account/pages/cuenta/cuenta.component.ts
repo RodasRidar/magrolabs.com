@@ -9,11 +9,12 @@ import { OrderService } from '../../../shared/services/order.service';
 import { OrderResponse, OrderStatus } from '../../../shared/interfaces/order.interfaces';
 import { finalize, takeUntil, switchMap, map, catchError } from 'rxjs/operators';
 import { CreditTransactionService } from '../../../shared/services/credit-transactions.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Subject, of } from 'rxjs';
 import { environment } from '../../../../environments/env';
 import { FlowService } from '../../../shared/services/flow.service';
+import { LoyaltyService } from '../../../shared/services/loyalty.service';
+import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 
 @Component({
   selector: 'app-cuenta',
@@ -31,6 +32,7 @@ export class CuentaComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
   private _flowService = inject(FlowService);
+  private _loyaltyService = inject(LoyaltyService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   user: UserDetailResponse | null = null;
@@ -41,11 +43,17 @@ export class CuentaComponent implements OnInit {
   orderLoading = false;
   orderError = false;
   loyaltyPoints = 0;
+  loyaltyEarnedPoints = 0;
   loyaltyProgressWidth = '0%';
   maxLoyaltyPoints = 200;
   statusEnum = SubscriptionStatusEnum;
   nextBillingDate = signal<string>('');
   ENV = environment;
+
+  // Tier y imagen dinámica
+  tierImageRoutes: LoyaltyTierImageRoutes | null = null;
+  tierDisplayName = 'MagroPoints';
+  isLoadingTier = true;
 
   ngOnInit() {
     this.loadUserData();
@@ -65,7 +73,7 @@ export class CuentaComponent implements OnInit {
   }
 
   calculateProgressPercentage(): number {
-    return (this.loyaltyPoints / this.maxLoyaltyPoints) * 100;
+    return (this.loyaltyEarnedPoints / this.maxLoyaltyPoints) * 100;
   }
 
   private loadUserData() {
@@ -74,6 +82,7 @@ export class CuentaComponent implements OnInit {
       .subscribe({
         next: (user) => {
           this.user = user;
+          this.loadUserTier(); // Cargar tier después de obtener el usuario
         },
         error: (error) => {
           console.error('Error al cargar datos del usuario:', error);
@@ -272,6 +281,35 @@ export class CuentaComponent implements OnInit {
         return 'bg-gray-500';
       default:
         return 'bg-gray-500';
+    }
+  }
+
+  private loadUserTier(): void {
+    this.isLoadingTier = true;
+    const userId = this.getLoggedUserId();
+    
+    if (userId) {
+      this._loyaltyService.getUserTierInfo(userId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (tierInfo) => {
+            this.tierImageRoutes = tierInfo.imageRoutes;
+            this.tierDisplayName = tierInfo.displayName;
+            this.isLoadingTier = false;
+            this.loyaltyEarnedPoints = tierInfo.tierData.totalEarnedCredits || 0;
+              // Actualizar la barra de progreso después de obtener los puntos
+              this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
+          },
+          error: (error) => {
+            console.error('Error al obtener tier del usuario:', error);
+            // Mantener valores por defecto en caso de error
+            this.tierImageRoutes = null;
+            this.tierDisplayName = 'MagroPoints';
+            this.isLoadingTier = false;
+          }
+        });
+    } else {
+      this.isLoadingTier = false;
     }
   }
 }

@@ -25,8 +25,8 @@ export class LoyaltyWebshopComponent {
   }
 
   private loadSEO() {
-    const description = 'Cada miembro recibe S/10 de crédito al mes. Acumular crédito para compras es muy fácil, regístrate ahora y recibe S/10 !';
-                        
+    const description = 'Cada miembro recibe 10 Magropuntos al mes. Acumular Magropuntos para compras es muy fácil, regístrate ahora y recibe 10 Magropuntos !';
+
     const title = 'Magrolabs | Webshop';
     const URL = 'https://magrolabs.com/loyalty-webshop';
     const image = 'https://magrolabs.com/loyalty-web-shop-banner_c.webp';

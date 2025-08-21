@@ -1,0 +1,22 @@
+/* Estilos adicionales para el tooltip si son necesarios */
+.tooltip-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.tooltip-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+}
+
+.tooltip-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tooltip-leave-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+}

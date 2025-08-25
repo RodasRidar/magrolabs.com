@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/env';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTier, LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
+import { SeoService } from '../../../shared/services/seo.service';
 
 interface TransactionHistoryItem {
   date: Date;
@@ -30,6 +31,7 @@ export class CreditoComponent implements OnInit {
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
+  private _seoService = inject(SeoService);
 
   ENV = environment;
   // Crédito disponible
@@ -62,6 +64,9 @@ export class CreditoComponent implements OnInit {
   urlShared = '';
 
   ngOnInit(): void {
+    // Configuración SEO para página de créditos de usuario
+    this.configureSEO();
+    
     this.loadUserCredits();
     this.loadTransactions();
     this.loadUserTier();
@@ -76,6 +81,33 @@ export class CreditoComponent implements OnInit {
       this.urlShared = 'https://magrolabs.com/referido-por-amigo?codigo=' + codigo + '&nombre=' + nombre;
       this.urlShared = this.urlShared.replace(/ /g, '%20');
 
+  }
+
+  /**
+   * Configura los metadatos SEO para la página de créditos de usuario.
+   * Esta página no debe ser indexada por los motores de búsqueda debido a que contiene
+   * información privada del usuario sobre sus créditos y transacciones.
+   */
+  private configureSEO(): void {
+    // Establecer el título de la página
+    this._seoService.setTitle('Mis Magropuntos | Magrolabs');
+    
+    // Configurar para que no sea indexada por robots
+    this._seoService.setIndexFollow(false);
+    
+    // Establecer descripción (aunque no se indexe, es buena práctica)
+    this._seoService.setDescription('Panel de Magropuntos y transacciones de usuario de Magrolabs. Acceso restringido.');
+    
+    // Configurar meta robots adicionales para mayor seguridad
+    this._seoService.meta.updateTag({ name: 'robots', content: 'noindex,nofollow,noarchive,nosnippet,noimageindex' });
+    
+    // Configurar X-Robots-Tag para mayor protección
+    this._seoService.meta.updateTag({ name: 'X-Robots-Tag', content: 'noindex,nofollow' });
+    
+    // Evitar caché del contenido en buscadores
+    this._seoService.meta.updateTag({ name: 'cache-control', content: 'no-cache, no-store, must-revalidate' });
+    this._seoService.meta.updateTag({ name: 'pragma', content: 'no-cache' });
+    this._seoService.meta.updateTag({ name: 'expires', content: '0' });
   }
 
   private loadUserCredits(): void {

@@ -25,6 +25,7 @@ import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subsc
 import { CookieService } from 'ngx-cookie-service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
+import { SeoService } from '../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-suscripcion',
@@ -53,6 +54,7 @@ export class SuscripcionComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private cookieService = inject(CookieService);
   private _loyaltyService = inject(LoyaltyService);
+  private _seoService = inject(SeoService);
 
   reactivateType = ReactivateType;
   ENV = environment;
@@ -148,6 +150,9 @@ export class SuscripcionComponent implements OnInit {
 
 
   ngOnInit(): void {
+    // Configuración SEO para página de suscripción de usuario
+    this.configureSEO();
+    
     this.loadSubscription();
     this.loadUserCredits();
     this.loadUserTier();
@@ -187,6 +192,33 @@ export class SuscripcionComponent implements OnInit {
     if(this.cookieService.get('isCardModifiedToReprocessPayment') == 'true') {
       this.isCardModifiedToReprocessPayment.set(true);
     }
+  }
+
+  /**
+   * Configura los metadatos SEO para la página de suscripción de usuario.
+   * Esta página no debe ser indexada por los motores de búsqueda debido a que contiene
+   * información privada del usuario sobre su suscripción.
+   */
+  private configureSEO(): void {
+    // Establecer el título de la página
+    this._seoService.setTitle('Mi Suscripción | Magrolabs');
+    
+    // Configurar para que no sea indexada por robots
+    this._seoService.setIndexFollow(false);
+    
+    // Establecer descripción (aunque no se indexe, es buena práctica)
+    this._seoService.setDescription('Panel de suscripción de usuario de Magrolabs. Acceso restringido.');
+    
+    // Configurar meta robots adicionales para mayor seguridad
+    this._seoService.meta.updateTag({ name: 'robots', content: 'noindex,nofollow,noarchive,nosnippet,noimageindex' });
+    
+    // Configurar X-Robots-Tag para mayor protección
+    this._seoService.meta.updateTag({ name: 'X-Robots-Tag', content: 'noindex,nofollow' });
+    
+    // Evitar caché del contenido en buscadores
+    this._seoService.meta.updateTag({ name: 'cache-control', content: 'no-cache, no-store, must-revalidate' });
+    this._seoService.meta.updateTag({ name: 'pragma', content: 'no-cache' });
+    this._seoService.meta.updateTag({ name: 'expires', content: '0' });
   }
 
   /**

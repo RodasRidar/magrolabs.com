@@ -15,6 +15,7 @@ import { environment } from '../../../../environments/env';
 import { FlowService } from '../../../shared/services/flow.service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
+import { SeoService } from '../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -33,6 +34,7 @@ export class CuentaComponent implements OnInit {
   private destroy$ = new Subject<void>();
   private _flowService = inject(FlowService);
   private _loyaltyService = inject(LoyaltyService);
+  private _seoService = inject(SeoService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   user: UserDetailResponse | null = null;
@@ -56,6 +58,9 @@ export class CuentaComponent implements OnInit {
   isLoadingTier = true;
 
   ngOnInit() {
+    // Configuración SEO para página de cuenta de usuario
+    this.configureSEO();
+    
     this.loadUserData();
     this.loadSubscriptionData();
     this.loadLastOrder();
@@ -74,6 +79,31 @@ export class CuentaComponent implements OnInit {
 
   calculateProgressPercentage(): number {
     return (this.loyaltyEarnedPoints / this.maxLoyaltyPoints) * 100;
+  }
+
+  /**
+   * Configura los metadatos SEO para la página de cuenta de usuario.
+   * Esta página no debe ser indexada por los motores de búsqueda debido a que contiene
+   * información privada del usuario.
+   */
+  private configureSEO(): void {
+    // Establecer el título de la página
+    this._seoService.setTitle('Mi Cuenta | Magrolabs');
+    
+    // Configurar para que no sea indexada por robots
+    this._seoService.setIndexFollow(false);
+    
+    // Establecer descripción (aunque no se indexe, es buena práctica)
+    this._seoService.setDescription('Panel de cuenta de usuario de Magrolabs. Acceso restringido.');
+    
+    // Configurar meta robots adicionales para mayor seguridad
+    this._seoService.meta.updateTag({ name: 'robots', content: 'noindex,nofollow,noarchive,nosnippet,noimageindex' });
+    
+    // Configurar X-Robots-Tag para mayor protección
+    this._seoService.meta.updateTag({ name: 'X-Robots-Tag', content: 'noindex,nofollow' });
+    
+    // Eliminar o configurar canonical para evitar problemas de SEO
+    // En este caso, al no indexarse, no es necesario canonical
   }
 
   private loadUserData() {

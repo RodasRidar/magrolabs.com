@@ -10,6 +10,7 @@ import { FlowService } from '../../../shared/services/flow.service';
 import { FlowPaymentMethod, FlowPaymentRequest } from '../../../shared/models/flow.model';
 import { AuthService } from '../../../shared/services/auth.service';
 import { environment } from '../../../../environments/env';
+import { SeoService } from '../../../shared/services/seo.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -20,6 +21,7 @@ import { environment } from '../../../../environments/env';
 export class PedidosComponent implements OnInit {
   private _flowService = inject(FlowService);
   private _authService = inject(AuthService);
+  private _seoService = inject(SeoService);
   ENV = environment;
   pedidos = signal<OrderResponse[]>([]);
   isLoading = signal<boolean>(true);
@@ -49,7 +51,37 @@ export class PedidosComponent implements OnInit {
   constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
+    // Configuración SEO para página de pedidos de usuario
+    this.configureSEO();
+    
     this.cargarPedidos();
+  }
+
+  /**
+   * Configura los metadatos SEO para la página de pedidos de usuario.
+   * Esta página no debe ser indexada por los motores de búsqueda debido a que contiene
+   * información privada del usuario sobre sus compras y pedidos.
+   */
+  private configureSEO(): void {
+    // Establecer el título de la página
+    this._seoService.setTitle('Mis Pedidos | Magrolabs');
+    
+    // Configurar para que no sea indexada por robots
+    this._seoService.setIndexFollow(false);
+    
+    // Establecer descripción (aunque no se indexe, es buena práctica)
+    this._seoService.setDescription('Historial de pedidos y compras de usuario de Magrolabs. Acceso restringido.');
+    
+    // Configurar meta robots adicionales para mayor seguridad
+    this._seoService.meta.updateTag({ name: 'robots', content: 'noindex,nofollow,noarchive,nosnippet,noimageindex' });
+    
+    // Configurar X-Robots-Tag para mayor protección
+    this._seoService.meta.updateTag({ name: 'X-Robots-Tag', content: 'noindex,nofollow' });
+    
+    // Evitar caché del contenido en buscadores
+    this._seoService.meta.updateTag({ name: 'cache-control', content: 'no-cache, no-store, must-revalidate' });
+    this._seoService.meta.updateTag({ name: 'pragma', content: 'no-cache' });
+    this._seoService.meta.updateTag({ name: 'expires', content: '0' });
   }
 
   cargarPedidos(): void {

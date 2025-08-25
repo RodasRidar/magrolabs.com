@@ -15,7 +15,7 @@ interface Product {
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })

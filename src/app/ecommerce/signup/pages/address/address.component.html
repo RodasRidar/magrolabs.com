@@ -218,11 +218,11 @@
                 <hr class="mb-64 max-sm:mb-20" [ngClass]="hideSearching ? 'hidden' : ''">
 
                 <div class="max-sm:hidden mt-6" [ngClass]="isSearched ? '' : 'hidden'">
-                    <ml-button name="Continuar →" (click)="nextStep()" [isProcessing]="isSaving"></ml-button>
+                    <ml-button name="Continuar →" (click)="nextStep()" [isDisabled]="isSaving || !form.valid" [isProcessing]="isSaving"></ml-button>
                 </div>
                 @if (isSearched) {
                     <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30" [ngClass]="{isSaving:'cursor-progress disabled', isSearched: 'hidden'}">
-                        <button (click)="nextStep()" type="button" [disabled]="isSaving"
+                        <button (click)="nextStep()" type="button" [disabled]="isSaving || !form.valid"
                             class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                             Continuar →
                         </button>

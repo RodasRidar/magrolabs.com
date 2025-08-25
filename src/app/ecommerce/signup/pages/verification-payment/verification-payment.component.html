@@ -195,14 +195,14 @@
         </div>
         <div class="my-6 lg:w-72">
             <ml-button [name]="isPaymentVerified ? 'Suscríbete →' : 'Suscríbete'" (click)="nextStep()"
-                [isDisabled]="!isPaymentVerified || isLoading"></ml-button>
+                [isProcessing]="!isPaymentVerified || isLoading"></ml-button>
         </div>
         }@else {
 
         <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
         <div class="my-6 lg:w-72">
-            <ml-button [name]="buttonName" (click)="nextStep()" [isDisabled]="isLoading"></ml-button>
+            <ml-button [name]="buttonName" (click)="nextStep()" [isProcessing]="isLoading"></ml-button>
         </div>
         }
         <!-- CODIGO PROMOCIONAL -->

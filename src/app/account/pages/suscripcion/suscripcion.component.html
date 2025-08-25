@@ -305,7 +305,7 @@
 
                             <div class="max-sm:hidden my-6">
                                 <ml-button [name]="isPaymentVerified() ? 'Suscríbete →' : 'Suscríbete'"
-                                    (click)="nextStep()" [isDisabled]="!isPaymentVerified() || isLoading()"></ml-button>
+                                    (click)="nextStep()" [isProcessing]="!isPaymentVerified() || isLoading()"></ml-button>
                             </div>
                             <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
 

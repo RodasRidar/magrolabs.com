@@ -60,7 +60,7 @@ export class SuscripcionComponent implements OnInit {
   ENV = environment;
   subscription = signal<Subscription | null>(null);
   subscriptionPlan = signal<SubscriptionPlan | null>(null);
-  isLoading = signal<boolean>(true);
+  isLoading = signal<boolean>(false);
   openCardRegistration = signal<boolean>(false);
   statusEnum = SubscriptionStatusEnum;
   flowToken = '';
@@ -166,8 +166,8 @@ export class SuscripcionComponent implements OnInit {
           //console.log(response);
           this.flowToken = (response as RegisterCardResponse).token;
           this.showPaymentVerification.set(true);
-          //despues de 2 segundos redirigir a suscription [fragment]="'reviews'"
-          /*if (!this.isPaymentVerified()) {
+          //despues de 2 segundos redirigir a suscription [fragment]="'reviews'" si es que el usuario no tiene suscripcion
+          /*if (!this.subscription()) {
             setTimeout(() => {
               this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
             }, 500);

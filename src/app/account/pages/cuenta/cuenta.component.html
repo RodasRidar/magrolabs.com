@@ -155,7 +155,7 @@
                                     </p>
                                 }
                                 @else if (!subscription?.status) {
-                                    <p class="mt-3">Suscribete a Magrolabs y recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntoss para compras.</p>
+                                    <p class="mt-3">Suscribete a Magrolabs y recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos para compras.</p>
                                 }
                                 @else{
                                     <p class="mt-3">Próximo pago: {{nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy')  : 'No disponible'}}</p>

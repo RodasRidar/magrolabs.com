@@ -50,6 +50,7 @@ const flowCouponId30PercentDiscount = 884;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
 const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/subscriptions/confirm-payment'
 const precioEnvioFueraLimaMetropolitana = 13;
+const tiktokTrackingEnabled = false;
 
 export const environment = {
     production,
@@ -103,5 +104,6 @@ export const environment = {
     flowUrlConfirmationSubscription,
     flowPlanIdTest,
     flowCouponId30PercentDiscount,
-    precioEnvioFueraLimaMetropolitana
+    precioEnvioFueraLimaMetropolitana,
+    tiktokTrackingEnabled
 };

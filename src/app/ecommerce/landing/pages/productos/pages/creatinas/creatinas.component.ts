@@ -19,6 +19,7 @@ import { OrderService } from '../../../../../../shared/services/order.service';
 import { SubscriptionService } from '../../../../../../shared/services/subscription.service';
 import { forkJoin } from 'rxjs';
 import { OrderStatus } from '../../../../../../shared/interfaces/order.interfaces';
+import { TiktokAnalyticsService } from '../../../../../../shared/services/tiktok-analytics.service';
 
 @Component({
   selector: 'app-creatinas',
@@ -43,7 +44,8 @@ export class CreatinasComponent {
   private _toastService = inject(ToastService);
   private _orderService = inject(OrderService);
   private _subscriptionService = inject(SubscriptionService);
-  
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
+
   ENV = environment
   productName = '';
   productPriceOnePurchase = 0;
@@ -191,6 +193,7 @@ export class CreatinasComponent {
     else {
       this.router.navigate(['./404']);
     }
+    this.trackProductView();
     this.loadSEO();
   }
 
@@ -481,6 +484,15 @@ export class CreatinasComponent {
         },
         quantity: 1
       });
+      this._tiktokAnalytics.trackAddToCart({
+        contents: [{
+          content_id: this.slug,
+          content_name: 'Subscripcion mensual de ' + this.productName,
+          content_type: 'product',
+        }],
+        value: this.productPriceSubscription,
+        currency: 'PEN'
+      });
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);
@@ -496,6 +508,15 @@ export class CreatinasComponent {
         },
         quantity: 1
       });
+      this._tiktokAnalytics.trackAddToCart({
+        contents: [{
+          content_id: this.slug,
+          content_name: this.productName,
+          content_type: 'product',
+        }],
+        value: this.productPriceOnePurchase,
+        currency: 'PEN'
+      });  
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);
@@ -890,6 +911,18 @@ export class CreatinasComponent {
         value: `${this.credits} Magropuntos`
       }
     ];
+  }
+
+  private trackProductView() {
+    this._tiktokAnalytics.trackViewContent({
+      contents: [{
+        content_id: this.slug,
+        content_type: 'product',
+        content_name: this.productName
+      }],
+      value: this.productPriceSubscription,
+      currency: 'PEN'
+    });
   }
 
 }

@@ -3,6 +3,7 @@ import { StepComponent } from "../../components/step/step.component";
 import { StepEnum } from "../../models/step.model";
 import { Information } from "../../components/information/information.component";
 import { SummaryService } from "../../../../shared/services/summary-service.service";
+import { TiktokAnalyticsService } from "../../../../shared/services/tiktok-analytics.service";
 import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
@@ -24,6 +25,7 @@ export class PlansComponent {
   @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
 
   private _summaryService = inject(SummaryService);
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _seo = inject(SeoService);
@@ -134,6 +136,17 @@ export class PlansComponent {
     this.isSelectSubscription = true;
     this.isSelectOnePurchase = false;
 
+    // Track plan selection
+    this._tiktokAnalytics.trackViewContent({
+      contents: [{
+        content_id: 'creatina-subscription-plan',
+        content_type: 'product',
+        content_name: 'Plan Suscripción Creatina'
+      }],
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
+
     if (this.onePurchaseElement) {
       this.onePurchaseElement.nativeElement.open = false;
     }
@@ -146,6 +159,17 @@ export class PlansComponent {
 
     this.isSelectSubscription = false;
     this.isSelectOnePurchase = true;
+
+    // Track plan selection
+    this._tiktokAnalytics.trackViewContent({
+      contents: [{
+        content_id: 'creatina-one-purchase-plan',
+        content_type: 'product',
+        content_name: 'Plan Compra Única Creatina'
+      }],
+      value: this.ENV.precioCreatinaOnePurchase,
+      currency: 'PEN'
+    });
 
     if (this.subscriptionElement) {
       this.subscriptionElement.nativeElement.open = false;

@@ -13,6 +13,7 @@ import { environment } from '../../../../../environments/env';
 import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { EmailService } from '../../../../shared/services/email.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -29,13 +30,15 @@ export class ConfirmationComponent {
   private _seo = inject(SeoService)
   private _shoppingCartService = inject(ShoppingCartService)
   private _emailService = inject(EmailService)
+  private _tiktokAnalytics = inject(TiktokAnalyticsService)
 
   ENV = environment
-  confirmationStatusEnum= ConfirmationStatus
+  confirmationStatusEnum = ConfirmationStatus
   stepEnum = StepEnum;
   clientName = '';
   status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
   creditos = '{{ENV.creditoRegaloPorCompraMes}} Magropuntos';
+  shoppingCart = this._shoppingCartService.getShoppingCart();
 
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
@@ -49,7 +52,7 @@ export class ConfirmationComponent {
     { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
     { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
   ]
-  
+
   informationCompraExitoRegistroList: Information[] = [
     { name: 'Puedes darle seguimiento a tu pedido en tu cuenta de Magrolabs.' },
     { name: 'Enviaremos tu creatina lo antes posible.' },
@@ -100,27 +103,31 @@ export class ConfirmationComponent {
     }
 
     this.creditos = summary?.chosePlan?.selection ==
-    SummaryEnum.CREATINA_3KG ? this.ENV.creditoRegaloPorCompraAño + ' Magropuntos'
-    : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
+      SummaryEnum.CREATINA_3KG ? this.ENV.creditoRegaloPorCompraAño + ' Magropuntos'
+      : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
     this.clientName = summary?.userData?.nombre ?? '';
 
     this._route.queryParams.subscribe(params => {
       let status = params['status'] ?? localStorage.getItem('status');
       if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
+        this.trackCompleteSuscription(false);
         this.openWelcomeModal();
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
         this.sendWelcomeEmail();
       }
       else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
+        this.trackCompleteSuscription(true);
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
         // Enviar email de confirmación de orden
         this.sendOrderConfirmationEmail();
+        this.trackPurchaseComplete();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+        this.trackPurchaseComplete();
       }
       else {
         this._router.navigate(['registro/verificacion']);
@@ -206,4 +213,29 @@ export class ConfirmationComponent {
       });
   }
 
+  private trackPurchaseComplete(): void {
+    if (this.shoppingCart && this.shoppingCart.items) {
+      const contents = this.shoppingCart.items.map(item => ({
+        content_id: item.product.id.toString(),
+        content_type: 'product' as const,
+        content_name: item.product.name
+      }));
+
+      this._tiktokAnalytics.trackPurchase({
+        contents: contents,
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN'
+      });
+    }
+  }
+
+  private trackCompleteSuscription(isOutsideLimaMetropolitana: boolean){
+    this._tiktokAnalytics.trackCompleteRegistration({
+      contents: [{
+        content_id: 'registration',
+        content_type: 'product_group',
+        content_name: isOutsideLimaMetropolitana ? 'Registro Completado (Fuera de Lima Metropolitana)' : 'Registro Completado'
+      }]
+    });
+  }
 }

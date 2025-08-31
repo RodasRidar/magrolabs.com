@@ -3,6 +3,7 @@ import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
@@ -56,6 +57,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
   private _shoppingCartService = inject(ShoppingCartService);
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -134,6 +136,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.trackInitiateCheckout();
 
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
       if (shoppingCart && shoppingCart.items.length > 0) {
@@ -1153,4 +1156,21 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         }
       }
     }          
+
+  private trackInitiateCheckout(): void {
+    // Obtener items del carrito para tracking
+    if (this.shoppingCart && this.shoppingCart.items) {
+      const contents = this.shoppingCart.items.map(item => ({
+        content_id: item.product.id.toString(),
+        content_type: 'product' as const,
+        content_name: item.product.name
+      }));
+
+      this._tiktokAnalytics.trackInitiateCheckout({
+        contents: contents,
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN'
+      });
+    }
+  }
 }

@@ -4,6 +4,8 @@ import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
 import { ModuleRetryService } from './shared/services/module-retry.service';
+import { TiktokAnalyticsService } from './shared/services/tiktok-analytics.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,7 @@ import { ModuleRetryService } from './shared/services/module-retry.service';
 })
 export class AppComponent {
   private _router = inject(Router);
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private moduleRetryService = inject(ModuleRetryService);
   title = 'Magrolabs';
   ENV = environment;
@@ -32,6 +35,13 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    // Tracking automático de navegación de rutas
+    this._router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.trackPageView(event.url);
+    });
+
     this._router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
@@ -75,5 +85,59 @@ export class AppComponent {
       error.message?.includes('ChunkLoadError') ||
       (event.filename && event.filename.includes('chunk-'))
     );
+  }
+
+  private trackPageView(url: string): void {
+    // Mapeo de rutas a nombres descriptivos
+    const pageMap: { [key: string]: string } = {
+      '/': 'Landing Principal',
+      '/registro': 'Registro - Planes',
+      '/registro/crear-cuenta': 'Registro - Crear Cuenta',
+      '/registro/direccion': 'Registro - Dirección',
+      '/registro/verificacion': 'Registro - Verificación de Pago',
+      '/registro/confirmacion': 'Registro - Confirmación',
+      '/login': 'Iniciar Sesión',
+      '/productos': 'Productos',
+      '/loyalty-webshop': 'Loyalty WebShop',
+      '/checkout': 'Checkout',
+      '/bolsa': 'Carrito de Compras',
+      '/mi-primera-creatina': 'Mi Primera Creatina',
+      '/referido-por-amigo': 'Referido por Amigo',
+      '/atencion-cliente': 'Atención al Cliente',
+      '/politicas': 'Políticas',
+      '/cuenta/mi-cuenta': 'Mi Cuenta',
+      '/cuenta/pedidos': 'Mis Pedidos',
+      '/cuenta/credito': 'Mi Crédito',
+      '/cuenta/suscripcion': 'Mi Suscripción',
+      '/cuenta/perfil': 'Mi Perfil'
+    };
+
+    // Buscar coincidencia exacta o por patrón
+    let pageName = pageMap[url];
+    
+    // Si no encontramos coincidencia exacta, buscar patrones
+    if (!pageName) {
+      if (url.includes('/productos/creatinas/')) {
+        pageName = 'Producto - Creatina';
+      } else if (url.includes('/loyalty-webshop/articulos/')) {
+        pageName = 'Loyalty WebShop - Artículo';
+      } else if (url.includes('/atencion-cliente/')) {
+        pageName = 'Atención al Cliente - Subcategoría';
+      } else if (url.includes('/politicas/')) {
+        pageName = 'Políticas - Subcategoría';
+      } else {
+        pageName = 'Página Genérica';
+      }
+    }
+
+    // Enviar tracking a TikTok
+    this._tiktokAnalytics.trackViewContent({
+      contents: [{
+        content_id: url.replace('/', '').replace(/\//g, '-') || 'home',
+        content_type: 'product_group',
+        content_name: pageName
+      }],
+      currency: 'PEN'
+    });
   }
 }

@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../shared/services/auth.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { finalize } from 'rxjs/operators';
 import { SeoService } from '../../../../shared/services/seo.service';
 
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
   private _cookieService = inject(CookieService);
   private _toastService = inject(ToastService);
   private _authService = inject(AuthService);
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private _destroyRef = inject(DestroyRef);
   private _seo = inject(SeoService);
 
@@ -96,7 +98,14 @@ export class LoginComponent implements OnInit {
         finalize(() => this.isProcessing = false)
       )
       .subscribe({
-        next: () => {
+        next: (response) => {
+          // Identificar usuario logueado
+          this._tiktokAnalytics.identify({
+            email: response.data.user.email,
+            external_id: response.data.user.id,
+            phone_number: response.data.user.phone
+          });
+          
           // Redirigir a la URL especificada en returnUrl
           this._router.navigateByUrl(this.returnUrl);
         },

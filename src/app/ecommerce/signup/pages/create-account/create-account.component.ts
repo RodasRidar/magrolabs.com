@@ -13,6 +13,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
@@ -49,6 +50,7 @@ export class CreateAccountComponent implements OnDestroy {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
+  private _tiktokAnalytics = inject(TiktokAnalyticsService)
   private _route = inject(ActivatedRoute)
   private _seo = inject(SeoService)
   private _flowService = inject(FlowService)
@@ -472,6 +474,22 @@ export class CreateAccountComponent implements OnDestroy {
       .subscribe(response => {
         userData.id = response.data.user.id;
         userData.referralCode = response.data.user.referralCode;
+        
+        // Track successful registration
+          this._tiktokAnalytics.identify({
+            email: response.data.user.email,
+            external_id: response.data.user.id,
+            phone_number: response.data.user.phone
+          });          
+        
+        this._tiktokAnalytics.trackCompleteRegistration({
+          contents: [{
+            content_id: 'user-registration',
+            content_type: 'product_group',
+            content_name: 'Registro de Usuario Completado'
+          }]
+        });
+        
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         this.saveUserDataAndNavigate(userData);
       });

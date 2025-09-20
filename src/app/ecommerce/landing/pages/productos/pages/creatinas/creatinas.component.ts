@@ -172,7 +172,7 @@ export class CreatinasComponent {
       this.reviews = this.ENV.nroReviews;
       this.principalImgFront = 'package-image.png';
       this.model3dUrl = '250g';
-      this.previewmodel3d = 'preview-3d-image.png';
+      this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_100Gr); // Removido para evitar duplicación con setAdvancedStructuredData
     }
     else if (this.slug === 'creatina-monohidratada-3-kg') {
@@ -187,7 +187,7 @@ export class CreatinasComponent {
       this.recurrencia = 'año';
       this.model3dUrl = '3kg';
       this.principalImgFront = 'package-image-3000.png';
-      this.previewmodel3d = 'preview-3d-image.png';
+      this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_3Kg); // Removido para evitar duplicación con setAdvancedStructuredData
     }
     else {

@@ -58,7 +58,7 @@ export class CreatinasComponent {
   principalImgBack = ''
   previewmodel3d = ''
   model3dUrl = ''
-  tapSelected = 1;
+  tapSelected = 2;
 
   isOutOfStock = false;
   isFreeCreatine = false;
@@ -156,9 +156,9 @@ export class CreatinasComponent {
       this.credits = this.ENV.creditoRegaloPorCompraMes
       this.reviews = this.ENV.nroReviews;
       this.recurrencia = '30 días';
-      this.principalImgFront = 'package-image.png';
+      this.principalImgFront = 'banner_2.png';
       this.model3dUrl = '250g';
-      this.previewmodel3d = 'preview-3d-image.png';
+      this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_250Gr); // Removido para evitar duplicación con setAdvancedStructuredData
     }
     else if (this.slug === 'creatina-monohidratada-100-gr') {

@@ -48,28 +48,14 @@
                 <!-- Image selector -->
                 <div class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none">
                     <div class="grid grid-cols-4 gap-6" aria-orientation="horizontal" role="tablist">
-                        <button id="tabs-2-tab-1" (click)="selectTap(1)"
-                            class="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            aria-controls="tabs-2-panel-1" role="tab" type="button">
-                            <span class="sr-only"> Angled view </span>
-                            <span class="absolute inset-0 rounded-md overflow-hidden">
-
-                                <img [ngSrc]="previewmodel3d" [alt]="productName"
-                                    class="w-full h-full object-center object-cover" height="100" width="100" lazyLoad>
-                            </span>
-                            <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
-                            <span
-                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
-                                aria-hidden="true"></span>
-                        </button>
                         <button id="tabs-2-tab-2" (click)="selectTap(2)"
-                            class="relative h-24 bg-[#eeeae7] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            class="relative h-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
                             aria-controls="tabs-2-panel-1" role="tab" type="button">
                             <span class="sr-only"> Angled view </span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
 
-                                <img [ngSrc]="principalImgFront" [alt]="productName"
-                                    class="w-auto h-full object-center object-cover mx-auto max" height="60" width="96"
+                                <img [ngSrc]="principalImgFront" [alt]="productName" draggable="false"
+                                    class="w-auto h-full object-center object-cover mx-auto max p-2 select-none" height="96" width="76"
                                     lazyLoad>
 
                             </span>
@@ -78,6 +64,21 @@
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button>
+                        <button id="tabs-2-tab-1" (click)="selectTap(1)"
+                            class="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            aria-controls="tabs-2-panel-1" role="tab" type="button">
+                            <span class="sr-only"> Angled view </span>
+                            <span class="absolute inset-0 rounded-md overflow-hidden">
+
+                                <img [ngSrc]="previewmodel3d" [alt]="productName" draggable="false"
+                                    class="w-full h-full object-center object-contain p-8 select-none" height="100" width="100" lazyLoad>
+                            </span>
+                            <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
+                            <span
+                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+                                aria-hidden="true"></span>
+                        </button>
+
                     </div>
                 </div>
 
@@ -115,12 +116,12 @@
                         </div>
                     </div>
 
-                    <div class="bg-[#eeeae7] sm:rounded-lg  lg:h-[500px] lg:w-[500px] h-96" id="tabs-2-panel-2"
+                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg  lg:h-[500px] lg:w-[500px] h-96" id="tabs-2-panel-2"
                         aria-labelledby="tabs-2-tab-2" role="tabpanel" tabindex="0"
                         [ngClass]="{'hidden': tapSelected !== 2}">
-                        <img [ngSrc]="principalImgFront" priority lazyLoad [alt]="productName"
-                            class="w-auto h-full object-center object-cover sm:rounded-lg  mx-auto" height="60"
-                            width="96">
+                        <img [ngSrc]="principalImgFront" priority lazyLoad [alt]="productName" draggable="false"
+                            class="w-auto h-full object-center object-cover sm:rounded-lg  mx-auto p-12 select-none" height="96"
+                            width="76">
                     </div>
                 </div>
             </div>
@@ -817,8 +818,8 @@
 
                             <!-- Product info -->
                             <div class="flex items-center mb-6">
-                                <img [src]="principalImgFront" [alt]="productName"
-                                    class="h-12 w-12 object-cover rounded-lg bg-gray-100">
+                                <img [src]="principalImgFront" [alt]="productName" draggable="false" 
+                                    class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none">
                                 <div class="ml-3">
                                     <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
                                     <p class="text-sm text-gray-500">Magrolabs</p>

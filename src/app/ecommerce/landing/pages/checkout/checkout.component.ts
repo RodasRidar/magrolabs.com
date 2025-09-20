@@ -156,13 +156,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
+      filter(value => !!value && value.trim().length >= 3), // Solo buscar si hay al menos 3 caracteres
       tap(() => this.isSearchingAddress = true),
       switchMap(value => this._addressService.searchAddress(value))
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
       this.isSearchingAddress = false;
     });
-    const passwordControl = this.form.get('password');
 
     if (this.form.get('isSignUpAcepted')) {
       this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
@@ -1138,7 +1138,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
      */
     private validateAddressLocation(addressSummary: AddressSummary): void {
       console.log('Validating address location:', addressSummary);
-      if (addressSummary) {
+      if (addressSummary.department && addressSummary.provincia) {
         // Verificar si NO es Lima Metropolitana
         // Lima Metropolitana = departamento "Lima" y provincia "Lima"
         if (addressSummary.department?.toLowerCase() !== '3926' || addressSummary.provincia?.toLowerCase() !== '3927') {

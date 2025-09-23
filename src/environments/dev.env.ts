@@ -51,6 +51,7 @@ const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/su
 const flowCouponId30PercentDiscount = 884;
 const precioEnvioFueraLimaMetropolitana = 13;
 const tiktokTrackingEnabled = false;
+const metaTrackingEnabled = false;
 
 export const environment = {
     production,
@@ -105,5 +106,6 @@ export const environment = {
     flowPlanIdTest,
     flowCouponId30PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
-    tiktokTrackingEnabled
+    tiktokTrackingEnabled,
+    metaTrackingEnabled
 };

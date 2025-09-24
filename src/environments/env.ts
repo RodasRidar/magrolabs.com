@@ -52,6 +52,8 @@ const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/su
 const precioEnvioFueraLimaMetropolitana = 13;
 const tiktokTrackingEnabled = false;
 const metaTrackingEnabled = false;
+const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
+const metaDebug = false;
 
 export const environment = {
     production,
@@ -107,5 +109,10 @@ export const environment = {
     flowCouponId30PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
     tiktokTrackingEnabled,
-    metaTrackingEnabled
+    metaTrackingEnabled,
+    meta: {
+        pixelId: metaPixelId,
+        enabled: metaTrackingEnabled,
+        debug: metaDebug
+    }
 };

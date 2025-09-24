@@ -4,6 +4,7 @@ import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-sum
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
@@ -58,6 +59,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private _toastService = inject(ToastService);
   private _shoppingCartService = inject(ShoppingCartService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -499,6 +501,14 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod = paymentMethod;
+    
+    // Tracking Meta Analytics - AddPaymentInfo cuando se selecciona método de pago
+    this._metaAnalytics.trackAddPaymentInfo({
+      value: this.shoppingCart.total || 0,
+      currency: 'PEN',
+      content_category: 'checkout_payment_method'
+    });
+    
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.buttonName = 'Continuar →';
 
@@ -1170,6 +1180,15 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         contents: contents,
         value: this.shoppingCart.total || 0,
         currency: 'PEN'
+      });
+
+      // Tracking Meta Analytics
+      this._metaAnalytics.trackInitiateCheckout({
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN',
+        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        content_type: 'product',
+        num_items: this.shoppingCart.items.length
       });
     }
   }

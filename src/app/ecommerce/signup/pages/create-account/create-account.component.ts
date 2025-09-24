@@ -481,15 +481,6 @@ export class CreateAccountComponent implements OnDestroy {
             external_id: response.data.user.id,
             phone_number: response.data.user.phone
           });          
-        
-        this._tiktokAnalytics.trackCompleteRegistration({
-          contents: [{
-            content_id: 'user-registration',
-            content_type: 'product_group',
-            content_name: 'Registro de Usuario Completado'
-          }]
-        });
-        
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         this.saveUserDataAndNavigate(userData);
       });

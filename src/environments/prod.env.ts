@@ -52,6 +52,8 @@ const flowCouponId30PercentDiscount = 5215;
 const precioEnvioFueraLimaMetropolitana = 13;
 const tiktokTrackingEnabled = true;
 const metaTrackingEnabled = true;
+const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
+const metaDebug = true;
 
 export const environment = {
     production,
@@ -107,5 +109,10 @@ export const environment = {
     flowCouponId30PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
     tiktokTrackingEnabled,
-    metaTrackingEnabled
+    metaTrackingEnabled,
+    meta: {
+        pixelId: metaPixelId,
+        enabled: metaTrackingEnabled,
+        debug: metaDebug
+    }
 };

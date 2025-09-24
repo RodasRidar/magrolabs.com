@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
 import { ModuleRetryService } from './shared/services/module-retry.service';
 import { TiktokAnalyticsService } from './shared/services/tiktok-analytics.service';
+import { MetaAnalyticsService } from './shared/services/meta-analytics.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -17,6 +18,7 @@ import { filter } from 'rxjs';
 export class AppComponent {
   private _router = inject(Router);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
   private moduleRetryService = inject(ModuleRetryService);
   title = 'Magrolabs';
   ENV = environment;
@@ -35,6 +37,9 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    // Inicializar Meta Analytics
+    this._metaAnalytics.initialize();
+    
     // Tracking automático de navegación de rutas
     this._router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -137,6 +142,14 @@ export class AppComponent {
         content_type: 'product_group',
         content_name: pageName
       }],
+      currency: 'PEN'
+    });
+
+    // Enviar tracking a Meta
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: pageName,
+      content_ids: [url.replace('/', '').replace(/\//g, '-') || 'home'],
+      content_type: 'product_group',
       currency: 'PEN'
     });
   }

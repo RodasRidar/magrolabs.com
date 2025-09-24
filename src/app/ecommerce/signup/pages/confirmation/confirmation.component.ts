@@ -14,6 +14,7 @@ import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summa
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { EmailService } from '../../../../shared/services/email.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 
 @Component({
   selector: 'app-confirmation',
@@ -31,6 +32,7 @@ export class ConfirmationComponent {
   private _shoppingCartService = inject(ShoppingCartService)
   private _emailService = inject(EmailService)
   private _tiktokAnalytics = inject(TiktokAnalyticsService)
+  private _metaAnalytics = inject(MetaAnalyticsService)
 
   ENV = environment
   confirmationStatusEnum = ConfirmationStatus
@@ -226,6 +228,15 @@ export class ConfirmationComponent {
         value: this.shoppingCart.total || 0,
         currency: 'PEN'
       });
+
+      // Tracking Meta Analytics
+      this._metaAnalytics.trackPurchase({
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN',
+        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        content_type: 'product',
+        num_items: this.shoppingCart.items.length
+      });
     }
   }
 
@@ -237,5 +248,37 @@ export class ConfirmationComponent {
         content_name: isOutsideLimaMetropolitana ? 'Registro Completado (Fuera de Lima Metropolitana)' : 'Registro Completado'
       }]
     });
+
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCompleteRegistration({
+      content_name: isOutsideLimaMetropolitana ? 'Registro Completado (Fuera de Lima Metropolitana)' : 'Registro Completado',
+      status: true
+    });
+
+    // Tracking StartTrial y Subscribe según el tipo de compra
+    if (this.status === ConfirmationStatus.SUBSCRIPTION_SUCCESS || this.status === ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+      // Verificar si es la primera creatina gratis (trial) o suscripción de pago
+      const isFreeTrial = this.shoppingCart?.items?.some(item => 
+        item.product.name.toLowerCase().includes('gratis') || 
+        item.product.price === 0 ||
+        item.product.name.toLowerCase().includes('primera')
+      );
+
+      if (isFreeTrial) {
+        // Es una prueba gratis
+        this._metaAnalytics.trackStartTrial({
+          value: 0,
+          currency: 'PEN',
+          predicted_ltv: this.ENV.precioCreatinaSubscription * 12 // Valor anual predicho
+        });
+      } else {
+        // Es una suscripción de pago
+        this._metaAnalytics.trackSubscribe({
+          value: this.shoppingCart?.total || this.ENV.precioCreatinaSubscription,
+          currency: 'PEN',
+          predicted_ltv: (this.shoppingCart?.total || this.ENV.precioCreatinaSubscription) * 12 // Valor anual predicho
+        });
+      }
+    }
   }
 }

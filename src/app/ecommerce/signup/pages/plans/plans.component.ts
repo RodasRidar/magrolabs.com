@@ -4,6 +4,7 @@ import { StepEnum } from "../../models/step.model";
 import { Information } from "../../components/information/information.component";
 import { SummaryService } from "../../../../shared/services/summary-service.service";
 import { TiktokAnalyticsService } from "../../../../shared/services/tiktok-analytics.service";
+import { MetaAnalyticsService } from "../../../../shared/services/meta-analytics.service";
 import { ChosePlanSummary, SummaryEnum } from "../../../../shared/models/summary.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SeoService } from "../../../../shared/services/seo.service";
@@ -26,6 +27,7 @@ export class PlansComponent {
 
   private _summaryService = inject(SummaryService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _seo = inject(SeoService);
@@ -147,6 +149,15 @@ export class PlansComponent {
       currency: 'PEN'
     });
 
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Plan Suscripción Creatina',
+      content_ids: ['creatina-subscription-plan'],
+      content_type: 'product',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
+
     if (this.onePurchaseElement) {
       this.onePurchaseElement.nativeElement.open = false;
     }
@@ -167,6 +178,15 @@ export class PlansComponent {
         content_type: 'product',
         content_name: 'Plan Compra Única Creatina'
       }],
+      value: this.ENV.precioCreatinaOnePurchase,
+      currency: 'PEN'
+    });
+
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Plan Compra Única Creatina',
+      content_ids: ['creatina-one-purchase-plan'],
+      content_type: 'product',
       value: this.ENV.precioCreatinaOnePurchase,
       currency: 'PEN'
     });

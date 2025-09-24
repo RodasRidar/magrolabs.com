@@ -20,6 +20,7 @@ import { SubscriptionService } from '../../../../../../shared/services/subscript
 import { forkJoin } from 'rxjs';
 import { OrderStatus } from '../../../../../../shared/interfaces/order.interfaces';
 import { TiktokAnalyticsService } from '../../../../../../shared/services/tiktok-analytics.service';
+import { MetaAnalyticsService } from '../../../../../../shared/services/meta-analytics.service';
 
 @Component({
   selector: 'app-creatinas',
@@ -45,6 +46,7 @@ export class CreatinasComponent {
   private _orderService = inject(OrderService);
   private _subscriptionService = inject(SubscriptionService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
 
   ENV = environment
   productName = '';
@@ -493,6 +495,21 @@ export class CreatinasComponent {
         value: this.productPriceSubscription,
         currency: 'PEN'
       });
+
+      // Tracking Meta Analytics
+      this._metaAnalytics.trackAddToCart({
+        value: this.productPriceSubscription,
+        currency: 'PEN',
+        content_name: 'Subscripcion mensual de ' + this.productName,
+        content_ids: [this.slug],
+        content_type: 'product',
+        contents: [{
+          id: this.slug,
+          quantity: 1,
+          item_price: this.productPriceSubscription
+        }]
+      });
+
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);
@@ -516,7 +533,22 @@ export class CreatinasComponent {
         }],
         value: this.productPriceOnePurchase,
         currency: 'PEN'
-      });  
+      });
+
+      // Tracking Meta Analytics
+      this._metaAnalytics.trackAddToCart({
+        value: this.productPriceOnePurchase,
+        currency: 'PEN',
+        content_name: this.productName,
+        content_ids: [this.slug],
+        content_type: 'product',
+        contents: [{
+          id: this.slug,
+          quantity: 1,
+          item_price: this.productPriceOnePurchase
+        }]
+      });
+
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);

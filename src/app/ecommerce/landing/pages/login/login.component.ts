@@ -9,6 +9,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { finalize } from 'rxjs/operators';
 import { SeoService } from '../../../../shared/services/seo.service';
 
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
   private _toastService = inject(ToastService);
   private _authService = inject(AuthService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
   private _destroyRef = inject(DestroyRef);
   private _seo = inject(SeoService);
 
@@ -104,6 +106,12 @@ export class LoginComponent implements OnInit {
             email: response.data.user.email,
             external_id: response.data.user.id,
             phone_number: response.data.user.phone
+          });
+
+          // Tracking de Meta para login exitoso
+          this._metaAnalytics.trackCustomEvent('Login', {
+            content_name: 'User Login Success',
+            status: true
           });
           
           // Redirigir a la URL especificada en returnUrl

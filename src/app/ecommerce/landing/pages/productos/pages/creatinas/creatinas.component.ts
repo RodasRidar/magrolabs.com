@@ -57,10 +57,12 @@ export class CreatinasComponent {
   reviews = 6;
   recurrencia = '30 días';
   principalImgFront = ''
+  previewImgFront = ''
+  previewImgBack = ''
   principalImgBack = ''
   previewmodel3d = ''
   model3dUrl = ''
-  tapSelected = 2;
+  tapSelected = 1; // Por defecto muestra la imagen frontal
 
   isOutOfStock = false;
   isFreeCreatine = false;
@@ -77,6 +79,10 @@ export class CreatinasComponent {
   selectedRating = 0;
   hoveredRating = 0;
   isLoadReviews = signal<boolean>(false);
+
+  // Zoom properties
+  isZoomActive = false;
+  zoomBackgroundPosition = '0% 0%';
 
   // Review statistics - valores por defecto
   reviewStats = {
@@ -158,7 +164,10 @@ export class CreatinasComponent {
       this.credits = this.ENV.creditoRegaloPorCompraMes
       this.reviews = this.ENV.nroReviews;
       this.recurrencia = '30 días';
-      this.principalImgFront = 'banner_2.png';
+      this.principalImgFront = '250gr_front_mockup_2000x2000.png';
+      this.principalImgBack = '250gr_back_mockup_2000x2000.png'; // Por ahora usa la misma imagen
+      this.previewImgFront = '250gr_front_mockup_500x500.png';
+      this.previewImgBack = '250gr_back_mockup_500x500.png'; // Por ahora usa la misma imagen
       this.model3dUrl = '250g';
       this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_250Gr); // Removido para evitar duplicación con setAdvancedStructuredData
@@ -172,9 +181,12 @@ export class CreatinasComponent {
       this.productServicesAndWeight = this.ENV.creatinaFreeGramos + ' gr. ' + this.ENV.nroServicios100g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
       this.reviews = this.ENV.nroReviews;
-      this.principalImgFront = 'package-image.png';
+      this.principalImgFront = '100gr_front_mockup_2000x2000.png';
+      this.principalImgBack = '100gr_back_mockup_2000x2000.png';
       this.model3dUrl = '250g';
       this.previewmodel3d = '3d.png';
+      this.previewImgFront = '100gr_front_mockup_500x500.png';
+      this.previewImgBack = '100gr_back_mockup_500x500.png';
       // this._seo.setStructuredData(this.jsonLD_100Gr); // Removido para evitar duplicación con setAdvancedStructuredData
     }
     else if (this.slug === 'creatina-monohidratada-3-kg') {
@@ -189,6 +201,9 @@ export class CreatinasComponent {
       this.recurrencia = 'año';
       this.model3dUrl = '3kg';
       this.principalImgFront = 'package-image-3000.png';
+      this.principalImgBack = 'package-image-3000.png'; // Por ahora usa la misma imagen
+      this.previewImgFront = 'package-image-3000.png';
+      this.previewImgBack = 'package-image-3000.png'; // Por ahora usa la misma imagen
       this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_3Kg); // Removido para evitar duplicación con setAdvancedStructuredData
     }
@@ -442,6 +457,28 @@ export class CreatinasComponent {
     setTimeout(() => {
       this.isLoading = false;
     }, 1000);
+  }
+
+  // Zoom methods
+  onMouseEnterImage() {
+    this.isZoomActive = true;
+  }
+
+  onMouseLeaveImage() {
+    this.isZoomActive = false;
+  }
+
+  onMouseMoveImage(event: MouseEvent) {
+    if (!this.isZoomActive) return;
+
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    
+    // Calcular la posición del mouse relativa al contenedor
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    
+    this.zoomBackgroundPosition = `${x}% ${y}%`;
   }
 
   selectSubscription($event: any) {

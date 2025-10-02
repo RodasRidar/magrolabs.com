@@ -47,34 +47,51 @@
             <div class="flex flex-col-reverse">
                 <!-- Image selector -->
                 <div class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none">
-                    <div class="grid grid-cols-4 gap-6" aria-orientation="horizontal" role="tablist">
-                        <button id="tabs-2-tab-2" (click)="selectTap(2)"
-                            class="relative h-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                    <div class="grid grid-cols-4 gap-2" aria-orientation="horizontal" role="tablist">
+                        
+                        <button id="tabs-2-tab-1" (click)="selectTap(1)"
+                            class="relative h-24 w-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            [class.ring-[#d07d66]]="tapSelected === 1"
                             aria-controls="tabs-2-panel-1" role="tab" type="button">
-                            <span class="sr-only"> Angled view </span>
+                            <span class="sr-only">Vista frontal</span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
-
-                                <img [ngSrc]="principalImgFront" [alt]="productName" draggable="false"
-                                    class="w-auto h-full object-center object-cover mx-auto max p-2 select-none" height="96" width="76"
+                                <img [ngSrc]="previewImgFront" [alt]="productName" draggable="false"
+                                    class="w-full h-full object-center object-cover select-none" height="96" width="96"
                                     lazyLoad>
-
                             </span>
-                            <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
                             <span
+                                [class.ring-[#d07d66]]="tapSelected === 1"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button>
-                        <button id="tabs-2-tab-1" (click)="selectTap(1)"
-                            class="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            aria-controls="tabs-2-panel-1" role="tab" type="button">
-                            <span class="sr-only"> Angled view </span>
-                            <span class="absolute inset-0 rounded-md overflow-hidden">
 
-                                <img [ngSrc]="previewmodel3d" [alt]="productName" draggable="false"
-                                    class="w-full h-full object-center object-contain p-8 select-none" height="100" width="100" lazyLoad>
+                        <button id="tabs-2-tab-2" (click)="selectTap(2)"
+                            class="relative h-24 w-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            [class.ring-[#d07d66]]="tapSelected === 2"
+                            aria-controls="tabs-2-panel-2" role="tab" type="button">
+                            <span class="sr-only">Vista trasera</span>
+                            <span class="absolute inset-0 rounded-md overflow-hidden">
+                                <img [ngSrc]="previewImgBack" [alt]="productName" draggable="false"
+                                    class="w-full h-full object-center object-cover select-none" height="96" width="96"
+                                    lazyLoad>
                             </span>
-                            <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
                             <span
+                                [class.ring-[#d07d66]]="tapSelected === 2"
+                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+                                aria-hidden="true"></span>
+                        </button>
+
+                        <button id="tabs-2-tab-3" (click)="selectTap(3)"
+                            class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            [class.ring-[#d07d66]]="tapSelected === 3"
+                            aria-controls="tabs-2-panel-3" role="tab" type="button">
+                            <span class="sr-only">Modelo 3D</span>
+                            <span class="absolute inset-0 rounded-md overflow-hidden">
+                                <img [ngSrc]="previewmodel3d" [alt]="productName" draggable="false"
+                                    class="w-full h-full object-center object-contain p-8 select-none" height="96" width="96" lazyLoad>
+                            </span>
+                            <span
+                                [class.ring-[#d07d66]]="tapSelected === 3"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button>
@@ -83,14 +100,67 @@
                 </div>
 
                 <div class="w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto">
-                    <!-- Tab panel, show/hide based on tab state. -->
-                    <div id="tabs-2-panel-1" aria-labelledby="tabs-2-tab-1" role="tabpanel" tabindex="0"
-                        [ngClass]="{'hidden': tapSelected !== 1}">
+                    <!-- Panel 1: Imagen frontal -->
+                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
+                        id="tabs-2-panel-1"
+                        aria-labelledby="tabs-2-tab-1" 
+                        role="tabpanel" 
+                        tabindex="0"
+                        [ngClass]="{'hidden': tapSelected !== 1}"
+                        (mouseenter)="onMouseEnterImage()"
+                        (mouseleave)="onMouseLeaveImage()"
+                        (mousemove)="onMouseMoveImage($event)">
+                        <img [ngSrc]="principalImgFront" priority lazyLoad [alt]="productName" draggable="false"
+                            class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
+                            [class.opacity-0]="isZoomActive"
+                            height="96"
+                            width="76">
+                        <!-- Zoom overlay -->
+                        <div *ngIf="isZoomActive" 
+                            class="absolute inset-0 bg-gradient-to-r from-[#94716B] to-[#C4A39C]"
+                            [style.background-image]="'url(' + principalImgFront + ')'"
+                            [style.background-position]="zoomBackgroundPosition"
+                            [style.background-size]="'200%'"
+                            [style.background-repeat]="'no-repeat'">
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Imagen trasera -->
+                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
+                        id="tabs-2-panel-2"
+                        aria-labelledby="tabs-2-tab-2" 
+                        role="tabpanel" 
+                        tabindex="0"
+                        [ngClass]="{'hidden': tapSelected !== 2}"
+                        (mouseenter)="onMouseEnterImage()"
+                        (mouseleave)="onMouseLeaveImage()"
+                        (mousemove)="onMouseMoveImage($event)">
+                        <img [ngSrc]="principalImgBack" lazyLoad [alt]="productName + ' - vista trasera'" draggable="false"
+                            class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
+                            [class.opacity-0]="isZoomActive"
+                            height="96"
+                            width="76">
+                        <!-- Zoom overlay -->
+                        <div *ngIf="isZoomActive" 
+                            class="absolute inset-0 bg-gradient-to-r from-[#94716B] to-[#C4A39C]"
+                            [style.background-image]="'url(' + principalImgBack + ')'"
+                            [style.background-position]="zoomBackgroundPosition"
+                            [style.background-size]="'200%'"
+                            [style.background-repeat]="'no-repeat'">
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: Modelo 3D -->
+                    <div id="tabs-2-panel-3" 
+                        aria-labelledby="tabs-2-tab-3" 
+                        role="tabpanel" 
+                        tabindex="0"
+                        [ngClass]="{'hidden': tapSelected !== 3}">
                         <div class="mx-auto flex overflow-hidden lg:h-[500px] lg:w-[500px] h-96 sm:rounded-lg">
                             <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}" role="status"
                                 class="max-sm:absolute max-sm:top-[9%] max-sm:right-[44%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
                                 <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}"
-                                    class="flex items-center justify-center w-full h-full rounded sm:w-96 ">
+                                    class="flex items-center justify-center w-full h-full rounded sm:w-96">
                                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                                         <path
@@ -112,16 +182,7 @@
                                 allowfullscreen loading="lazy">
                             </iframe>
                             }
-
                         </div>
-                    </div>
-
-                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg  lg:h-[500px] lg:w-[500px] h-96" id="tabs-2-panel-2"
-                        aria-labelledby="tabs-2-tab-2" role="tabpanel" tabindex="0"
-                        [ngClass]="{'hidden': tapSelected !== 2}">
-                        <img [ngSrc]="principalImgFront" priority lazyLoad [alt]="productName" draggable="false"
-                            class="w-auto h-full object-center object-cover sm:rounded-lg  mx-auto p-12 select-none" height="96"
-                            width="76">
                     </div>
                 </div>
             </div>

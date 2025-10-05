@@ -43,14 +43,14 @@ export class ConfirmationComponent {
   shoppingCart = this._shoppingCartService.getShoppingCart();
 
   informationExitoList: Information[] = [
-    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
+    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina gratis.' },
     { name: 'Te avisaremos cuando finalice tu periodo de prueba.' },
     { name: 'Entrega estimada de la creatina gratis: ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min + ' a ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + ' días hábiles.' },
   ]
 
   informationErrorList: Information[] = [
     { name: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.' },
-    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina.' },
+    { name: 'Tu periodo de prueba comienza despues de recibir tu creatina gratis.' },
     { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
     { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
   ]

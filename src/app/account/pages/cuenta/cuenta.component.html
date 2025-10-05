@@ -199,7 +199,7 @@
                                 @if (lastOrder.total_amount > 0) {
                                     <p class="mt-1">Total: S/{{lastOrder.total_amount | number:'1.2-2'}}</p>
                                 }@else {
-                                    <p class="mt-1">Total: Gratis!</p>
+                                    <p class="mt-1">Total: S/0</p>
                                 }
                                 <p class="mt-1">Fecha del pedido: {{lastOrder.order_date | date:'dd/MM/yyyy'}}</p>
                                 @if (lastOrder.orderItems && lastOrder.orderItems.length > 0) {

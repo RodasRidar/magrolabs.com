@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StepEnum } from '../../models/step.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -36,12 +36,12 @@ import { CreditTransactionService, TransactionType } from '../../../../shared/se
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
-  paymentMethod: FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
+  paymentMethod = signal<FlowPaymentMethod>(FlowPaymentMethod.DEBIT_CREDIT_CARD);
   ENV = environment
-  isPaymentVerified = false;
-  isLoading = false;
-  promotionIsShow = false;
-  informationList: Information[] = [
+  isPaymentVerified = signal(false);
+  isLoading = signal(false);
+  promotionIsShow = signal(false);
+  informationList = signal<Information[]>([
     {
       name: 'Tu creatina gratis se enviará inmediatamente después de completar el registro',
     },
@@ -51,9 +51,9 @@ export class VerificationPaymentComponent {
     {
       name: 'Cancela cuando quieras',
     }
-  ]
-  flowToken = '';
-  buttonName = 'Pagar →';
+  ]);
+  flowToken = signal('');
+  buttonName = signal('Pagar →');
   private platformId = inject(PLATFORM_ID)
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
@@ -68,10 +68,10 @@ export class VerificationPaymentComponent {
   private _userService = inject(UserService)
   private _creditTransactionService = inject(CreditTransactionService)
   private readonly destroy$ = takeUntilDestroyed();
-  labelCardRegisted = '**** **** **** ';
+  labelCardRegisted = signal('**** **** **** ');
   stepEnum = StepEnum;
-  isCreatinaGratis = false;
-  isOutsideLimaMetropolitana = false;
+  isCreatinaGratis = signal(false);
+  isOutsideLimaMetropolitana = signal(false);
 
   form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
@@ -91,7 +91,7 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/direccion']);
     }
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      this.isCreatinaGratis = true;
+      this.isCreatinaGratis.set(true);
     }
 
     // Validar si la dirección está fuera de Lima Metropolitana
@@ -106,14 +106,14 @@ export class VerificationPaymentComponent {
       // Verificar si NO es Lima Metropolitana
       // Lima Metropolitana = departamento "Lima" y provincia "Lima"
       if (summary.address?.department?.toLowerCase() !== '3926' || summary.address?.provincia?.toLowerCase() !== '3927') {
-        this.isOutsideLimaMetropolitana = true;
+        this.isOutsideLimaMetropolitana.set(true);
       } else {
-        this.isOutsideLimaMetropolitana = false;
+        this.isOutsideLimaMetropolitana.set(false);
       }
     }
     if (this._cookieService.get('promoCode')) {
-      this.isPaymentVerified = true;
-      this.promotionIsShow = true;
+      this.isPaymentVerified.set(true);
+      this.promotionIsShow.set(true);
       this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
       this.form.get('promoCode')?.disable();
     }
@@ -121,17 +121,17 @@ export class VerificationPaymentComponent {
     if (isPlatformBrowser(this.platformId)) {
       this.registerUserFlowAndRegisterCard();
     }
-    this.isPaymentVerified = summary?.userData?.isPaymentVerified ?? false;
-    if (this.isPaymentVerified) {
+    this.isPaymentVerified.set(summary?.userData?.isPaymentVerified ?? false);
+    if (this.isPaymentVerified()) {
       this.cardAddedSuccessfully(true);
     }
   }
 
   applyPromoCode() {
-    if (this.form.get('promoCode')?.valid || !this.isPaymentVerified) {
+    if (this.form.get('promoCode')?.valid || !this.isPaymentVerified()) {
       const promoCode = this.form.get('promoCode')?.value;
       if (promoCode === 'FREE' || promoCode === 'ERROR') {
-        this.isPaymentVerified = true;
+        this.isPaymentVerified.set(true);
         this._toastService.success('¡Genial!', 'Código de promoción aplicado correctamente.');
         this._cookieService.set('promoCode', promoCode);
         this.form.get('promoCode')?.disable();
@@ -143,9 +143,9 @@ export class VerificationPaymentComponent {
   }
 
   nextStep() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     
-    if (this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
+    if (this.paymentMethod() === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.handleRecurrentPaymentOption();
       return;
     }
@@ -155,11 +155,11 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/confirmacion'], { 
         queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA } 
       });
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 
-    if (this.isCreatinaGratis) {
+    if (this.isCreatinaGratis()) {
       this.handleSubscriptionFlow();
     } else {
       this.handleOnePurchaseFlow();
@@ -191,11 +191,11 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/crear-cuenta'], { queryParams: { next: 'verificacion' } });
       localStorage.setItem('passwordSignal', 'true');
     }
-    this.isLoading = false;
+    this.isLoading.set(false);
   }
 
   private handleOnePurchaseFlow(): void {
-    if (this.isPaymentVerified) {
+    if (this.isPaymentVerified()) {
       this.handleVerifiedPayment();
       return;
     }
@@ -253,7 +253,7 @@ export class VerificationPaymentComponent {
             ...this._summaryService.getSummary()?.userData as UserDataSummary,
             isSubscription: false
           });
-          this.isLoading = false;
+          this.isLoading.set(false);
         })
       ).subscribe({
         next: (response) => {
@@ -269,7 +269,7 @@ export class VerificationPaymentComponent {
         queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
       });
     }, 2000);
-    this.isLoading = false;
+    this.isLoading.set(false);
   }
 
   private createPaymentRequest(): FlowPaymentRequest {
@@ -284,7 +284,7 @@ export class VerificationPaymentComponent {
       commerceOrder: '',
       subject: 'Creatina Monohidratada Magrolabs de 250 gr.',
       email: this._summaryService.getSummary()?.userData?.email ?? '',
-      paymentMethod: this.paymentMethod,
+      paymentMethod: this.paymentMethod(),
       urlReturn: this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
       urlConfirmation: this.ENV.flowUrlConfirmation
     };
@@ -308,7 +308,7 @@ export class VerificationPaymentComponent {
           ...this._summaryService.getSummary()?.userData as UserDataSummary,
           isSubscription: false
         });
-        this.isLoading = false;
+        this.isLoading.set(false);
       })
     ).subscribe({
       next: (response) => {
@@ -336,7 +336,7 @@ export class VerificationPaymentComponent {
           ...this._summaryService.getSummary()?.userData as UserDataSummary,
           isSubscription: false
         });
-        this.isLoading = false;
+        this.isLoading.set(false);
       })
     ).subscribe({
       next: (response) => {
@@ -411,7 +411,7 @@ export class VerificationPaymentComponent {
             ...this._summaryService.getSummary()?.userData as UserDataSummary,
             isSubscription: true
           });
-          this.isLoading = false;
+          this.isLoading.set(false);
         })
       ).subscribe({
         next: (response) => {
@@ -438,7 +438,7 @@ export class VerificationPaymentComponent {
 
   private createOrderRequest(isSubscription: boolean): CreateOrderRequest {
     let paymentMethod = PaymentMethod.CREDIT_CARD;
-    switch(this.paymentMethod) {
+    switch(this.paymentMethod()) {
       case FlowPaymentMethod.BANK_TRANSFER:
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         break;
@@ -490,7 +490,7 @@ export class VerificationPaymentComponent {
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
     };
     
-    switch(this.paymentMethod) {
+    switch(this.paymentMethod()) {
       case FlowPaymentMethod.BANK_TRANSFER:
         orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
         break;
@@ -572,7 +572,7 @@ export class VerificationPaymentComponent {
           ...this._summaryService.getSummary()?.userData as UserDataSummary,
           isSubscription: true
         });
-        this.isLoading = false;
+        this.isLoading.set(false);
       })
     ).subscribe({
       next: (response) => {
@@ -626,7 +626,7 @@ export class VerificationPaymentComponent {
           ...this._summaryService.getSummary()?.userData as UserDataSummary,
           isSubscription: true
         });
-        this.isLoading = false;
+        this.isLoading.set(false);
       })
     ).subscribe({
       next: (response) => {
@@ -682,7 +682,7 @@ export class VerificationPaymentComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.isPaymentVerified = true;
+    this.isPaymentVerified.set(true);
   }
 
   hasRequiredError(field: string) {
@@ -698,22 +698,22 @@ export class VerificationPaymentComponent {
   }
   
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
-    this.paymentMethod = paymentMethod;
+    this.paymentMethod.set(paymentMethod);
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
-      this.buttonName = 'Continuar →';
+      this.buttonName.set('Continuar →');
     } else {
-      this.buttonName = 'Pagar →';
+      this.buttonName.set('Pagar →');
     }
   }
 
   cardAddedSuccessfully($event: boolean) {
     if ($event) {
       setTimeout(() => {
-        this.isPaymentVerified = true;
+        this.isPaymentVerified.set(true);
       }, 2000);
       const card = this._summaryService.getSummary()?.userData?.last4CardDigits + ' (' + this._summaryService.getSummary()?.userData?.creditCardType + ')';
-      this.labelCardRegisted += card;
-      this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted);
+      this.labelCardRegisted.update(label => label + card);
+      this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted());
     }
     else {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
@@ -724,10 +724,10 @@ export class VerificationPaymentComponent {
     const userData = this._summaryService.getSummary()?.userData;
 
     if (userData?.id) {
-      if (userData.customerId && this.isCreatinaGratis) {
+      if (userData.customerId && this.isCreatinaGratis()) {
         this.updateExistingCustomerWithFlow(userData.customerId, userData);
       }
-      else if (!userData.customerId && this.isCreatinaGratis) {
+      else if (!userData.customerId && this.isCreatinaGratis()) {
         this.createNewCustomerWithFlow(userData);
       }
       else {
@@ -747,7 +747,7 @@ export class VerificationPaymentComponent {
       .pipe(
         tap(response => {
           this._summaryService.setUserData({ ...userData, customerId: response.customerId });
-          this.isLoading = false;
+          this.isLoading.set(false);
         }),
         switchMap(response => {
           return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
@@ -757,7 +757,7 @@ export class VerificationPaymentComponent {
           return this._flowService.registerCard(this._summaryService.getSummary()?.userData?.customerId ?? '')
         }),
         catchError(err => {
-          this.isLoading = false;
+          this.isLoading.set(false);
           console.error(err);
           this.handleCustomerError(err);
           return EMPTY;
@@ -765,7 +765,7 @@ export class VerificationPaymentComponent {
       )
       .subscribe({
         next: (response) => {
-          this.flowToken = (response as RegisterCardResponse).token;
+          this.flowToken.set((response as RegisterCardResponse).token);
           this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
         }
       });
@@ -786,7 +786,7 @@ export class VerificationPaymentComponent {
             userData.customerId = customerId;
           }
           this._summaryService.setUserData(userData);
-          this.isLoading = false;
+          this.isLoading.set(false);
         }),
         switchMap(response => {
           return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
@@ -803,7 +803,7 @@ export class VerificationPaymentComponent {
       )
       .subscribe({
         next: (response) => {
-          this.flowToken = (response as RegisterCardResponse).token;
+          this.flowToken.set((response as RegisterCardResponse).token);
           this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
         }
       });
@@ -811,7 +811,7 @@ export class VerificationPaymentComponent {
 
   // Manejar errores de cliente
   private handleCustomerError(err: any) {
-    this.isLoading = false;
+    this.isLoading.set(false);
 
     if (err.error?.code === 501) {
       if (err.error.message.includes('externalId')) {

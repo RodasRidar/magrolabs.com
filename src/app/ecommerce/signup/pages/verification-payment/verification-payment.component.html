@@ -10,14 +10,14 @@
         </div>
     </div>
 </div>
-@if (isCreatinaGratis) {
+@if (isCreatinaGratis()) {
 <div class="mx-auto text-pretty max-w-3xl">
-    <app-information [information]="informationList" />
+    <app-information [information]="informationList()" />
 </div>
 }
 
 <!-- Aviso para direcciones fuera de Lima Metropolitana -->
-@if (isOutsideLimaMetropolitana) {
+@if (isOutsideLimaMetropolitana()) {
 <div class="mx-auto text-pretty max-w-3xl mt-4">
     <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-6 rounded-r-lg">
         <div class="flex items-start">
@@ -58,7 +58,7 @@
         <div class="pb-4 lg:px-0 text-pretty">
 
 
-            @if (isCreatinaGratis) {
+            @if (isCreatinaGratis()) {
             <p class="ota-p16 font-semibold mb-1 lg:ota-p18">Selecciona tu
                 método de verificación.</p>
             <p class="ota-p14 mb-6">Para activar tu cuenta y evitar el abuso,
@@ -69,7 +69,7 @@
             }
         </div>
 
-        @if (isCreatinaGratis) {
+        @if (isCreatinaGratis()) {
         <!-- VERIFICAR PAGO -->
         <div class="lg:w-2/3 border border-gray-300 rounded-sm mb-4">
             <div class=" bg-[#e9e9e9]  p-4">
@@ -122,12 +122,12 @@
                         </g>
                     </svg>
                 </div>
-                <h4 class="text-left text-sm mt-1" [ngClass]="{'hidden': !isPaymentVerified}"> {{labelCardRegisted}}</h4>
+                <h4 class="text-left text-sm mt-1" [ngClass]="{'hidden': !isPaymentVerified()}"> {{labelCardRegisted()}}</h4>
                 <h5 class="text-left text-xs mt-1"> S/0.00 de verificación</h5>
             </div>
-            @if (flowToken !== '' && !isPaymentVerified) {
+            @if (flowToken() !== '' && !isPaymentVerified()) {
             <form class="p-4 bg-[#f8f9fa]" [formGroup]="form">
-                <app-flow-widget-add-card [token]="flowToken"
+                <app-flow-widget-add-card [token]="flowToken()"
                     (cardAddedSuccessfully)="cardAddedSuccessfully($event)"></app-flow-widget-add-card>
                 <!-- <div class="grid grid-cols-12 gap-y-6 gap-x-4 mb-6">
 
@@ -194,15 +194,15 @@
             }
         </div>
         <div class="my-6 lg:w-72">
-            <ml-button [name]="isPaymentVerified ? 'Suscríbete →' : 'Suscríbete'" (click)="nextStep()"
-                [isProcessing]="!isPaymentVerified || isLoading"></ml-button>
+            <ml-button [name]="isPaymentVerified() ? 'Suscríbete →' : 'Suscríbete'" (click)="nextStep()"
+                [isProcessing]="isLoading()" [isDisabled]="!isPaymentVerified() || isLoading()"></ml-button>
         </div>
         }@else {
 
         <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
         <div class="my-6 lg:w-72">
-            <ml-button [name]="buttonName" (click)="nextStep()" [isProcessing]="isLoading" [isDisabled]="isLoading"></ml-button>
+            <ml-button [name]="buttonName()" (click)="nextStep()" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
         </div>
         }
         <!-- CODIGO PROMOCIONAL -->
@@ -211,7 +211,7 @@
         <form [formGroup]="form">
             <div class="space-y-12">
                 <div class="pb-4 grid grid-cols-6 gap-x-4 gap-y-2">
-                    <div class="sm:col-span-6 col-span-4 cursor-pointer" (click)="promotionIsShow = true">
+                    <div class="sm:col-span-6 col-span-4 cursor-pointer" (click)="promotionIsShow.set(true)">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
                                 fill="text-gray-900">
@@ -223,7 +223,7 @@
                         </div>
 
                     </div>
-                    @if (promotionIsShow) {
+                    @if (promotionIsShow()) {
                     <div class="col-span-2 max-lg:col-span-3">
                         <div class="mt-2">
                             <input type="text"
@@ -238,7 +238,7 @@
 
                     <div class="col-span-1 max-lg:col-span-2 mt-2">
                         <ml-button name="Aplicar" (click)="applyPromoCode()" type="secondary"
-                            [isDisabled]="isPaymentVerified || isLoading"></ml-button>
+                            [isDisabled]="isPaymentVerified() || isLoading()"></ml-button>
                     </div>
                     }
 
@@ -269,7 +269,7 @@
                         declaras que has comprobado que tu pedido y tus datos
                         son correctos.</span>
                 </li>
-                @if (isCreatinaGratis) {
+                @if (isCreatinaGratis()) {
                 <li class="mb-1m">
                     <span class="ota-p14 text-gray-600">
                         Después de registrarte, tienes
@@ -281,7 +281,7 @@
                 }
             </ul>
         </div>
-        @if (isCreatinaGratis) {
+        @if (isCreatinaGratis()) {
         <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
             <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
             <p class="text-pretty text-sm">Después de realizar el pago de verificación,
@@ -407,7 +407,7 @@
             </div>
         </section>
 
-        @if (isCreatinaGratis) {
+        @if (isCreatinaGratis()) {
         <!-- FAQs -->
         <div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10">
             <div class="space-y-4">

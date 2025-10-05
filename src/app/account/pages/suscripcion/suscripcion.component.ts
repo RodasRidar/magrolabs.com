@@ -388,11 +388,13 @@ export class SuscripcionComponent implements OnInit {
       .subscribe({
         next: (combinedResponse) => {
           this.flowSubscriptionId.set(combinedResponse.flowResponse?.data[0].subscriptionId || '');
+          this.isLoading.set(false);
         },
         error: (error) => {
           console.error('Error al cargar datos de suscripción:', error);
           this._toastService.error('Error', 'Error al cargar la suscripción');
           this.subscription.set(null);
+          this.isLoading.set(false);
         }
       });
   }

@@ -50,7 +50,7 @@
                     <div class="grid grid-cols-4 gap-2" aria-orientation="horizontal" role="tablist">
                         
                         <button id="tabs-2-tab-1" (click)="selectTap(1)"
-                            class="relative h-24 w-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
                             [class.ring-[#d07d66]]="tapSelected === 1"
                             aria-controls="tabs-2-panel-1" role="tab" type="button">
                             <span class="sr-only">Vista frontal</span>
@@ -66,7 +66,7 @@
                         </button>
 
                         <button id="tabs-2-tab-2" (click)="selectTap(2)"
-                            class="relative h-24 w-24 bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
                             [class.ring-[#d07d66]]="tapSelected === 2"
                             aria-controls="tabs-2-panel-2" role="tab" type="button">
                             <span class="sr-only">Vista trasera</span>
@@ -81,7 +81,7 @@
                                 aria-hidden="true"></span>
                         </button>
 
-                        <button id="tabs-2-tab-3" (click)="selectTap(3)"
+                        <!-- <button id="tabs-2-tab-3" (click)="selectTap(3)"
                             class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
                             [class.ring-[#d07d66]]="tapSelected === 3"
                             aria-controls="tabs-2-panel-3" role="tab" type="button">
@@ -94,14 +94,14 @@
                                 [class.ring-[#d07d66]]="tapSelected === 3"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
-                        </button>
+                        </button> -->
 
                     </div>
                 </div>
 
                 <div class="w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto">
                     <!-- Panel 1: Imagen frontal -->
-                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
+                    <div class=" sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
                         id="tabs-2-panel-1"
                         aria-labelledby="tabs-2-tab-1" 
                         role="tabpanel" 
@@ -117,7 +117,7 @@
                             width="76">
                         <!-- Zoom overlay -->
                         <div *ngIf="isZoomActive" 
-                            class="absolute inset-0 bg-gradient-to-r from-[#94716B] to-[#C4A39C]"
+                            class="absolute inset-0 "
                             [style.background-image]="'url(' + principalImgFront + ')'"
                             [style.background-position]="zoomBackgroundPosition"
                             [style.background-size]="'200%'"
@@ -126,7 +126,7 @@
                     </div>
 
                     <!-- Panel 2: Imagen trasera -->
-                    <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
+                    <div class=" sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
                         id="tabs-2-panel-2"
                         aria-labelledby="tabs-2-tab-2" 
                         role="tabpanel" 
@@ -142,7 +142,7 @@
                             width="76">
                         <!-- Zoom overlay -->
                         <div *ngIf="isZoomActive" 
-                            class="absolute inset-0 bg-gradient-to-r from-[#94716B] to-[#C4A39C]"
+                            class="absolute inset-0 "
                             [style.background-image]="'url(' + principalImgBack + ')'"
                             [style.background-position]="zoomBackgroundPosition"
                             [style.background-size]="'200%'"

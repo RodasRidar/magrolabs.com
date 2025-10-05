@@ -116,6 +116,10 @@ export class CreatinasComponent {
   // Los schemas JSON-LD ahora se generan dinámicamente en setAdvancedStructuredData()
   // para evitar duplicación del campo "brand" reportada por Google Search Console
 
+  preparandoDate = ''
+  enviadoDate = ''
+  entregadoDate = ''
+
   onLoadReviews(event: boolean) {
     this.isLoadReviews.set(event);
   }
@@ -212,6 +216,43 @@ export class CreatinasComponent {
     }
     this.trackProductView();
     this.loadSEO();
+    this.setDatesForTracking();
+  }
+  setDatesForTracking() {
+    // Fecha de hoy (preparando)
+    const today = new Date();
+    this.preparandoDate = today.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    });
+
+    // Fecha de enviado (hoy + 1 a 2 días)
+    const enviadoStart = new Date(today);
+    enviadoStart.setDate(today.getDate() + 1);
+    const enviadoEnd = new Date(today);
+    enviadoEnd.setDate(today.getDate() + 2);
+    
+    this.enviadoDate = `${enviadoStart.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })} ${enviadoEnd.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })}`;
+
+    // Fecha de entregado (hoy + 3 a 5 días)
+    const entregadoStart = new Date(today);
+    entregadoStart.setDate(today.getDate() + 3);
+    const entregadoEnd = new Date(today);
+    entregadoEnd.setDate(today.getDate() + 5);
+    
+    this.entregadoDate = `${entregadoStart.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })} ${entregadoEnd.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })}`;
   }
 
   writeReview() {

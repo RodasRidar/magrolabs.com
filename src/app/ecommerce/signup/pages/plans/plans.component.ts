@@ -78,12 +78,52 @@ export class PlansComponent {
       name: 'Canjea tus créditos por artículos exclusivos.'
     }
   ]
+  preparandoDate: string = '';
+  enviadoDate: string = '';
+  entregadoDate: string = '';
 
   ngOnInit(): void {
     const summary = this._summaryService.getSummary();
     this.loadSEO();
     this.setupRouteParams();
     this.initializePlanSelection(summary);
+    this.setDatesForTracking();
+  }
+  setDatesForTracking() {
+    // Fecha de hoy (preparando)
+    const today = new Date();
+    this.preparandoDate = today.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    });
+
+    // Fecha de enviado (hoy + 1 a 2 días)
+    const enviadoStart = new Date(today);
+    enviadoStart.setDate(today.getDate() + 1);
+    const enviadoEnd = new Date(today);
+    enviadoEnd.setDate(today.getDate() + 2);
+    
+    this.enviadoDate = `${enviadoStart.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })} ${enviadoEnd.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })}`;
+
+    // Fecha de entregado (hoy + 3 a 5 días)
+    const entregadoStart = new Date(today);
+    entregadoStart.setDate(today.getDate() + 3);
+    const entregadoEnd = new Date(today);
+    entregadoEnd.setDate(today.getDate() + 5);
+    
+    this.entregadoDate = `${entregadoStart.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })} ${entregadoEnd.toLocaleDateString('es-PE', { 
+      day: '2-digit', 
+      month: 'short' 
+    })}`;
   }
 
   /**

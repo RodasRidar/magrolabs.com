@@ -12,8 +12,10 @@ const creatina3kg = 3;
 const creditoRegaloPorCompraMes = 10;
 const creditoRegaloPorCompraAño = 120;
 const creditoRegaloPorAmigoReferido = creditoRegaloPorCompraMes;
-const plazoDeEntregaDiasHabiles = { min: 1, max: 3};
-const plazoDeEntregaDiasHabilesCreatinaFree = { min: 1, max: 4};
+const plazoDeEntregaDiasHabiles = { min: 1, max: 2};
+const plazoDeEntregaDiasHabilesCreatinaFree = { min: 1, max: 2};
+const plazoDeEntregaHoras = { min: plazoDeEntregaDiasHabiles.min * 24, max: plazoDeEntregaDiasHabiles.max * 24};
+const plazoDeEntregaHorasCreatinaFree = { min: plazoDeEntregaDiasHabilesCreatinaFree.min * 24, max: plazoDeEntregaDiasHabilesCreatinaFree.max * 24};
 const diasNormalesDePruebaOperiodoDeReflexion = 7;
 const envioGratisA = {LIMA_METRO: 'Lima Metropolitana'};
 const nroServicios250g = 80;
@@ -114,5 +116,7 @@ export const environment = {
         pixelId: metaPixelId,
         enabled: metaTrackingEnabled,
         debug: metaDebug
-    }
+    },
+    plazoDeEntregaHoras,
+    plazoDeEntregaHorasCreatinaFree
 };

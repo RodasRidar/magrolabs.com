@@ -219,40 +219,53 @@ export class CreatinasComponent {
     this.setDatesForTracking();
   }
   setDatesForTracking() {
-    // Fecha de hoy (preparando)
-    const today = new Date();
-    this.preparandoDate = today.toLocaleDateString('es-PE', { 
-      day: '2-digit', 
-      month: 'short' 
-    });
-
-    // Fecha de enviado (hoy + 1 a 2 días)
-    const enviadoStart = new Date(today);
-    enviadoStart.setDate(today.getDate() + 1);
-    const enviadoEnd = new Date(today);
-    enviadoEnd.setDate(today.getDate() + 2);
+    // Obtener la hora actual en Perú (UTC-5)
+    const now = new Date();
+    const peruTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Lima' }));
+    const dayOfWeek = peruTime.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+    const currentHour = peruTime.getHours();
     
-    this.enviadoDate = `${enviadoStart.toLocaleDateString('es-PE', { 
-      day: '2-digit', 
-      month: 'short' 
-    })} ${enviadoEnd.toLocaleDateString('es-PE', { 
-      day: '2-digit', 
-      month: 'short' 
-    })}`;
+    let preparandoText = 'Hoy';
+    let enviadoText = 'Hoy';
+    let entregadoText = 'Mañana';
 
-    // Fecha de entregado (hoy + 3 a 5 días)
-    const entregadoStart = new Date(today);
-    entregadoStart.setDate(today.getDate() + 3);
-    const entregadoEnd = new Date(today);
-    entregadoEnd.setDate(today.getDate() + 5);
-    
-    this.entregadoDate = `${entregadoStart.toLocaleDateString('es-PE', { 
-      day: '2-digit', 
-      month: 'short' 
-    })} ${entregadoEnd.toLocaleDateString('es-PE', { 
-      day: '2-digit', 
-      month: 'short' 
-    })}`;
+    // Reglas de negocio
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      // Lunes a Viernes
+      if (currentHour <= 16) {
+        // Menor o igual a las 4 PM
+        preparandoText = 'Hoy';
+        enviadoText = 'Hoy';
+        entregadoText = 'Mañana';
+      } else {
+        // Mayor a las 4 PM
+        preparandoText = 'Hoy';
+        enviadoText = 'Mañana';
+        entregadoText = 'Mañana';
+      }
+    } else if (dayOfWeek === 6) {
+      // Sábado
+      if (currentHour <= 13) {
+        // Menor o igual a la 1 PM
+        preparandoText = 'Hoy';
+        enviadoText = 'Hoy';
+        entregadoText = 'Lunes';
+      } else {
+        // Mayor a la 1 PM (usando la misma lógica que domingo)
+        preparandoText = 'Hoy';
+        enviadoText = 'Lunes';
+        entregadoText = 'Lunes';
+      }
+    } else if (dayOfWeek === 0) {
+      // Domingo
+      preparandoText = 'Hoy';
+      enviadoText = 'Lunes';
+      entregadoText = 'Lunes';
+    }
+
+    this.preparandoDate = preparandoText;
+    this.enviadoDate = enviadoText;
+    this.entregadoDate = entregadoText;
   }
 
   writeReview() {

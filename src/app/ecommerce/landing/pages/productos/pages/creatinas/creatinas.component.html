@@ -308,43 +308,39 @@
                                 </h2>
                                 @if(!isFreeCreatine){
                                 <h2 id="options-heading" class="sr-only">Product options</h2>
-
+                                
                                 <div class="mx-auto pt-6 pb-2 max-sm:mb-4">
                                     <div class="space-y-4">
-
+                                
                                         <details #Subscription (click)="selectSubscription($event)"
                                             [ngClass]="{'border-gray-800': isSelectSubscription,'border-gray-900': isSelectSubscription}"
                                             class="rounded-lg overflow-hidden group border border-gray-900 [&_summary::-webkit-details-marker]:hidden">
-                                            <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
+                                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
                                                     <span class="relative size-5 shrink-0 mr-2">
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                                                            width="24px" fill="#000000">
+                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
+                                                            fill="#000000">
                                                             <path
                                                                 d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                                                            width="24px" fill="#434343">
+                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" width="24px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
                                                     </span>
-
+                                
                                                     <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
                                                     <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
-                                                        <p
-                                                            class="max-lg:text-[10px] text-xs text-white font-extralight">
+                                                        <p class="max-lg:text-[10px] text-xs text-white font-extralight">
                                                             Ahorra {{ENV.creatina2025Descuento}}</p>
                                                     </div>
                                                 </div>
-
+                                
                                                 <div class="flex items-center">
                                                     <div class="flex justify-center items-center font-extralight">
                                                         <p class="text-xs text-gray-500  line-through">
@@ -353,16 +349,17 @@
                                                             {{productPriceSubscription | currency : 'S/'}}</p>
                                                     </div>
                                                 </div>
-
+                                
                                             </summary>
-
+                                
                                             <div class="m-3">
                                                 <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
                                                     <span class="text-sm text-left text-gray-900 font-light">
                                                         Así es como funciona la suscripción:
                                                     </span>
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
                                                         </svg>
@@ -370,9 +367,10 @@
                                                             Primera creatina de prueba gratis (100gr).
                                                         </p>
                                                     </div>
-                                                
+                                
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z" />
                                                         </svg>
@@ -380,9 +378,10 @@
                                                             Pruébala en {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días y si te gusta.
                                                         </p>
                                                     </div>
-                                                
+                                
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z" />
                                                         </svg>
@@ -390,9 +389,10 @@
                                                             Recibes una creatina 250gr cada mes.
                                                         </p>
                                                     </div>
-                                                
+                                
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm-36-74v-49q-35-5-66-18t-57-33l-34 34q33 26 72.5 43.5T444-170Zm72 0q45-5 84.5-22.5T673-236l-34-34q-26 20-57 33t-66 18v49Zm-36-118q80 0 136-56t56-136q0-80-56-136t-136-56q-80 0-136 56t-56 136q0 80 56 136t136 56Zm244 1q26-33 43.5-72.5T790-444h-49q-5 35-18 66t-33 57l34 34Zm-488 0 34-34q-20-26-33-57t-18-66h-49q5 45 22.5 84.5T236-287Zm244-49L372-480l108-144 108 144-108 144ZM170-516h49q5-35 18-66t33-57l-34-34q-26 33-43.5 72.5T170-516Zm571 0h49q-5-45-22.5-84.5T724-673l-34 34q20 26 33 57t18 66ZM321-690q26-20 57-33t66-18v-49q-45 5-84.5 22.5T287-724l34 34Zm318 0 34-34q-33-26-72.5-43.5T516-790v49q35 5 66 18t57 33Z" />
                                                         </svg>
@@ -400,9 +400,10 @@
                                                             Además {{ENV.creditoRegaloPorCompraMes}} Magropuntos con cada entrega.
                                                         </p>
                                                     </div>
-                                                
+                                
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M276-168q-50 0-85-35t-35-85H72l24-72h84q17-22 42.24-35 25.23-13 53.76-13 28.53 0 53.76 13Q355-382 372-360h196l84-336H216l8-24q8-22 26.5-35t41.5-13h452l-36 144h84l120 168-48 168h-48q0 50-35 85t-85 35q-50 0-85-35t-35-85H396q0 50-35 85t-85 35Zm384-264h170l3-11-78-109h-65l-30 120Zm-12-248 4-16-84 336 4-16 34-136 42-168ZM24-424l18-72h198l-18 72H24Zm72-136 18-72h234l-18 72H96Zm180 320q20.4 0 34.2-13.8Q324-267.6 324-288q0-20.4-13.8-34.2Q296.4-336 276-336q-20.4 0-34.2 13.8Q228-308.4 228-288q0 20.4 13.8 34.2Q255.6-240 276-240Zm420 0q20.4 0 34.2-13.8Q744-267.6 744-288q0-20.4-13.8-34.2Q716.4-336 696-336q-20.4 0-34.2 13.8Q648-308.4 648-288q0 20.4 13.8 34.2Q675.6-240 696-240Z" />
                                                         </svg>
@@ -413,106 +414,96 @@
                                                 </div>
                                             </div>
                                         </details>
-
-                                        <details #OnePurchase (click)="selectOnePurchase($event)"
-                                            [ngClass]="{'border-gray-800': isSelectOnePurchase}"
+                                
+                                        <details #OnePurchase (click)="selectOnePurchase($event)" [ngClass]="{'border-gray-800': isSelectOnePurchase}"
                                             class="rounded-lg overflow-hidden group border [&_summary::-webkit-details-marker]:hidden">
-                                            <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
+                                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
                                                     <span class="relative size-5 shrink-0 mr-2">
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                                                            width="24px" fill="#000000">
+                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
+                                                            fill="#000000">
                                                             <path
                                                                 d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                                                            width="24px" fill="#434343">
+                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" width="24px"
+                                                            fill="#434343">
                                                             <path
                                                                 d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
                                                     </span>
                                                     <h2 class="font-light mr-2 max-lg:text-sm">Compra única</h2>
                                                 </div>
-
+                                
                                                 <div class="flex items-center">
                                                     <div class="flex justify-center items-center font-extralight">
                                                         <p class="text-sm text-gray-900 sm:text-sm ml-2">
                                                             {{productPriceOnePurchase| currency : 'S/'}}</p>
                                                     </div>
                                                 </div>
-
+                                
                                             </summary>
                                         </details>
-
+                                
                                     </div>
                                 </div>
                                 }
-                                    <div class="p-2 sm:p-6">
-                                        <!-- Timeline de seguimiento -->
-                                        <div class="relative">
-                                            <!-- Contenido del timeline -->
-                                            <div class="flex items-center justify-between my-2 sm:my-2 relative">
+                                <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto">
+                                    <!-- Timeline de seguimiento -->
+                                    <div class="relative">
+                                        <!-- Contenido del timeline -->
+                                        <div class="flex items-center justify-between my-2 sm:my-2 relative">
                                             <!-- Línea horizontal que conecta los círculos -->
-                                            <div class="absolute top-8 left-4 right-0 h-0.5 bg-gray-300 z-0 w-[90%]"></div>
-                                                <!-- Paso 1: Pedido realizado -->
+                                            <div class="absolute top-4 left-8 right-0 h-0.5 bg-gray-300 z-0 w-[85.5%]"></div>
+                                            <!-- Paso 1: Pedido realizado -->
                                             <div class="flex flex-col items-center">
-                                                <div
-                                                class="rounded-full h-16 w-16 flex items-center justify-center bg-white  z-10">
-                                                <svg class="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                                </svg>
+                                                <div class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                    </svg>
                                                 </div>
-                                                <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Preparando</h3>
+                                                <h3 class="mt-2 text-center font-bold text-xs">Preparando</h3>
                                                 <p class="text-gray-600 text-center text-xs min-h-[24px]">{{preparandoDate}}</p>
                                             </div>
-                                                <!-- Paso 2: Preparando -->
+                                            <!-- Paso 2: Preparando -->
                                             <div class="flex flex-col items-center">
-                                                <div
-                                                class="rounded-full h-16 w-16 flex items-center justify-center bg-white z-10">
-                                                <svg class="w-8 h-8"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                                                </svg>
+                                                <div class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white z-10">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                                                    </svg>
                                                 </div>
-                                                <h3 class="mt-4 text-center font-bold text-sm sm:text-base">
-                                                Enviado</h3>
+                                                <h3 class="mt-2 text-center font-bold text-xs">
+                                                    Enviado</h3>
                                                 <p class="text-gray-600 text-center text-xs min-h-[24px]">{{enviadoDate}}</p>
                                             </div>
-                                                <!-- Paso 3: Enviado -->
+                                            <!-- Paso 3: Enviado -->
                                             <div class="flex flex-col items-center">
-                                                <div class="rounded-full h-16 w-16 flex items-center justify-center bg-white  z-10">
-                                                <svg class="w-8 h-8"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                </svg>
+                                                <div class="rounded-full  border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
                                                 </div>
-                                                <h3 class="mt-4 text-center font-bold text-sm sm:text-base">
-                                                Entregado</h3>
+                                                <h3 class="mt-2 text-center font-bold text-xs">
+                                                    Entregado</h3>
                                                 <p class="text-gray-600 text-center text-xs min-h-[24px]">
                                                     {{entregadoDate}}
                                                 </p>
                                             </div>
-                                            </div>
                                         </div>
                                     </div>
-
+                                </div>
                                 @if(!isFreeCreatine){
                                 @if (isSelectSubscription) {
                                 <div class="max-sm:hidden my-2">
                                     <ml-button [name]="isOutOfStock ? 'Agotado' : 'Lo quiero →'" (click)="irRegistro()"
                                         [isDisabled]="isButtonDisabled()"></ml-button>
                                 </div>
-                                <div
-                                    class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="irRegistro()" type="button" [disabled]="isButtonDisabled()"
                                         class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Lo quiero →'}}
@@ -521,11 +512,10 @@
                                 }
                                 @if(isSelectOnePurchase) {
                                 <div class="max-sm:hidden my-2">
-                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
-                                        (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'" (click)="agregarCarrito()"
+                                        [isDisabled]="isButtonDisabled()"></ml-button>
                                 </div>
-                                <div
-                                    class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="agregarCarrito()" type="button" [disabled]="isButtonDisabled()"
                                         class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}

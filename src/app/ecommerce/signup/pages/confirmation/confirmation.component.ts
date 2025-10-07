@@ -45,7 +45,7 @@ export class ConfirmationComponent {
   informationExitoList: Information[] = [
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina gratis.' },
     { name: 'Te avisaremos cuando finalice tu periodo de prueba.' },
-    { name: 'Entrega estimada de la creatina gratis: ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min + ' a ' + this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + ' días hábiles.' },
+    { name: 'Entrega estimada de la creatina gratis: ' + this.ENV.plazoDeEntregaHorasCreatinaFree.min + ' a ' + this.ENV.plazoDeEntregaHorasCreatinaFree.max + ' horas.' },
   ]
 
   informationErrorList: Information[] = [

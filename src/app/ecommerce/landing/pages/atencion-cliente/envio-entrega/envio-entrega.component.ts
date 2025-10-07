@@ -13,15 +13,15 @@ export class EnvioEntregaComponent {
   list = [
     {
       title: '¿Cuándo recibiré mi creatina gratis?',
-      description: 'Recibirás tu creatina gratis de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max+' días hábiles. Tan pronto como completes tu registro, tu pedido será enviado inmediatamente. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
+      description: 'Recibirás tu creatina gratis de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaHorasCreatinaFree.max+' horas. Tan pronto como completes tu registro, tu pedido será enviado inmediatamente. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
     },
     {
       title: '¿Cuándo recibiré mis entregas mensuales?',
-      description: 'Las entregas mensuales las recibirás en un plazo de '+ this.ENV.plazoDeEntregaDiasHabiles.max + ' días después de que se haya realizado tu pago automático. Todas las entregas se realizan dentro del mismo período y pueden llegar de forma separada si hay más de un producto en tu suscripción.',
+      description: 'Las entregas mensuales las recibirás en un plazo de '+ this.ENV.plazoDeEntregaHoras.max + ' horas después de que se haya realizado tu pago automático. Todas las entregas se realizan dentro del mismo período y pueden llegar de forma separada si hay más de un producto en tu suscripción.',
     },
     {
       title: 'No he recibido mi(s) producto(s)',
-      description: '¿No has recibido tu primer pedido después de los '+ this.ENV.plazoDeEntregaDiasHabiles.max+' días hábiles? ¿O no te ha llegado la entrega mensual pasada la fecha estimada? No te preocupes, ponte en contacto con nosotros y lo solucionaremos rápidamente.',
+      description: '¿No has recibido tu primer pedido después de las '+ this.ENV.plazoDeEntregaHoras.max+' horas? ¿O no te ha llegado la entrega mensual pasada la fecha estimada? No te preocupes, ponte en contacto con nosotros y lo solucionaremos rápidamente.',
     },
     {
       title: 'He recibido el producto incorrecto',

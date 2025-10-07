@@ -19,7 +19,7 @@ export class CambioComponent {
     },
     {
       title: '¿Cómo presento una solicitud de cambio?',
-      description: '¿No has recibido tu pedido después de los '+this.ENV.plazoDeEntregaDiasHabiles.max+' días hábiles? No te preocupes. Puedes presentar fácilmente una solicitud de cambio contáctandote directamente con nosotros y estaremos encantados de ayudarte.'
+      description: '¿No has recibido tu pedido después de las '+this.ENV.plazoDeEntregaHoras.max+' horas? No te preocupes. Puedes presentar fácilmente una solicitud de cambio contáctandote directamente con nosotros y estaremos encantados de ayudarte.'
     },
     {
       title: '¿Cómo devuelvo un producto incorrecto?',

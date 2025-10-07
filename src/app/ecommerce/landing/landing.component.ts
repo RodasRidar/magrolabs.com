@@ -234,7 +234,7 @@ export class LandingComponent {
           name: '¿Cuándo recibiré mi creatina gratis?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Después de registrarte, tu creatina gratis estará en tu casa en un plazo de ${this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.min} - ${this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max} días hábiles.`
+            text: `Después de registrarte, tu creatina gratis estará en tu casa en un plazo de ${this.ENV.plazoDeEntregaHorasCreatinaFree.min} a ${this.ENV.plazoDeEntregaHorasCreatinaFree.max} horass.`
           }
         },
         {

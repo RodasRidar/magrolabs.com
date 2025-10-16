@@ -6,6 +6,7 @@ import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banne
 import { ModuleRetryService } from './shared/services/module-retry.service';
 import { TiktokAnalyticsService } from './shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from './shared/services/meta-analytics.service';
+import { HotjarService } from './shared/services/hotjar.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -19,6 +20,7 @@ export class AppComponent {
   private _router = inject(Router);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private _metaAnalytics = inject(MetaAnalyticsService);
+  private _hotjar = inject(HotjarService);
   private moduleRetryService = inject(ModuleRetryService);
   title = 'Magrolabs';
   ENV = environment;

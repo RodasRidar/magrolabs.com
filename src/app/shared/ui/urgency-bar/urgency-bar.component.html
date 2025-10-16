@@ -1,11 +1,11 @@
 <!--ping Barra de Urgencia - Minimalista -->
 @if (isVisible) {
-<div class="bg-black h-[60px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
+<div class="bg-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
     <!--ping Contenido -->
-    <div class="w-full max-w-7xl px-4 sm:px-6">
-        <div class="flex items-center justify-center">
-            <!--ping Contenedor con marquee para móviles -->
-            <div class="urgency-content flex items-center justify-center gap-4 sm:gap-6 whitespace-nowrap">
+    <div class="w-full max-w-7xl px-2 sm:px-6">
+        <!-- Wrapper para desktop: centrado normal -->
+        <div class="hidden md:flex items-center justify-center">
+            <div class="flex items-center justify-center gap-4 sm:gap-6 whitespace-nowrap">
                 
                 <!--ping Mensaje principal -->
                 <div class="flex items-center gap-2">
@@ -31,14 +31,63 @@
                         <span class="text-gray-600">:</span>
                         <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
                     </div>
-                    
-                    <!--ping Botón de testing 
-                    <button 
-                        (click)="setCountdownToFourSeconds()"
-                        class="ml-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 text-xs px-2 py-0.5 rounded font-medium transition-colors"
-                        title="Testing: 4s">
-                        ⚡
-                    </button>-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Wrapper para móvil: marquee infinito -->
+        <div class="md:hidden urgency-wrapper">
+            <div class="urgency-content">
+                <!-- Contenido original -->
+                <div class="flex items-center gap-4 whitespace-nowrap px-8">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-300">
+                            @if (isLastChance) {
+                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                            } @else {
+                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                            }
+                        </span>
+                    </div>
+
+                    <div class="w-px h-4 bg-gray-700"></div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
+                        <div class="flex items-center gap-1 font-mono text-sm font-semibold">
+                            <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                            <span class="text-gray-600">:</span>
+                            <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                            <span class="text-gray-600">:</span>
+                            <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido duplicado para scroll infinito -->
+                <div class="flex items-center gap-4 whitespace-nowrap px-8">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-300">
+                            @if (isLastChance) {
+                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                            } @else {
+                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                            }
+                        </span>
+                    </div>
+
+                    <div class="w-px h-4 bg-gray-700"></div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
+                        <div class="flex items-center gap-1 font-mono text-sm font-semibold">
+                            <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                            <span class="text-gray-600">:</span>
+                            <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                            <span class="text-gray-600">:</span>
+                            <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,17 +8,24 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './urgency-bar.component.html',
   styles: [`
     @media (max-width: 800px) {
+      .urgency-wrapper {
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+      }
+      
       .urgency-content {
-        animation: marquee 15s linear infinite;
+        display: inline-flex;
+        animation: marquee 20s linear infinite;
       }
     }
 
     @keyframes marquee {
       0% {
-        transform: translateX(10%);
+        transform: translateX(0%);
       }
       100% {
-        transform: translateX(-110%);
+        transform: translateX(-50%);
       }
     }
 

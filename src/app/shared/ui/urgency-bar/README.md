@@ -11,9 +11,13 @@ Componente de barra de urgencia con temporizador de cuenta regresiva para aument
 - ✅ **Diseño minimalista dark mode** con fondo negro puro
 - ✅ **Color de marca #d07d66** para elementos destacados
 - ✅ Animaciones suaves y no intrusivas
-- ✅ **Efecto marquesina en pantallas < 800px**: El contenido se desplaza de derecha a izquierda automáticamente
+- ✅ **Efecto marquesina mejorado en móviles < 768px**: 
+  - Scroll infinito sin espacios vacíos
+  - Duración de 22.5 segundos (50% más lento)
+  - Contenido duplicado para continuidad perfecta
 - ✅ **Gestión de unidades disponibles**: Decrementa automáticamente al completar compras/suscripciones
 - ✅ **Copy limpio y directo**: Mensajes concisos sin elementos innecesarios
+- ✅ **Responsive**: Desktop centrado, móvil con marquee
 
 ## Diseño UI/UX
 

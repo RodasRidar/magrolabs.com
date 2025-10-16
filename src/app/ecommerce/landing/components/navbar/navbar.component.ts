@@ -8,11 +8,12 @@ import { CartComponent } from '../../../../shared/ui/cart/cart.component';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
 import { Subscription } from 'rxjs';
+import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive],
+  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, UrgencyBarComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   animations: [

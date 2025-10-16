@@ -1,15 +1,6 @@
-<!-- Barra de Urgencia Superior -->
-<app-urgency-bar></app-urgency-bar>
 
-<!-- Espaciador para compensar la barra fija -->
-<div class="h-[60px]"></div>
 <!-- Navbar fijo -->
-<div class="fixed top-[60px] left-0 right-0 z-40">
-    <app-navbar [type]="navbarTypeEnum.LANDING" [isCheckout]="false"/>
-</div>
-
-<!-- Espaciador para compensar el navbar fijo (ajustar altura según el navbar) -->
-<div class="h-[60px]"></div>
+<app-navbar [type]="navbarTypeEnum.LANDING" [isCheckout]="false"/>
 
 <app-hero />
 

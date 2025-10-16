@@ -5,14 +5,12 @@ import { RouterLink } from '@angular/router';
 import { SeoService } from '../../shared/services/seo.service';
 import { environment } from '../../../environments/env';
 import { FooterComponent } from "./components/footer/footer.component";
-import { ButtonComponent } from "../../shared/ui/button/button.component";
 import { CommonModule } from '@angular/common';
-import { UrgencyBarComponent } from '../../shared/ui/urgency-bar/urgency-bar.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, UrgencyBarComponent],
+  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {

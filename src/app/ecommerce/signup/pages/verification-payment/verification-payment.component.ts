@@ -766,7 +766,7 @@ export class VerificationPaymentComponent {
       .subscribe({
         next: (response) => {
           this.flowToken.set((response as RegisterCardResponse).token);
-          this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
+          //this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
         }
       });
   }

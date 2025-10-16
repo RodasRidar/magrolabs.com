@@ -15,6 +15,7 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { EmailService } from '../../../../shared/services/email.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 
 @Component({
   selector: 'app-confirmation',
@@ -116,27 +117,46 @@ export class ConfirmationComponent {
         this.openWelcomeModal();
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
         this.sendWelcomeEmail();
+        // Decrementar unidades disponibles
+        UrgencyBarComponent.decrementUnits();
       }
       else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
         this.trackCompleteSuscription(true);
+        // Decrementar unidades disponibles
+        UrgencyBarComponent.decrementUnits();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
         // Enviar email de confirmación de orden
         this.sendOrderConfirmationEmail();
         this.trackPurchaseComplete();
+        // Decrementar unidades disponibles
+        UrgencyBarComponent.decrementUnits();
       }
       else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
         this.trackPurchaseComplete();
+        // Decrementar unidades disponibles
+        UrgencyBarComponent.decrementUnits();
       }
       else {
         this._router.navigate(['registro/verificacion']);
       }
       this._summaryService.clearSummary();
       this._shoppingCartService.clearCart();
+      
+      // Preservar datos importantes antes de limpiar localStorage
+      const unitsAvailable = localStorage.getItem('unitsAvailable');
+      const isLastChance = localStorage.getItem('isLastChance');
+      const offerEndTime = localStorage.getItem('offerEndTime');
+      
       localStorage.clear();
+      
+      // Restaurar datos importantes
+      if (unitsAvailable) localStorage.setItem('unitsAvailable', unitsAvailable);
+      if (isLastChance) localStorage.setItem('isLastChance', isLastChance);
+      if (offerEndTime) localStorage.setItem('offerEndTime', offerEndTime);
     });
   }
 

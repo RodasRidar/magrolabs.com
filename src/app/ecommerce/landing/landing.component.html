@@ -1,22 +1,10 @@
 <!-- Barra de Urgencia Superior -->
-<div class="bg-black h-[30px] flex items-center justify-center px-4 sm:px-6 lg:px-8 text-white text-sm font-medium overflow-hidden shadow-lg fixed top-0 left-0 right-0 z-40">
-    <!-- Elemento decorativo sutil -->
-    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
-    
-    <!-- Contenido centrado -->
-    <div class="relative z-10 flex items-center space-x-2 text-center">
-        <div class="w-2 h-2 bg-[#d07d66] rounded-full animate-pulse"></div>
-        <span class="text-gray-200">
-            <strong class="text-white max-sm:hidden">Oferta limitada:</strong> Solo quedan <strong class="text-[#d07d66]">10 unidades</strong> gratis!
-        </span>
-    </div>
-</div>
+<app-urgency-bar></app-urgency-bar>
 
 <!-- Espaciador para compensar la barra fija -->
-<div class="h-[30px]"></div>
-
+<div class="h-[60px]"></div>
 <!-- Navbar fijo -->
-<div class="fixed top-[30px] left-0 right-0 z-40">
+<div class="fixed top-[60px] left-0 right-0 z-40">
     <app-navbar [type]="navbarTypeEnum.LANDING" [isCheckout]="false"/>
 </div>
 

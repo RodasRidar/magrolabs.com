@@ -1,0 +1,77 @@
+<!--ping Barra de Urgencia - Minimalista -->
+@if (isVisible) {
+<div class="bg-black h-[60px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
+    <!--ping Contenido -->
+    <div class="w-full max-w-7xl px-4 sm:px-6">
+        <div class="flex items-center justify-center">
+            <!--ping Contenedor con marquee para móviles -->
+            <div class="urgency-content flex items-center justify-center gap-4 sm:gap-6 whitespace-nowrap">
+                
+                <!--ping Mensaje principal -->
+                <div class="flex items-center gap-2">
+                    <span class="text-sm sm:text-base text-gray-300">
+                        @if (isLastChance) {
+                             Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                        } @else {
+                            <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                        }
+                    </span>
+                </div>
+
+                <!--ping Separador -->
+                <div class="w-px h-4 bg-gray-700"></div>
+
+                <!--ping Temporizador -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
+                    <div class="flex items-center gap-1 font-mono text-sm font-semibold">
+                        <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}</span>
+                        <span class="text-gray-600">:</span>
+                        <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}</span>
+                        <span class="text-gray-600">:</span>
+                        <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}</span>
+                    </div>
+                    
+                    <!--ping Botón de testing 
+                    <button 
+                        (click)="setCountdownToFourSeconds()"
+                        class="ml-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 text-xs px-2 py-0.5 rounded font-medium transition-colors"
+                        title="Testing: 4s">
+                        ⚡
+                    </button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+} @else {
+<!--ping Barra de Envío - Minimalista -->
+<div class="bg-black h-[60px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
+    <!--ping Contenido -->
+    <div class="w-full max-w-7xl px-4 sm:px-6">
+        <div class="flex items-center justify-center">
+            <div class="flex items-center justify-center gap-4 sm:gap-6">
+                
+                <!--ping Envío Express -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🚀</span>
+                    <span class="text-sm sm:text-base text-gray-300">
+                        <span class="text-[#d07d66] font-semibold">Envío Express 24H</span>
+                    </span>
+                </div>
+
+                <!--ping Separador -->
+                <div class="w-px h-4 bg-gray-700"></div>
+
+                <!--ping Envío gratis -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📦</span>
+                    <span class="text-sm sm:text-base text-gray-300">
+                        <span class="text-[#d07d66] font-semibold">Envío gratis</span> en Lima Metropolitana
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

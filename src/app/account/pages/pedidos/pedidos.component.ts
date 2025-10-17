@@ -269,6 +269,40 @@ export class PedidosComponent implements OnInit {
     this.pedidoSeleccionado.set(null);
   }
 
+  /**
+   * Genera la URL de seguimiento de Olva Courier
+   * @param trackingNumber - Número de tracking en formato "25-36710008"
+   * @returns URL completa de seguimiento o null si el formato es inválido
+   */
+  generarUrlOlvaCourier(trackingNumber: string | undefined): string | null {
+    if (!trackingNumber) return null;
+    
+    // Separar el número de tracking por el guion
+    const partes = trackingNumber.split('-');
+    
+    // Validar que tenga exactamente 2 partes
+    if (partes.length !== 2) return null;
+    
+    const emision = partes[0]; // "25"
+    const tracking = partes[1]; // "36710008"
+    
+    return `https://tracking.olvaexpress.pe/?emision=${emision}&tracking=${tracking}`;
+  }
+
+  /**
+   * Abre el seguimiento de Olva Courier en una nueva pestaña
+   */
+  abrirSeguimientoOlva(): void {
+    const trackingNumber = this.pedidoSeleccionado()?.trackingNumber;
+    const url = this.generarUrlOlvaCourier(trackingNumber);
+    
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      alert('Número de seguimiento no disponible o inválido');
+    }
+  }
+
   descargarBoleta(orderId: string): void {
     //TODO Implementar la lógica para descargar la boleta
     alert(`Para descargar la boleta del Pedido #${orderId.slice(0, 8)}, por favor contacta al número de WhatsApp +${this.ENV.telefonoAtencionClientes}.`);

@@ -183,6 +183,8 @@ export interface OrderResponse {
 
   address?: any;
 
+  trackingNumber?: string;
+
   /**
    * Ítems de la orden
    */

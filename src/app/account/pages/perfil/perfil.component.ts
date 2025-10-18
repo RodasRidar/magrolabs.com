@@ -133,7 +133,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     // Formulario de dirección
     this.addressForm = this.fb.group({
       searchAddress: ['', [Validators.minLength(3)]],
-      streetAddress: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]],
+      streetAddress: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]],
       department: ['', [Validators.required]],
       province: [{ value: '', disabled: true }, [Validators.required]],
       district: [{ value: '', disabled: true }, [Validators.required]],

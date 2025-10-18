@@ -106,7 +106,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
-    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(70), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]),
+    streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]),
     department: this._formBuilder.nonNullable.control('', [Validators.required]),
     province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
     district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),

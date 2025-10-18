@@ -283,10 +283,15 @@ export class PedidosComponent implements OnInit {
    * @returns URL completa de seguimiento o null si el formato es inválido
    */
   generarUrlOlvaCourier(trackingNumber: string | undefined): string | null {
+    console.log('Generando URL de seguimiento para tracking number:', trackingNumber);
     if (!trackingNumber) return null;
     
+    // Normalizar diferentes tipos de guiones a guion estándar
+    // Esto maneja: guion normal (-), guion no rompible (‑), guion medio (–), guion largo (—)
+    const trackingNormalizado = trackingNumber.replace(/[-‑–—]/g, '-');
+    
     // Separar el número de tracking por el guion
-    const partes = trackingNumber.split('-');
+    const partes = trackingNormalizado.split('-');
     
     // Validar que tenga exactamente 2 partes
     if (partes.length !== 2) return null;

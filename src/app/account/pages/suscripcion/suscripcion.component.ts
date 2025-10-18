@@ -471,7 +471,7 @@ export class SuscripcionComponent implements OnInit {
             ));
             if(this.charges().length > 0) {
               // Si el status es 1, es que el cargo del ultimo periodo de la suscripción está pagada
-              if(this.charges()[0].status == FlowChargeStatus.COMPLETED) {
+              if(this.charges()[0].status == FlowChargeStatus.COMPLETED || this.charges()[0].status == FlowChargeStatus.CANCELLED) {
                 this.isPorActivar.set(false);
               }
               else {

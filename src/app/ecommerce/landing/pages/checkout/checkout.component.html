@@ -592,32 +592,40 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="sm:col-span-1">
-                                                    <label for="postal-code"
-                                                        class="block text-sm/6 font-medium text-gray-900">Número</label>
+                                                <div class="sm:col-span-2">
+                                                    <label for="number"
+                                                        class="block text-sm/6 font-medium text-gray-900">N° / Mz. / Lt. *</label>
                                                     <div class="mt-2">
-                                                        <input type="text" (input)="limitDigits(6, 'number')"
+                                                        <input type="text" id="number" name="number" placeholder="Ej: 123, Mz A Lt 5"
+                                                            (input)="limitDigits(20, 'number')"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
                                                             formControlName="number"
-                                                            [ngClass]="{'ring-red-500 ring-2': hasValidatorError('number')}">
+                                                            [ngClass]="{'ring-red-500 ring-2': hasRequiredError('number') || hasValidatorError('number')}">
                                                     </div>
                                                     <div class="p-2">
-                                                        @if(hasValidatorError('number')) {
-                                                        <p class="text-xs text-red-500">*Se permite de 1 a 6 dígitos</p>
+                                                        @if(hasRequiredError('number')) {
+                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
+                                                        }
+                                                        @if(hasValidatorError('number') && !hasRequiredError('number')) {
+                                                        <p class="text-xs text-red-500">*Formato: números, letras, / . , -</p>
                                                         }
                                                     </div>
                                                 </div>
 
 
-                                                <div class="sm:col-span-5 mb-2">
-                                                    <label for="postal-code"
-                                                        class="block text-sm/6 font-medium text-gray-900">Referencia</label>
+                                                <div class="sm:col-span-4 mb-2">
+                                                    <label for="reference"
+                                                        class="block text-sm/6 font-medium text-gray-900">Referencia *</label>
                                                     <div class="mt-2">
-                                                        <input type="text" formControlName="reference"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('reference')}"
+                                                        <input type="text" id="reference" name="reference" formControlName="reference"
+                                                            placeholder="Ej: Casa azul al lado del parque"
+                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('reference') || hasValidatorError('reference')}"
                                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
                                                     </div>
                                                     <div class="p-2">
+                                                        @if(hasRequiredError('reference')) {
+                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
+                                                        }
                                                         @if(hasValidatorError('reference')) {
                                                         <p class="text-xs text-red-500">*Se permite de 3 a 250
                                                             caracteres</p>

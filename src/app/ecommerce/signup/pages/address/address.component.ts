@@ -69,8 +69,8 @@ export class AddressComponent {
     department: this._formBuilder.nonNullable.control('', [Validators.required]),
     province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
     district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
-    number: this._formBuilder.nonNullable.control('', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]),
-    reference: this._formBuilder.nonNullable.control('', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
+    number: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(1), Validators.maxLength(20), Validators.pattern(/^[0-9A-Za-zÑñ\/\.,\-\s]{1,20}$/)]),
+    reference: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
 
@@ -127,7 +127,7 @@ export class AddressComponent {
         )
       ).subscribe(() => {
         this.form.get('streetAddress')?.setValue(summary.address?.nombreVia ?? '');
-        this.form.get('number')?.setValue(summary.address?.numero ?? 'S/N');
+        this.form.get('number')?.setValue(summary.address?.numero ?? '');
         this.form.get('postalCode')?.setValue(summary.address?.codigoPostal ?? '');
         this.form.get('district')?.setValue(summary.address?.distrito ?? '');
         this.form.get('province')?.setValue(summary.address?.provincia ?? '');
@@ -174,7 +174,7 @@ export class AddressComponent {
       this.form.get('department')?.setValue(this.departmentUbigeo);
       this.form.get('province')?.setValue(this.provinceUbigeo);
       this.form.get('district')?.setValue(this.districtUbigeo);
-      this.form.get('number')?.setValue(address.address.house_number ?? 'S/N');
+      this.form.get('number')?.setValue(address.address.house_number ?? '');
       this.form.get('district')?.enable();
       this.form.get('province')?.enable();
     });

@@ -263,7 +263,7 @@ export class VerificationPaymentComponent {
   }
 
   private handleVerifiedPayment(): void {
-    this._toastService.success('¡Genial!', 'Pago realizado con éxito.');
+    this._toastService.success('¡Genial!', 'Verificación exitosa.');
     setTimeout(() => {
       this._router.navigate(['registro/confirmacion'], { 
         queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
@@ -804,7 +804,7 @@ export class VerificationPaymentComponent {
       .subscribe({
         next: (response) => {
           this.flowToken.set((response as RegisterCardResponse).token);
-          this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
+          //this._toastService.success('¡Genial!', 'Todo listo, ahora puedes pagar.');
         }
       });
   }

@@ -17,8 +17,8 @@ export class PagoComponent {
       description: 'La suscripción mensual de nuestra Creatina Magrolabs de '+ this.ENV.creatinaSubscription250 +'g solo cuesta S/' + this.ENV.precioCreatinaSubscription + ' al mes y nuestra suscripción anual Creatina Magrolabs de '+ this.ENV.creatina3kg +'Kg cuesta S/' + this.ENV.precioCreatina3kgSubscription + ' al año',
     },
     {
-      title: '¿Por qué se me cobran tarifas de verificación?',
-      description: 'El cobro sera devuelto. Al registrarte, te pedimos que realices un pago de verificación. Esto es para vincular los datos de pago a la cuenta correcta y evitar abusos de la suscripción.',
+      title: '¿Por qué se hace una verificación?',
+      description: 'Al registrarte, te pedimos que realices una verificación con tu tarjeta. Esto es para vincular los datos de pago a la cuenta correcta y evitar abusos de la suscripción.',
     },
     {
       title: '¿Cuando se realizarán los pagos?',

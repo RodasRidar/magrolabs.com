@@ -173,14 +173,22 @@ export class PedidosComponent implements OnInit {
   formatearFechaCompleta(fecha: string): string {
     //TODO: Corregir validacion e incorporar fecha de creacion y actualizacion
     if (!fecha) return '';
+    
+    // La fecha de la BD viene como si fuera UTC, pero es hora de Lima
+    // Sumamos 5 horas para compensar
     const date = new Date(fecha);
-    const dia = date.getDate().toString().padStart(2, '0');
-    const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-    const anio = date.getFullYear();
-    const hora = date.getHours().toString().padStart(2, '0');
-    const minutos = date.getMinutes().toString().padStart(2, '0');
-
-    return `${dia}/${mes}/${anio} ${hora}:${minutos}`;
+    date.setHours(date.getHours() + 5);
+    
+    // Formatear en hora de Lima
+    return date.toLocaleString('es-PE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'America/Lima'
+    });
   }
 
   formatearFecha(fecha: string): string {

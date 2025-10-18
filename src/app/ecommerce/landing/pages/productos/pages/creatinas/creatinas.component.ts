@@ -661,8 +661,8 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
-        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
@@ -671,8 +671,8 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina500gSubscription + '.',
-        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1,
       })
@@ -681,8 +681,8 @@ export class CreatinasComponent {
       this._summaryService.setChoosePlan({
         selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina3kgSubscription + '.',
-        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraAño + ' Magropuntos.',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+        descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraAño + ' Magropuntos 🎁 .',
+        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })

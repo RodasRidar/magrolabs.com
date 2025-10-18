@@ -1,9 +1,8 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-signup',
@@ -32,6 +31,17 @@ export class SignupComponent {
       });
     }
 
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    // Solo mostrar la alerta si no estamos en la página de confirmación
+    if (this.currentUrl !== 'confirmacion') {
+      $event.preventDefault();
+      // En navegadores modernos, el mensaje personalizado puede no mostrarse,
+      // pero el navegador mostrará su propio mensaje de confirmación
+      $event.returnValue = '¡Espera! Completa tu registro para obtener tu creatina gratis.';
+    }
   }
 
   goBack() {

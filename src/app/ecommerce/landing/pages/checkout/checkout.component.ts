@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, HostListener, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
@@ -54,6 +54,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   isProcessing =  signal(false);
   isOutsideLimaMetropolitana = signal(false);
   precioEnvioFueraLimaMetropolitana = signal(this.ENV.precioEnvioFueraLimaMetropolitana);
+  allowNavigation = signal(false); // Señal para permitir navegación cuando el pago se procesa correctamente
 
   private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
@@ -257,6 +258,17 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     // Limpiar todas las suscripciones
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    // Solo mostrar la alerta si no se ha completado el pago exitosamente
+    if (!this.allowNavigation() && !this.isProcessing()) {
+      $event.preventDefault();
+      // En navegadores modernos, el mensaje personalizado puede no mostrarse,
+      // pero el navegador mostrará su propio mensaje de confirmación
+      $event.returnValue = '¡Espera! Completa tu compra para obtener tu creatina gratis.';
+    }
   }
 
   isSignUpAceptedChange() {
@@ -621,7 +633,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       })
     ).subscribe({
       next: (paymentResponse) => {
-
+        this.allowNavigation.set(true); // Permitir navegación al procesar el pago exitosamente
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
       },
@@ -825,6 +837,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       })
     ).subscribe({
       next: (paymentResponse) => {
+        this.allowNavigation.set(true); // Permitir navegación al procesar el pago exitosamente
         console.log('Summary', this._summaryService.getSummary())
         this._toastService.success('¡Listo!', 'Datos actualizados correctamente.');
         window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
@@ -947,11 +960,12 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
       const userData = this._summaryService.getSummary()?.userData;
       if (userData?.id) {
+        this.allowNavigation.set(true); // Permitir navegación al continuar con usuario existente
         this._summaryService.setChoosePlan({
           selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
           descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
-          descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
-          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+          descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
           descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
           quantity: 1
         });
@@ -997,11 +1011,12 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           })
         ).subscribe({
           next: () => {
+            this.allowNavigation.set(true); // Permitir navegación al guardar los datos exitosamente
             this._summaryService.setChoosePlan({
               selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
               descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
-              descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
-              descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+              descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+              descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
               descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
               quantity: 1
             });
@@ -1068,8 +1083,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._summaryService.setChoosePlan({
       selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
       descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
-      descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos.',
-      descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (gratis) 🎁',
+      descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+      descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
       descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
       quantity: 1
     });

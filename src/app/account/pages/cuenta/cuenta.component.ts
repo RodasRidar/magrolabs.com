@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, DestroyRef, signal } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../shared/services/user.service';
@@ -16,6 +16,7 @@ import { FlowService } from '../../../shared/services/flow.service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
+import { ProfileCompletionService, ProfileCompletionStatus } from '../../../shared/services/profile-completion.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -35,50 +36,112 @@ export class CuentaComponent implements OnInit {
   private _flowService = inject(FlowService);
   private _loyaltyService = inject(LoyaltyService);
   private _seoService = inject(SeoService);
+  profileCompletionService = inject(ProfileCompletionService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
-  user: UserDetailResponse | null = null;
-  subscription: Subscription | null = null;
-  subscriptionLoading = false;
-  subscriptionError = false;
-  lastOrder: OrderResponse | null = null;
-  orderLoading = false;
-  orderError = false;
-  loyaltyPoints = 0;
-  loyaltyEarnedPoints = 0;
-  loyaltyProgressWidth = '0%';
-  maxLoyaltyPoints = 200;
-  statusEnum = SubscriptionStatusEnum;
+  
+  // Señal unificada de carga
+  isLoadingDashboard = signal(true);
+  
+  // Señales para estado del usuario
+  user = signal<UserDetailResponse | null>(null);
+  
+  // Señales para suscripción
+  subscription = signal<Subscription | null>(null);
   nextBillingDate = signal<string>('');
-  ENV = environment;
+  
+  // Señales para pedidos
+  lastOrder = signal<OrderResponse | null>(null);
+  
+  // Señales para loyalty/créditos
+  loyaltyPoints = signal(0);
+  loyaltyEarnedPoints = signal(0);
+  maxLoyaltyPoints = signal(200);
+  
+  // Señales para tier
+  tierImageRoutes = signal<LoyaltyTierImageRoutes | null>(null);
+  tierDisplayName = signal('MagroPoints');
 
-  // Tier y imagen dinámica
-  tierImageRoutes: LoyaltyTierImageRoutes | null = null;
-  tierDisplayName = 'MagroPoints';
-  isLoadingTier = true;
+  // Computed signals
+  loyaltyProgressWidth = computed(() => {
+    const percentage = (this.loyaltyEarnedPoints() / this.maxLoyaltyPoints()) * 100;
+    return `${percentage}%`;
+  });
+
+  loyaltyProgressPercentage = computed(() => {
+    return (this.loyaltyEarnedPoints() / this.maxLoyaltyPoints()) * 100;
+  });
+
+  // Verificación si se debe mostrar la card de último pedido
+  shouldShowLastOrderCard = computed(() => {
+    return this.profileCompletionService.hasAddress() || 
+           this.profileCompletionService.hasSubscription() || 
+           this.lastOrder() !== null;
+  });
+
+  // Verificar si debe mostrar el medidor de lealtad
+  shouldShowLoyaltyMeter = computed(() => {
+    return this.profileCompletionService.hasAddress() && 
+           this.profileCompletionService.hasSubscription();
+  });
+
+  // Verificación si necesita completar secciones
+  needsBasicInfo = computed(() => !this.profileCompletionService.hasBasicInfo());
+  needsAddress = computed(() => !this.profileCompletionService.hasAddress());
+  needsSubscription = computed(() => !this.profileCompletionService.hasSubscription());
+
+  statusEnum = SubscriptionStatusEnum;
+  ENV = environment;
 
   ngOnInit() {
     // Configuración SEO para página de cuenta de usuario
     this.configureSEO();
     
-    this.loadUserData();
-    this.loadSubscriptionData();
-    this.loadLastOrder();
-    this.loadUserCredits();
+    // Cargar todos los datos en una sola petición
+    this.loadAllDashboardData();
 
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
       this.destroy$.complete();
     });
-
-    // Iniciar con 0% y luego animar hasta el porcentaje actual
-    setTimeout(() => {
-      this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
-    }, 500);
   }
 
-  calculateProgressPercentage(): number {
-    return (this.loyaltyEarnedPoints / this.maxLoyaltyPoints) * 100;
+  /**
+   * Carga todos los datos del dashboard en una sola petición optimizada
+   */
+  private loadAllDashboardData(): void {
+    const userId = this.getLoggedUserId();
+    if (!userId) {
+      console.error('No user ID found');
+      this.isLoadingDashboard.set(false);
+      return;
+    }
+
+    this.isLoadingDashboard.set(true);
+
+    this.profileCompletionService.loadAllDashboardData(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          // Actualizar todas las señales con los datos recibidos
+          this.user.set(data.user);
+          this.subscription.set(data.subscription);
+          this.lastOrder.set(data.lastOrder);
+          this.loyaltyPoints.set(data.loyaltyPoints);
+          this.loyaltyEarnedPoints.set(data.loyaltyEarnedPoints);
+          this.tierImageRoutes.set(data.tierInfo.imageRoutes);
+          this.tierDisplayName.set(data.tierInfo.displayName);
+          this.nextBillingDate.set(data.nextBillingDate);
+          
+          this.isLoadingDashboard.set(false);
+          
+          console.log('Dashboard data loaded:', data);
+        },
+        error: (error) => {
+          console.error('Error loading dashboard data:', error);
+          this.isLoadingDashboard.set(false);
+        }
+      });
   }
 
   /**
@@ -104,120 +167,6 @@ export class CuentaComponent implements OnInit {
     
     // Eliminar o configurar canonical para evitar problemas de SEO
     // En este caso, al no indexarse, no es necesario canonical
-  }
-
-  private loadUserData() {
-    this._userService.getCurrentUser()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (user) => {
-          this.user = user;
-          this.loadUserTier(); // Cargar tier después de obtener el usuario
-        },
-        error: (error) => {
-          console.error('Error al cargar datos del usuario:', error);
-        }
-      });
-  }
-
-  private loadSubscriptionData() {
-    this.subscriptionLoading = true;
-    this.subscriptionError = false;
-
-    this._subscriptionService.getMySubscriptions(1, 1)
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap(response => {
-          if (response.data.subscriptions && response.data.subscriptions.length > 0) {
-            this.subscription = response.data.subscriptions[0];
-            const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-            return this._flowService.getSubscriptions(customerId || '')
-              .pipe(
-                map(flowResponse => ({
-                  subscriptionResponse: response,
-                  flowResponse
-                })),
-                catchError(err => {
-                  console.error('Error al obtener detalles de Flow:', err);
-                  // Retornar un objeto con solo la respuesta original para no interrumpir el flujo
-                  return of({
-                    subscriptionResponse: response,
-                    flowResponse: null
-                  });
-                })
-              );
-          }
-          this.subscription = null;
-          // Retornar un observable que emite null si no hay suscripciones
-          return of({ subscriptionResponse: response, flowResponse: null });
-        }),
-        finalize(() => {
-          this.subscriptionLoading = false;
-        })
-      )
-      .subscribe({
-        next: (combinedResponse) => {
-          //console.log('combinedResponse', combinedResponse);
-          //console.log('Próxima fecha de pago:', combinedResponse.flowResponse?.data[0].next_invoice_date);
-          this.nextBillingDate.set(combinedResponse.subscriptionResponse.data.subscriptions[0].next_billing_date || '');
-        },
-        error: (error) => {
-          console.error('Error al cargar datos de suscripción:', error);
-          this.subscriptionError = true;
-          this.subscription = null;
-        }
-      });
-  }
-
-  private loadLastOrder() {
-    this.orderLoading = true;
-    this.orderError = false;
-
-    // Obtener solo el último pedido (page=1, limit=1)
-    this._orderService.getMyOrders(1, 1)
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
-          this.orderLoading = false;
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.data && response.data.orders && response.data.orders.length > 0) {
-            this.lastOrder = response.data.orders[0];
-          } else {
-            this.lastOrder = null;
-          }
-        },
-        error: (error) => {
-          console.error('Error al cargar último pedido:', error);
-          this.orderError = true;
-          this.lastOrder = null;
-        }
-      });
-  }
-
-  private loadUserCredits(): void {
-    const userId = this.getLoggedUserId();
-    console.log('userId', userId);
-    if (userId) {
-      this._creditTransactionService.getTotalCredits(userId)
-        .pipe(
-          takeUntil(this.destroy$)
-        )
-        .subscribe({
-          next: (response) => {
-            if (response && response.data) {
-              this.loyaltyPoints = parseFloat(response.data.totalCredits) || 0;
-              // Actualizar la barra de progreso después de obtener los puntos
-              this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
-            }
-          },
-          error: (error) => {
-            console.error('Error al obtener los créditos del usuario:', error);
-          }
-        });
-    }
   }
 
   private getLoggedUserId(): string {
@@ -311,35 +260,6 @@ export class CuentaComponent implements OnInit {
         return 'bg-gray-500';
       default:
         return 'bg-gray-500';
-    }
-  }
-
-  private loadUserTier(): void {
-    this.isLoadingTier = true;
-    const userId = this.getLoggedUserId();
-    
-    if (userId) {
-      this._loyaltyService.getUserTierInfo(userId)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (tierInfo) => {
-            this.tierImageRoutes = tierInfo.imageRoutes;
-            this.tierDisplayName = tierInfo.displayName;
-            this.isLoadingTier = false;
-            this.loyaltyEarnedPoints = tierInfo.tierData.totalEarnedCredits || 0;
-              // Actualizar la barra de progreso después de obtener los puntos
-              this.loyaltyProgressWidth = this.calculateProgressPercentage() + '%';
-          },
-          error: (error) => {
-            console.error('Error al obtener tier del usuario:', error);
-            // Mantener valores por defecto en caso de error
-            this.tierImageRoutes = null;
-            this.tierDisplayName = 'MagroPoints';
-            this.isLoadingTier = false;
-          }
-        });
-    } else {
-      this.isLoadingTier = false;
     }
   }
 }

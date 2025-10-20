@@ -44,6 +44,9 @@ export class CreditoComponent implements OnInit {
   tierDisplayName = signal<string>('Carbon');
   isLoadingTier = true;
 
+  // Control de visibilidad del card de promoción de Instagram
+  showInstagramPromoCard = signal<boolean>(false);
+
   // Historial de transacciones
   transactions: CreditTransaction[] = [];
   transactionHistory: TransactionHistoryItem[] = [];
@@ -160,13 +163,24 @@ export class CreditoComponent implements OnInit {
   }
 
   private processTransactionHistory(): void {
+    // Variable para verificar si ya participó en la promoción de Instagram
+    let hasInstagramPromo = false;
+
     this.transactions.map(transaction => {
       const description = transaction.description || this.getDefaultDescription(transaction);
       
       if (description.toLowerCase().includes('amigo')) {
         this.invitationCredits += parseFloat(transaction.amount);
       }
+
+      // Verificar si existe una transacción con "Compartir tu creatina en Instagram"
+      if (description.toLowerCase().includes('compartir tu creatina en instagram')) {
+        hasInstagramPromo = true;
+      }
     });
+
+    // Actualizar el signal: mostrar card solo si NO ha participado en la promo
+    this.showInstagramPromoCard.set(!hasInstagramPromo);
 
     this.transactionHistory = this.transactions.map(transaction => {
       return {

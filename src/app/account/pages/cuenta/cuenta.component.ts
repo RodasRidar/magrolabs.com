@@ -299,6 +299,7 @@ export class CuentaComponent implements OnInit {
 
     });
 
+    this.authService.updateFlowCustomerId(currentUser.flowCustomerId || '');
     // Configurar el plan de suscripción
     this._summaryService.setChoosePlan({
       selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,

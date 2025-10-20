@@ -75,7 +75,7 @@ export class SummaryService {
    * SIN eliminar las cookies de autenticación del usuario
    */
   clearSummaryOnly() {
-    //this.summaryState.next(<Summary>{});
+    this.summaryState.next(<Summary>{});
     this._cookieService.delete(this.cookieName, '/');
     this._cookieService.delete(this.cookieName);
     this._cookieService.delete('promoCode', '/');

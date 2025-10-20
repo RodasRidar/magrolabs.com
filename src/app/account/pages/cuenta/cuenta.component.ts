@@ -17,26 +17,27 @@ import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
 import { ProfileCompletionService, ProfileCompletionStatus } from '../../../shared/services/profile-completion.service';
+import { VerificationPaymentModalService } from '../../../shared/services/verification-payment-modal.service';
+import { VerificationPaymentModalComponent } from '../../../shared/ui/verification-payment-modal/verification-payment-modal.component';
+import { SummaryService } from '../../../shared/services/summary-service.service';
+import { SummaryEnum } from '../../../shared/models/summary.model';
+import { AddressListResponse } from '../../../shared/interfaces/address.interfaces';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })
 export class CuentaComponent implements OnInit {
-  private _userService = inject(UserService);
-  private _subscriptionService = inject(SubscriptionService);
-  private _orderService = inject(OrderService);
-  private _creditTransactionService = inject(CreditTransactionService);
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private destroy$ = new Subject<void>();
-  private _flowService = inject(FlowService);
-  private _loyaltyService = inject(LoyaltyService);
   private _seoService = inject(SeoService);
   profileCompletionService = inject(ProfileCompletionService);
+  verificationPaymentModalService = inject(VerificationPaymentModalService);
+  private _summaryService = inject(SummaryService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   
@@ -261,5 +262,83 @@ export class CuentaComponent implements OnInit {
       default:
         return 'bg-gray-500';
     }
+  }
+
+  /**
+   * Abre el modal de verificación de pago con los datos necesarios
+   */
+  openVerificationPaymentModal(): void {
+    const currentUser = this.user();
+    console.log('Current user data before opening modal:', currentUser);
+    if (!currentUser) {
+      console.error('No user data available');
+      return;
+    }
+
+    // Verificar que el usuario tenga dirección
+    if (!this.profileCompletionService.hasAddress()) {
+      console.error('User needs to complete address before subscribing');
+      // Podrías agregar un toast aquí
+      return;
+    }
+
+    // Preparar los datos del summary con la información del usuario actual
+    
+    // Actualizar el summary con los datos actuales del usuario
+    this._summaryService.setUserData({
+      nombre: currentUser.first_name,
+      apellido: currentUser.last_name,
+      email: currentUser.email,
+      nroDocument: currentUser.documentNumber || '',
+      cellphone: currentUser.phone || '',
+      typeDocument: currentUser.documentType || 'DNI' as any,
+      id: currentUser.id,
+      isSignUpAcepted: true,
+      customerId: currentUser.flowCustomerId || '',
+
+    });
+
+    // Configurar el plan de suscripción
+    this._summaryService.setChoosePlan({
+      selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
+      descriptionOne: 'Plan mensual de S/' + environment.precioCreatinaSubscription + '.',
+      descriptionTwo: 'Ganas ' + environment.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
+      descrptionThree: 'Creatina ' + environment.creatinaFreeGramos + 'gr (prueba gratis)',
+      descrptionFour: 'Periodo de prueba de ' + environment.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
+      quantity: 1
+    });
+
+    // Configurar la dirección si existe
+    if (currentUser.address) {
+      const address = currentUser.address; // Usar la primera dirección
+      console.log('Setting address from user data:', address);
+      
+      this._summaryService.setAddress({
+        id: address.id,
+        tipoVia: address.avenue || '', // avenue es el nombre de la calle/avenida
+        nombreVia: address.avenue || '', // Mantener coherencia
+        numero: address.number || '',
+        codigoPostal: address.postalcode || '',
+        distrito: address.district_ubigeo || '',
+        provincia: address.province_ubigeo || '',
+        department: address.department_ubigeo|| '',
+        reference: address.reference || ''
+      });
+    }
+
+    // Abrir el modal con callback para recargar datos después de cerrar
+    this.verificationPaymentModalService.open(
+      this._summaryService.getSummary()!,
+      () => this.reloadDashboardAfterModalClose()
+    );
+  }
+
+  /**
+   * Recarga los datos del dashboard después de cerrar el modal
+   * Útil para reflejar cambios después de una suscripción exitosa
+   */
+  private reloadDashboardAfterModalClose(): void {
+    console.log('Reloading dashboard data after modal close...');
+    this.loadAllDashboardData();
   }
 }

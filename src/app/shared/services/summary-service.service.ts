@@ -70,6 +70,22 @@ export class SummaryService {
     return <Summary>{};
   }
 
+  /**
+   * Limpia solo las cookies relacionadas con el summary (registro/suscripción)
+   * SIN eliminar las cookies de autenticación del usuario
+   */
+  clearSummaryOnly() {
+    this.summaryState.next(<Summary>{});
+    this._cookieService.delete(this.cookieName, '/');
+    this._cookieService.delete(this.cookieName);
+    this._cookieService.delete('promoCode', '/');
+    this._cookieService.delete('promoCode');
+  }
+
+  /**
+   * Limpia TODAS las cookies incluyendo autenticación
+   * ⚠️ ADVERTENCIA: Solo usar en logout o casos específicos
+   */
   clearSummary() {
     // this.summaryState.next(<Summary>{});
     this._cookieService.delete(this.cookieName, '/');

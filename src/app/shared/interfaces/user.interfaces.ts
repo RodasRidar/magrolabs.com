@@ -2,6 +2,7 @@
  * Interfaces para usuarios
  */
 
+import { AddressListResponse, AddressResponse } from "./address.interfaces";
 import { TypeDocument } from "./auth.interfaces";
 
 // Interfaces de Request
@@ -93,7 +94,6 @@ export interface UserDetailResponse {
   /**
    * Direcciones del usuario
    */
-  address?: any;
 
   /**
    * Fecha de nacimiento del usuario
@@ -111,7 +111,9 @@ export interface UserDetailResponse {
    * Fecha de última actualización del usuario
    * @example "2023-01-01T00:00:00.000Z"
    */
+  flowCustomerId?: string;
   updated_at: string;
+  address?: AddressResponse | null;
 }
 
 export interface UsersListResponse {

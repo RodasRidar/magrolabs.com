@@ -448,10 +448,10 @@
 
                         <!-- Campos de la dirección -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Calle/Avenida -->
+                            <!-- Calle/Avenida/Jiron -->
                             <div class="form-group">
                                 <label for="streetAddress" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Calle/Avenida<span class="text-red-500">*</span>
+                                    Calle/Avenida/Jiron<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="streetAddress" formControlName="streetAddress"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
@@ -469,15 +469,19 @@
                             <!-- Número -->
                             <div class="form-group">
                                 <label for="number" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Número
+                                    N°/Mz/Lt<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="number" formControlName="number"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
                                     [class.border-red-500]="hasError(addressForm, 'number')"
-                                    (input)="limitDigits('number', 6)">
+                                    (input)="limitDigits('number', 20)">
+                                <div *ngIf="hasError(addressForm, 'number', 'required')"
+                                    class="mt-1 text-sm text-red-500">
+                                    Campo obligatorio
+                                </div>
                                 <div *ngIf="hasError(addressForm, 'number', 'pattern')"
                                     class="mt-1 text-sm text-red-500">
-                                    Solo se permiten letras y números (máximo 6 caracteres)
+                                    Solo se permiten caracteres alfanuméricos y . - / (máximo 20 caracteres)
                                 </div>
                             </div>
 
@@ -560,11 +564,15 @@
                             <!-- Referencia -->
                             <div class="form-group md:col-span-2">
                                 <label for="reference" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Referencia
+                                    Referencia<span class="text-red-500">*</span>
                                 </label>
                                 <textarea id="reference" formControlName="reference" rows="3"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
                                     [class.border-red-500]="hasError(addressForm, 'reference')"></textarea>
+                                <div *ngIf="hasError(addressForm, 'reference', 'required')"
+                                    class="mt-1 text-sm text-red-500">
+                                    La referencia es obligatoria
+                                </div>
                                 <div *ngIf="hasError(addressForm, 'reference', 'pattern')"
                                     class="mt-1 text-sm text-red-500">
                                     La referencia contiene caracteres no permitidos

@@ -253,13 +253,10 @@ export class AddressComponent {
         province_ubigeo: this.provinceUbigeo,
         district: district?.nombre_ubigeo ?? '',
         district_ubigeo: this.districtUbigeo,
+        reference: addressSummary.reference,
+        number: addressSummary.numero,
       };
-      if(addressSummary.reference !== ''){
-        addressRequest.reference = addressSummary.reference;
-      }
-      if(addressSummary.numero !== ''){
-        addressRequest.number = addressSummary.numero;
-      }
+      
       if(addressSummary.codigoPostal !== ''){
         addressRequest.postalcode = addressSummary.codigoPostal;
       }

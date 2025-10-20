@@ -137,8 +137,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
       department: ['', [Validators.required]],
       province: [{ value: '', disabled: true }, [Validators.required]],
       district: [{ value: '', disabled: true }, [Validators.required]],
-      number: ['', [Validators.minLength(1), Validators.maxLength(6), Validators.pattern(/^[a-zA-Z0-9/]{1,6}$/)]],
-      reference: ['', [Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]],
+      number: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(20), Validators.pattern(/^[0-9A-Za-zÑñ\/\.,\-\s]{1,20}$/)]],
+      reference: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]],
       postalCode: ['', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]]
     });
     
@@ -667,19 +667,11 @@ export class PerfilComponent implements OnInit, OnDestroy {
       province_ubigeo: this.provinceUbigeo,
       district: district?.nombre_ubigeo || '',
       district_ubigeo: this.districtUbigeo,
+      number: this.addressForm.get('number')?.value || '',
+      reference: this.addressForm.get('reference')?.value || '',
     };
     
-    // Agregar campos opcionales si tienen valor
-    const reference = this.addressForm.get('reference')?.value;
-    if (reference) {
-      addressRequest.reference = reference;
-    }
-    
-    const number = this.addressForm.get('number')?.value;
-    if (number) {
-      addressRequest.number = number;
-    }
-    
+    // Agregar campo opcional de código postal si tiene valor
     const postalCode = this.addressForm.get('postalCode')?.value;
     if (postalCode) {
       addressRequest.postalcode = postalCode;

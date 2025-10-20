@@ -186,7 +186,7 @@
                 <!-- Banner de completitud de perfil -->
                 @if (!profileCompletionService.isLoading() && !profileCompletionService.isProfileComplete()) {
                 <div
-                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#d07d66] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
+                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
@@ -212,7 +212,7 @@
                 @if (!profileCompletionService.isLoading() && profileCompletionService.isProfileComplete() &&
                 !profileCompletionService.hasSubscription()) {
                 <div
-                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#d07d66] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
+                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
@@ -234,7 +234,7 @@
                     [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsSubscription()}">
                     @if (needsSubscription()) {
                     <div
-                        class="bg-gradient-to-r from-[#d07d66] to-[#d7816a] px-4 py-2 flex items-center justify-between">
+                        class="bg-gradient-to-r from-[#1f1b19] to-[#d7816a] px-4 py-2 flex items-center justify-between">
                         <span class="text-white text-sm font-semibold flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -330,7 +330,7 @@
                     [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsBasicInfo() || needsAddress()}">
                     @if (needsBasicInfo() || needsAddress()) {
                     <div
-                        class="bg-gradient-to-r from-[#d07d66] to-[#d7816a] px-4 py-2 flex items-center justify-between">
+                        class="bg-gradient-to-r from-[#1f1b19] to-[#d7816a] px-4 py-2 flex items-center justify-between">
                         <span class="text-white text-sm font-semibold flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
                                 fill="currentColor">

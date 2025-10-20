@@ -675,6 +675,8 @@ export class VerificationPaymentComponent {
     // Cerrar el modal si fue levantado como modal
     if (this._verificationPaymentModalService.isOpen()) {
       this._verificationPaymentModalService.close();
+      this._summaryService.clearSummaryOnly();
+      this._toastService.success('¡Genial!', 'Suscripción creada correctamente.');
       return;
     }
     

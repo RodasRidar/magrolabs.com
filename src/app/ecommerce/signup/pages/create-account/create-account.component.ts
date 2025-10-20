@@ -43,7 +43,7 @@ export interface SignUp {
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, RouterLink, FormsModule],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule],
   templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent implements OnDestroy {

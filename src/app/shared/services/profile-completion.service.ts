@@ -106,7 +106,7 @@ export class ProfileCompletionService {
     
     // Si solo falta la dirección
     if (status.hasBasicInfo && !status.hasAddress) {
-      return 'Completa tu dirección para activar tu prueba gratis.';
+      return 'Completa tu dirección de envío para tu creatina de prueba gratis.';
     }
     
     // Si falta información básica
@@ -382,7 +382,7 @@ export class ProfileCompletionService {
     
     // Si solo falta la dirección
     if (status.hasBasicInfo && !status.hasAddress) {
-      return 'Completa tu dirección para activar tu prueba gratis.';
+      return 'Completa tu dirección de envío para tu creatina de prueba gratis.';
     }
     
     // Si falta información básica

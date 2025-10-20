@@ -53,7 +53,7 @@ export class ConfirmationComponent {
     { name: 'El email de confirmación está en camino, si no lo recibes puedes revisar tu bandeja de spam.' },
     { name: 'Tu periodo de prueba comienza despues de recibir tu creatina gratis.' },
     { name: 'En las proximas 48 horas nos pondremos en contacto vía Whatsapp.' },
-    { name: 'Te avisaremos cuando hagamos envíos a tu ciudad.' },
+    { name: 'Coordinaremos la entrega contigo.' },
   ]
 
   informationCompraExitoRegistroList: Information[] = [
@@ -76,8 +76,8 @@ export class ConfirmationComponent {
 
   parrafoError = {
     parrafo1: '¡El registro se ha completado con éxito, aunque tenemos noticias!',
-    parrafo2: 'Revisamos que tu domicilio no esta dentro de la zona de cobertura, pronto estaremos por tu ciudad. Por el momento no es posible enviarte tu creatina gratis. ' +
-      'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio.',
+    parrafo2: 'Revisamos que tu domicilio no esta dentro de Lima Metropolitana' +
+      'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio y coordinar la entrega.',
     parrafo3: 'Ten en cuenta que:',
   }
 

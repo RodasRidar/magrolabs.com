@@ -1,27 +1,22 @@
-import { Component, OnInit, inject, DestroyRef, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UserService } from '../../../shared/services/user.service';
 import { UserDetailResponse } from '../../../shared/interfaces/user.interfaces';
-import { SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum } from '../../../shared/interfaces/subscription.interface';
-import { OrderService } from '../../../shared/services/order.service';
 import { OrderResponse, OrderStatus } from '../../../shared/interfaces/order.interfaces';
-import { finalize, takeUntil, switchMap, map, catchError } from 'rxjs/operators';
-import { CreditTransactionService } from '../../../shared/services/credit-transactions.service';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Subject, of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/env';
-import { FlowService } from '../../../shared/services/flow.service';
-import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
-import { ProfileCompletionService, ProfileCompletionStatus } from '../../../shared/services/profile-completion.service';
+import { ProfileCompletionService } from '../../../shared/services/profile-completion.service';
 import { VerificationPaymentModalService } from '../../../shared/services/verification-payment-modal.service';
 import { VerificationPaymentModalComponent } from '../../../shared/ui/verification-payment-modal/verification-payment-modal.component';
 import { SummaryService } from '../../../shared/services/summary-service.service';
 import { SummaryEnum } from '../../../shared/models/summary.model';
-import { AddressListResponse } from '../../../shared/interfaces/address.interfaces';
+import { Router } from '@angular/router';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -38,6 +33,8 @@ export class CuentaComponent implements OnInit {
   profileCompletionService = inject(ProfileCompletionService);
   verificationPaymentModalService = inject(VerificationPaymentModalService);
   private _summaryService = inject(SummaryService);
+  private _router = inject(Router);
+  private _toastService = inject(ToastService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   
@@ -278,7 +275,11 @@ export class CuentaComponent implements OnInit {
     // Verificar que el usuario tenga dirección
     if (!this.profileCompletionService.hasAddress()) {
       console.error('User needs to complete address before subscribing');
-      // Podrías agregar un toast aquí
+      this._toastService.warning('Dirección requerida', 'Por favor, completa tu dirección de envío para activar tu prueba gratis.');
+      // Redireccionar al perfil con parámetro para indicar el flujo
+      this._router.navigate(['/cuenta'], { 
+        queryParams: { isFromFreeCreatineFlow: 'true' } 
+      });
       return;
     }
 

@@ -51,13 +51,13 @@ export class AppComponent {
 
     this._router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
+        //const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
 
-        if (currentUrl === 'registro' || currentUrl === 'crear-cuenta' || currentUrl === 'direccion' || currentUrl === 'creatina-monohidratada-100-gr' || currentUrl === 'creatina-monohidratada-250-gr' || currentUrl === 'creatina-monohidratada-3-kg' || currentUrl === 'creatina-monohidratada-250-gr#reviews') {
-          this.isButtonVisible = true;
-        } else {
-          this.isButtonVisible = false;
-        }
+        // if (currentUrl === 'registro' || currentUrl === 'crear-cuenta' || currentUrl === 'direccion' || currentUrl === 'creatina-monohidratada-100-gr' || currentUrl === 'creatina-monohidratada-250-gr' || currentUrl === 'creatina-monohidratada-3-kg' || currentUrl === 'creatina-monohidratada-250-gr#reviews') {
+        //   this.isButtonVisible = true;
+        // } else {
+        //   this.isButtonVisible = false;
+        // }
 
         // Limpiar contadores de reintentos en navegación exitosa
         this.moduleRetryService.clearRetryCount(event.url);

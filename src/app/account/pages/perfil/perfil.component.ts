@@ -10,6 +10,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../shared/services/address-service.service';
 import { AddressApiService } from '../../../shared/services/address-api.service';
 import { CreateAddressRequest } from '../../../shared/interfaces/address.interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Ahora que hemos añadido birth_date a la interfaz original, solo necesitamos definir address_id
 declare module '../../../shared/interfaces/user.interfaces' {
@@ -34,6 +35,11 @@ export class PerfilComponent implements OnInit, OnDestroy {
   private addressApiService = inject(AddressApiService);
   private destroy$ = new Subject<void>();
   private platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  
+  // Query param para detectar si viene del flujo de creatina gratis
+  isFromFreeCreatineFlow = signal(false);
   
   // Formularios
   profileForm!: FormGroup;
@@ -99,6 +105,20 @@ export class PerfilComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   
   ngOnInit(): void {
+    // Detectar si viene del flujo de creatina gratis
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['isFromFreeCreatineFlow'] === 'true') {
+        this.isFromFreeCreatineFlow.set(true);
+        this.toastService.info('Completa tu dirección', 'Por favor, completa tu dirección para continuar con la activación de tu prueba gratis.');
+        
+        // Activar automáticamente la edición de dirección
+        setTimeout(() => {
+          this.isEditingAddress.set(true);
+          this.addressForm.enable();
+        }, 500);
+      }
+    });
+    
     this.initForms();
     this.setupValidators();
     this.setupAddressObservables();
@@ -689,20 +709,19 @@ export class PerfilComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (response) => {
-            this.successMessage.set('Dirección actualizada correctamente');
+            this.toastService.success('¡Listo!', 'Dirección actualizada correctamente');
             this.toggleAddressEdit();
             
-            setTimeout(() => {
-              this.successMessage.set('');
-            }, 3000);
+            // Redireccionar si viene del flujo de creatina gratis
+            if (this.isFromFreeCreatineFlow()) {
+              setTimeout(() => {
+                this.router.navigate(['/cuenta/mi-cuenta']);
+              }, 1500);
+            }
           },
           error: (error) => {
             console.error('Error al actualizar la dirección:', error);
-            this.errorMessage.set('No se pudo actualizar la dirección');
-            
-            setTimeout(() => {
-              this.errorMessage.set('');
-            }, 3000);
+            this.toastService.error('Ups!', 'No se pudo actualizar la dirección. Por favor, intenta nuevamente.');
           }
         });
     } else {
@@ -721,23 +740,22 @@ export class PerfilComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: () => {
-            this.successMessage.set('Dirección guardada correctamente');
+            this.toastService.success('¡Listo!', 'Dirección guardada correctamente');
             this.toggleAddressEdit();
             
             // Recargar los datos del usuario para obtener el nuevo address_id
             this.loadUserData();
             
-            setTimeout(() => {
-              this.successMessage.set('');
-            }, 3000);
+            // Redireccionar si viene del flujo de creatina gratis
+            if (this.isFromFreeCreatineFlow()) {
+              setTimeout(() => {
+                this.router.navigate(['/cuenta/mi-cuenta']);
+              }, 1500);
+            }
           },
           error: (error) => {
             console.error('Error al guardar la dirección:', error);
-            this.errorMessage.set('No se pudo guardar la dirección');
-            
-            setTimeout(() => {
-              this.errorMessage.set('');
-            }, 3000);
+            this.toastService.error('Ups!', 'No se pudo guardar la dirección. Por favor, intenta nuevamente.');
           }
         });
     }
@@ -783,7 +801,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
         department: this.departmentUbigeo,
         province: this.provinceUbigeo,
         district: this.districtUbigeo,
-        number: address.address.house_number ?? 'S/N'
+        number: address.address.house_number ?? ''
       });
       
       // Habilitar campos según la selección

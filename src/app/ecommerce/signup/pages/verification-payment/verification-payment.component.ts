@@ -12,22 +12,21 @@ import { environment } from '../../../../../environments/env';
 import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
-import { AddressSummary, ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
+import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
-import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of, Subscription, map } from 'rxjs';
+import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of } from 'rxjs';
 import { OrderService } from '../../../../shared/services/order.service';
 import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
 import { AtPeriodEnd, SubscriptionService } from '../../../../shared/services/subscription.service';
-import { CreateSubscriptionRequest, SubscriptionResponse, SubscriptionStatusEnum } from '../../../../shared/interfaces/subscription.interface';
+import { CreateSubscriptionRequest, SubscriptionStatusEnum } from '../../../../shared/interfaces/subscription.interface';
 import { SubscriptionOrderService } from '../../../../shared/services/subscription-order.service';
 import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/subscription-order.interface';
-import { response } from 'express';
 import { UserService } from '../../../../shared/services/user.service';
-import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
 import { CreditTransactionService, TransactionType } from '../../../../shared/services/credit-transactions.service';
+import { VerificationPaymentModalService } from '../../../../shared/services/verification-payment-modal.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -67,6 +66,7 @@ export class VerificationPaymentComponent {
   private _subscriptionOrderService = inject(SubscriptionOrderService)
   private _userService = inject(UserService)
   private _creditTransactionService = inject(CreditTransactionService)
+  private _verificationPaymentModalService = inject(VerificationPaymentModalService)
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = signal('**** **** **** ');
   stepEnum = StepEnum;
@@ -266,7 +266,7 @@ export class VerificationPaymentComponent {
     this._toastService.success('¡Genial!', 'Verificación exitosa.');
     setTimeout(() => {
       this._router.navigate(['registro/confirmacion'], { 
-        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+        queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
       });
     }, 2000);
     this.isLoading.set(false);
@@ -672,8 +672,14 @@ export class VerificationPaymentComponent {
   }
 
   private navigateToConfirmation(): void {
-    this._router.navigate(['registro/confirmacion'], { 
-      queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+    // Cerrar el modal si fue levantado como modal
+    if (this._verificationPaymentModalService.isOpen()) {
+      this._verificationPaymentModalService.close();
+      return;
+    }
+    
+    this._router.navigate(['registro/confirmacion'], {
+      queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
     });
   }
 

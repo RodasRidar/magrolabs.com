@@ -119,6 +119,44 @@ export class CuentaComponent implements OnInit {
   needsAddress = computed(() => !this.profileCompletionService.hasAddress());
   needsSubscription = computed(() => !this.profileCompletionService.hasSubscription());
 
+  // Información de suscripción formateada
+  subscriptionPlanName = computed(() => {
+    return 'Creatina Magrolabs de 250gr - Mensual';
+  });
+
+  subscriptionPrice = computed(() => {
+    return `S/${this.ENV.precioCreatinaSubscription}.00 / mensual`;
+  });
+
+  subscriptionStartDate = computed(() => {
+    const sub = this.subscription();
+    if (!sub || !sub.start_date) return 'No disponible';
+    return new Date(sub.start_date).toLocaleDateString('es-PE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  });
+
+  // Nombre del producto del último pedido
+  lastOrderProductName = computed(() => {
+    const order = this.lastOrder();
+    if (!order || !order.orderItems || order.orderItems.length === 0) {
+      return 'No disponible';
+    }
+    
+    // Si tiene la información del producto
+    if (order.orderItems[0].product?.name) {
+      return order.orderItems[0].product.name;
+    }
+    
+    // Fallback: retornar un nombre genérico basado en la cantidad de productos
+    if (order.orderItems.length === 1) {
+      return 'Producto';
+    }
+    return `${order.orderItems.length} productos`;
+  });
+
   statusEnum = SubscriptionStatusEnum;
   ENV = environment;
 

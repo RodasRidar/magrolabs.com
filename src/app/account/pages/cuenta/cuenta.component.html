@@ -24,7 +24,7 @@
                     style="background:linear-gradient(90deg, rgba(20, 20, 20, 1) 0%, rgb(40 40 66) 35%, #393737 100%)">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-medium leading-6 text-white">Medidor de lealtad</h3>
+                            <h3 class="text-xl font-medium leading-6 text-white">Medidor de Magropuntos</h3>
                             <a routerLink="/cuenta/credito"
                                 class="flex items-center text-white text-sm hover:underline">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"
@@ -32,7 +32,7 @@
                                     <path
                                         d="M17,10.43V2H7v8.43c0,0.35,0.18,0.68,0.49,0.86l4.18,2.51l-0.99,2.34l-3.41,0.29l2.59,2.24L9.07,22L12,20.23L14.93,22 l-0.78-3.33l2.59-2.24l-3.41-0.29l-0.99-2.34l4.18-2.51C16.82,11.11,17,10.79,17,10.43z M13,12.23l-1,0.6l-1-0.6V3h2V12.23z" />
                                 </svg>
-                                Mis Magropuntos
+                                Premiamos tu constancia
                             </a>
                         </div>
 
@@ -252,8 +252,8 @@
                     </div>
                     }
                     <div class="px-4 py-5 sm:p-6 flex-grow">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
-                        <div class="mt-2 max-w-xl text-sm text-gray-500">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
                             <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
                                 [ngClass]="getStatusClass(subscription()?.status)">
                                 <span class="w-2 h-2 me-1 rounded-full"
@@ -265,19 +265,22 @@
                                 <span class="hidden bg-gray-500"></span>
                                 {{ getSubscriptionStatusText(subscription()?.status) }}
                             </span>
-                            @if (subscription()?.status === statusEnum.TRIAL) {
-                            <p class="mt-3">
-                                <strong>Próximo pago:</strong>
-                                {{nextBillingDateFreeCreatine}}
-                            </p>
-                            }
-                            @else if (!subscription()?.status) {
-                            <p class="mt-3">Suscribete a Magrolabs y recibe {{ENV.creditoRegaloPorCompraMes}}
-                                Magropuntos para compras.</p>
-                            }
-                            @else{
-                            <p class="mt-3"><strong>Próximo pago:</strong> {{nextBillingDate() ? (nextBillingDate() |
-                                date:'dd/MM/yyyy') : 'No disponible'}}</p>
+                        </div>
+                        <div class="mt-2 max-w-xl text-sm text-gray-500">
+                            
+                            @if (subscription()?.status) {
+                            <div class="mt-3 space-y-2">
+                                <p><strong>Plan:</strong> {{ subscriptionPlanName() }}</p>
+                                <p><strong>Inversión:</strong> {{ subscriptionPrice() }}</p>
+                                <p><strong>Fecha de inicio:</strong> {{ subscriptionStartDate() }}</p>
+                                @if (subscription()?.status === statusEnum.TRIAL) {
+                                <p><strong>Próximo pago:</strong> {{ nextBillingDateFreeCreatine }}</p>
+                                } @else {
+                                <p><strong>Próximo pago:</strong> {{ nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy') : 'No disponible' }}</p>
+                                }
+                            </div>
+                            } @else {
+                            <p class="mt-3">Suscríbete a Magrolabs y recibe {{ ENV.creditoRegaloPorCompraMes }} Magropuntos para compras.</p>
                             }
                         </div>
                     </div>
@@ -305,18 +308,14 @@
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Último Pedido</h3>
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
                             @if (lastOrder()) {
-                            <p> <strong>Estado:</strong> {{getOrderStatusText(lastOrder()!.status)}}</p>
+                            <p><strong>Producto:</strong> {{ lastOrderProductName() }}</p>
+                            <p class="mt-1"><strong>Estado:</strong> {{ getOrderStatusText(lastOrder()!.status) }}</p>
                             @if (lastOrder()!.total_amount > 0) {
-                            <p class="mt-1"> <strong>Total:</strong> S/{{lastOrder()!.total_amount | number:'1.2-2'}}
-                            </p>
-                            }@else {
-                            <p class="mt-1"> <strong>Total:</strong> S/0</p>
+                            <p class="mt-1"><strong>Total:</strong> S/{{ lastOrder()!.total_amount | number:'1.2-2' }}</p>
+                            } @else {
+                            <p class="mt-1"><strong>Total:</strong> S/0</p>
                             }
-                            <p class="mt-1"> <strong>Fecha del pedido:</strong> {{lastOrder()!.order_date |
-                                date:'dd/MM/yyyy'}}</p>
-                            @if (lastOrder()!.orderItems && lastOrder()!.orderItems.length > 0) {
-                            <p class="mt-1"> <strong>Productos:</strong> {{lastOrder()!.orderItems.length}}</p>
-                            }
+                            <p class="mt-1"><strong>Fecha del pedido:</strong> {{ lastOrder()!.order_date | date:'dd/MM/yyyy' }}</p>
                             } @else {
                             <p>No hay pedidos recientes</p>
                             }

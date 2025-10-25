@@ -65,6 +65,32 @@ export class CuentaComponent implements OnInit {
   tierImageRoutes = signal<LoyaltyTierImageRoutes | null>(null);
   tierDisplayName = signal('MagroPoints');
 
+  // Saludo dinámico
+  greetingMessage = computed(() => {
+    const user = this.user();
+    if (!user) return '';
+    
+    const hour = new Date().getHours();
+    let greeting = '';
+    let emoji = '';
+    
+    if (hour >= 6 && hour < 12) {
+      greeting = 'Buenos días';
+      emoji = '☀️';
+    } else if (hour >= 12 && hour < 19) {
+      greeting = 'Buenas tardes';
+      emoji = '🌤️';
+    } else {
+      greeting = 'Buenas noches';
+      emoji = '🌙';
+    }
+    
+    // Usar solo el primer nombre si tiene varios nombres separados por espacios
+    const firstName = user.first_name.split(' ')[0];
+    
+    return `¡${greeting} ${firstName} ${emoji}, qué gusto tenerte de vuelta!`;
+  });
+
   // Computed signals
   loyaltyProgressWidth = computed(() => {
     const percentage = (this.loyaltyEarnedPoints() / this.maxLoyaltyPoints()) * 100;

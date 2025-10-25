@@ -17,11 +17,14 @@ import { SummaryService } from '../../../shared/services/summary-service.service
 import { SummaryEnum } from '../../../shared/models/summary.model';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../shared/services/toast.service';
+import { MonthlyRewardModalService } from '../../../shared/services/monthly-reward-modal.service';
+import { MonthlyRewardModalComponent } from '../../../shared/ui/monthly-reward-modal/monthly-reward-modal.component';
+import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })
@@ -35,6 +38,8 @@ export class CuentaComponent implements OnInit {
   private _summaryService = inject(SummaryService);
   private _router = inject(Router);
   private _toastService = inject(ToastService);
+  monthlyRewardModalService = inject(MonthlyRewardModalService);
+  private _creditTransactionService = inject(CreditTransactionService);
 
   nextBillingDateFreeCreatine: string = environment.diasNormalesDePruebaOperiodoDeReflexion + ' días después de la entrega.';
   
@@ -97,6 +102,9 @@ export class CuentaComponent implements OnInit {
     
     // Cargar todos los datos en una sola petición
     this.loadAllDashboardData();
+
+    // Verificar si hay recompensa mensual para mostrar
+    this.checkMonthlyReward();
 
     this.destroyRef.onDestroy(() => {
       this.destroy$.next();
@@ -342,5 +350,58 @@ export class CuentaComponent implements OnInit {
   private reloadDashboardAfterModalClose(): void {
     console.log('Reloading dashboard data after modal close...');
     this.loadAllDashboardData();
+  }
+
+  /**
+   * Verifica si el usuario recibió su recompensa mensual hoy
+   * Si es así y no se ha mostrado el modal, lo muestra
+   */
+  private checkMonthlyReward(): void {
+    const userId = this.getLoggedUserId();
+    if (!userId) {
+      return;
+    }
+
+    // No mostrar si ya se mostró hoy
+    if (this.monthlyRewardModalService.wasShownToday()) {
+      return;
+    }
+
+    // Obtener transacciones del usuario
+    this._creditTransactionService.getTransactionsByUser(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response?.data?.transactions) {
+            // Buscar transacciones de hoy del tipo EARNED con descripción de bienvenida mensual
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const todayReward = response.data.transactions.find(transaction => {
+              const transactionDate = new Date(transaction.created_at);
+              transactionDate.setHours(0, 0, 0, 0);
+              
+              // Verificar si es de hoy, tipo EARNED, y tiene descripción de bienvenida mensual
+              return transaction.type === TransactionType.EARNED &&
+                     transactionDate.getTime() === today.getTime() &&
+                     transaction.description?.toLowerCase().includes('bienvenido');
+            });
+
+            // Si encontró una recompensa de hoy, mostrar el modal
+            if (todayReward) {
+              // Esperar un pequeño delay para que cargue el dashboard primero
+              setTimeout(() => {
+                this.monthlyRewardModalService.open({
+                  points: parseFloat(todayReward.amount),
+                  date: new Date(todayReward.created_at)
+                });
+              }, 1500);
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error checking monthly reward:', error);
+        }
+      });
   }
 }

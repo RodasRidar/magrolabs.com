@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { Router, RouterLinkActive, RouterOutlet, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { UserService } from '../shared/services/user.service';
@@ -57,6 +57,33 @@ export class AccountComponent implements OnInit {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    // Prevenir scroll del body cuando el menú está abierto
+    if (this.isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
+    
+    // Cerrar menú móvil si se hace clic fuera del menú y del botón
+    if (this.isMobileMenuOpen && 
+        mobileMenu && 
+        !mobileMenu.contains(target) && 
+        mobileMenuButton && 
+        !mobileMenuButton.contains(target)) {
+      this.closeMobileMenu();
+    }
   }
 
   logout() {

@@ -49,7 +49,7 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    La primera creatina es gratis.
+                                    {{ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula}}.
                                 </p>
                             </dt>
                         </div>
@@ -426,7 +426,7 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
-                                    La primera creatina es gratis.
+                                    {{ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula}}.
                                 </p>
                             </dt>
                         </div>
@@ -584,7 +584,7 @@
     <div class="space-y-4">
         <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h3>
+                <h3 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloOferta}}</h3>
                 <span class="relative size-5 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none" viewBox="0 0 24 24"
@@ -601,15 +601,13 @@
                 </span>
             </summary>
             <p class="mt-4 leading-relaxed text-gray-700">
-                Te regalamos la primera creatina porque estamos 100% convencidos de la calidad de nuestro producto. 
-                Queremos que experimentes los beneficios reales de una creatina monohidratada pura antes de cualquier compromiso. 
-                Es nuestra forma de demostrar confianza en lo que ofrecemos.
+                {{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}
             </p>
         </details>
 
         <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h3>
+                <h3 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion}}</h3>
                 <span class="relative size-5 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -624,8 +622,7 @@
                 </span>
             </summary>
             <p class="mt-4 leading-relaxed text-gray-700">
-                Después de completar tu registro, tu creatina gratis llegará a tu casa en un plazo de {{ENV.plazoDeEntregaHorasCreatinaFree.min}} a {{ENV.plazoDeEntregaHorasCreatinaFree.max}} horas. 
-                Te enviaremos el código de seguimiento para que puedas rastrear tu paquete en tiempo real.
+                {{ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
             </p>
         </details>
 
@@ -669,9 +666,13 @@
                 </span>
             </summary>
             <p class="mt-4 leading-relaxed text-gray-700">
-                <strong>No hay compromiso mínimo.</strong> Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo. 
-                Si cancelas durante este período de prueba, no pagas nada. Después del período de prueba, 
-                puedes cancelar cuando quieras, solo asegúrate de hacerlo {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días antes de tu próxima fecha de facturación.
+                <strong>No hay compromiso mínimo.</strong> Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo adicional. 
+                @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {
+                    Si cancelas durante este período de prueba, no pagas nada.
+                } @else {
+                    Si cancelas durante este período de prueba, solo pagas los S/ {{ENV.campanaPrimeraCreatina.precio}}.
+                }
+                Después del período de prueba, puedes cancelar cuando quieras, solo asegúrate de hacerlo {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días antes de tu próxima fecha de facturación.
             </p>
         </details>
 

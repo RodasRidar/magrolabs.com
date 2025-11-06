@@ -377,7 +377,7 @@ export class CuentaComponent implements OnInit {
       selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
       descriptionOne: 'Plan mensual de S/' + environment.precioCreatinaSubscription + '.',
       descriptionTwo: 'Ganas ' + environment.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-      descrptionThree: 'Creatina ' + environment.creatinaFreeGramos + 'gr (prueba gratis)',
+      descrptionThree: environment.campanaPrimeraCreatina.textos.descripcionCarrito(environment.campanaPrimeraCreatina.gramos),
       descrptionFour: 'Periodo de prueba de ' + environment.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
       quantity: 1
     });

@@ -23,7 +23,7 @@ export class LandingComponent {
   }
 
   private loadSEO() {
-    const description = '¿Por qué Magrolabs? S/'+this.ENV.precioCreatinaSubscription+' por mes. La primera creatina es gratis - '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.';
+    const description = `¿Por qué Magrolabs? S/${this.ENV.precioCreatinaSubscription} por mes. ${this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula} - ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.`;
     const title = 'Magrolabs Creatina';
     const URL = 'https://magrolabs.com';
     const image = 'https://magrolabs.com/image-meta.webp';
@@ -53,7 +53,7 @@ export class LandingComponent {
       locale: 'es_PE',
       'image:width': '1200',
       'image:height': '628',
-      'image:alt': 'Creatina Monohidrato Premium Magrolabs - Primera gratis'
+      'image:alt': `Creatina Monohidrato Premium Magrolabs - ${this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula}`
     });
 
     // Twitter Cards optimizado
@@ -65,7 +65,7 @@ export class LandingComponent {
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Creatina Monohidrato Premium - Primera gratis con Magrolabs'
+      'twitter:image:alt': `Creatina Monohidrato Premium - ${this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula} con Magrolabs`
     });
 
     // Hreflang para SEO internacional
@@ -223,18 +223,18 @@ export class LandingComponent {
       mainEntity: [
         {
           '@type': 'Question',
-          name: '¿Por qué recibo la primera creatina gratis?',
+          name: this.ENV.campanaPrimeraCreatina.textos.faqTituloOferta,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Te regalamos la primera creatina porque queremos mostrarte y hacerte sentir que estás tomando la mejor decisión. Estamos muy convencidos de nuestra creatina de alta calidad.'
+            text: this.ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta
           }
         },
         {
           '@type': 'Question',
-          name: '¿Cuándo recibiré mi creatina gratis?',
+          name: this.ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Después de registrarte, tu creatina gratis estará en tu casa en un plazo de ${this.ENV.plazoDeEntregaHorasCreatinaFree.min} a ${this.ENV.plazoDeEntregaHorasCreatinaFree.max} horass.`
+            text: this.ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(this.ENV.plazoDeEntregaHorasCreatinaFree.min, this.ENV.plazoDeEntregaHorasCreatinaFree.max)
           }
         },
         {
@@ -242,7 +242,9 @@ export class LandingComponent {
           name: '¿Hay un periodo de cancelación?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Después de recibir tu creatina gratis, tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para probarla como período de prueba. Si cancelas durante este tiempo, no pagarás nada. Después aplicamos un período de cancelación mensual.`
+            text: this.ENV.campanaPrimeraCreatina.tipo === 'gratis' 
+              ? `Después de recibir tu ${this.ENV.campanaPrimeraCreatina.textos.heroOferta}, tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para probarla como período de prueba. Si cancelas durante este tiempo, no pagarás nada. Después aplicamos un período de cancelación mensual.`
+              : `Después de recibir tu ${this.ENV.campanaPrimeraCreatina.textos.heroOferta}, tienes ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para probarla como período de prueba. Si cancelas durante este tiempo, solo pagarás los S/ ${this.ENV.campanaPrimeraCreatina.precio}. Después aplicamos un período de cancelación mensual.`
           }
         },
         {
@@ -260,9 +262,11 @@ export class LandingComponent {
     const specialOfferSchema = {
       '@context': 'https://schema.org',
       '@type': 'Offer',
-      name: 'Primera Creatina Gratis + Suscripción Premium',
-      description: `Obtén tu primera creatina completamente gratis y únete a nuestra suscripción por solo S/${this.ENV.precioCreatinaSubscription} al mes`,
-      price: '0',
+      name: `${this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula} + Suscripción Premium`,
+      description: this.ENV.campanaPrimeraCreatina.tipo === 'gratis'
+        ? `Obtén tu primera creatina completamente gratis y únete a nuestra suscripción por solo S/${this.ENV.precioCreatinaSubscription} al mes`
+        : `Obtén tu primera creatina por solo S/${this.ENV.campanaPrimeraCreatina.precio} y únete a nuestra suscripción por S/${this.ENV.precioCreatinaSubscription} al mes`,
+      price: this.ENV.campanaPrimeraCreatina.precio.toString(),
       priceCurrency: 'PEN',
       availability: 'https://schema.org/InStock',
       url: `${URL}/registro`,

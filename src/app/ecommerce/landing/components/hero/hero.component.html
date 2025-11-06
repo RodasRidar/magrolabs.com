@@ -52,7 +52,7 @@
           Envío gratis para siempre<span class="text-base tracking-tighter">!*</span>
         </h2>
         <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
-          Regístrate ahora y recibe tu primera creatina gratis y un regalo de <strong class="text-[#d07d66]">{{ENV.creditoRegaloPorCompraMes}} MP</strong><span class="text-base tracking-tighter">.**</span>
+          Regístrate ahora y recibe tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}} y un regalo de <strong class="text-[#d07d66]">{{ENV.creditoRegaloPorCompraMes}} MP</strong><span class="text-base tracking-tighter">.**</span>
         </h2>
 
         <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
@@ -60,7 +60,7 @@
             style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
             <a [routerLink]="'/registro'"
               class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] md:py-4 md:text-lg md:px-10">
-              Prueba gratis de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días →
+              {{ENV.campanaPrimeraCreatina.textos.ctaBoton(ENV.diasNormalesDePruebaOperiodoDeReflexion)}}
             </a>
           </div>
         </div>
@@ -69,8 +69,7 @@
             * Envío gratis solo para Lima Metropolitana.
           </p>
           <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
-            ** Los {{ENV.creditoRegaloPorCompraMes}} Magropuntos (MP) pueden ser utilizados en nuestra Webshop. Creatina gratis ({{ENV.creatinaFreeGramos}} gr) se entrega en un plazo de
-            {{ENV.plazoDeEntregaHorasCreatinaFree.min}} a {{ENV.plazoDeEntregaHorasCreatinaFree.max}} horas.
+            ** Los {{ENV.creditoRegaloPorCompraMes}} Magropuntos (MP) pueden ser utilizados en nuestra Webshop. {{ENV.campanaPrimeraCreatina.textos.notaPie(ENV.campanaPrimeraCreatina.gramos, ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
           </p>
         </div>
       </div>

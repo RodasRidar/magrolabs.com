@@ -5,7 +5,108 @@ const precioCreatinaSubscription = 69;
 const precioCreatina3kgOnePurchase = 590;
 const precioCreatina3kgSubscription = 470;
 const precioCreatina500gSubscription = 99;
-const creatinaFreeGramos = 100;
+
+// ============================================
+// CONFIGURACIÓN DE CAMPAÑA DE PRIMERA CREATINA
+// ============================================
+// Tipos de campaña soportados:
+// - 'gratis': Primera creatina completamente gratis (S/ 0.00)
+// - 'precio-especial': Primera creatina con precio promocional (ej: S/ 9.90, S/ 14.90, etc.)
+// 
+// Para cambiar de campaña, solo modifica estos valores:
+
+const campanaPrimeraCreatina = {
+  // Tipo de campaña: 'gratis' | 'precio-especial'
+  tipo: 'precio-especial' as 'gratis' | 'precio-especial',
+  
+  // Precio de la primera creatina (0 si es gratis, ej: 9.90, 14.90, etc.)
+  precio: 9.90,
+  
+  // Gramos de la primera creatina
+  gramos: 100,
+  
+  // Textos dinámicos según el tipo de campaña
+  get textos() {
+    if (this.tipo === 'gratis') {
+      return {
+        // Textos cortos
+        ofertaCorta: 'GRATIS',
+        ofertaMedia: 'gratis',
+        ofertaConPrecio: 'gratis (S/ 0.00)',
+        
+        // Textos para hero/landing
+        heroOferta: 'primera creatina gratis',
+        heroOfertaMayuscula: 'Primera creatina GRATIS',
+        
+        // Textos para FAQs
+        faqTituloRecepcion: '¿Cuándo recibiré mi creatina gratis?',
+        faqTituloOferta: '¿Por qué recibo la primera creatina gratis?',
+        faqRespuestaOferta: 'Te regalamos la primera creatina porque estamos 100% convencidos de la calidad de nuestro producto. Queremos que experimentes los beneficios reales de una creatina monohidratada pura antes de cualquier compromiso. Es nuestra forma de demostrar confianza en lo que ofrecemos.',
+        faqRespuestaRecepcion: (plazoMin: number, plazoMax: number) => 
+          `Después de completar tu registro, tu creatina gratis llegará a tu casa en un plazo de ${plazoMin} a ${plazoMax} horas. Te enviaremos el código de seguimiento para que puedas rastrear tu paquete en tiempo real.`,
+        
+        // Textos para descripciones
+        descripcionCarrito: (gramos: number) => `Creatina ${gramos}gr (prueba gratis)`,
+        descripcionSEO: 'Primera creatina GRATIS',
+        
+        // Textos para promociones
+        promocionTitulo: '¿Por qué recibo la primera creatina gratis?',
+        promocionRespuesta: (plazoMax: number, diasPrueba: number) => 
+          `Después de completar tu registro, recibirás tu primera creatina gratis dentro de ${plazoMax} horas. Durante los primeros ${diasPrueba} días, puedes probar tranquilamente tu creatina de 100 gramos, este es tu período de prueba. Luego, pasarás a una suscripción de pago y comenzarán tus pagos y entregas mensuales. ¿Te das de baja en tus primeros ${diasPrueba} días? Entonces perderás tus beneficios gratis.`,
+        
+        // CTA buttons
+        ctaBoton: (dias: number) => `Prueba gratis de ${dias} días →`,
+        ctaBotonAlt: 'Obtener creatina gratis',
+        
+        // Notas al pie
+        notaPie: (gramos: number, plazoMin: number, plazoMax: number) => 
+          `Creatina gratis (${gramos} gr) se entrega en un plazo de ${plazoMin} a ${plazoMax} horas.`,
+      };
+    } else {
+      // precio-especial
+      const precioFormateado = this.precio.toFixed(2);
+      return {
+        // Textos cortos
+        ofertaCorta: `S/ ${precioFormateado}`,
+        ofertaMedia: `a solo S/ ${precioFormateado}`,
+        ofertaConPrecio: `a S/ ${precioFormateado}`,
+        
+        // Textos para hero/landing
+        heroOferta: `primera creatina a solo S/ ${precioFormateado}`,
+        heroOfertaMayuscula: `Primera creatina a S/ ${precioFormateado}`,
+        
+        // Textos para FAQs
+        faqTituloRecepcion: '¿Cuándo recibiré mi primera creatina?',
+        faqTituloOferta: `¿Por qué la primera creatina cuesta solo S/ ${precioFormateado}?`,
+        faqRespuestaOferta: `Ofrecemos tu primera creatina a un precio especial de S/ ${precioFormateado} porque queremos que pruebes la calidad superior de nuestro producto. Estamos tan convencidos de nuestra creatina monohidratada pura que te damos esta oportunidad única de probarla a un precio increíble antes de comprometerte con la suscripción.`,
+        faqRespuestaRecepcion: (plazoMin: number, plazoMax: number) => 
+          `Después de completar tu registro y pago de S/ ${precioFormateado}, tu primera creatina llegará a tu casa en un plazo de ${plazoMin} a ${plazoMax} horas. Te enviaremos el código de seguimiento para que puedas rastrear tu paquete en tiempo real.`,
+        
+        // Textos para descripciones
+        descripcionCarrito: (gramos: number) => `Creatina ${gramos}gr (primera a S/ ${precioFormateado})`,
+        descripcionSEO: `Primera creatina a S/ ${precioFormateado}`,
+        
+        // Textos para promociones
+        promocionTitulo: `¿Por qué la primera creatina cuesta solo S/ ${precioFormateado}?`,
+        promocionRespuesta: (plazoMax: number, diasPrueba: number) => 
+          `Después de completar tu registro, recibirás tu primera creatina por solo S/ ${precioFormateado} dentro de ${plazoMax} horas. Durante los primeros ${diasPrueba} días, puedes probar tu creatina de 100 gramos, este es tu período de prueba. Luego, pasarás a una suscripción de pago regular y comenzarán tus pagos y entregas mensuales normales. ¿Te das de baja en tus primeros ${diasPrueba} días? No hay problema, solo pagarás los S/ ${precioFormateado} de tu primera creatina.`,
+        
+        // CTA buttons
+        ctaBoton: (dias: number) => `Prueba ${dias} días por S/ ${precioFormateado} →`,
+        ctaBotonAlt: `Obtener por S/ ${precioFormateado}`,
+        
+        // Notas al pie
+        notaPie: (gramos: number, plazoMin: number, plazoMax: number) => 
+          `Primera creatina (${gramos} gr) a S/ ${precioFormateado} se entrega en un plazo de ${plazoMin} a ${plazoMax} horas.`,
+      };
+    }
+  }
+};
+
+// Mantener variables legacy para compatibilidad (DEPRECADAS - usar campanaPrimeraCreatina)
+const creatinaFreeGramos = campanaPrimeraCreatina.gramos;
+const creatinaFreePrecio = campanaPrimeraCreatina.precio;
+
 const creatinaSubscription250 = 250;
 const creatinaOnePurchase250 = 250;
 const creatina3kg = 3;
@@ -43,7 +144,6 @@ const fechaUltimaActualizacionCondicionesUso = '01/12/2024';
 const fechaUltimaActualizacionTerminosCondiciones = '02/12/2024';
 const fechaUltimaActualizacionPrivacidad = '03/12/2024';
 const fechaUltimaActualizacionCookies = '04/12/2024';
-const creatinaFreePrecio = 35;
 const apiMagroLabs = 'http://localhost:3000/api/v1';
 const useProxy = true;
 const cancelDiscout = 30;
@@ -62,7 +162,14 @@ export const environment = {
     encrypt,
     precioCreatinaOnePurchase,
     precioCreatinaSubscription,
+    
+    // Nueva configuración de campaña centralizada
+    campanaPrimeraCreatina,
+    
+    // Variables legacy (deprecadas - usar campanaPrimeraCreatina)
     creatinaFreeGramos,
+    creatinaFreePrecio,
+    
     creatinaSubscription250,
     creatinaOnePurchase250,
     creditoRegaloPorCompraMes,
@@ -99,7 +206,6 @@ export const environment = {
     fechaUltimaActualizacionTerminosCondiciones,
     fechaUltimaActualizacionPrivacidad,
     fechaUltimaActualizacionCookies,
-    creatinaFreePrecio,
     apiMagroLabs,
     flowUrlReturnPagoPorAdmin,
     useProxy,

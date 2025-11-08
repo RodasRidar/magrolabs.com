@@ -255,7 +255,7 @@ export class PlansComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
         descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })

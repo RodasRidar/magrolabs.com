@@ -43,7 +43,7 @@ export class TerminosYCondicionesComponent {
       title: 'Artículo 4 - La oferta',
       description: [
         'La oferta de productos y sus precios expresados en Créditos son válidos mientras estén visibles en el Sitio Web y dentro de los límites del stock disponible.',
-        'La descripción de los productos será lo más precisa posible, pero las imágenes son de carácter referencial. La oferta inicial de "creatina gratis" está sujeta a los términos de la membresía y se entrega una sola vez por miembro.',
+        `La descripción de los productos será lo más precisa posible, pero las imágenes son de carácter referencial. La oferta inicial de la primera creatina está sujeta a los términos de la membresía y se entrega una sola vez por miembro con las condiciones vigentes al momento del registro.`,
         'Magrolabs se reserva el derecho de modificar la oferta de productos en cualquier momento.'
       ]
     },

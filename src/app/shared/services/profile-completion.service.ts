@@ -9,6 +9,7 @@ import { CreditTransactionService } from './credit-transactions.service';
 import { LoyaltyService } from './loyalty.service';
 import { UserDetailResponse } from '../interfaces/user.interfaces';
 import { Subscription } from '../interfaces/subscription.interface';
+import { environment } from '../../../environments/env';
 import { OrderResponse } from '../interfaces/order.interfaces';
 import { LoyaltyTierImageRoutes } from '../interfaces/loyalty.interfaces';
 
@@ -101,12 +102,12 @@ export class ProfileCompletionService {
     
     // Si tiene perfil completo pero falta suscripción
     if (status.isProfileComplete && !status.hasSubscription) {
-      return 'Todo listo para activar tu prueba gratis.';
+      return `Todo listo para activar tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
     
     // Si solo falta la dirección
     if (status.hasBasicInfo && !status.hasAddress) {
-      return 'Completa tu dirección de envío para tu creatina de prueba gratis.';
+      return `Completa tu dirección de envío para tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
     
     // Si falta información básica
@@ -115,7 +116,7 @@ export class ProfileCompletionService {
     }
     
     // Caso por defecto
-    return 'Completa tu perfil para comenzar tu prueba gratis.';
+    return `Completa tu perfil para comenzar tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
   });
 
   /**
@@ -377,12 +378,12 @@ export class ProfileCompletionService {
     
     // Si tiene perfil completo pero falta suscripción
     if (status.isProfileComplete && !status.hasSubscription) {
-      return 'Todo listo para activar tu prueba gratis.';
+      return `Todo listo para activar tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
     
     // Si solo falta la dirección
     if (status.hasBasicInfo && !status.hasAddress) {
-      return 'Completa tu dirección de envío para tu creatina de prueba gratis.';
+      return `Completa tu dirección de envío para tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
     
     // Si falta información básica
@@ -391,7 +392,7 @@ export class ProfileCompletionService {
     }
     
     // Caso por defecto (no debería llegar aquí normalmente)
-    return 'Completa tu perfil para comenzar tu prueba gratis.';
+    return `Completa tu perfil para comenzar tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
   }
 
   /**

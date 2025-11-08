@@ -42,7 +42,7 @@ export class VerificationPaymentComponent {
   promotionIsShow = signal(false);
   informationList = signal<Information[]>([
     {
-      name: 'Tu creatina gratis se enviará inmediatamente después de completar el registro',
+      name: `Tu ${this.ENV.campanaPrimeraCreatina.textos.heroOferta} se enviará inmediatamente después de completar el registro`,
     },
     {
       name: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
@@ -173,7 +173,7 @@ export class VerificationPaymentComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
         descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
         quantity: 1
       });
@@ -184,7 +184,7 @@ export class VerificationPaymentComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
         descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
         quantity: 1
       });

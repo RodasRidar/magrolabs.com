@@ -324,7 +324,7 @@
         <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
             <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
             <p class="text-pretty text-sm">Después de realizar la verificación,
-                enviaremos tu creatina gratis de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala
+                enviaremos tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}} de inmediato y comenzará el período de prueba de tu suscripción. ¡Pruebala
                 y
                 disfruta la creatina tanto como quieras! Durante tu período de prueba de
                 {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días. Después de estos
@@ -452,7 +452,7 @@
             <div class="space-y-4">
                 <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
                     <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                        <h2 class="font-semibold">¿Por qué recibo la primera creatina gratis?</h2>
+                        <h2 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloOferta}}</h2>
                         <span class="relative size-5 shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
@@ -471,15 +471,13 @@
                     </summary>
 
                     <p class="mt-4 leading-relaxed text-gray-700">
-                        Te regalamos la primera creatina.
-                        ¿Por qué? Queremos mostrarte y hacerte sentir que estás tomando la mejor decisión. ¡Estamos muy
-                        convencidos de nuestra creatina!
+                        {{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}
                     </p>
                 </details>
 
                 <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
                     <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                        <h2 class="font-semibold">¿Cuándo recibiré mi creatina gratis?</h2>
+                        <h2 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion}}</h2>
 
                         <span class="relative size-5 shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -499,8 +497,7 @@
                     </summary>
 
                     <p class="mt-4 leading-relaxed text-gray-700">
-                        Después de registrarte, tu creatina gratis estará en tu casa en un plazo de
-                        {{ENV.plazoDeEntregaHorasCreatinaFree.min}} a {{ENV.plazoDeEntregaHorasCreatinaFree.max}} horas.
+                        {{ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
                     </p>
                 </details>
 
@@ -526,10 +523,14 @@
                     </summary>
 
                     <p class="mt-4 leading-relaxed text-gray-700">
-                        Después de recibir tu creatina gratis, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
+                        Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
                         días para probarla,
                         este es tu período de prueba.
-                        Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
+                        @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {
+                            Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
+                        } @else {
+                            Si cancelas durante el período de prueba, solo pagarás los S/ {{ENV.campanaPrimeraCreatina.precio}} de tu primera creatina y se cancelará tu suscripción.
+                        }
                         Después de tus primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, aplicamos un
                         período de cancelación mensual.
                         ¿Cancelas antes de {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días de tu fecha de

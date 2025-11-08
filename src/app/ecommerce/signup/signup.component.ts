@@ -3,6 +3,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { environment } from '../../../environments/env';
 
 @Component({
   selector: 'app-signup',
@@ -40,7 +41,7 @@ export class SignupComponent {
       $event.preventDefault();
       // En navegadores modernos, el mensaje personalizado puede no mostrarse,
       // pero el navegador mostrará su propio mensaje de confirmación
-      $event.returnValue = '¡Espera! Completa tu registro para obtener tu creatina gratis.';
+      $event.returnValue = `¡Espera! Completa tu registro para obtener tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
   }
 

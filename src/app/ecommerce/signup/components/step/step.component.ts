@@ -3,6 +3,7 @@ import { StepItemComponent } from './step-item/step-item.component';
 import { StepEnum } from '../../models/step.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SummaryEnum } from '../../../../shared/models/summary.model';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-step',
@@ -26,12 +27,15 @@ export class StepComponent {
   ngOnInit(): void {
     this._summaryService.summaryState$.subscribe((summary) => {
       const summarySelection = summary?.chosePlan?.selection
-      this.flag = "Gratis"
-      if (summarySelection && summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      // Solo mostrar el flag "Gratis" si el tipo de campaña es 'gratis' Y la selección es creatina con suscripción
+      if (environment.campanaPrimeraCreatina.tipo === 'gratis' && 
+          summarySelection && 
+          summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
         this.flag = "Gratis"
-      }else{
+      } else {
         this.flag = ""
       }
+      
       switch (this.step()) {
         case StepEnum.CHOSE_PLAN:
           this.stepChosePlan = true;

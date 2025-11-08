@@ -662,7 +662,7 @@ export class CreatinasComponent {
         selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatinaSubscription + '.',
         descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
@@ -672,7 +672,7 @@ export class CreatinasComponent {
         selection: SummaryEnum.CREATINA_500G_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina500gSubscription + '.',
         descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1,
       })
@@ -682,7 +682,7 @@ export class CreatinasComponent {
         selection: SummaryEnum.CREATINA_3KG_SUBSCRIPTION,
         descriptionOne: 'Plan mensual de S/'+ this.ENV.precioCreatina3kgSubscription + '.',
         descriptionTwo: 'Ganas '+ this.ENV.creditoRegaloPorCompraAño + ' Magropuntos 🎁 .',
-        descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+        descrptionThree: this.ENV.campanaPrimeraCreatina.textos.descripcionCarrito(this.ENV.campanaPrimeraCreatina.gramos),
         descrptionFour: 'Periodo de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion+' días.',
         quantity: 1
       })
@@ -702,7 +702,7 @@ export class CreatinasComponent {
     // Configuración SEO específica por producto
     if (this.slug === 'creatina-monohidratada-250-gr') {
       title = `Creatina Monohidrato 250g | S/${this.ENV.precioCreatinaSubscription}/mes | Envío Gratis - Magrolabs`;
-      description = `🚀 Creatina monohidrato 99.9% pura 250g | Primera GRATIS | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | ${this.ENV.creditoRegaloPorCompraMes} Magropuntos mensuales | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      description = `🚀 Creatina monohidrato 99.9% pura 250g | ${this.ENV.campanaPrimeraCreatina.textos.descripcionSEO} | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | ${this.ENV.creditoRegaloPorCompraMes} Magropuntos mensuales | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
         'creatina monohidrato 250g', 'creatina suscripcion Peru', 'suplementos gym Lima',
         'creatina premium', 'creatina envio gratis', 'mejor creatina Peru',
@@ -710,8 +710,8 @@ export class CreatinasComponent {
         'creatina musculacion', 'suplemento fuerza', 'creatina crossfit'
       ];
     } else if (this.slug === 'creatina-monohidratada-100-gr') {
-      title = `Creatina GRATIS 100g | Prueba sin costo | Envío gratuito - Magrolabs`;
-      description = `🎁 Creatina monohidrato 100g COMPLETAMENTE GRATIS | ${this.ENV.nroServicios100g} servicios | Período de prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días | Envío gratis Lima | Sin compromisos | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
+      title = `Creatina ${this.ENV.campanaPrimeraCreatina.gramos}g ${this.ENV.campanaPrimeraCreatina.textos.ofertaConPrecio} | Prueba ahora | Envío gratuito - Magrolabs`;
+      description = `🎁 Creatina monohidrato ${this.ENV.campanaPrimeraCreatina.gramos}g ${this.ENV.campanaPrimeraCreatina.textos.ofertaMedia} | ${this.ENV.nroServicios100g} servicios | Período de prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días | Envío gratis Lima | Sin compromisos | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
         'creatina gratis Peru', 'muestra gratis creatina', 'prueba creatina sin costo',
         'creatina 100g gratis', 'suplementos gratis Lima', 'magrolabs gratis',
@@ -769,7 +769,7 @@ export class CreatinasComponent {
       'twitter:image': image,
       'twitter:image:alt': `${this.productName} - Creatina Premium Magrolabs`,
       'twitter:label1': 'Precio',
-      'twitter:data1': this.isFreeCreatine ? 'GRATIS' : `S/${this.productPriceSubscription}`,
+      'twitter:data1': this.isFreeCreatine ? this.ENV.campanaPrimeraCreatina.textos.ofertaCorta : `S/${this.productPriceSubscription}`,
       'twitter:label2': 'Disponibilidad',
       'twitter:data2': this.isOutOfStock ? 'Próximamente' : 'En stock'
     });

@@ -99,6 +99,7 @@ export enum SubscriptionStatusEnum {
     paused_until?: string;
     discount?: number;
     has_apply_cancel_discount?: boolean;
+    subscriptionPlan?: SubscriptionPlan;
   }
   
   /**

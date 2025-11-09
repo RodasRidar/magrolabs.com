@@ -673,11 +673,33 @@
                             </div>
 
                             <div *ngIf="subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED"
-                                class="bg-gray-200 p-4 rounded-md">
-                                <p class="text-sm text-gray-700">¿Pensando en empezar de nuevo con tu suscripción?</p>
+                                class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
+                                <h4 class="text-base font-semibold text-gray-900 mb-3">¿Pensando en volver?</h4>
+                                
+                                <!-- Información del precio -->
+                                <div class="bg-white border border-gray-200 rounded-md p-4 mb-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-gray-600">Precio de suscripción:</span>
+                                        <span class="text-2xl font-bold text-gray-900"> {{ ENV.precioCreatinaSubscription | currency : 'S/'}}/mes</span>
+                                    </div>
+                                </div>
+
+                                <!-- Nota informativa -->
+                                <div class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="text-sm text-gray-700">
+                                        Envío gratis. Puedes cancelar en cualquier momento. Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos de bienvenida al reactivar tu suscripción.
+                                    </p>
+                                </div>
+
                                 <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
-                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
-                                    Activar directamente
+                                    class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                    Reactivar suscripción
                                 </button>
                             </div>
 
@@ -1200,8 +1222,8 @@
 
                         <div class="mb-6">
                             <p class="text-lg font-semibold text-gray-900 mb-2">No pagaras
-                                {{ENV.precioCreatinaSubscription | currency:'S/'}} sino {{ENV.precioCreatinaSubscription
-                                * (1 - ENV.cancelDiscout / 100) | currency:'S/'}} .</p>
+                                {{subscription()?.subscriptionPlan?.price | currency:'S/'}} sino 
+                                {{(subscription()?.subscriptionPlan?.price || ENV.precioCreatinaSubscription69) * (1 - ENV.cancelDiscout / 100) | currency:'S/'}} .</p>
                             <p class="text-gray-700 leading-relaxed">
                                 ¡Nos entristecería que te vayas! Por eso, tenemos una oferta especial para ti:
                                 quédate como miembro y obtén un {{ENV.cancelDiscout}}% de descuento en tu próxima creatina.
@@ -1213,6 +1235,100 @@
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
                     <ml-button [name]="isLoading() ? 'Aplicando...' : '¡Quiero el descuento!'" (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
                     <ml-button name="Continuar con la cancelación" (click)="proceedWithFinalCancellation()"></ml-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de aviso de nuevo precio de resuscripción -->
+    <div *ngIf="showNewPriceWarningModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+            <!-- Fondo oscuro -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+            <!-- Modal -->
+            <div
+                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
+                    <!-- Botón para cerrar -->
+                    <button (click)="closeNewPriceWarningModal()"
+                        class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    <!-- Contenido del modal -->
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Información importante</h3>
+
+                        <!-- Ícono informativo -->
+                        <div class="bg-gray-50 rounded-lg p-6 mx-auto max-w-md my-6 border-2 border-gray-300">
+                            
+                            <div class="space-y-4">
+                                <!-- Precio actual -->
+                                <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                    <p class="text-sm text-gray-600 mb-1">Tu precio actual</p>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <p class="text-3xl font-bold text-gray-900">
+                                            {{ENV.precioCreatinaSubscription69 | currency : 'S/'}}
+                                        </p>
+                                        <p class="text-sm text-gray-600">/mes</p>
+                                    </div>
+                                </div>
+
+                                <!-- Flecha hacia abajo -->
+                                <div class="flex justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </div>
+
+                                <!-- Nuevo precio -->
+                                <div class="bg-white rounded-lg p-4 border-2 border-gray-900">
+                                    <p class="text-sm text-gray-600 mb-1">Precio al resuscribirte</p>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <p class="text-3xl font-bold text-gray-900">
+                                            S/ 79.00
+                                        </p>
+                                        <p class="text-sm text-gray-600">/mes</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-left mb-6 space-y-3">
+                            <p class="text-gray-700 leading-relaxed">
+                                Si cancelas tu suscripción ahora y decides volver más adelante, 
+                                <span class="font-semibold">el precio de tu suscripción será de S/ 79.00 al mes</span>.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed">
+                                Este es el precio regular actual para nuevos suscriptores. 
+                                Tu precio especial de {{ENV.precioCreatinaSubscription69 | currency : 'S/'}} solo está disponible 
+                                mientras mantengas tu suscripción activa.
+                            </p>
+                        </div>
+
+                        <div class="bg-white border-l-4 border-[#d7816a] p-4 rounded">
+                            <div class="flex gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="text-xs text-gray-700 leading-relaxed">
+                                    <span class="font-semibold">¿Prefieres mantener tu precio especial?</span> 
+                                    Quédate como miembro y conserva tu beneficio exclusivo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
+                    <ml-button name="Mantener mi precio especial" (click)="continueAsMember()"></ml-button>
+                    <ml-button name="Entiendo, continuar cancelación" (click)="continueToFinalConfirmation()" type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>

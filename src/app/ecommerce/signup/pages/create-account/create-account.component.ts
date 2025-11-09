@@ -264,7 +264,7 @@ export class CreateAccountComponent implements OnDestroy {
       name: ' Acumula automáticamente, sin costo adicional.',
     },
     {
-      name: 'Canjea tus créditos por artículos exclusivos.',
+      name: 'Canjea tus Magropuntos por artículos exclusivos.',
     }
   ]
 

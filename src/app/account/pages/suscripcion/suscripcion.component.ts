@@ -115,6 +115,9 @@ export class SuscripcionComponent implements OnInit {
   showFinalConfirmationModal = signal<boolean>(false);
   lastPaymentDate = signal<string>('');
 
+  // Variables para modal de aviso de nuevo precio
+  showNewPriceWarningModal = signal<boolean>(false);
+
   // Variables para modal de confirmación exitosa de cancelación
   showSuccessCancellationModal = signal<boolean>(false);
   isPaymentVerified = signal<boolean>(false);
@@ -124,18 +127,18 @@ export class SuscripcionComponent implements OnInit {
   
   // Review statistics - valores por defecto
   reviewStats = {
-    totalReviews: 6,
-    averageRating: 4.5,
+    totalReviews: 12,
+    averageRating: 5,
     starDistribution: {
-      5: 4,
-      4: 2,
+      5: 12,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
     },
     percentages: {
-      5: 67,
-      4: 33,
+      5: 100,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
@@ -785,8 +788,9 @@ export class SuscripcionComponent implements OnInit {
           if (customerId) {
             const subscriptionStartDate = new Date(this.subscription()!.next_billing_date!);
             const formattedStartDate = this.formatDateToLimaTimezone(subscriptionStartDate);
+            const planId = this.subscription()!.subscriptionPlan?.name || '';
             const flowSubscriptionData: FlowCreateSubscriptionRequest = {
-              planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : this.ENV.flowCreatina250Gr2025PlanId,
+              planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : planId,
               customerId: customerId,
               subscription_start: formattedStartDate,
               couponId: this.ENV.flowCouponId30PercentDiscount
@@ -832,8 +836,30 @@ export class SuscripcionComponent implements OnInit {
     // Calcular fechas antes de mostrar el modal
     this.calculateCancellationDates();
 
-    // Cerrar el modal de descuento y mostrar el modal de confirmación final
+    // Cerrar el modal de descuento
     this.showDiscountModal.set(false);
+    
+    // Verificar si el precio actual es diferente al precio regular
+    const currentPrice = this.subscriptionPlan()?.price || 0;
+    const regularPrice = this.ENV.precioCreatinaSubscription;
+    
+    // Solo mostrar el modal de aviso de nuevo precio si el precio es diferente
+    if (currentPrice !== regularPrice) {
+      this.showNewPriceWarningModal.set(true);
+    } else {
+      // Si el precio es el mismo, ir directo a la confirmación final
+      this.showFinalConfirmationModal.set(true);
+    }
+  }
+
+  // Método para cerrar el modal de aviso de nuevo precio
+  closeNewPriceWarningModal(): void {
+    this.showNewPriceWarningModal.set(false);
+  }
+
+  // Método para continuar a la confirmación final después del aviso de precio
+  continueToFinalConfirmation(): void {
+    this.showNewPriceWarningModal.set(false);
     this.showFinalConfirmationModal.set(true);
   }
 
@@ -911,6 +937,7 @@ export class SuscripcionComponent implements OnInit {
     this.showFinalCancelModal.set(false);
     this.showCancellationModal.set(false);
     this.showPauseModal.set(false);
+    this.showNewPriceWarningModal.set(false);
   }
 
   // Método para cancelar definitivamente la suscripción
@@ -1084,9 +1111,9 @@ export class SuscripcionComponent implements OnInit {
       });
 
       monthPaymentDate = reactivationResult.nextBillingDate;
-
+      const planId = this.subscription()!.subscriptionPlan?.name || '';
       flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : planId,
         customerId: customerId || '',
         subscription_start: this.formatDateToLimaTimezone(reactivationResult.nextBillingDate),
       };
@@ -1110,7 +1137,7 @@ export class SuscripcionComponent implements OnInit {
         reactivationDate.getSeconds()
       );
       flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_79_PlanId,
         customerId: customerId || '',
         subscription_start: this.formatDateToLimaTimezone(reactivationDate),
       };
@@ -1607,7 +1634,7 @@ export class SuscripcionComponent implements OnInit {
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
     const subscriptionPlan: FlowCreateSubscriptionRequest = {
-      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025PlanId,
+      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_79_PlanId,
       customerId: user?.flowCustomerId ?? '',
     }
 
@@ -1697,11 +1724,11 @@ export class SuscripcionComponent implements OnInit {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: '00000006-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr - 79soles
           quantity: 1
         }
       ],
-      discount: 20
+      discount: 21
     };
 
   }
@@ -1711,7 +1738,7 @@ export class SuscripcionComponent implements OnInit {
    */
   private createBackendSubscription(): Observable<Subscription> {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
+      subscription_plan_id: '00000006-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date().toISOString(),
       status: SubscriptionStatusEnum.ACTIVE,
     };

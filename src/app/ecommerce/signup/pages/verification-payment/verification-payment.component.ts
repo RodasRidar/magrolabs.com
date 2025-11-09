@@ -42,7 +42,7 @@ export class VerificationPaymentComponent {
   promotionIsShow = signal(false);
   informationList = signal<Information[]>([
     {
-      name: `Tu ${this.ENV.campanaPrimeraCreatina.textos.heroOferta} se enviará inmediatamente después de completar el registro`,
+      name: `Tu ${this.ENV.campanaPrimeraCreatina.textos.heroOferta} se preparará después de completar el registro`,
     },
     {
       name: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
@@ -70,7 +70,7 @@ export class VerificationPaymentComponent {
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = signal('**** **** **** ');
   stepEnum = StepEnum;
-  isCreatinaGratis = signal(false);
+  isCreatinaSuscription = signal(false);
   isOutsideLimaMetropolitana = signal(false);
 
   form = this._formBuilder.group({
@@ -91,7 +91,7 @@ export class VerificationPaymentComponent {
       this._router.navigate(['registro/direccion']);
     }
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      this.isCreatinaGratis.set(true);
+      this.isCreatinaSuscription.set(true);
     }
 
     // Validar si la dirección está fuera de Lima Metropolitana
@@ -159,7 +159,7 @@ export class VerificationPaymentComponent {
       return;
     }
 
-    if (this.isCreatinaGratis()) {
+    if (this.isCreatinaSuscription()) {
       this.handleSubscriptionFlow();
     } else {
       this.handleOnePurchaseFlow();
@@ -373,6 +373,15 @@ export class VerificationPaymentComponent {
         }),
         switchMap(response => {
           this.updateUserDataWithOrderId(response.data.order.id);
+          
+          // 1. Realizar el cargo de la primera creatina (9.90 soles)
+          const chargeRequest = this.createChargeRequest(response.data.order.id);
+          return this._flowService.chargeCustomer(chargeRequest);
+        }),
+        switchMap(chargeResponse => {
+          console.log('Charge completed: ', chargeResponse);
+          
+          // 2. Crear la suscripción en Flow
           return this._flowService.createSubscription(subscription);
         }),
         switchMap(flowResponse => {
@@ -421,7 +430,10 @@ export class VerificationPaymentComponent {
       });
   }
 
-  //TODO:MODIFICAR PARA COBRAR 9 SOLES PRIMERO
+  /**
+   * Crea la solicitud de suscripción en Flow
+   * Nota: El cargo de la primera creatina se realiza antes de crear la suscripción
+   */
   private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
     if(localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
       return {
@@ -431,9 +443,32 @@ export class VerificationPaymentComponent {
       };
     }
     return {
-      planId: this.ENV.flowCreatina250Gr2025PlanId,
+      planId: this.ENV.flowCreatina250Gr2025_79_PlanId,
       customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
       trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
+    };
+  }
+
+  /**
+   * Crea la solicitud de cargo para la primera creatina
+   * @param orderId ID de la orden creada
+   * @returns Solicitud de cargo al cliente
+   */
+  private createChargeRequest(orderId: string) {
+    const amount = this.ENV.campanaPrimeraCreatina.precio;
+    const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
+    
+    return {
+      customerId: customerId,
+      amount: amount,
+      subject: `Primera creatina prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
+      commerceOrder: orderId,
+      currency: 'PEN',
+      optionals: JSON.stringify({
+        campaign_type: this.ENV.campanaPrimeraCreatina.tipo,
+        product_weight: this.ENV.campanaPrimeraCreatina.gramos,
+        is_first_creatine: true
+      })
     };
   }
 
@@ -459,7 +494,7 @@ export class VerificationPaymentComponent {
         isLoyaltyWebShow: false,
         orderItems: [
           {
-            product_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
+            product_id: '00000008-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
             quantity: 1
           },
           /*{
@@ -478,7 +513,7 @@ export class VerificationPaymentComponent {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: '00000007-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
           quantity: 1
         }
       ],
@@ -522,12 +557,20 @@ export class VerificationPaymentComponent {
     const orderDetails: UpdateOrderDetailsRequest = {
       payment_method: PaymentMethod.CREDIT_CARD,
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-      discount: 20,
+      discount: 21,
     };
 
     this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
       switchMap(response => {
         this.updateUserDataWithOrderId(response.data.order.id);
+        
+        // 1. Realizar el cargo de la primera creatina (9.90 soles)
+        const chargeRequest = this.createChargeRequest(response.data.order.id);
+        return this._flowService.chargeCustomer(chargeRequest);
+      }),
+      switchMap(chargeResponse => {
+        console.log('Charge completed: ', chargeResponse);
+        
         const existingSubscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId;
         
         if (existingSubscriptionId) {
@@ -537,6 +580,7 @@ export class VerificationPaymentComponent {
           });
           return of(<CreateSubscriptionResponse>{ subscriptionId: existingSubscriptionId });
         } else {
+          // 2. Crear la suscripción en Flow
           return this._flowService.createSubscription(subscription);
         }
       }),
@@ -589,6 +633,15 @@ export class VerificationPaymentComponent {
     this._orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
         this.updateUserDataWithOrderId(response.data.order.id);
+        
+        // 1. Realizar el cargo de la primera creatina (9.90 soles)
+        const chargeRequest = this.createChargeRequest(response.data.order.id);
+        return this._flowService.chargeCustomer(chargeRequest);
+      }),
+      switchMap(chargeResponse => {
+        console.log('Charge completed: ', chargeResponse);
+        
+        // 2. Crear la suscripción en Flow
         return this._flowService.createSubscription(subscription);
       }),
       switchMap(flowResponse => {
@@ -639,7 +692,7 @@ export class VerificationPaymentComponent {
 
   private createBackendSubscription() {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
+      subscription_plan_id: '00000006-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date(
         Date.now() + 
         (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 
@@ -733,10 +786,10 @@ export class VerificationPaymentComponent {
     const userData = this._summaryService.getSummary()?.userData;
 
     if (userData?.id) {
-      if (userData.customerId && this.isCreatinaGratis()) {
+      if (userData.customerId && this.isCreatinaSuscription()) {
         this.updateExistingCustomerWithFlow(userData.customerId, userData);
       }
-      else if (!userData.customerId && this.isCreatinaGratis()) {
+      else if (!userData.customerId && this.isCreatinaSuscription()) {
         this.createNewCustomerWithFlow(userData);
       }
       else {

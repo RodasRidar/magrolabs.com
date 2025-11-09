@@ -125,7 +125,33 @@ export class CuentaComponent implements OnInit {
   });
 
   subscriptionPrice = computed(() => {
-    return `S/${this.ENV.precioCreatinaSubscription}.00 / mensual`;
+    const sub = this.subscription();
+    if (!sub || !sub.subscriptionPlan?.price) return 'No disponible';
+    
+    const basePrice = sub.subscriptionPlan.price;
+    const discount = sub.discount || 0;
+    
+    // Si hay descuento, calcular el precio con descuento
+    if (discount > 0) {
+      const discountedPrice = basePrice * (1 - discount / 100);
+      return `S/${discountedPrice.toFixed(2)} / mensual`;
+    }
+    
+    return `S/${basePrice}.00 / mensual`;
+  });
+
+  // Información sobre el descuento
+  hasDiscount = computed(() => {
+    const sub = this.subscription();
+    return sub?.discount && sub.discount > 0;
+  });
+
+  discountPercentage = computed(() => {
+    return this.subscription()?.discount || 0;
+  });
+
+  originalPrice = computed(() => {
+    return this.subscription()?.subscriptionPlan?.price || 0;
   });
 
   subscriptionStartDate = computed(() => {

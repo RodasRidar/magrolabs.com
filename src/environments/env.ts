@@ -1,7 +1,8 @@
 const production = false;
 const encrypt = false;
-const precioCreatinaOnePurchase = 112;
-const precioCreatinaSubscription = 89;
+const precioCreatinaOnePurchase = 100;
+const precioCreatinaSubscription = 79;
+const precioCreatinaSubscription69 = 69;
 const precioCreatina3kgOnePurchase = 590;
 const precioCreatina3kgSubscription = 470;
 const precioCreatina500gSubscription = 99;
@@ -126,11 +127,12 @@ const isEncuestaActive = true;
 const emailAtencionClientes = 'hola@magrolabs.com';
 const telefonoAtencionClientes = '51950794501';
 const rucEmpresa = '20614056577';
-const nroReviews = 6;
+const nroReviews = 12;
 const urlApiFlow = '/api';
 const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
+const flowCreatina250Gr2025_79_PlanId = '2025-creatina-250gr-mensual-79';
 const flowPlanIdTest = 'TEST-PROD-TWO-SOLES';
 const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'http://localhost:4200/registro/confirmacion';
@@ -224,5 +226,7 @@ export const environment = {
         debug: metaDebug
     },
     plazoDeEntregaHoras,
-    plazoDeEntregaHorasCreatinaFree
+    plazoDeEntregaHorasCreatinaFree,
+    flowCreatina250Gr2025_79_PlanId,
+    precioCreatinaSubscription69
 };

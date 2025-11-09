@@ -258,7 +258,10 @@ export class PedidosComponent implements OnInit {
       '00000003-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
       '00000002-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-100-gr',
       '00000004-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg',
-      '00000005-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg'
+      '00000005-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg',
+      '00000006-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
+      '00000007-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
+      '00000008-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-100-gr',
     };
     
     return auxSlug[productId] || productId;

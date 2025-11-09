@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
+import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargeCustomerRequest, FlowChargeCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 import { AtPeriodEnd } from './subscription.service';
 
@@ -288,6 +288,59 @@ export class FlowService {
         .set('s', this.getFlowSignature(toSign));
       
       return this.http.post<any>(url, body.toString(), { headers });
+    }
+  }
+
+  /**
+   * Realiza un cargo a un cliente que ya tiene tarjeta registrada en Flow
+   * @param chargeData Datos del cargo a realizar
+   * @returns Observable con la respuesta del cargo
+   */
+  chargeCustomer(chargeData: FlowChargeCustomerRequest): Observable<FlowChargeCustomerResponse> {
+    if (environment.production || !this.useProxy) {
+      const url = `${this.apiUrl}customer/charge.ts`;
+      return this.http.post<FlowChargeCustomerResponse>(url, chargeData);
+    }
+    else {
+      const url = `${this.apiUrlLocal}/customer/charge`;
+      const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      
+      // Construir objeto para firmar
+      const toSign: Record<string, string | number> = {
+        apiKey: this.apiKey,
+        customerId: chargeData.customerId,
+        amount: chargeData.amount,
+        subject: chargeData.subject,
+        commerceOrder: chargeData.commerceOrder
+      };
+
+      // Agregar parámetros opcionales a la firma si existen
+      if (chargeData.currency) {
+        toSign['currency'] = chargeData.currency;
+      }
+      if (chargeData.optionals) {
+        toSign['optionals'] = chargeData.optionals;
+      }
+
+      // Construir body
+      let body = new HttpParams()
+        .set('apiKey', this.apiKey)
+        .set('customerId', chargeData.customerId)
+        .set('amount', chargeData.amount.toString())
+        .set('subject', chargeData.subject)
+        .set('commerceOrder', chargeData.commerceOrder);
+
+      if (chargeData.currency) {
+        body = body.set('currency', chargeData.currency);
+      }
+      if (chargeData.optionals) {
+        body = body.set('optionals', chargeData.optionals);
+      }
+
+      // Agregar firma
+      body = body.set('s', this.getFlowSignature(toSign));
+
+      return this.http.post<FlowChargeCustomerResponse>(url, body.toString(), { headers });
     }
   }
 

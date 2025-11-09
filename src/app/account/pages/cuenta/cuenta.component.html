@@ -253,7 +253,14 @@
                     }
                     <div class="px-4 py-5 sm:p-6 flex-grow">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
+                                @if (hasDiscount()) {
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#d7816a] text-white">
+                                    -{{ discountPercentage() }}%
+                                </span>
+                                }
+                            </div>
                             <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
                                 [ngClass]="getStatusClass(subscription()?.status)">
                                 <span class="w-2 h-2 me-1 rounded-full"
@@ -271,7 +278,15 @@
                             @if (subscription()?.status) {
                             <div class="mt-3 space-y-2">
                                 <p><strong>Plan:</strong> {{ subscriptionPlanName() }}</p>
+                                @if (hasDiscount()) {
+                                <p class="flex items-center gap-2">
+                                    <strong>Inversión:</strong> 
+                                    <span class="line-through text-gray-500 text-sm">S/{{ originalPrice() }}.00</span>
+                                    <span class="text-[#d7816a] font-semibold">{{ subscriptionPrice() }}</span>
+                                </p>
+                                } @else {
                                 <p><strong>Inversión:</strong> {{ subscriptionPrice() }}</p>
+                                }
                                 <p><strong>Fecha de inicio:</strong> {{ subscriptionStartDate() }}</p>
                                 @if (subscription()?.status === statusEnum.TRIAL) {
                                 <p><strong>Próximo pago:</strong> {{ nextBillingDateFreeCreatine }}</p>

@@ -46,18 +46,18 @@ export class PlansComponent {
   
   // Review statistics - valores por defecto
   reviewStats = {
-    totalReviews: 6,
-    averageRating: 4.5,
+    totalReviews: 12,
+    averageRating: 5,
     starDistribution: {
-      5: 4,
-      4: 2,
+      5: 12,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
     },
     percentages: {
-      5: 67,
-      4: 33,
+      5: 100,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
@@ -75,7 +75,7 @@ export class PlansComponent {
       name: 'Acumula automáticamente, sin costo adicional.'
     },
     {
-      name: 'Canjea tus créditos por artículos exclusivos.'
+      name: 'Canjea tus Magropuntos por artículos exclusivos.'
     }
   ]
   preparandoDate: string = '';
@@ -119,19 +119,19 @@ export class PlansComponent {
       if (currentHour <= 13) {
         // Menor o igual a la 1 PM
         preparandoText = 'Hoy';
-        enviadoText = 'Hoy';
-        entregadoText = 'Lunes';
+        enviadoText = 'Lunes';
+        entregadoText = 'Martes';
       } else {
         // Mayor a la 1 PM (usando la misma lógica que domingo)
         preparandoText = 'Hoy';
         enviadoText = 'Lunes';
-        entregadoText = 'Lunes';
+        entregadoText = 'Martes';
       }
     } else if (dayOfWeek === 0) {
       // Domingo
-      preparandoText = 'Hoy';
+      preparandoText = 'Lunes';
       enviadoText = 'Lunes';
-      entregadoText = 'Lunes';
+      entregadoText = 'Martes';
     }
 
     this.preparandoDate = preparandoText;

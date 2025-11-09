@@ -54,7 +54,7 @@ export class CreatinasComponent {
   productPriceSubscription = 0;
   productServicesAndWeight = '';
   credits = this.ENV.creditoRegaloPorCompraMes;
-  reviews = 6;
+  reviews = 12;
   recurrencia = '30 días';
   principalImgFront = ''
   previewImgFront = ''
@@ -86,23 +86,24 @@ export class CreatinasComponent {
 
   // Review statistics - valores por defecto
   reviewStats = {
-    totalReviews: 6,
-    averageRating: 4.5,
+    totalReviews: 12,
+    averageRating: 5,
     starDistribution: {
-      5: 4,
-      4: 2,
+      5: 12,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
     },
     percentages: {
-      5: 67,
-      4: 33,
+      5: 100,
+      4: 0,
       3: 0,
       2: 0,
       1: 0,
     }
   };
+
 
   // Flag para saber si los datos ya se actualizaron
   reviewStatsUpdated = false;
@@ -248,19 +249,19 @@ export class CreatinasComponent {
       if (currentHour <= 13) {
         // Menor o igual a la 1 PM
         preparandoText = 'Hoy';
-        enviadoText = 'Hoy';
-        entregadoText = 'Lunes';
+        enviadoText = 'Lunes';
+        entregadoText = 'Martes';
       } else {
         // Mayor a la 1 PM (usando la misma lógica que domingo)
         preparandoText = 'Hoy';
         enviadoText = 'Lunes';
-        entregadoText = 'Lunes';
+        entregadoText = 'Martes';
       }
     } else if (dayOfWeek === 0) {
       // Domingo
-      preparandoText = 'Hoy';
+      preparandoText = 'Lunes';
       enviadoText = 'Lunes';
-      entregadoText = 'Lunes';
+      entregadoText = 'Martes';
     }
 
     this.preparandoDate = preparandoText;
@@ -451,8 +452,8 @@ export class CreatinasComponent {
   public getProductId(): string {
     // Mapear el slug a un product_id (en un caso real esto vendría de una API o base de datos)
     const productIdMap: { [key: string]: string } = {
-      'creatina-monohidratada-250-gr': '00000001-50eb-4ac3-aa94-1b64fbf32b9c',
-      'creatina-monohidratada-100-gr': '00000002-50eb-4ac3-aa94-1b64fbf32b9c',
+      'creatina-monohidratada-250-gr': '00000006-50eb-4ac3-aa94-1b64fbf32b9c',
+      'creatina-monohidratada-100-gr': '00000008-50eb-4ac3-aa94-1b64fbf32b9c',
       'creatina-monohidratada-3-kg': '00000004-50eb-4ac3-aa94-1b64fbf32b9c'
     };
     

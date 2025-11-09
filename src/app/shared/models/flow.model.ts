@@ -272,4 +272,47 @@ export interface RegisterCardRequest extends FlowModelRequest{
     errorCode: number;
     errorDescription: string;
   }
+
+  /**
+   * Interfaz para la solicitud de cargo a cliente
+   */
+  export interface FlowChargeCustomerRequest extends FlowModelRequest {
+    customerId: string;
+    amount: number;
+    subject: string;
+    commerceOrder: string;
+    currency?: string;
+    optionals?: string;
+  }
+
+  /**
+   * Interfaz para la respuesta de cargo a cliente
+   */
+  export interface FlowChargeCustomerResponse {
+    flowOrder: number;
+    commerceOrder: string;
+    requestDate: string;
+    status: number;
+    subject: string;
+    currency: string;
+    amount: number;
+    payer: string;
+    optional?: any;
+    pending_info?: {
+      media: any;
+      date: any;
+    };
+    paymentData?: {
+      date: any;
+      media: any;
+      conversionDate: any;
+      conversionRate: any;
+      amount: any;
+      currency: any;
+      fee: any;
+      balance: any;
+      transferDate: any;
+    };
+    merchantId?: any;
+  }
   

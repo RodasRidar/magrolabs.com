@@ -16,7 +16,7 @@ import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../..
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowChargeStatus, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
 import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of } from 'rxjs';
 import { OrderService } from '../../../../shared/services/order.service';
 import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
@@ -381,7 +381,13 @@ export class VerificationPaymentComponent {
         switchMap(chargeResponse => {
           console.log('Charge completed: ', chargeResponse);
           
-          // 2. Crear la suscripción en Flow
+          // Validar el estado del cargo antes de continuar
+          if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
+            // Si el cargo no fue exitoso, lanzar error
+            throw new Error('CHARGE_FAILED');
+          }
+          
+          // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
           return this._flowService.createSubscription(subscription);
         }),
         switchMap(flowResponse => {
@@ -414,7 +420,15 @@ export class VerificationPaymentComponent {
             source: PaymentMethod.CREDIT_CARD
           });
         }),
-        catchError(error => this.handleSubscriptionError(error)),
+        catchError(error => {
+          // Manejo especial para error de cargo fallido
+          if (error.message === 'CHARGE_FAILED') {
+            this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+            this.resetPaymentVerification();
+            return throwError(() => error);
+          }
+          return this.handleSubscriptionError(error);
+        }),
         finalize(() => {
           this._summaryService.setUserData({
             ...this._summaryService.getSummary()?.userData as UserDataSummary,
@@ -571,6 +585,12 @@ export class VerificationPaymentComponent {
       switchMap(chargeResponse => {
         console.log('Charge completed: ', chargeResponse);
         
+        // Validar el estado del cargo antes de continuar
+        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
+          // Si el cargo no fue exitoso, lanzar error
+          throw new Error('CHARGE_FAILED');
+        }
+        
         const existingSubscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId;
         
         if (existingSubscriptionId) {
@@ -580,7 +600,7 @@ export class VerificationPaymentComponent {
           });
           return of(<CreateSubscriptionResponse>{ subscriptionId: existingSubscriptionId });
         } else {
-          // 2. Crear la suscripción en Flow
+          // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
           return this._flowService.createSubscription(subscription);
         }
       }),
@@ -611,7 +631,15 @@ export class VerificationPaymentComponent {
           source: PaymentMethod.CREDIT_CARD
         });
       }),
-      catchError(error => this.handleSubscriptionError(error)),
+      catchError(error => {
+        // Manejo especial para error de cargo fallido
+        if (error.message === 'CHARGE_FAILED') {
+          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+          this.resetPaymentVerification();
+          return throwError(() => error);
+        }
+        return this.handleSubscriptionError(error);
+      }),
       finalize(() => {
         this._summaryService.setUserData({
           ...this._summaryService.getSummary()?.userData as UserDataSummary,
@@ -641,7 +669,13 @@ export class VerificationPaymentComponent {
       switchMap(chargeResponse => {
         console.log('Charge completed: ', chargeResponse);
         
-        // 2. Crear la suscripción en Flow
+        // Validar el estado del cargo antes de continuar
+        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
+          // Si el cargo no fue exitoso, lanzar error
+          throw new Error('CHARGE_FAILED');
+        }
+        
+        // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
         return this._flowService.createSubscription(subscription);
       }),
       switchMap(flowResponse => {
@@ -652,45 +686,51 @@ export class VerificationPaymentComponent {
         const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
         return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
       }),
-      switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created: ', subscriptionOrderResponse);
-        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-        return this._orderService.updateOrderDetails(orderId, {
-          status: OrderStatus.PROCESSING
-        });
-      }),
-      switchMap(orderUpdateResponse => {
-        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-        if (!userId) {
-          return of(null);
+        switchMap(subscriptionOrderResponse => {
+          console.log('Subscription order created: ', subscriptionOrderResponse);
+          const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+          return this._orderService.updateOrderDetails(orderId, {
+            status: OrderStatus.PROCESSING
+          });
+        }),
+        switchMap(orderUpdateResponse => {
+          const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+          if (!userId) {
+            return of(null);
+          }
+          
+          // Agregar 10 créditos al usuario por la suscripción
+          return this._creditTransactionService.createTransaction({
+            user_id: userId,
+            type: TransactionType.EARNED,
+            amount: this.ENV.creditoRegaloPorCompraMes,
+            description: '¡Bienvenido a Magrolabs!',
+            source: PaymentMethod.CREDIT_CARD
+          });
+        }),
+        catchError(error => {
+          // Manejo especial para error de cargo fallido
+          if (error.message === 'CHARGE_FAILED') {
+            this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+            this.resetPaymentVerification();
+            return throwError(() => error);
+          }
+          return this.handleSubscriptionError(error);
+        }),
+        finalize(() => {
+          this._summaryService.setUserData({
+            ...this._summaryService.getSummary()?.userData as UserDataSummary,
+            isSubscription: true
+          });
+          this.isLoading.set(false);
+        })
+      ).subscribe({
+        next: (response) => {
+          console.log('Order updated and credits added: ', response);
+          this.navigateToConfirmation();
         }
-        
-        // Agregar 10 créditos al usuario por la suscripción
-        return this._creditTransactionService.createTransaction({
-          user_id: userId,
-          type: TransactionType.EARNED,
-          amount: this.ENV.creditoRegaloPorCompraMes,
-          description: '¡Bienvenido a Magrolabs!',
-          source: PaymentMethod.CREDIT_CARD
-        });
-      }),
-      catchError(error => this.handleSubscriptionError(error)),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: true
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        console.log('Order updated and credits added: ', response);
-        this.navigateToConfirmation();
-      }
-    });
-  }
-
-  private createBackendSubscription() {
+      });
+  }  private createBackendSubscription() {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
       subscription_plan_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date(
@@ -893,6 +933,39 @@ export class VerificationPaymentComponent {
     } else {
       this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
       console.error(err);
+    }
+  }
+
+  /**
+   * Resetea la verificación de pago cuando falla el cargo
+   * Limpia el label de la tarjeta y solicita un nuevo token para registrar otra tarjeta
+   */
+  private resetPaymentVerification(): void {
+    // Resetear el estado de verificación de pago
+    this.isPaymentVerified.set(false);
+    
+    // Limpiar el label de la tarjeta registrada
+    this.labelCardRegisted.set('**** **** **** ');
+    
+    // Limpiar el token actual para forzar la recarga del widget
+    this.flowToken.set('');
+    
+    // Solicitar un nuevo token para registrar otra tarjeta
+    const customerId = this._summaryService.getSummary()?.userData?.customerId;
+    if (customerId) {
+      this._flowService.registerCard(customerId)
+        .pipe(
+          catchError(err => {
+            console.error('Error al generar nuevo token de Flow:', err);
+            this._toastService.error('Error', 'No se pudo preparar el formulario. Intenta nuevamente.');
+            return EMPTY;
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            this.flowToken.set((response as RegisterCardResponse).token);
+          }
+        });
     }
   }
 }

@@ -219,8 +219,10 @@
                                 <div class="flex items-center">
                                     @if(isFreeCreatine){
                                     <div class="flex justify-center items-center font-extralight">
+                                        <p class="text-base text-gray-500 sm:text-lg line-through">
+                                            {{ENV.creatinaFreePrecio | currency : 'S/'}}</p>
                                         <p class="text-lg text-[#d7816a] sm:text-xl ml-2">
-                                            Gratis
+                                            {{ENV.campanaPrimeraCreatina.textos.ofertaCorta}}
                                         </p>
                                     </div>
                                     }@else {
@@ -346,7 +348,7 @@
                                                         <p class="text-xs text-gray-500  line-through">
                                                             {{productPriceOnePurchase| currency : 'S/'}}</p>
                                                         <p class="text-sm text-gray-900  ml-2">
-                                                            {{productPriceSubscription | currency : 'S/'}}/mes</p>
+                                                            {{productPriceSubscription | currency : 'S/'}}{{ productPriceSubscription > 200 ? '/año' : '/mes' }}</p>
                                                     </div>
                                                 </div>
                                 

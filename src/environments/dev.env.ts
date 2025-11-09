@@ -1,7 +1,7 @@
 const production = false;
 const encrypt = false;
-const precioCreatinaOnePurchase = 86;
-const precioCreatinaSubscription = 69;
+const precioCreatinaOnePurchase = 112;
+const precioCreatinaSubscription = 89;
 const precioCreatina3kgOnePurchase = 590;
 const precioCreatina3kgSubscription = 470;
 const precioCreatina500gSubscription = 99;
@@ -104,7 +104,7 @@ const campanaPrimeraCreatina = {
 };
 
 // Mantener variables legacy para compatibilidad (DEPRECADAS - usar campanaPrimeraCreatina)
-const creatinaFreeGramos = campanaPrimeraCreatina.gramos;
+const creatinaFreeGramos = 45;
 const creatinaFreePrecio = campanaPrimeraCreatina.precio;
 
 const creatinaSubscription250 = 250;

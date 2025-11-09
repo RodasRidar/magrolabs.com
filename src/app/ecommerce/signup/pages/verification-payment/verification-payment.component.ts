@@ -421,6 +421,7 @@ export class VerificationPaymentComponent {
       });
   }
 
+  //TODO:MODIFICAR PARA COBRAR 9 SOLES PRIMERO
   private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
     if(localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
       return {

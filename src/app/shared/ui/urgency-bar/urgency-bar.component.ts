@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { environment } from '../../../../environments/env';
 
 @Component({
   selector: 'app-urgency-bar',
@@ -39,6 +40,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 })
 export class UrgencyBarComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
+  private env = environment;
   
   // Temporizador
   timeLeft = {
@@ -50,7 +52,7 @@ export class UrgencyBarComponent implements OnInit, OnDestroy {
   
   // Estado de la oferta
   isLastChance = false;
-  unitsAvailable = 10;
+  unitsAvailable = 11;
   isVisible = true;
   
   ngOnInit(): void {
@@ -152,9 +154,10 @@ export class UrgencyBarComponent implements OnInit, OnDestroy {
   }
 
   getOfferText(): string {
+    const ofertaText = this.env.campanaPrimeraCreatina.textos.ofertaMedia;
     return this.isLastChance 
-      ? `Última oportunidad. Solo quedan ${this.unitsAvailable} unidades gratis.`
-      : `Oferta por tiempo limitado. Solo quedan ${this.unitsAvailable} unidades gratis.`;
+      ? `Solo quedan ${this.unitsAvailable} unidades ${ofertaText}.`
+      : `Solo quedan ${this.unitsAvailable} unidades ${ofertaText}.`;
   }
 
   getUnitsLeft(): number {
@@ -169,11 +172,11 @@ export class UrgencyBarComponent implements OnInit, OnDestroy {
     const isLastChance = localStorage.getItem('isLastChance') === 'true';
     
     if (savedUnits !== null) {
-      this.unitsAvailable = parseInt(savedUnits, 10);
+      this.unitsAvailable = parseInt(savedUnits, 11);
     } else {
-      // Inicializar con 10 unidades si no existe
-      this.unitsAvailable = 10;
-      localStorage.setItem('unitsAvailable', '10');
+      // Inicializar con 11 unidades si no existe
+      this.unitsAvailable = 11;
+      localStorage.setItem('unitsAvailable', '11');
     }
 
     // Ajustar según el estado de última oportunidad
@@ -203,7 +206,7 @@ export class UrgencyBarComponent implements OnInit, OnDestroy {
    */
   static decrementUnits(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const currentUnits = parseInt(localStorage.getItem('unitsAvailable') || '10', 10);
+      const currentUnits = parseInt(localStorage.getItem('unitsAvailable') || '11', 11);
       const newUnits = Math.max(0, currentUnits - 1);
       localStorage.setItem('unitsAvailable', newUnits.toString());
     }
@@ -212,7 +215,7 @@ export class UrgencyBarComponent implements OnInit, OnDestroy {
   /**
    * Método público para reiniciar las unidades
    */
-  static resetUnits(units: number = 10): void {
+  static resetUnits(units: number = 11): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('unitsAvailable', units.toString());
     }

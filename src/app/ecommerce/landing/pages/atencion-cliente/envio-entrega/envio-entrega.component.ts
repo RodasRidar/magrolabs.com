@@ -12,8 +12,8 @@ export class EnvioEntregaComponent {
   ENV = environment
   list = [
     {
-      title: '¿Cuándo recibiré mi creatina gratis?',
-      description: 'Recibirás tu creatina gratis de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaHorasCreatinaFree.max+' horas. Tan pronto como completes tu registro, tu pedido será enviado inmediatamente. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
+      title: this.ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion,
+      description: 'Recibirás tu ' + this.ENV.campanaPrimeraCreatina.textos.heroOferta + ' de ' + this.ENV.creatinaFreeGramos + ' gr en un plazo de '+ this.ENV.plazoDeEntregaHorasCreatinaFree.max+' horas. Tan pronto como completes tu registro, tu pedido será enviado inmediatamente. Recuerda que cuentas con ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para decidir si deseas continuar con tu suscripción.',
     },
     {
       title: '¿Cuándo recibiré mis entregas mensuales?',

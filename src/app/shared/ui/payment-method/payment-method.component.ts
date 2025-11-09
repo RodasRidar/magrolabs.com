@@ -60,7 +60,7 @@ export class PaymentMethodComponent {
     {
       name: 'Suscripción mensual',
       // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',
-      description: 'Ahorra '+ this.env.creatina2025Descuento +' y llevate una creatina gratis.',
+      description: 'Ahorra '+ this.env.creatina2025Descuento +' y llévate una ' + this.env.campanaPrimeraCreatina.textos.heroOferta + '.',
       icon: `RECURRENT_PAYMENT`,
       id: FlowPaymentMethod.RECURRENT_PAYMENT,
     }

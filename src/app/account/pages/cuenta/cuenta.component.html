@@ -222,7 +222,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
-                            <p class="text-white text-opacity-90">Activa tu suscripción con prueba gratis por 7 días.
+                            <p class="text-white text-opacity-90">Activa tu suscripción con prueba por 7 días {{ ENV.campanaPrimeraCreatina.textos.ofertaMedia }}.
                             </p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white text-opacity-50 ml-4"
@@ -247,7 +247,7 @@
                                 <path
                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
-                            ¡Prueba gratis disponible!
+                            ¡Prueba {{ ENV.campanaPrimeraCreatina.textos.ofertaMedia }} disponible!
                         </span>
                     </div>
                     }
@@ -288,7 +288,7 @@
                         @if (needsSubscription()) {
                         <button type="button" (click)="openVerificationPaymentModal()"
                             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] shadow-sm transition-colors duration-200">
-                            Activar Prueba Gratis
+                            Activar Prueba
                         </button>
                         } @else {
                         <a routerLink="/cuenta/suscripcion"

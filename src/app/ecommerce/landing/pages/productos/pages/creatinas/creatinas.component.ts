@@ -704,18 +704,13 @@ export class CreatinasComponent {
       title = `Creatina Monohidrato 250g | S/${this.ENV.precioCreatinaSubscription}/mes | Envío Gratis - Magrolabs`;
       description = `🚀 Creatina monohidrato 99.9% pura 250g | ${this.ENV.campanaPrimeraCreatina.textos.descripcionSEO} | S/${this.ENV.precioCreatinaSubscription}/mes | ${this.ENV.nroServicios250g} servicios | ${this.ENV.creditoRegaloPorCompraMes} Magropuntos mensuales | Envío gratis Lima | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
-        'creatina monohidrato 250g', 'creatina suscripcion Peru', 'suplementos gym Lima',
-        'creatina premium', 'creatina envio gratis', 'mejor creatina Peru',
-        'suplementos deportivos', 'creatina fitness', 'magrolabs creatina 250gr',
-        'creatina musculacion', 'suplemento fuerza', 'creatina crossfit'
+        'creatina'
       ];
     } else if (this.slug === 'creatina-monohidratada-100-gr') {
       title = `Creatina ${this.ENV.campanaPrimeraCreatina.gramos}g ${this.ENV.campanaPrimeraCreatina.textos.ofertaConPrecio} | Prueba ahora | Envío gratuito - Magrolabs`;
       description = `🎁 Creatina monohidrato ${this.ENV.campanaPrimeraCreatina.gramos}g ${this.ENV.campanaPrimeraCreatina.textos.ofertaMedia} | ${this.ENV.nroServicios100g} servicios | Período de prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días | Envío gratis Lima | Sin compromisos | ⭐ ${this.reviewStats.averageRating}/5 (${this.reviewStats.totalReviews} reviews)`;
       keywords = [
-        'creatina gratis Peru', 'muestra gratis creatina', 'prueba creatina sin costo',
-        'creatina 100g gratis', 'suplementos gratis Lima', 'magrolabs gratis',
-        'creatina trial', 'periodo prueba creatina', 'creatina sin compromiso'
+        'creatina'
       ];
     } else if (this.slug === 'creatina-monohidratada-3-kg') {
       title = `Creatina Monohidrato 3kg | S/${this.ENV.precioCreatina3kgSubscription}/año | ${this.ENV.nroServicios3kg} servicios - Magrolabs`;
@@ -887,7 +882,7 @@ export class CreatinasComponent {
         '@type': 'Offer',
         '@id': `${url}#free-offer`,
         name: `${this.productName} - Muestra Gratuita`,
-        description: `Prueba gratis nuestra creatina premium sin costo ni compromiso durante ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`,
+        description: `Prueba nuestra creatina premium durante ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`,
         price: '0',
         priceCurrency: 'PEN',
         availability: 'https://schema.org/InStock',

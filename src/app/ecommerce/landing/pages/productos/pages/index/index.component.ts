@@ -25,7 +25,7 @@ export class IndexComponent implements OnInit {
     const description = 'Descubre nuestra línea completa de suplementos de alta calidad. Creatina monohidratada, proteínas y más productos para potenciar tu rendimiento físico.';
     const URL = 'https://magrolabs.com/productos';
     const image = 'https://magrolabs.com/articulos-fit.png';
-    const keywords = 'suplementos deportivos, creatina monohidratada, proteína, suplementos Perú, productos Magrolabs, suplementación deportiva, rendimiento físico';
+    const keywords = 'creatina';
 
     // Configuración básica de SEO
     this._seo.setTitle(title);

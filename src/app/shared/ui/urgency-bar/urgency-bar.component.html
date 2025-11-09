@@ -11,9 +11,9 @@
                 <div class="flex items-center gap-2">
                     <span class="text-sm sm:text-base text-gray-300">
                         @if (isLastChance) {
-                             Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                             Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
                         } @else {
-                            <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                            <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
                         }
                     </span>
                 </div>
@@ -43,9 +43,9 @@
                     <div class="flex items-center gap-2">
                         <span class="text-sm text-gray-300">
                             @if (isLastChance) {
-                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
                             } @else {
-                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}} 
                             }
                         </span>
                     </div>
@@ -69,9 +69,9 @@
                     <div class="flex items-center gap-2">
                         <span class="text-sm text-gray-300">
                             @if (isLastChance) {
-                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">Solo quedan {{ unitsAvailable }} creatinas gratis </span>
+                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
                             } @else {
-                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> Solo quedan {{ unitsAvailable }} creatinas gratis disponibles
+                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
                             }
                         </span>
                     </div>

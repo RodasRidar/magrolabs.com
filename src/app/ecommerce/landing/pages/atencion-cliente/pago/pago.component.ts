@@ -34,8 +34,8 @@ export class PagoComponent {
       description: 'Solo puedes parar los pagos automáticos pausando o cancelando tu suscripción. Esto lo puedes hacer fácilmente tú mismo en tu cuenta en la página "Mi Suscripción". Al verificar tus datos de pago, aceptaste el cobro mensual. Si quieres cancelar tu suscripción y no recibir una próxima entrega, deberias hacerlo '+this.ENV.diasAntesDeSiguienteCobroSubscripcion +' días antes de tu fecha de facturación.',
     },
     {
-      title: 'No he recibido aún mi creatina gratis, y ya se ha realizado un cobro.',
-      description: 'Tu creatina gratuita se envió inmediatamente después de completar tu registro. Te enviamos un correo electrónico sobre la finalización de tu período de reflexión de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Tu suscripción ha comenzado y ahora está activa. Después del período de reflexión, realizaremos cobros mensuales en tu fecha de facturación que es la misma del inicio de tu suscripción. La entrega de ese pedido siempre se hará después del cobro'+
+      title: 'No he recibido aún mi ' + this.ENV.campanaPrimeraCreatina.textos.heroOferta + ', y ya se ha realizado un cobro.',
+      description: 'Tu ' + this.ENV.campanaPrimeraCreatina.textos.heroOferta + ' se envió inmediatamente después de completar tu registro. Te enviamos un correo electrónico sobre la finalización de tu período de reflexión de '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Tu suscripción ha comenzado y ahora está activa. Después del período de reflexión, realizaremos cobros mensuales en tu fecha de facturación que es la misma del inicio de tu suscripción. La entrega de ese pedido siempre se hará después del cobro'+
       ' ¿No has recibido un correo electrónico nuestro sobre la finalización de tu período de reflexión? Verifica si has usado la dirección de correo electrónico correcta al registrarte y también revisa tu carpeta de Spam.',
     },
     {

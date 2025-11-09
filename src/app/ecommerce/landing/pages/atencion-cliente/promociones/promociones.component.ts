@@ -12,12 +12,12 @@ export class PromocionesComponent {
 ENV = environment
 list = [
   {
-    title: '¿Qué sucede después del período de prueba?',
-    description: 'Después de completar tu registro, recibirás tu primera creatina gratis dentro de '+this.ENV.plazoDeEntregaHorasCreatinaFree.max +' horas. Durante los primeros '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, puedes probar tranquilamente tu creatina de 100 gramos, este es tu período de prueba. Luego, pasarás a una suscripción de pago y comenzarán tus pagos y entregas mensuales. ¿Te das de baja en tus primeros '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días? Entonces perderás tus beneficios gratis.',
+    title: this.ENV.campanaPrimeraCreatina.textos.promocionTitulo,
+    description: this.ENV.campanaPrimeraCreatina.textos.promocionRespuesta(this.ENV.plazoDeEntregaHorasCreatinaFree.max, this.ENV.diasNormalesDePruebaOperiodoDeReflexion),
   },
   {
-    title: '¿Cuándo recibiré mi creatina gratis?',
-    description: 'Recibirás tu primer boxer gratis dentro de '+this.ENV.plazoDeEntregaHorasCreatinaFree.max +' horas. Durante los primeros '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, puedes probar tranquilamente tu creatina de 100 gramos, este es tu período de prueba.',
+    title: this.ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion,
+    description: this.ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(this.ENV.plazoDeEntregaHorasCreatinaFree.min, this.ENV.plazoDeEntregaHorasCreatinaFree.max) + ' Durante los primeros '+this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, puedes probar tranquilamente tu creatina de 100 gramos, este es tu período de prueba.',
   }
 ]
 }

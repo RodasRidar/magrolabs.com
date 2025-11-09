@@ -109,7 +109,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['isFromFreeCreatineFlow'] === 'true') {
         this.isFromFreeCreatineFlow.set(true);
-        this.toastService.info('Completa tu dirección', 'Por favor, completa tu dirección para continuar con la activación de tu prueba gratis.');
+        this.toastService.info('Completa tu dirección', 'Por favor, completa tu dirección para continuar con la activación de tu prueba.');
         
         // Activar automáticamente la edición de dirección
         setTimeout(() => {

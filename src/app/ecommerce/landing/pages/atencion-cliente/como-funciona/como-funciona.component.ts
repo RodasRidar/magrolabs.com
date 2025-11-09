@@ -21,12 +21,12 @@ export class ComoFuncionaComponent implements OnInit {
   list = [
     {
       title: '¿Cómo puedo registrarme en Magrolabs?',
-      description: 'Con la suscripción de Magrolabs, recibirás una creatina de 250 gr cada mes directamente en tu puerta, asegurándote de nunca quedarte sin energía ni rendimiento. Al registrarte, obtienes tu primer producto (100 gr) totalmente gratis para que lo pruebes durante ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion +
+      description: 'Con la suscripción de Magrolabs, recibirás una creatina de 250 gr cada mes directamente en tu puerta, asegurándote de nunca quedarte sin energía ni rendimiento. Al registrarte, obtienes tu primer producto (100 gr) ' + this.ENV.campanaPrimeraCreatina.textos.ofertaMedia + ' para que lo pruebes durante ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion +
         ' días. Si no estás satisfecho, puedes cancelar sin costo dentro de ese período. Pasado ese tiempo, tu suscripción se activará automáticamente con una política de cancelación de un mes.',
     },
     {
-      title: '¿Cómo funciona la primera creatina gratis?',
-      description: 'Al registrarte en Magrolabs, recibirás tu primer suplemento totalmente gratis para que lo pruebes sin compromiso. Queremos que estés seguro de tu elección, por eso te damos ' + 
+      title: '¿Cómo funciona la primera creatina?',
+      description: 'Al registrarte en Magrolabs, recibirás tu primer suplemento ' + this.ENV.campanaPrimeraCreatina.textos.ofertaMedia + ' para que lo pruebes sin compromiso. Queremos que estés seguro de tu elección, por eso te damos ' + 
       this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días de prueba para usarlo, evaluarlo y decidir. Durante este período, puedes cancelar tu suscripción en cualquier momento sin costo. Si decides continuar, tu suscripción se activará y recibirás la mejor creatina cada mes para mantener tu rendimiento al máximo.',
     },
     {
@@ -35,21 +35,21 @@ export class ComoFuncionaComponent implements OnInit {
     },
     {
       title: '¿Cómo funciona una suscripción de Magrolabs?',
-      description: 'Magrolabs te ofrece una suscripción mensual única de suplementos. Como miembro, recibirás una cada mes, por una tarifa fija, un suplemento de alta calidad directamente en tu puerta. Puedes elegir entre diferentes planes según tus objetivos: fuerza, energía, enfoque o recuperación. ¡Tu primer suplemento es totalmente gratis! Luego de recibirlo, tendrás un período de prueba de '
+      description: 'Magrolabs te ofrece una suscripción mensual única de suplementos. Como miembro, recibirás una cada mes, por una tarifa fija, un suplemento de alta calidad directamente en tu puerta. Puedes elegir entre diferentes planes según tus objetivos: fuerza, energía, enfoque o recuperación. ¡Tu primer suplemento es ' + this.ENV.campanaPrimeraCreatina.textos.ofertaMedia + '! Luego de recibirlo, tendrás un período de prueba de '
       + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días para decidir si deseas continuar. Durante ese tiempo, puedes cancelar sin costo alguno. Si decides seguir, tu suscripción se activará y cada mes se realizará el cobro automáticamente, con entregas puntuales para que nunca te falte lo que necesitas para rendir al máximo. También puedes sumar más productos cuando quieras.'
     },
     {
       title: '¿Cómo funciona el período de prueba?',
-      description:'Después de recibir tu creatina de '+ this.ENV.creatinaFreeGramos + ' gr gratis, comienza tu período de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Durante el período, puedes cancelar tu suscripción de forma gratuita en cualquier momento. Después de estos '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, tu suscripción se convertirá automáticamente en una suscripción de pago, y recibirás una creatina en tu puerta cada mes.'
+      description:'Después de recibir tu creatina de '+ this.ENV.creatinaFreeGramos + ' gr ' + this.ENV.campanaPrimeraCreatina.textos.ofertaMedia + ', comienza tu período de prueba de '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días. Durante el período, puedes cancelar tu suscripción de forma gratuita en cualquier momento. Después de estos '+ this.ENV.diasNormalesDePruebaOperiodoDeReflexion +' días, tu suscripción se convertirá automáticamente en una suscripción de pago, y recibirás una creatina en tu puerta cada mes.'
     }
   ];
 
   private loadSEO(): void {
     const title = '¿Cómo Funciona Magrolabs? - Suscripción de Suplementos';
-    const description = 'Descubre cómo funciona la suscripción mensual de Magrolabs. Obtén tu primera creatina gratis, pruébala por ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días y recibe suplementos de alta calidad cada mes.';
+    const description = 'Descubre cómo funciona la suscripción mensual de Magrolabs. Obtén tu ' + this.ENV.campanaPrimeraCreatina.textos.heroOferta + ', pruébala por ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días y recibe suplementos de alta calidad cada mes.';
     const URL = 'https://magrolabs.com/atencion-cliente/como-funciona';
     const image = 'https://magrolabs.com/image-meta.webp';
-    const keywords = 'cómo funciona Magrolabs, suscripción suplementos, creatina gratis, período de prueba, suplementos mensuales, Magrolabs Perú';
+    const keywords = 'cómo funciona Magrolabs, suscripción suplementos, creatina oferta, período de prueba, suplementos mensuales, Magrolabs Perú';
 
     // Configuración básica de SEO
     this._seo.setTitle(title);
@@ -142,7 +142,7 @@ export class ComoFuncionaComponent implements OnInit {
         },
         offers: {
           '@type': 'Offer',
-          description: 'Primera creatina gratis con período de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
+          description: this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula + ' con período de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días',
           priceCurrency: 'PEN'
         }
       }

@@ -267,7 +267,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       $event.preventDefault();
       // En navegadores modernos, el mensaje personalizado puede no mostrarse,
       // pero el navegador mostrará su propio mensaje de confirmación
-      $event.returnValue = '¡Espera! Completa tu compra para obtener tu creatina gratis.';
+      $event.returnValue = `¡Espera! Completa tu compra para obtener tu ${environment.campanaPrimeraCreatina.textos.heroOferta}.`;
     }
   }
 
@@ -965,7 +965,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
           descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
           descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+          descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba)',
           descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
           quantity: 1
         });
@@ -1016,7 +1016,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
               selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
               descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
               descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-              descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+              descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba)',
               descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
               quantity: 1
             });
@@ -1084,7 +1084,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       selection: SummaryEnum.CREATINA_250G_SUBSCRIPTION,
       descriptionOne: 'Plan mensual de S/' + this.ENV.precioCreatinaSubscription + '.',
       descriptionTwo: 'Ganas ' + this.ENV.creditoRegaloPorCompraMes + ' Magropuntos 🎁 .',
-      descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba gratis)',
+      descrptionThree: 'Creatina ' + this.ENV.creatinaFreeGramos + 'gr (prueba)',
       descrptionFour: 'Periodo de prueba de ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días.',
       quantity: 1
     });

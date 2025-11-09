@@ -28,11 +28,7 @@ export class LandingComponent {
     const URL = 'https://magrolabs.com';
     const image = 'https://magrolabs.com/image-meta.webp';
     const keywords = [
-      'creatina monohidrato Peru', 'creatina premium Lima', 'suplementos deportivos Peru',
-      'creatina suscripcion', 'creatina envio gratis', 'mejor creatina Peru',
-      'creatina gimnasio', 'suplementos musculacion', 'creatina fitness',
-      'creatina crossfit', 'proteina creatina', 'suplementos alta calidad',
-      'magrolabs creatina', 'comprar creatina Peru', 'creatina delivery Lima'
+      'creatina'
     ];
 
     // SEO básico optimizado

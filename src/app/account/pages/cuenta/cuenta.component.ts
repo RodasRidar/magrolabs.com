@@ -347,7 +347,7 @@ export class CuentaComponent implements OnInit {
     // Verificar que el usuario tenga dirección
     if (!this.profileCompletionService.hasAddress()) {
       console.error('User needs to complete address before subscribing');
-      this._toastService.warning('Dirección requerida', 'Por favor, completa tu dirección de envío para activar tu prueba gratis.');
+      this._toastService.warning('Dirección requerida', 'Por favor, completa tu dirección de envío para activar tu prueba.');
       // Redireccionar al perfil con parámetro para indicar el flujo
       this._router.navigate(['/cuenta'], { 
         queryParams: { isFromFreeCreatineFlow: 'true' } 

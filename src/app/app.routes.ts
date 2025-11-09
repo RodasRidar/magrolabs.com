@@ -112,6 +112,10 @@ export const routes: Routes = [
       {
         path: 'promociones',
         loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/promociones/promociones.component').then(m => m.PromocionesComponent),
+      },
+      {
+        path: 'nosotros',
+        loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/nosotros/nosotros.component').then(m => m.NosotrosComponent),
       }
     ],
     loadComponent: () => import('./ecommerce/landing/pages/atencion-cliente/atencion-cliente.component').then(m => m.AtencionClienteComponent),

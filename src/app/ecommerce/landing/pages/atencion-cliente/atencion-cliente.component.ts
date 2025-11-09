@@ -46,6 +46,7 @@ export class AtencionClienteComponent {
   options: string[] = [
     '/atencion-cliente/preguntas-frecuentes',
     '/atencion-cliente/contactanos',
+    '/atencion-cliente/nosotros',
     '/atencion-cliente/como-funciona',
     '/atencion-cliente/envio-y-entrega',
     '/atencion-cliente/cambio',

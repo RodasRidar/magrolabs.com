@@ -105,8 +105,8 @@ const campanaPrimeraCreatina = {
 };
 
 // Mantener variables legacy para compatibilidad (DEPRECADAS - usar campanaPrimeraCreatina)
-const creatinaFreeGramos = 45;
-const creatinaFreePrecio = campanaPrimeraCreatina.precio;
+const creatinaFreeGramos = campanaPrimeraCreatina.gramos;
+const creatinaFreePrecio = 45;
 
 const creatinaSubscription250 = 250;
 const creatinaOnePurchase250 = 250;

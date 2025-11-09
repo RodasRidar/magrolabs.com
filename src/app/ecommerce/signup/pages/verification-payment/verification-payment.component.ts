@@ -73,6 +73,12 @@ export class VerificationPaymentComponent {
   isCreatinaSuscription = signal(false);
   isOutsideLimaMetropolitana = signal(false);
 
+  // Computed signal para obtener el precio de la primera creatina según el código promocional
+  firstCreatinePrice = () => {
+    const promoCode = this.form.get('promoCode')?.value;
+    return promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
+  };
+
   form = this._formBuilder.group({
     promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
     cardNumber: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{15,16}|(([0-9]{4}\s){3}[0-9]{3,4})$/)]),
@@ -130,9 +136,9 @@ export class VerificationPaymentComponent {
   applyPromoCode() {
     if (this.form.get('promoCode')?.valid || !this.isPaymentVerified()) {
       const promoCode = this.form.get('promoCode')?.value;
-      if (promoCode === 'FREE' || promoCode === 'ERROR') {
-        this.isPaymentVerified.set(true);
-        this._toastService.success('¡Genial!', 'Código de promoción aplicado correctamente.');
+      if (promoCode === 'P252SOLESX') {
+        // Mensaje específico para el código P252SOLESX
+        this._toastService.success('¡Genial!', 'Código promocional aplicado. Pagarás solo S/ 2 por tu primera creatina.');
         this._cookieService.set('promoCode', promoCode);
         this.form.get('promoCode')?.disable();
       }
@@ -469,7 +475,9 @@ export class VerificationPaymentComponent {
    * @returns Solicitud de cargo al cliente
    */
   private createChargeRequest(orderId: string) {
-    const amount = this.ENV.campanaPrimeraCreatina.precio;
+    // Verificar si se aplicó el código promocional P252SOLESX
+    const promoCode = this.form.get('promoCode')?.value;
+    const amount = promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
     const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
     
     return {

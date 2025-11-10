@@ -316,3 +316,41 @@ export interface RegisterCardRequest extends FlowModelRequest{
     merchantId?: any;
   }
   
+  /**
+   * Interfaz para la solicitud de agregar cupón a una suscripción
+   */
+  export interface FlowAddCouponToSubscriptionRequest {
+    subscriptionId: string;
+    couponId: number;
+  }
+
+  /**
+   * Interfaz para la respuesta de agregar cupón a una suscripción
+   */
+  export interface FlowAddCouponToSubscriptionResponse {
+    subscriptionId: string;
+    planId: string;
+    plan_name: string;
+    customerId: string;
+    created: string;
+    subscription_start: string;
+    subscription_end: string;
+    period_start: string;
+    period_end: string;
+    next_invoice_date: string;
+    trial_period_days: number;
+    discount_balance: string;
+    status: number;
+    discount?: {
+      id: number;
+      type: string;
+      coupon: {
+        id: number;
+        name: string | number;
+        percent_off: number;
+        amount: number;
+        currency: string;
+      };
+    };
+  }
+  

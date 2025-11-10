@@ -768,43 +768,19 @@ export class SuscripcionComponent implements OnInit {
       discount: this.ENV.cancelDiscout
     }).pipe(
       switchMap((response) => {
-        // 2. Cancelar la suscripción actual en Flow si existe
+        // 2. Aplicar el cupón de descuento a la suscripción existente en Flow
         if (this.flowSubscriptionId()) {
-          return this.flowService.cancelSubscription(this.flowSubscriptionId(), AtPeriodEnd.IMMEDIATE)
-            .pipe(
-              map(() => response),
-              catchError((flowError) => {
-                console.error('Error cancelando suscripción en Flow:', flowError);
-                // Continuar con la creación de nueva suscripción aunque falle la cancelación
-                return of(response);
-              })
-            );
-        }
-        return of(response);
-      }),
-      switchMap((response) => {
-        // 3. Crear nueva suscripción en Flow con el descuento aplicado
-                  const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-          if (customerId) {
-            const subscriptionStartDate = new Date(this.subscription()!.next_billing_date!);
-            const formattedStartDate = this.formatDateToLimaTimezone(subscriptionStartDate);
-            const planId = this.subscription()!.subscriptionPlan?.name || '';
-            const flowSubscriptionData: FlowCreateSubscriptionRequest = {
-              planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : planId,
-              customerId: customerId,
-              subscription_start: formattedStartDate,
-              couponId: this.ENV.flowCouponId30PercentDiscount
-            };
-
-          return this.flowService.createSubscription(flowSubscriptionData)
-            .pipe(
-              map((flowResponse) => ({ backendResponse: response, flowResponse })),
-              catchError((flowError) => {
-                console.error('Error creando nueva suscripción en Flow:', flowError);
-                // Continuar aunque falle la creación en Flow
-                return of({ backendResponse: response, flowResponse: null });
-              })
-            );
+          return this.flowService.addCouponToSubscription({
+            subscriptionId: this.flowSubscriptionId(),
+            couponId: this.ENV.flowCouponId30PercentDiscount
+          }).pipe(
+            map((flowResponse) => ({ backendResponse: response, flowResponse })),
+            catchError((flowError) => {
+              console.error('Error aplicando cupón en Flow:', flowError);
+              // Continuar aunque falle la aplicación del cupón en Flow
+              return of({ backendResponse: response, flowResponse: null });
+            })
+          );
         }
         return of({ backendResponse: response, flowResponse: null });
       }),
@@ -813,13 +789,13 @@ export class SuscripcionComponent implements OnInit {
       })
     ).subscribe({
       next: (combinedResponse) => {
-        // Actualizar el Flow subscription ID si se creó exitosamente
-        if (combinedResponse.flowResponse) {
-          this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
-        }
-
         // Actualizar la suscripción local con la respuesta del backend
         this.subscription.set(combinedResponse.backendResponse.data.subscription);
+
+        // Log de información del cupón aplicado (si existe)
+        if (combinedResponse.flowResponse) {
+          console.log('Cupón aplicado en Flow:', combinedResponse.flowResponse.discount);
+        }
 
         this._toastService.success('¡Excelente!', `¡Has obtenido un ${this.ENV.cancelDiscout}% de descuento en tu próxima creatina!`);
         this.closeDiscountModal();

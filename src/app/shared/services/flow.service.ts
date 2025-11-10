@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowChargeCustomerRequest, FlowChargeCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
+import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowAddCouponToSubscriptionRequest, FlowAddCouponToSubscriptionResponse, FlowChargeCustomerRequest, FlowChargeCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
 import * as CryptoJS from 'crypto-js';
 import { AtPeriodEnd } from './subscription.service';
 
@@ -342,6 +342,33 @@ export class FlowService {
 
       return this.http.post<FlowChargeCustomerResponse>(url, body.toString(), { headers });
     }
+  }
+
+  /**
+   * Agrega un cupón de descuento a una suscripción existente en Flow
+   * 
+   * @param requestData Datos del cupón y suscripción
+   * @returns Observable con la respuesta de la suscripción actualizada con el descuento aplicado
+   * 
+   * @example
+   * ```typescript
+   * const request: FlowAddCouponToSubscriptionRequest = {
+   *   subscriptionId: 'sus_azcyjj9ycd',
+   *   couponId: 166
+   * };
+   * 
+   * this.flowService.addCouponToSubscription(request).subscribe({
+   *   next: (response) => {
+   *     console.log('Cupón aplicado:', response.discount);
+   *     console.log('Balance de descuento:', response.discount_balance);
+   *   },
+   *   error: (error) => console.error('Error al aplicar cupón:', error)
+   * });
+   * ```
+   */
+  addCouponToSubscription(requestData: FlowAddCouponToSubscriptionRequest): Observable<FlowAddCouponToSubscriptionResponse> {
+    const url = `${environment.apiMagroLabs}/flow/subscription/add-coupon`;
+    return this.http.post<FlowAddCouponToSubscriptionResponse>(url, requestData);
   }
 
   /**

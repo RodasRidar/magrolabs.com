@@ -138,7 +138,7 @@ export class VerificationPaymentComponent {
       const promoCode = this.form.get('promoCode')?.value;
       if (promoCode === 'P252SOLESX') {
         // Mensaje específico para el código P252SOLESX
-        localStorage.setItem('TEST-PROD-TWO-SOLES', '2');
+        localStorage.setItem('TEST-PROD-TWO-SOLES', 'TEST-PROD-TWO-SOLES');
         this._toastService.success('¡Genial!', 'Código promocional aplicado. Pagarás solo S/ 2 por tu primera creatina.');
         this._cookieService.set('promoCode', promoCode);
         this.form.get('promoCode')?.disable();

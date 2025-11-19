@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   isProcessing = false;
   credentialsFailed = false;
   toastTitle = signal<string>('Oops! Algo salió mal.');
-  toastMessage = signal<string>('Por favor, verifica tu usuario y contraseña.');
+  toastMessage = signal<string>('');
   returnUrl = '/cuenta/mi-cuenta'; // URL por defecto
 
   form = this._formBuilder.group({
@@ -84,6 +84,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.toastMessage.set('Por favor, verifica tu usuario y contraseña.');
     this.isProcessing = true;
     const { email, password, rememberMe } = this.form.value;
 
@@ -119,7 +120,7 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.credentialsFailed = true;
-          this.toastMessage.set(error?.error?.message || this.toastMessage());
+          this.toastMessage.set(error?.error?.error?.message || this.toastMessage());
 
           this._toastService.error(this.toastTitle(), this.toastMessage());
           console.error('Error en login:', error);

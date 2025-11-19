@@ -1153,7 +1153,7 @@ export class SuscripcionComponent implements OnInit {
           }
           this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
           let credits = '10'
-          if (response.data.subscription.status === SubscriptionStatusEnum.PAUSED) {
+          if (response.data.subscription.status === SubscriptionStatusEnum.PAUSED || response.data.subscription.status === SubscriptionStatusEnum.TO_CANCEL ) {
             credits = this.userCredits()
           }
           this.userCredits.set(credits);

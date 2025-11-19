@@ -853,7 +853,7 @@ export class SuscripcionComponent implements OnInit {
     }
 
     // Obtener el día de facturación personal del usuario desde su fecha de inicio
-    const subscriptionStartDate = new Date(this.subscription()!.start_date);
+    const subscriptionStartDate = new Date(this.subscription()!.next_billing_date || this.subscription()!.start_date);
     const userBillingDay = subscriptionStartDate.getDate();
 
     // Calcular la próxima fecha de facturación del usuario

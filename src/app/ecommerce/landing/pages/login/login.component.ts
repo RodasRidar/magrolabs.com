@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/env';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
   ENV = environment;
   isProcessing = false;
   credentialsFailed = false;
-  toastTitle = 'Credenciales incorrectas';
-  toastMessage = 'Por favor, verifica tu usuario y contraseña.';
+  toastTitle = signal<string>('Oops! Algo salió mal.');
+  toastMessage = signal<string>('Por favor, verifica tu usuario y contraseña.');
   returnUrl = '/cuenta/mi-cuenta'; // URL por defecto
 
   form = this._formBuilder.group({
@@ -119,7 +119,9 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.credentialsFailed = true;
-          this._toastService.error(this.toastTitle, this.toastMessage);
+          this.toastMessage.set(error?.error?.message || this.toastMessage());
+
+          this._toastService.error(this.toastTitle(), this.toastMessage());
           console.error('Error en login:', error);
         }
       });

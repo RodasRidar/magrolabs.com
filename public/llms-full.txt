@@ -1,0 +1,53 @@
+# Magrolabs - Documentación para LLMs
+
+## Descripción General
+Magrolabs es una plataforma de comercio electrónico dedicada a la venta de suplementos deportivos premium en Perú, con un enfoque principal en la creatina. Nuestro modelo de negocio incluye opciones de compra única y suscripciones mensuales que ofrecen beneficios como envío gratuito y precios preferenciales.
+
+## Propuesta de Valor
+- **Calidad Premium:** Suplementos de alta pureza y calidad garantizada.
+- **Suscripción Flexible:** Planes mensuales con envío gratis.
+- **Prueba sin Riesgo:** Opción de prueba de 7 días sin compromiso.
+- **Cobertura:** Envíos a todo el Perú.
+- **Sostenibilidad:** Compromiso con prácticas ecoamigables y reducción de impacto ambiental.
+
+## Compromiso Ambiental
+Magrolabs integra la sostenibilidad en su modelo de negocio:
+- **Empaques Ecoamigables:** Priorizamos materiales reciclables y biodegradables.
+- **Logística Eficiente:** Optimizamos rutas de entrega para minimizar la huella de carbono.
+- **Responsabilidad:** Fomentamos el consumo responsable y el reciclaje de nuestros envases.
+
+## Estructura del Sitio Web
+
+### Principal
+- **Inicio (/)**: Página de aterrizaje con información sobre productos, ofertas y acceso a registro/login.
+- **Login (/login)**: Acceso para usuarios registrados.
+
+### Proceso de Registro y Compra (/registro)
+- **Planes**: Selección de planes de suscripción o compra única.
+- **Crear Cuenta**: Formulario de registro de usuario.
+- **Dirección**: Ingreso de datos de envío.
+- **Verificación y Pago**: Pasarela de pago y verificación de datos.
+- **Confirmación**: Resumen de la compra exitosa.
+
+### Área de Usuario (/cuenta)
+- **Perfil**: Gestión de datos personales.
+- **Pedidos**: Historial y estado de compras.
+- **Suscripción**: Gestión de la suscripción activa.
+- **Crédito**: Saldo a favor o puntos de fidelidad.
+
+### Atención al Cliente (/atencion-cliente)
+- **Preguntas Frecuentes**: Respuestas a dudas comunes.
+- **Contáctanos**: Formulario y medios de contacto.
+- **Cómo Funciona**: Explicación del modelo de suscripción y compras.
+- **Envío y Entrega**: Información sobre tiempos y zonas de cobertura.
+- **Cambios**: Políticas de devolución y cambios.
+
+### Legal (/politicas)
+- **Términos y Condiciones**
+- **Política de Privacidad**
+- **Política de Cookies**
+- **Condiciones de Uso**
+
+## Información de Contacto
+- Sitio Web: https://magrolabs.com
+- Redes Sociales: @magrolabs (Twitter, Instagram, TikTok)

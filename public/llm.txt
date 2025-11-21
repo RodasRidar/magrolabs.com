@@ -1,0 +1,9 @@
+# Magrolabs
+
+Magrolabs es una tienda online de suplementos deportivos en Perú, especializada en creatina de alta calidad. Ofrecemos suscripciones mensuales con envío gratuito y una prueba de 7 días sin compromiso. Estamos comprometidos con la sostenibilidad y el uso de prácticas ecoamigables.
+
+## Enlaces Principales
+- Inicio: https://magrolabs.com/
+- Registro: https://magrolabs.com/registro
+- Login: https://magrolabs.com/login
+- Ayuda: https://magrolabs.com/atencion-cliente

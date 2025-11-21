@@ -1,0 +1,163 @@
+@if (isVisible) {
+    @if (isCountingToStart) {
+        <!-- Antes del Black Friday: Cuenta regresiva para el inicio -->
+        <div class="bg-gradient-to-r from-black via-red-950 to-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b-2 border-red-600 shadow-lg shadow-red-900/50">
+            <div class="w-full max-w-7xl px-2 sm:px-6">
+                <!-- Desktop -->
+                <div class="hidden md:flex items-center justify-center">
+                    <div class="flex items-center justify-center gap-4 sm:gap-6 whitespace-nowrap">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">Black Friday Inicia en</span>
+                                <span class="text-sm text-white font-semibold">80% OFF en tu primera creatina de prueba</span>
+                            </div>
+                        </div>
+                        <div class="w-px h-8 bg-red-800"></div>
+                        <div class="flex flex-col items-center">
+                            <div class="flex items-center gap-1.5">
+                                @if (timeLeft.days > 0) {
+                                    <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                        <span class="text-base font-bold text-red-500">{{ timeLeft.days }}</span>
+                                        <span class="text-[9px] text-red-300">días</span>
+                                    </div>
+                                }
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.hours.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">hrs</span>
+                                </div>
+                                <span class="text-red-600 text-base font-bold">:</span>
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.minutes.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">min</span>
+                                </div>
+                                <span class="text-red-600 text-base font-bold">:</span>
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.seconds.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">seg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile -->
+                <div class="md:hidden bf-marquee-wrapper">
+                    <div class="bf-marquee-content">
+                        <div class="flex items-center gap-4 whitespace-nowrap px-8">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <span class="text-sm font-bold text-red-400 uppercase">Black Friday</span>
+                            <span class="text-sm text-white font-semibold">80% OFF</span>
+                            <span class="text-xs text-red-400">Inicia en</span>
+                            <div class="flex items-center gap-1 font-mono text-sm font-bold">
+                                @if (timeLeft.days > 0) {
+                                    <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.days }}d</span>
+                                }
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 whitespace-nowrap px-8">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <span class="text-sm font-bold text-red-400 uppercase">Black Friday</span>
+                            <span class="text-sm text-white font-semibold">80% OFF</span>
+                            <span class="text-xs text-red-400">Inicia en</span>
+                            <div class="flex items-center gap-1 font-mono text-sm font-bold">
+                                @if (timeLeft.days > 0) {
+                                    <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.days }}d</span>
+                                }
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <!-- Durante el Black Friday: Oferta activa -->
+        <div class="bg-gradient-to-r from-black via-red-950 to-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b-2 border-red-600 shadow-lg shadow-red-900/50">
+            <div class="w-full max-w-7xl px-2 sm:px-6">
+                <!-- Desktop -->
+                <div class="hidden md:flex items-center justify-center">
+                    <div class="flex items-center justify-center gap-4 sm:gap-6 whitespace-nowrap">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">Black Friday | Termina en</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm text-white font-semibold">80% OFF en tu primera creatina.</span>
+                                    <span class="text-xs text-gray-400 line-through">S/45</span>
+                                    <span class="text-base text-red-500 font-bold animate-pulse">S/9.90</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-px h-8 bg-red-800"></div>
+                        <div class="flex flex-col items-center">
+                            <div class="flex items-center gap-1.5">
+                                @if (timeLeft.days > 0) {
+                                    <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                        <span class="text-base font-bold text-red-500">{{ timeLeft.days }}</span>
+                                        <span class="text-[9px] text-red-300">días</span>
+                                    </div>
+                                }
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.hours.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">hrs</span>
+                                </div>
+                                <span class="text-red-600 text-base font-bold">:</span>
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.minutes.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">min</span>
+                                </div>
+                                <span class="text-red-600 text-base font-bold">:</span>
+                                <div class="flex flex-col items-center bg-red-900/30 px-1.5 py-0.5 rounded">
+                                    <span class="text-base font-bold text-red-500">{{ timeLeft.seconds.toString().padStart(2, '0') }}</span>
+                                    <span class="text-[9px] text-red-300">seg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile -->
+                <div class="md:hidden bf-marquee-wrapper">
+                    <div class="bf-marquee-content">
+                        <div class="flex items-center gap-3 whitespace-nowrap px-8">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <span class="text-sm font-bold text-red-400 uppercase">Black Friday:</span>
+                            <span class="text-sm text-white font-semibold">80% OFF</span>
+                            <span class="text-xs text-gray-400 line-through">S/45</span>
+                            <span class="text-base text-red-500 font-bold">S/9.90</span>
+                            <span class="text-xs text-red-400">Termina</span>
+                            <div class="flex items-center gap-1 font-mono text-sm font-bold">
+                                @if (timeLeft.days > 0) {
+                                    <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.days }}d</span>
+                                }
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 whitespace-nowrap px-8">
+                            <span class="text-xl animate-pulse">🔥</span>
+                            <span class="text-sm font-bold text-red-400 uppercase">Black Friday:</span>
+                            <span class="text-sm text-white font-semibold">80% OFF</span>
+                            <span class="text-xs text-gray-400 line-through">S/45</span>
+                            <span class="text-base text-red-500 font-bold">S/9.90</span>
+                            <span class="text-xs text-red-400">Termina</span>
+                            <div class="flex items-center gap-1 font-mono text-sm font-bold">
+                                @if (timeLeft.days > 0) {
+                                    <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.days }}d</span>
+                                }
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                                <span class="text-red-500 bg-red-900/30 px-1 rounded">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

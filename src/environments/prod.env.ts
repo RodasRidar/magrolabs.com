@@ -158,6 +158,7 @@ const tiktokTrackingEnabled = true;
 const metaTrackingEnabled = true;
 const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
 const metaDebug = true;
+const isBlackFridayActive = true;
 
 export const environment = {
     production,
@@ -228,5 +229,6 @@ export const environment = {
     plazoDeEntregaHoras,
     plazoDeEntregaHorasCreatinaFree,
     flowCreatina250Gr2025_79_PlanId,
-    precioCreatinaSubscription69
+    precioCreatinaSubscription69,
+    isBlackFridayActive
 };

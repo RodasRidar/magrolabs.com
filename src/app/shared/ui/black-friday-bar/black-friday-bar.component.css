@@ -1,0 +1,38 @@
+@media (max-width: 800px) {
+  .bf-marquee-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  
+  .bf-marquee-content {
+    display: inline-flex;
+    animation: bf-marquee 25s linear infinite;
+  }
+}
+
+@keyframes bf-marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pausar animación al hacer hover */
+@media (max-width: 800px) {
+  .bf-marquee-content:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Animación de pulso para el precio */
+@keyframes price-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}

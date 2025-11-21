@@ -56,7 +56,7 @@ export class BlackFridayBarComponent implements OnInit, OnDestroy {
   isVisible = true;
   
   // Fechas Black Friday (hora de Perú: UTC-5)
-  private readonly BLACK_FRIDAY_START = new Date('2025-11-21T00:00:00-05:00').getTime();
+  private readonly BLACK_FRIDAY_START = new Date('2025-11-23T00:00:00-05:00').getTime();
   private readonly BLACK_FRIDAY_END = new Date('2025-11-30T23:59:59-05:00').getTime();
   
   ngOnInit(): void {

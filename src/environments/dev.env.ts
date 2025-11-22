@@ -159,6 +159,7 @@ const metaTrackingEnabled = false;
 const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
 const metaDebug = false;
 const isBlackFridayActive = true;
+const creatina100GrDescuentoBlackFriday = '80%'
 
 export const environment = {
     production,
@@ -230,5 +231,6 @@ export const environment = {
     plazoDeEntregaHorasCreatinaFree,
     flowCreatina250Gr2025_79_PlanId,
     precioCreatinaSubscription69,
-    isBlackFridayActive
+    isBlackFridayActive,
+    creatina100GrDescuentoBlackFriday
 };

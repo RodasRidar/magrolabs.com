@@ -159,7 +159,11 @@
 }
 @if (type() === navbarTypeEnum.LANDING) {
 
-<app-black-friday-bar></app-black-friday-bar>
+ @if (ENV.isBlackFridayActive) {
+    <app-black-friday-bar></app-black-friday-bar>
+ }@else {
+    <app-urgency-bar></app-urgency-bar>
+ }
 
 <div class="fixed top-[50px] left-0 right-0 z-40">
     <div class="relative bg-white shadow">

@@ -10,11 +10,12 @@ import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
 import { Subscription } from 'rxjs';
 import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 import { BlackFridayBarComponent } from '../../../../shared/ui/black-friday-bar/black-friday-bar.component';
+import { environment } from '../../../../../environments/env';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent],
+  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   animations: [
@@ -67,6 +68,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   type = input.required<NavbarTypeEnum.ECOMMERCE | NavbarTypeEnum.LANDING | NavbarTypeEnum.BOLSA>();
   navbarTypeEnum = NavbarTypeEnum;
   static navbarTypeEnum: any;
+  ENV = environment
 
   ngOnInit(): void {
     this._subscriptions.push(

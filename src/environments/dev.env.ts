@@ -158,7 +158,7 @@ const tiktokTrackingEnabled = false;
 const metaTrackingEnabled = false;
 const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
 const metaDebug = false;
-const isBlackFridayActive = true;
+const isBlackFridayActive = false;
 const creatina100GrDescuentoBlackFriday = '80%'
 
 export const environment = {

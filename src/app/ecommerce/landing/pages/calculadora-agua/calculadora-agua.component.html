@@ -1,0 +1,333 @@
+<app-navbar [isCheckout]="false" [type]="NavbarTypeEnum.LANDING"></app-navbar>
+
+<main class="min-h-screen bg-white">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Calculadora de Hidratación
+      </h1>
+      <p class="text-xl md:text-2xl opacity-90">
+        Descubre cuánta agua necesitas para potenciar la absorción de tu creatina
+      </p>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    
+    <!-- Introducción -->
+    <section class="mb-12 text-center">
+      <p class="text-lg text-gray-700 leading-relaxed mb-6">
+        La hidratación adecuada es fundamental para maximizar los beneficios de tu 
+        <strong>Creatina</strong>. Calcula tu consumo diario ideal de agua 
+        basado en tu peso corporal.
+      </p>
+    </section>
+
+    <!-- Calculadora -->
+    <section class="mb-16">
+      <div class="bg-gradient-to-br from-[#f8f6f4] to-[#f1efed] rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg">
+        
+        @if (!mostrarResultado()) {
+          <!-- Formulario de entrada -->
+          <div class="text-center">
+            <div class="w-20 h-20 bg-[#d07d66] text-white rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+              ⚖️
+            </div>
+            
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+              Ingresa tu peso
+            </h2>
+            
+            <p class="text-gray-600 mb-8">
+              Te diremos exactamente cuánta agua debes tomar al día
+            </p>
+
+            <div class="max-w-md mx-auto">
+              <div class="flex items-center justify-center gap-4 mb-6">
+                <input
+                  type="number"
+                  [(ngModel)]="pesoInput"
+                  (keyup.enter)="calcularAgua()"
+                  placeholder="Ej: 70"
+                  min="30"
+                  max="200"
+                  class="w-52 text-center text-4xl font-bold px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-[#d07d66] focus:border-[#d07d66] transition-all"
+                />
+                <span class="text-3xl font-semibold text-gray-700">kg</span>
+              </div>
+
+              <button
+                (click)="calcularAgua()"
+                [disabled]="!pesoInput || pesoInput <= 0"
+                class="w-full bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white font-bold text-lg py-4 px-8 rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none"
+              >
+                Calcular mi hidratación
+              </button>
+            </div>
+          </div>
+        } @else {
+          <!-- Resultados -->
+          <div class="text-center">
+            <div class="w-20 h-20 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+              💧
+            </div>
+
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">
+              Tu hidratación diaria ideal
+            </h2>
+
+            <p class="text-gray-600 mb-8">
+              Para una persona de <strong>{{ peso() }} kg</strong>
+            </p>
+
+            <!-- Resultado Principal -->
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-8 mb-8 shadow-xl">
+              <div class="text-6xl md:text-7xl font-bold mb-2">
+                {{ aguaRecomendada() }}
+              </div>
+              <div class="text-2xl md:text-3xl font-semibold opacity-90">
+                mililitros al día
+              </div>
+            </div>
+
+            <!-- Equivalencias -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+              <div class="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+                <div class="text-4xl mb-2">🥤</div>
+                <div class="text-3xl font-bold text-[#d07d66] mb-1">
+                  {{ obtenerLitros() }} L
+                </div>
+                <div class="text-gray-600">
+                  litros de agua
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+                <div class="text-4xl mb-2">🚰</div>
+                <div class="text-3xl font-bold text-[#d07d66] mb-1">
+                  {{ obtenerVasos() }}
+                </div>
+                <div class="text-gray-600">
+                  vasos de 250ml
+                </div>
+              </div>
+            </div>
+
+            <!-- Consejo con Creatina -->
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6 border-2 border-green-200 text-left">
+              <h3 class="font-semibold text-green-900 mb-3 flex items-center text-lg">
+                <span class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center mr-3 text-xl">✓</span>
+                Hidratación + Creatina = Resultados Óptimos
+              </h3>
+              <p class="text-green-800 leading-relaxed">
+                Con nuestra <strong>Creatina 100% monohidratada</strong>, es esencial mantener 
+                una hidratación adecuada. La creatina retiene agua en tus músculos, ayudándote 
+                a ganar volumen muscular y mejorar tu rendimiento. Toma <strong>1g de creatina por cada 10kg de peso</strong> 
+                al día con abundante agua para maximizar sus beneficios.
+              </p>
+            </div>
+
+            <button
+              (click)="reiniciar()"
+              class="w-full md:w-auto bg-white border-2 border-[#94716B] text-[#94716B] font-bold text-lg py-3 px-8 rounded-xl hover:bg-[#94716B] hover:text-white transition-all duration-200"
+            >
+              ← Calcular de nuevo
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Sección educativa sobre creatina e hidratación -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        ¿Por qué es tan importante la hidratación con creatina?
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
+        <div class="text-center bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            💪
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Volumización Muscular</h3>
+          <p class="text-gray-600">
+            La creatina atrae agua hacia las células musculares, aumentando su volumen 
+            y mejorando tu apariencia física.
+          </p>
+        </div>
+
+        <div class="text-center bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            ⚡
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Mayor Rendimiento</h3>
+          <p class="text-gray-600">
+            Una correcta hidratación permite que la creatina funcione eficientemente, 
+            aumentando tu fuerza y potencia.
+          </p>
+        </div>
+
+        <div class="text-center bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            🔄
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Mejor Recuperación</h3>
+          <p class="text-gray-600">
+            El agua facilita el transporte de nutrientes y la eliminación de desechos, 
+            acelerando tu recuperación muscular.
+          </p>
+        </div>
+      </div>
+
+      <!-- CTA Creatina -->
+      <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
+        <h3 class="text-3xl md:text-4xl font-bold mb-4">
+          Creatina 100% Monohidratada Magrolabs
+        </h3>
+        <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+          La creatina más pura del mercado. Sin aditivos, sin rellenos. 
+          Solo resultados reales.
+        </p>
+        
+        <div class="grid md:grid-cols-3 gap-6 mb-8 text-center">
+          <div>
+            <div class="text-4xl font-bold mb-1">100%</div>
+            <div class="text-lg opacity-90">Pura</div>
+          </div>
+          <div>
+            <div class="text-4xl font-bold mb-1">1g</div>
+            <div class="text-lg opacity-90">Por cada 10kg</div>
+          </div>
+          <div>
+            <div class="text-4xl font-bold mb-1">300g</div>
+            <div class="text-lg opacity-90">Por envase</div>
+          </div>
+        </div>
+
+        <a
+          href="/productos"
+          class="inline-block bg-white text-[#94716B] font-bold text-lg py-4 px-10 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+        >
+          Ver Productos →
+        </a>
+      </div>
+    </section>
+
+    <!-- Tips adicionales -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Consejos Pro para Maximizar tus Resultados
+      </h2>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-blue-500">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 text-2xl shrink-0">💧</span>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Distribuye tu consumo</h3>
+              <p class="text-gray-600">
+                No tomes toda el agua de golpe. Distribúyela a lo largo del día para una 
+                hidratación constante y mejor absorción.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-500">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-4 text-2xl shrink-0">🏋️</span>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Durante el entrenamiento</h3>
+              <p class="text-gray-600">
+                Aumenta tu consumo en días de entrenamiento intenso. Tu cuerpo necesita 
+                más agua para compensar la pérdida por sudor.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-4 text-2xl shrink-0">⏰</span>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Toma tu creatina con agua</h3>
+              <p class="text-gray-600">
+                Mezcla 1g de creatina por cada 10kg de tu peso con 250-300ml de agua. Puedes tomarla en cualquier 
+                momento del día, lo importante es la constancia diaria.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-orange-500">
+          <div class="flex items-start">
+            <span class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mr-4 text-2xl shrink-0">🎯</span>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Sé consistente</h3>
+              <p class="text-gray-600">
+                Los beneficios de la creatina se acumulan con el tiempo. Tómala todos los días, 
+                incluso en días de descanso, para mantener los niveles óptimos en tus músculos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Preguntas Frecuentes
+      </h2>
+
+      <div class="space-y-4">
+        <details class="bg-white rounded-xl p-6 shadow-md border border-gray-200 cursor-pointer">
+          <summary class="font-semibold text-gray-900 text-lg">
+            ¿Qué pasa si no tomo suficiente agua con la creatina?
+          </summary>
+          <p class="mt-4 text-gray-600 leading-relaxed">
+            Una hidratación insuficiente puede limitar la efectividad de la creatina y, en algunos casos, 
+            causar calambres musculares o malestar digestivo. Mantén una hidratación adecuada para 
+            maximizar los beneficios y evitar efectos secundarios.
+          </p>
+        </details>
+
+        <details class="bg-white rounded-xl p-6 shadow-md border border-gray-200 cursor-pointer">
+          <summary class="font-semibold text-gray-900 text-lg">
+            ¿Puedo tomar más agua de la recomendada?
+          </summary>
+          <p class="mt-4 text-gray-600 leading-relaxed">
+            Sí, especialmente si entrenas intensamente o vives en clima cálido. La fórmula de 40ml por kg 
+            es una base mínima. Escucha a tu cuerpo y aumenta la ingesta si lo necesitas.
+          </p>
+        </details>
+
+        <details class="bg-white rounded-xl p-6 shadow-md border border-gray-200 cursor-pointer">
+          <summary class="font-semibold text-gray-900 text-lg">
+            ¿Cuándo debo tomar mi creatina monohidratada?
+          </summary>
+          <p class="mt-4 text-gray-600 leading-relaxed">
+            Puedes tomarla en cualquier momento del día. Lo más importante es la constancia diaria. 
+            Muchos atletas prefieren tomarla post-entrenamiento con una comida, pero el timing es 
+            menos importante que tomarla todos los días.
+          </p>
+        </details>
+
+        <details class="bg-white rounded-xl p-6 shadow-md border border-gray-200 cursor-pointer">
+          <summary class="font-semibold text-gray-900 text-lg">
+            ¿La creatina me hará retener agua de forma negativa?
+          </summary>
+          <p class="mt-4 text-gray-600 leading-relaxed">
+            No. La creatina retiene agua DENTRO de las células musculares, lo que aumenta el volumen 
+            muscular. Esto es un efecto positivo que contribuye a la apariencia de músculos más llenos 
+            y al aumento de fuerza. No causa hinchazón subcutánea.
+          </p>
+        </details>
+      </div>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>

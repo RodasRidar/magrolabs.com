@@ -177,6 +177,11 @@ export const routes: Routes = [
     canActivate: [refLinkGuard]
   },
   {
+    path: 'calculadora-agua',
+    loadComponent: () => import('./ecommerce/landing/pages/calculadora-agua/calculadora-agua.component').then(m => m.CalculadoraAguaComponent),
+    canActivate: [refLinkGuard]
+  },
+  {
     path: 'bolsa',
     loadComponent: () => import('./ecommerce/landing/pages/bolsa/bolsa.component').then(m => m.BolsaComponent),
     canActivate: [refLinkGuard]

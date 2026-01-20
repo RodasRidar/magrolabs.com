@@ -464,7 +464,7 @@ export class VerificationPaymentComponent {
       };
     }
     return {
-      planId: this.ENV.flowCreatina250Gr2025_79_PlanId,
+      planId: this.ENV.flowCreatina250Gr2025_55_PlanId,
       customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
       trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
     };

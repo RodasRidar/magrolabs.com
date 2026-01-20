@@ -1,8 +1,7 @@
 const production = false;
 const encrypt = false;
-const precioCreatinaOnePurchase = 100;
-const precioCreatinaSubscription = 79;
-const precioCreatinaSubscription69 = 69;
+const precioCreatinaOnePurchase = 69;
+const precioCreatinaSubscription = 55;
 const precioCreatina3kgOnePurchase = 590;
 const precioCreatina3kgSubscription = 470;
 const precioCreatina500gSubscription = 99;
@@ -133,6 +132,7 @@ const flowApiKey= '1F64DDDA-4266-4F9E-9E4E-8C8E5301L580';
 const flowSecretKey = '60344fc39a48449030be09ecc53c2bd3f20b8b98';
 const flowCreatina250Gr2025PlanId = '2025-creatina-250gr-mensual';
 const flowCreatina250Gr2025_79_PlanId = '2025-creatina-250gr-mensual-79';
+const flowCreatina250Gr2025_55_PlanId = '2026-creatina-250gr-mensual-55';
 const flowPlanIdTest = 'TEST-PROD-TWO-SOLES';
 const flowApiUrl = 'https://dev-function.magrolabs.com/api/flow/';
 const flowUrlReturn = 'http://localhost:4200/registro/confirmacion';
@@ -148,7 +148,7 @@ const fechaUltimaActualizacionPrivacidad = '03/12/2024';
 const fechaUltimaActualizacionCookies = '04/12/2024';
 const apiMagroLabs = 'http://localhost:3000/api/v1';
 const useProxy = true;
-const cancelDiscout = 30;
+const cancelDiscout = 20;
 const flowCouponId50PercentDiscount = 874;
 const flowCouponId30PercentDiscount = 884;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
@@ -230,7 +230,7 @@ export const environment = {
     plazoDeEntregaHoras,
     plazoDeEntregaHorasCreatinaFree,
     flowCreatina250Gr2025_79_PlanId,
-    precioCreatinaSubscription69,
     isBlackFridayActive,
-    creatina100GrDescuentoBlackFriday
+    creatina100GrDescuentoBlackFriday,
+    flowCreatina250Gr2025_55_PlanId
 };

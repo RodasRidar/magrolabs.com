@@ -280,7 +280,7 @@ export class ConfirmationComponent {
       // Verificar si es la primera creatina gratis (trial) o suscripción de pago
       const isFreeTrial = this.shoppingCart?.items?.some(item => 
         item.product.name.toLowerCase().includes('gratis') || 
-        item.product.price === 0 ||
+        item.product.price === this.ENV.campanaPrimeraCreatina.precio ||
         item.product.name.toLowerCase().includes('primera')
       );
 

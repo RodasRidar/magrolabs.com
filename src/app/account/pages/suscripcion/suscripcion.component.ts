@@ -122,6 +122,9 @@ export class SuscripcionComponent implements OnInit {
   showSuccessCancellationModal = signal<boolean>(false);
   isPaymentVerified = signal<boolean>(false);
 
+  // Variables para modal de pausa por WhatsApp
+  showWhatsappPauseModal = signal<boolean>(false);
+
   // Sistema de reviews similar a creatinas.component.ts
   isLoadReviews = signal<boolean>(false);
   
@@ -728,6 +731,23 @@ export class SuscripcionComponent implements OnInit {
       });
   }
 
+  pausarSuscripcionWtsp(): void {
+    this.showWhatsappPauseModal.set(true);
+  }
+
+  closeWhatsappPauseModal(): void {
+    this.showWhatsappPauseModal.set(false);
+  }
+
+  openWhatsappForPause(): void {
+    const phoneNumber = this.ENV.telefonoAtencionClientes;
+    const message = encodeURIComponent('Hola, me gustaría pausar mi suscripción.');
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    
+    window.open(whatsappUrl, '_blank');
+    this.closeWhatsappPauseModal();
+  }
+
   proceedWithCancellation(): void {
     if (!this.subscription()) return;
 
@@ -820,7 +840,7 @@ export class SuscripcionComponent implements OnInit {
     const regularPrice = this.ENV.precioCreatinaSubscription;
     
     // Solo mostrar el modal de aviso de nuevo precio si el precio es diferente
-    if (currentPrice !== regularPrice) {
+    if (currentPrice !== regularPrice && regularPrice > currentPrice) {
       this.showNewPriceWarningModal.set(true);
     } else {
       // Si el precio es el mismo, ir directo a la confirmación final
@@ -1113,7 +1133,7 @@ export class SuscripcionComponent implements OnInit {
         reactivationDate.getSeconds()
       );
       flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_79_PlanId,
+        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
         customerId: customerId || '',
         subscription_start: this.formatDateToLimaTimezone(reactivationDate),
       };
@@ -1610,7 +1630,7 @@ export class SuscripcionComponent implements OnInit {
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
     const subscriptionPlan: FlowCreateSubscriptionRequest = {
-      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_79_PlanId,
+      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
       customerId: user?.flowCustomerId ?? '',
     }
 

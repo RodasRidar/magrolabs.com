@@ -536,7 +536,7 @@ export class VerificationPaymentComponent {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000007-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
           quantity: 1
         }
       ],
@@ -741,7 +741,7 @@ export class VerificationPaymentComponent {
       });
   }  private createBackendSubscription() {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c',
+      subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date(
         Date.now() + 
         (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 

@@ -1720,7 +1720,7 @@ export class SuscripcionComponent implements OnInit {
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000006-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr - 79soles
+          product_id: '00000010-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr - 55 soles
           quantity: 1
         }
       ],
@@ -1734,7 +1734,7 @@ export class SuscripcionComponent implements OnInit {
    */
   private createBackendSubscription(): Observable<Subscription> {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000002-50eb-4ac3-aa94-1b64fbf32b9c',
+      subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date().toISOString(),
       status: SubscriptionStatusEnum.ACTIVE,
     };

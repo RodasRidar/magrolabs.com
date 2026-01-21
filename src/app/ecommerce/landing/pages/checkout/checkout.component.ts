@@ -671,7 +671,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],
-      discount: 0
+      discount: 0,
+      shipping_cost: this.isOutsideLimaMetropolitana() ? this.precioEnvioFueraLimaMetropolitana() : 0
     };
   }
 

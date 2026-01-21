@@ -149,8 +149,17 @@ export class CreatinasComponent {
       this.isLogged = isAuth;
     });
     
-    this.isSelectSubscription = true;
     this.slug = this.route.snapshot.params['slug'];
+    
+    // Verificar si viene el parámetro sel=2 para seleccionar compra única
+    const selParam = this.route.snapshot.queryParams['sel'];
+    if (selParam === '2') {
+      this.isSelectOnePurchase = true;
+      this.isSelectSubscription = false;
+    } else {
+      this.isSelectSubscription = true;
+      this.isSelectOnePurchase = false;
+    }
     
     // Verificar si viene el parámetro review=true
     const reviewParam = this.route.snapshot.queryParams['review'];

@@ -153,9 +153,20 @@
       <!-- Pie del pedido -->
       <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div class="mb-4 sm:mb-0">
-          <span class="font-semibold text-gray-700 mr-2">Total:</span>
-          <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2'
-            }}</span>
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-gray-700">Total:</span>
+              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2' }}</span>
+            </div>
+            @if (pedido.shipping_cost !== undefined && pedido.shipping_cost !== null) {
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">Costo de envío:</span>
+                <span class="text-sm font-medium text-gray-800">
+                  {{ pedido.shipping_cost === 0 ? 'Gratis' : (pedido.shipping_cost | currency:'S/':'symbol':'1.2-2') }}
+                </span>
+              </div>
+            }
+          </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3">

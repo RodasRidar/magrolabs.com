@@ -1120,7 +1120,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._summaryService.setChoosePlan({
       selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       descriptionOne: 'Monohidratada 100%',
-      descriptionTwo: 'Compra única de S/' + this.ENV.precioCreatinaOnePurchase + '.',
+      descriptionTwo: 'Compra única de S/' + this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + '.',
       quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
     });
 

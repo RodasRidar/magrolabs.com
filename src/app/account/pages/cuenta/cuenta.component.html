@@ -237,7 +237,7 @@
                 <!-- Resumen de Suscripción -->
                 @if ((profileCompletionService.isProfileComplete() || profileCompletionService.hasSubscription())) {
                 <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg transition-all duration-300 flex flex-col hover:shadow-lg hover:-translate-y-1"
-                    [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsSubscription() && lastOrder.length !== 0}">
+                    [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsSubscription() && lastOrder.length == 0}">
                     @if (needsSubscription() && lastOrder.length == 0) {
                     <div
                         class="bg-gradient-to-r from-[#1f1b19] to-[#d7816a] px-4 py-2 flex items-center justify-between">

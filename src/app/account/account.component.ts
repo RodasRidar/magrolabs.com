@@ -5,14 +5,13 @@ import { UserService } from '../shared/services/user.service';
 import { UserDetailResponse } from '../shared/interfaces/user.interfaces';
 import { CommonModule } from '@angular/common';
 import { CreditTransactionService } from '../shared/services/credit-transactions.service';
-import { TooltipComponent } from '../shared/ui/tooltip/tooltip.component';
 import { LoyaltyService } from '../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../shared/interfaces/loyalty.interfaces';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive, TooltipComponent],
+  imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './account.component.html',
 })
 export class AccountComponent implements OnInit {

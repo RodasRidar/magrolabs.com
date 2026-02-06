@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { refLinkGuard } from './shared/guards/ref-link.guard';
 import { authGuard } from './shared/guards/auth.guard';
 import { notAuthGuard } from './shared/guards/not-auth.guard';
+import { pixelTestGuard } from './shared/guards/pixel-test.guard';
 
 export const routes: Routes = [
   {
@@ -217,6 +218,11 @@ export const routes: Routes = [
         loadComponent: () => import('./account/pages/perfil/perfil.component').then(m => m.PerfilComponent),
       },
     ]
+  },
+  {
+    path: 'pixel-testing',
+    loadComponent: () => import('./shared/ui/pixel-testing/pixel-testing.component').then(m => m.PixelTestingComponent),
+    canActivate: [pixelTestGuard]
   },
   {
     path: '**',

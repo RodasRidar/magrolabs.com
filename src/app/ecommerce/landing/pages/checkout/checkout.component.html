@@ -22,19 +22,47 @@
                                     }
                                 </ul>
 
-                                <!-- <form class="mt-4">
+                                <form class="mt-4">
                                     <label for="discount-code-mobile" class="block text-sm font-medium text-gray-700">
                                         Código de descuento
                                     </label>
-                                    <div class="flex space-x-4 mt-1">
-                                        <input type="text" id="discount-code-mobile" name="discount-code-mobile"
-                                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <button type="button"
-                                            class="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
-                                            Aplicar
+                                    <div class="flex space-x-2 mt-1">
+                                        <input 
+                                            type="text" 
+                                            id="discount-code-mobile" 
+                                            name="discount-code-mobile"
+                                            [formControl]="form.controls.discountCodeInput"
+                                            [disabled]="isDiscountApplied()"
+                                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                        @if (!isDiscountApplied()) {
+                                        <button 
+                                            type="button"
+                                            (click)="applyDiscountCode()"
+                                            [disabled]="isApplyingDiscount()"
+                                            class="bg-[#d07d66] text-sm font-medium text-white rounded-md px-4 hover:bg-[#b86b56] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                                            {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
                                         </button>
+                                        } @else {
+                                        <button 
+                                            type="button"
+                                            (click)="removeDiscountCode()"
+                                            class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
+                                            Eliminar
+                                        </button>
+                                        }
                                     </div>
-                                </form> -->
+                                    @if (discountError()) {
+                                    <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
+                                    }
+                                    @if (isDiscountApplied()) {
+                                    <p class="mt-2 text-xs text-green-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Código aplicado exitosamente
+                                    </p>
+                                    }
+                                </form>
 
                             </div>
 
@@ -47,19 +75,15 @@
                             <dt>Subtotal</dt>
                             <dd class="text-gray-900">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>
                         </div>
-                        <!-- <div class="flex justify-between">
-                            <dt class="flex">
+                        @if (isDiscountApplied()) {
+                        <div class="flex justify-between text-[#d07d66]">
+                            <dt class="flex items-center">
                                 Descuento
-                                <span
-                                    class="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">CHEAPSKATE</span>
+                                <span class="ml-2 rounded-full bg-[#fae8e3] text-xs text-[#d07d66] py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
                             </dt>
-                            <dd class="text-gray-900">-{{this.shoppingCart.totalDiscount | currency : 'S/'}}
-                            </dd>
-                        </div> -->
-                        <!-- <div class="flex justify-between">
-                            <dt>IGV (18%)</dt>
-                            <dd class="text-gray-900">{{(this.shoppingCart.subTotal * 0.18) | currency : 'S/'}}</dd>
-                        </div> -->
+                            <dd class="text-[#d07d66]">-{{discountAmount() | currency : 'S/'}}</dd>
+                        </div>
+                        }
                         <div class="flex justify-between">
                             <dt>Envío</dt>
                             <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
@@ -84,37 +108,62 @@
                         </ul>
 
                         <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
-                            <!-- <form>
+                            <form class="mb-6">
                                 <label for="discount-code" class="block text-sm font-medium text-gray-700">
                                     Código de descuento
                                 </label>
-                                <div class="flex space-x-4 mt-1">
-                                    <input type="text" id="discount-code" name="discount-code"
-                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <button type="button"
-                                        class="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
-                                        Aplicar
+                                <div class="flex space-x-2 mt-1">
+                                    <input 
+                                        type="text" 
+                                        id="discount-code" 
+                                        name="discount-code"
+                                        [formControl]="form.controls.discountCodeInput"
+                                        [disabled]="isDiscountApplied()"
+                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                    @if (!isDiscountApplied()) {
+                                    <button 
+                                        type="button"
+                                        (click)="applyDiscountCode()"
+                                        [disabled]="isApplyingDiscount()"
+                                        class="bg-[#d07d66] text-sm font-medium text-white rounded-md px-4 hover:bg-[#b86b56] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                                        {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
                                     </button>
+                                    } @else {
+                                    <button 
+                                        type="button"
+                                        (click)="removeDiscountCode()"
+                                        class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
+                                        Eliminar
+                                    </button>
+                                    }
                                 </div>
-                            </form> -->
+                                @if (discountError()) {
+                                <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
+                                }
+                                @if (isDiscountApplied()) {
+                                <p class="mt-2 text-xs text-green-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Código aplicado exitosamente
+                                </p>
+                                }
+                            </form>
 
                             <dl class="text-sm font-medium text-gray-500 space-y-6">
                                 <div class="flex justify-between">
                                     <dt>Subtotal</dt>
                                     <dd class="text-gray-900">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
                                 </div>
-                                <!-- <div class="flex justify-between">
-                                    <dt class="flex">
+                                @if (isDiscountApplied()) {
+                                <div class="flex justify-between text-[#d07d66]">
+                                    <dt class="flex items-center">
                                         Descuento
-                                        <span
-                                            class="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">CHEAPSKATE</span>
+                                        <span class="ml-2 rounded-full bg-[#fae8e3] text-xs text-[#d07d66] py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
                                     </dt>
-                                    <dd class="text-gray-900">-{{shoppingCart.totalDiscount | currency : 'S/'}}</dd>
-                                </div> -->
-                                <!-- <div class="flex justify-between">
-                                    <dt>IGV (18%)</dt>
-                                    <dd class="text-gray-900">{{(this.shoppingCart.subTotal * 0.18) | currency : 'S/'}}</dd>
-                                </div> -->
+                                    <dd class="text-[#d07d66]">-{{discountAmount() | currency : 'S/'}}</dd>
+                                </div>
+                                }
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
                                     <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>

@@ -55,6 +55,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   isOutsideLimaMetropolitana = signal(false);
   precioEnvioFueraLimaMetropolitana = signal(this.ENV.precioEnvioFueraLimaMetropolitana);
   allowNavigation = signal(false); // Señal para permitir navegación cuando el pago se procesa correctamente
+  
+  // Variables para código de descuento
+  discountAmount = signal(0);
+  discountCode = signal('');
+  isDiscountApplied = signal(false);
+  discountError = signal('');
+  isApplyingDiscount = signal(false);
 
   private platformId = inject(PLATFORM_ID);
   private _toastService = inject(ToastService);
@@ -115,6 +122,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
     termsAccepted: this._formBuilder.nonNullable.control(false, [Validators.requiredTrue]),
+    discountCodeInput: this._formBuilder.nonNullable.control('', []),
   });
   buttonName = 'Pagar →';
 
@@ -151,6 +159,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         if (shoppingCart.items.find(item => item.product.name === 'Creatina Monohidratada 250 gr')) {
           this.cartHas250Creatine.set(true);
         }
+        this.recalculateTotal();
       }
       else {
         this._router.navigate(['/bolsa']);
@@ -380,12 +389,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
     if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
     if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
-
-    this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.precioEnvioFueraLimaMetropolitana();
     }
-    else{
-      this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-    }
+    this.recalculateTotal();
   }
 
   deleteItem(product: ItemShoppingCart) {
@@ -398,6 +403,82 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     if (this.shoppingCart.totalItems == 0) {
       this._router.navigate(['/bolsa']);
     }
+    this.recalculateTotal();
+  }
+
+  /**
+   * Aplica el código de descuento si es válido
+   */
+  applyDiscountCode(): void {
+    const code = this.form.get('discountCodeInput')?.value?.trim().toUpperCase();
+    
+    if (!code) {
+      this.discountError.set('Por favor, ingresa un código de descuento');
+      return;
+    }
+
+    this.isApplyingDiscount.set(true);
+    this.discountError.set('');
+
+    // Verificar que estemos en febrero
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // 0-11 (0 = enero, 1 = febrero)
+    const currentYear = currentDate.getFullYear();
+
+    if (currentMonth !== 1) { // 1 = febrero
+      this.discountError.set('Este código de descuento solo está disponible en febrero');
+      this.isApplyingDiscount.set(false);
+      return;
+    }
+
+    // Validar el código
+    if (code === 'MAGR9') {
+      this.discountCode.set(code);
+      this.discountAmount.set(9);
+      this.isDiscountApplied.set(true);
+      this.discountError.set('');
+      this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
+      this.recalculateTotal();
+    } else {
+      this.discountError.set('Código de descuento inválido');
+      this.isDiscountApplied.set(false);
+      this.discountAmount.set(0);
+      this.discountCode.set('');
+    }
+
+    this.isApplyingDiscount.set(false);
+  }
+
+  /**
+   * Elimina el código de descuento aplicado
+   */
+  removeDiscountCode(): void {
+    this.discountCode.set('');
+    this.discountAmount.set(0);
+    this.isDiscountApplied.set(false);
+    this.discountError.set('');
+    this.form.get('discountCodeInput')?.setValue('');
+    this.recalculateTotal();
+    this._toastService.info('Información', 'Código de descuento eliminado');
+  }
+
+  /**
+   * Recalcula el total del carrito incluyendo el descuento
+   */
+  private recalculateTotal(): void {
+    let baseTotal = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+    
+    // Agregar costo de envío si está fuera de Lima Metropolitana
+    if (this.isOutsideLimaMetropolitana()) {
+      baseTotal += this.precioEnvioFueraLimaMetropolitana();
+    }
+
+    // Aplicar descuento si está activo
+    if (this.isDiscountApplied() && this.discountAmount() > 0) {
+      baseTotal = Math.max(0, baseTotal - this.discountAmount());
+    }
+
+    this.shoppingCart.total = baseTotal;
   }
 
   hasValidatorError(field: string) {
@@ -676,7 +757,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],
-      discount: 0,
+      discount: this.isDiscountApplied() ? this.discountAmount() : 0,
       shipping_cost: this.isOutsideLimaMetropolitana() ? this.precioEnvioFueraLimaMetropolitana() : 0
     };
   }
@@ -1178,13 +1259,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
           if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
           if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
-
-          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + this.precioEnvioFueraLimaMetropolitana();
-          
         } else {
           this.isOutsideLimaMetropolitana.set(false);
-          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
         }
+        this.recalculateTotal();
       }
     }          
 

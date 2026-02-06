@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { environment } from '../../../../../../../environments/env';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
@@ -29,7 +29,7 @@ import { MetaAnalyticsService } from '../../../../../../shared/services/meta-ana
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
-export class CreatinasComponent {
+export class CreatinasComponent implements AfterViewInit {
   @ViewChild('Subscription', { static: false }) subscriptionElement!: ElementRef<HTMLDetailsElement>;
   @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
 
@@ -68,8 +68,8 @@ export class CreatinasComponent {
   isFreeCreatine = false;
   isLogged = false;
   slug = '';
-  isSelectSubscription = false;
-  isSelectOnePurchase = false;
+  isSelectSubscription = signal<boolean>(false);
+  isSelectOnePurchase = signal<boolean>(false);
   isLoading = true;
 
   // Modal review properties
@@ -150,14 +150,6 @@ export class CreatinasComponent {
     });
     
     this.slug = this.route.snapshot.params['slug'];
-    
-    // Verificar si viene el parámetro sel=2 para seleccionar compra única
-    const selParam = this.route.snapshot.queryParams['sel'];
-    if (selParam === '2') {
-      this.selectOnePurchase(new Event('click')); 
-    } else {
-      this.selectSubscription(new Event('click')); 
-    }
     
     // Verificar si viene el parámetro review=true
     const reviewParam = this.route.snapshot.queryParams['review'];
@@ -544,26 +536,28 @@ export class CreatinasComponent {
   }
 
   selectSubscription($event: any) {
-    if (this.isSelectSubscription) {
-      $event.preventDefault();
+    $event.preventDefault();
+
+    this.isSelectSubscription.set(true);
+    this.isSelectOnePurchase.set(false);
+
+    if (this.subscriptionElement) {
+      this.subscriptionElement.nativeElement.open = true;
     }
-
-    this.isSelectSubscription = true;
-    this.isSelectOnePurchase = false;
-
     if (this.onePurchaseElement) {
       this.onePurchaseElement.nativeElement.open = false;
     }
   }
 
   selectOnePurchase($event: any) {
-    if (this.isSelectOnePurchase) {
-      $event.preventDefault();
+    $event.preventDefault();
+
+    this.isSelectSubscription.set(false);
+    this.isSelectOnePurchase.set(true);
+
+    if (this.onePurchaseElement) {
+      this.onePurchaseElement.nativeElement.open = true;
     }
-
-    this.isSelectSubscription = false;
-    this.isSelectOnePurchase = true;
-
     if (this.subscriptionElement) {
       this.subscriptionElement.nativeElement.open = false;
     }
@@ -574,7 +568,7 @@ export class CreatinasComponent {
   }
 
   agregarCarrito() {
-    if (this.isSelectSubscription) {
+    if (this.isSelectSubscription()) {
       this._shoppingCartService.addProductToCart({
         product: {
           id: '1',
@@ -613,7 +607,7 @@ export class CreatinasComponent {
         this._shoppingCartService.openCart();
       }, 500);
     }
-    else if (this.isSelectOnePurchase) {
+    else if (this.isSelectOnePurchase()) {
       this._shoppingCartService.addProductToCart({
         product: {
           id: '2',
@@ -655,12 +649,21 @@ export class CreatinasComponent {
   }
 
   isButtonDisabled() {
-    return !this.isSelectSubscription && !this.isSelectOnePurchase || this.isOutOfStock;
+    return !this.isSelectSubscription() && !this.isSelectOnePurchase() || this.isOutOfStock;
   }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId) && this.slug !== 'creatina-monohidratada-100-gr') {
       this.subscriptionElement.nativeElement.open = true;
+    }
+    if (isPlatformBrowser(this.platformId)) {
+    // Verificar si viene el parámetro sel=2 para seleccionar compra única
+    const selParam = this.route.snapshot.queryParams['sel'];
+    if (selParam === '2') {
+      this.selectOnePurchase(new Event('click'));
+    } else {
+      this.selectSubscription(new Event('click'));
+    }
     }
   }
 

@@ -235,7 +235,7 @@
                                         </div>
                                     </div>
                                     }@else {
-                                    @if (isSelectSubscription) {
+                                    @if (isSelectSubscription()) {
                                     <div class="flex justify-center items-center font-extralight price">
                                         <p class="text-base text-gray-500 sm:text-lg line-through">
                                             {{productPriceOnePurchase| currency : 'S/'}}</p>
@@ -244,7 +244,7 @@
                                             <span class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
                                     </div>
                                     }
-                                    @if(isSelectOnePurchase) {
+                                    @if(isSelectOnePurchase()) {
                                     <div class="flex justify-center items-center font-extralight price">
                                         <p class="text-lg text-gray-900 sm:text-xl ml-2">{{productPriceOnePurchase |
                                             currency : 'S/'}}</p>
@@ -322,9 +322,41 @@
                                 
                                 <div class="mx-auto pt-6 pb-2 max-sm:mb-4">
                                     <div class="space-y-4">
+
+                                        <details #OnePurchase (click)="selectOnePurchase($event)" [ngClass]="{'border-gray-800': isSelectOnePurchase()}"
+                                            class="rounded-lg overflow-hidden group border [&_summary::-webkit-details-marker]:hidden">
+                                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
+                                                <div class="flex items-center">
+                                                    <span class="relative size-5 shrink-0 mr-2">
                                 
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
+                                                            fill="#000000">
+                                                            <path
+                                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                                        </svg>
+                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" width="24px"
+                                                            fill="#434343">
+                                                            <path
+                                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                                        </svg>
+                                                    </span>
+                                                    <h2 class="font-light mr-2 max-lg:text-sm">Compra única</h2>
+                                                </div>
+                                
+                                                <div class="flex items-center">
+                                                    <div class="flex justify-center items-center font-extralight">
+                                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">
+                                                            {{productPriceOnePurchase| currency : 'S/'}}</p>
+                                                    </div>
+                                                </div>
+                                
+                                            </summary>
+                                        </details>
                                         <details #Subscription (click)="selectSubscription($event)"
-                                            [ngClass]="{'border-gray-800': isSelectSubscription,'border-gray-900': isSelectSubscription}"
+                                            [ngClass]="{'border-gray-800': isSelectSubscription(),'border-gray-900': isSelectSubscription()}"
                                             class="rounded-lg overflow-hidden group border border-gray-900 [&_summary::-webkit-details-marker]:hidden">
                                             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
@@ -426,39 +458,6 @@
                                             </div>
                                         </details>
                                 
-                                        <details #OnePurchase (click)="selectOnePurchase($event)" [ngClass]="{'border-gray-800': isSelectOnePurchase}"
-                                            class="rounded-lg overflow-hidden group border [&_summary::-webkit-details-marker]:hidden">
-                                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
-                                                <div class="flex items-center">
-                                                    <span class="relative size-5 shrink-0 mr-2">
-                                
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" width="24px"
-                                                            fill="#000000">
-                                                            <path
-                                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-                                
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" width="24px"
-                                                            fill="#434343">
-                                                            <path
-                                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-                                                    </span>
-                                                    <h2 class="font-light mr-2 max-lg:text-sm">Compra única</h2>
-                                                </div>
-                                
-                                                <div class="flex items-center">
-                                                    <div class="flex justify-center items-center font-extralight">
-                                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">
-                                                            {{productPriceOnePurchase| currency : 'S/'}}</p>
-                                                    </div>
-                                                </div>
-                                
-                                            </summary>
-                                        </details>
-                                
                                     </div>
                                 </div>
                                 }
@@ -506,10 +505,16 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        <!-- Disclaimer envío gratis -->
+                                        <div class="flex justify-center items-center mt-3">
+                                            <p class="text-xs text-gray-500 font-light">
+                                                Envíos a todo el Perú (gratis Lima Metropolitana).
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                                 @if(!isFreeCreatine){
-                                @if (isSelectSubscription) {
+                                @if (isSelectSubscription()) {
                                 <div class="max-sm:hidden my-2">
                                     <ml-button [name]="isOutOfStock ? 'Agotado' : 'Lo quiero →'" (click)="irRegistro()"
                                         [isDisabled]="isButtonDisabled()"></ml-button>
@@ -521,7 +526,7 @@
                                     </button>
                                 </div>
                                 }
-                                @if(isSelectOnePurchase) {
+                                @if(isSelectOnePurchase()) {
                                 <div class="max-sm:hidden my-2">
                                     <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'" (click)="agregarCarrito()"
                                         [isDisabled]="isButtonDisabled()"></ml-button>

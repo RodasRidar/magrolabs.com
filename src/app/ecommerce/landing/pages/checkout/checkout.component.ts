@@ -520,6 +520,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       currency: 'PEN',
       content_category: 'checkout_payment_method'
     });
+
+    this._tiktokAnalytics.trackCustomEvent('AddPaymentInfo', {
+      currency: 'PEN',
+      value: this.shoppingCart.total || 0
+    });
     
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.buttonName = 'Continuar →';

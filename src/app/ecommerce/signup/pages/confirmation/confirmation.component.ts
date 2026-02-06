@@ -291,12 +291,20 @@ export class ConfirmationComponent {
           currency: 'PEN',
           predicted_ltv: this.ENV.precioCreatinaSubscription * 12 // Valor anual predicho
         });
+        this._tiktokAnalytics.trackCustomEvent('StartTrial', {
+          value: 0,
+          currency: 'PEN'
+        });
       } else {
         // Es una suscripción de pago
         this._metaAnalytics.trackSubscribe({
           value: this.shoppingCart?.total || this.ENV.precioCreatinaSubscription,
           currency: 'PEN',
           predicted_ltv: (this.shoppingCart?.total || this.ENV.precioCreatinaSubscription) * 12 // Valor anual predicho
+        });
+        this._tiktokAnalytics.trackCustomEvent('Subscribe', {
+          value: this.shoppingCart?.total || this.ENV.precioCreatinaSubscription,
+          currency: 'PEN'
         });
       }
     }

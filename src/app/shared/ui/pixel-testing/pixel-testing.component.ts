@@ -124,6 +124,30 @@ export class PixelTestingComponent {
     this.addLog(`TikTok - Purchase: ${this.testData.currency} ${this.testData.value}`);
   }
 
+  testTikTokStartTrial() {
+    this.tiktokService.trackCustomEvent('StartTrial', {
+      value: 0,
+      currency: this.testData.currency
+    });
+    this.addLog('TikTok - StartTrial: Free trial iniciado');
+  }
+
+  testTikTokSubscribe() {
+    this.tiktokService.trackCustomEvent('Subscribe', {
+      value: this.testData.value,
+      currency: this.testData.currency
+    });
+    this.addLog(`TikTok - Subscribe: ${this.testData.currency} ${this.testData.value}`);
+  }
+
+  testTikTokAddPaymentInfo() {
+    this.tiktokService.trackCustomEvent('AddPaymentInfo', {
+      currency: this.testData.currency,
+      value: this.testData.value
+    });
+    this.addLog(`TikTok - AddPaymentInfo: ${this.testData.currency} ${this.testData.value}`);
+  }
+
   // ==================== Meta Events ====================
 
   testMetaViewContent() {
@@ -228,8 +252,11 @@ export class PixelTestingComponent {
     setTimeout(() => this.testTikTokViewContent(), 500);
     setTimeout(() => this.testTikTokAddToCart(), 1000);
     setTimeout(() => this.testTikTokInitiateCheckout(), 1500);
-    setTimeout(() => this.testTikTokCompleteRegistration(), 2000);
-    setTimeout(() => this.testTikTokPurchase(), 2500);
+    setTimeout(() => this.testTikTokAddPaymentInfo(), 2000);
+    setTimeout(() => this.testTikTokCompleteRegistration(), 2500);
+    setTimeout(() => this.testTikTokStartTrial(), 3000);
+    setTimeout(() => this.testTikTokSubscribe(), 3500);
+    setTimeout(() => this.testTikTokPurchase(), 4000);
     this.addLog('🚀 Ejecutando todos los eventos de TikTok en secuencia...');
   }
 

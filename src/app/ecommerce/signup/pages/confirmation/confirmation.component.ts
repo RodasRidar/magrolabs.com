@@ -180,9 +180,19 @@ export class ConfirmationComponent {
 
   //get the date in string plus a number through the parameter int
   getDatePlusDays(days: number): string {
-    let result = new Date();
-    result.setDate(result.getDate() + days);
-    return result.toLocaleDateString();
+    const today = new Date();
+    let deliveryDate = new Date(today);
+    let daysAdded = 0;
+    
+    while (daysAdded < days) {
+      deliveryDate.setDate(deliveryDate.getDate() + 1);
+      // Saltar fines de semana (sábado = 6, domingo = 0)
+      if (deliveryDate.getDay() !== 0 && deliveryDate.getDay() !== 6) {
+        daysAdded++;
+      }
+    }
+    
+    return deliveryDate.toLocaleDateString();
   }
 
   /**

@@ -479,6 +479,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
 
     this.shoppingCart.total = baseTotal;
+    this._shoppingCartService.setShoppingCart(this.shoppingCart);
   }
 
   hasValidatorError(field: string) {
@@ -757,7 +758,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],
-      discount: this.isDiscountApplied() ? this.discountAmount() : 0,
+      discount: this.isDiscountApplied() ? (this.discountAmount() == 9 ? 13 : this.discountAmount()) : 0,
       shipping_cost: this.isOutsideLimaMetropolitana() ? this.precioEnvioFueraLimaMetropolitana() : 0
     };
   }

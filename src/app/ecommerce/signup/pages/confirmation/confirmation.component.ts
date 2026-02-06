@@ -286,12 +286,12 @@ export class ConfirmationComponent {
 
       if (isFreeTrial) {
         // Es una prueba gratis
-        this._metaAnalytics.trackStartTrial({
+        this._metaAnalytics.trackSubscribe({
           value: 0,
           currency: 'PEN',
           predicted_ltv: this.ENV.precioCreatinaSubscription * 12 // Valor anual predicho
         });
-        this._tiktokAnalytics.trackCustomEvent('StartTrial', {
+        this._tiktokAnalytics.trackCustomEvent('Subscribe', {
           value: 0,
           currency: 'PEN'
         });

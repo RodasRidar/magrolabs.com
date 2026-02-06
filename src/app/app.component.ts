@@ -7,6 +7,7 @@ import { ModuleRetryService } from './shared/services/module-retry.service';
 import { TiktokAnalyticsService } from './shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from './shared/services/meta-analytics.service';
 import { HotjarService } from './shared/services/hotjar.service';
+import { PixelInitializationService } from './shared/services/pixel-initialization.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -21,6 +22,7 @@ export class AppComponent {
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private _metaAnalytics = inject(MetaAnalyticsService);
   private _hotjar = inject(HotjarService);
+  private _pixelInitialization = inject(PixelInitializationService);
   private moduleRetryService = inject(ModuleRetryService);
   title = 'Magrolabs';
   ENV = environment;
@@ -35,12 +37,15 @@ export class AppComponent {
 
       // Manejar errores de carga de chunks/módulos
       this.setupChunkErrorHandler();
+      
+      // Inicializar pixels dinámicamente según el ambiente
+      this._pixelInitialization.initializePixels();
     })
   }
 
   ngOnInit() {
-    // Inicializar Meta Analytics
-    this._metaAnalytics.initialize();
+    // Inicializar Meta Analytics (ya no se necesita aquí, se hace en el servicio de inicialización)
+    // this._metaAnalytics.initialize();
     
     // Tracking automático de navegación de rutas
     this._router.events.pipe(

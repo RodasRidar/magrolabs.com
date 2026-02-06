@@ -155,9 +155,10 @@ const flowUrlConfirmationSubscription = 'https://api.magrolabs.com/api/v1/subscr
 const flowCouponId30PercentDiscount = 5215;
 const precioEnvioFueraLimaMetropolitana = 13;
 const tiktokTrackingEnabled = true;
+const tiktokPixelId = 'D632L4JC77U5AUBMNBGG'; // ID del pixel de TikTok para producción
 const metaTrackingEnabled = true;
-const metaPixelId = '797277002911669'; // ID del pixel de Meta desde index.html
-const metaDebug = true;
+const metaPixelId = '797277002911669'; // ID del pixel de Meta para producción
+const metaDebug = false;
 const isBlackFridayActive = false;
 const creatina100GrDescuentoBlackFriday = '80%';
 
@@ -221,6 +222,10 @@ export const environment = {
     flowCouponId30PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
     tiktokTrackingEnabled,
+    tiktok: {
+        pixelId: tiktokPixelId,
+        enabled: tiktokTrackingEnabled
+    },
     metaTrackingEnabled,
     meta: {
         pixelId: metaPixelId,

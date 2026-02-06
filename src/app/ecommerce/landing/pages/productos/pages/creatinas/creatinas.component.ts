@@ -154,11 +154,9 @@ export class CreatinasComponent {
     // Verificar si viene el parámetro sel=2 para seleccionar compra única
     const selParam = this.route.snapshot.queryParams['sel'];
     if (selParam === '2') {
-      this.isSelectOnePurchase = true;
-      this.isSelectSubscription = false;
+      this.selectOnePurchase(new Event('click')); 
     } else {
-      this.isSelectSubscription = true;
-      this.isSelectOnePurchase = false;
+      this.selectSubscription(new Event('click')); 
     }
     
     // Verificar si viene el parámetro review=true

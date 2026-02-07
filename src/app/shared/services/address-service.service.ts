@@ -15,7 +15,7 @@ export class AddressService {
 
   searchAddress(query: string): Observable<PlaceAPI[]> {
     let params = new HttpParams()
-      .set('q', query + ' , Lima, Perú')
+      .set('q', query + ', Perú')
       .set('format', 'json')
       .set('addressdetails', '1')
       .set('limit', '10');

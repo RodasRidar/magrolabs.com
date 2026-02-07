@@ -479,7 +479,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
 
     this.shoppingCart.total = baseTotal;
-    this._shoppingCartService.setShoppingCart(this.shoppingCart);
   }
 
   hasValidatorError(field: string) {
@@ -1191,6 +1190,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   private saveUserDataForOnePurchase(): void {
+    this._shoppingCartService.setShoppingCart(this.shoppingCart);
+
     this._summaryService.setUserData({
       ...this._summaryService.getSummary()?.userData,
       nombre: this.form.get('firtName')?.value ?? '',

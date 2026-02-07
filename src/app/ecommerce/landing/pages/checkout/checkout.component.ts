@@ -262,6 +262,17 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         provincia: this.form.get('province')?.value ?? ''
       } as AddressSummary);
       });
+      
+    this.form.get('department')?.valueChanges.subscribe(() => {
+      this.validateAddressLocation({
+        tipoVia: this.form.get('tipoVia')?.value ?? '',
+        nombreVia: this.form.get('nombreVia')?.value ?? '',
+        codigoPostal: this.form.get('codigoPostal')?.value ?? '',
+        department: this.form.get('department')?.value ?? '',
+        distrito: this.form.get('district')?.value ?? '',
+        provincia: this.form.get('province')?.value ?? ''
+      } as AddressSummary);
+      });
   }
 
   ngOnDestroy(): void {
@@ -1190,7 +1201,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   private saveUserDataForOnePurchase(): void {
-    this._shoppingCartService.setShoppingCart(this.shoppingCart);
 
     this._summaryService.setUserData({
       ...this._summaryService.getSummary()?.userData,
@@ -1208,7 +1218,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._summaryService.setChoosePlan({
       selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       descriptionOne: 'Monohidratada 100%',
-      descriptionTwo: 'Compra única de S/' + this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart) + '.',
+      descriptionTwo: 'Compra única de S/' + this.shoppingCart.total+ '.',
       quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
     });
 

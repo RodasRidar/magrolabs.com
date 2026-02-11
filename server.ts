@@ -27,14 +27,17 @@ export function app(): express.Express {
   server.use(express.json());
 
   // Handle POST redirects from Flow (convert POST to GET redirect)
-  server.post('**/confirmacion', (req, res) => {
+  server.post('*/confirmacion', (req, res) => {
     // Flow sends POST to return URL, but Angular expects GET navigation
     // Redirect POST to GET with same URL and query params
-    const queryString = Object.keys(req.query).length > 0 
-      ? '?' + new URLSearchParams(req.query as any).toString()
-      : '';
-    const redirectUrl = req.path + queryString;
+    const redirectUrl = req.originalUrl; // includes path + query string
     res.redirect(303, redirectUrl); // 303 See Other - forces GET method
+  });
+
+  server.post('*/pedidos', (req, res) => {
+    // Handle payment returns to /cuenta/pedidos
+    const redirectUrl = req.originalUrl;
+    res.redirect(303, redirectUrl);
   });
 
   // Example Express Rest API endpoints

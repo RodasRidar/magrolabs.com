@@ -22,6 +22,21 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
+  // Parse URL-encoded bodies (for POST from payment providers like Flow)
+  server.use(express.urlencoded({ extended: true }));
+  server.use(express.json());
+
+  // Handle POST redirects from Flow (convert POST to GET redirect)
+  server.post('**/confirmacion', (req, res) => {
+    // Flow sends POST to return URL, but Angular expects GET navigation
+    // Redirect POST to GET with same URL and query params
+    const queryString = Object.keys(req.query).length > 0 
+      ? '?' + new URLSearchParams(req.query as any).toString()
+      : '';
+    const redirectUrl = req.path + queryString;
+    res.redirect(303, redirectUrl); // 303 See Other - forces GET method
+  });
+
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   

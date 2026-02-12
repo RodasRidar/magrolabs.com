@@ -1,19 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "dist/magrolabs-app/server/server.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/magrolabs-app/browser/**",
-      "use": "@vercel/static"
+  "functions": {
+    "api/flow-return.ts": {
+      "memory": 128,
+      "maxDuration": 10
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/dist/magrolabs-app/server/server.mjs"
-    }
-  ]
+  }
 }

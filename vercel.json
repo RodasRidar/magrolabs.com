@@ -1,28 +1,19 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/**"]
-      }
+      "src": "dist/magrolabs-app/server/server.mjs",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/magrolabs-app/browser/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/registro/confirmacion",
-      "methods": ["POST"],
-      "dest": "/api/index"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/api/index"
+      "dest": "/dist/magrolabs-app/server/server.mjs"
     }
   ]
 }

@@ -1,6 +1,10 @@
 {
   "functions": {
-    "api/flow-return.ts": {
+    "api/flow-return.js": {
+      "memory": 128,
+      "maxDuration": 10
+    },
+    "api/flow-return-pedidos.js": {
       "memory": 128,
       "maxDuration": 10
     }

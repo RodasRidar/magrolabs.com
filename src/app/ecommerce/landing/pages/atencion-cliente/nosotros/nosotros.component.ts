@@ -21,7 +21,7 @@ export class NosotrosComponent implements OnInit {
     const title = 'Nosotros | Magrolabs';
     const description = 'Conoce a Magrolabs, empresa peruana de suplementos deportivos comprometida con la calidad, sostenibilidad y el bienestar de nuestros clientes. Nuestra misión es revolucionar la suplementación deportiva con productos premium y eco-amigables.';
     const URL = 'https://magrolabs.com/atencion-cliente/nosotros';
-    const image = 'https://magrolabs.com/image-meta_69.png';
+    const image = 'https://magrolabs.com/image-meta_55.png';
     const keywords = 'Magrolabs, sobre nosotros, empresa peruana, suplementos eco-amigables, misión, visión, valores, sostenibilidad, suplementos deportivos Perú';
 
     // Configuración básica de SEO

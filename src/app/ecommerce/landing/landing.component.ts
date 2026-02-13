@@ -26,7 +26,7 @@ export class LandingComponent {
     const description = `¿Por qué Magrolabs? S/${this.ENV.precioCreatinaSubscription} por mes. ${this.ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula} - ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días para pensártelo. Un plan de creatina de alta calidad ajustado a tus necesidades y con envío gratis.`;
     const title = 'Magrolabs Creatina';
     const URL = 'https://magrolabs.com';
-    const image = 'https://magrolabs.com/image-meta_69.png';
+    const image = 'https://magrolabs.com/image-meta_55.png';
     const keywords = [
       'creatina'
     ];

@@ -296,7 +296,7 @@ export class ConfirmationComponent {
 
       if (isFreeTrial) {
         // Es una prueba gratis
-        this._metaAnalytics.trackSubscribe({
+        this._metaAnalytics.trackPurchase({
           value: 0,
           currency: 'PEN',
           predicted_ltv: this.ENV.precioCreatinaSubscription * 12 // Valor anual predicho
@@ -307,7 +307,7 @@ export class ConfirmationComponent {
         });
       } else {
         // Es una suscripción de pago
-        this._metaAnalytics.trackSubscribe({
+        this._metaAnalytics.trackPurchase({
           value: this.shoppingCart?.total || this.ENV.precioCreatinaSubscription,
           currency: 'PEN',
           predicted_ltv: (this.shoppingCart?.total || this.ENV.precioCreatinaSubscription) * 12 // Valor anual predicho

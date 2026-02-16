@@ -27,6 +27,7 @@ import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/su
 import { UserService } from '../../../../shared/services/user.service';
 import { CreditTransactionService, TransactionType } from '../../../../shared/services/credit-transactions.service';
 import { VerificationPaymentModalService } from '../../../../shared/services/verification-payment-modal.service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -67,6 +68,7 @@ export class VerificationPaymentComponent {
   private _userService = inject(UserService)
   private _creditTransactionService = inject(CreditTransactionService)
   private _verificationPaymentModalService = inject(VerificationPaymentModalService)
+  private _metaAnalyticsService = inject(MetaAnalyticsService);
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = signal('**** **** **** ');
   stepEnum = StepEnum;
@@ -819,6 +821,7 @@ export class VerificationPaymentComponent {
 
   cardAddedSuccessfully($event: boolean) {
     if ($event) {
+      this.trackAddPaymentInfo();
       setTimeout(() => {
         this.isPaymentVerified.set(true);
       }, 2000);
@@ -976,5 +979,15 @@ export class VerificationPaymentComponent {
           }
         });
     }
+  }
+
+  trackAddPaymentInfo() {
+    this._metaAnalyticsService.trackAddPaymentInfo({
+        content_ids: ['creatina-250gr-suscripcion'],
+        content_type: 'subscription',
+        content_category: 'suscripcion_mensual',
+        value: this.ENV.precioCreatinaSubscription,
+        currency: 'PEN'
+    });
   }
 }

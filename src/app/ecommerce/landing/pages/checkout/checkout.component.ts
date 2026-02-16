@@ -605,8 +605,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod = paymentMethod;
-    
-    // Tracking Meta Analytics - AddPaymentInfo cuando se selecciona método de pago
     this._metaAnalytics.trackAddPaymentInfo({
       value: this.shoppingCart.total || 0,
       currency: 'PEN',
@@ -646,6 +644,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     if (this.paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.handleRecurrentPaymentOption();
       return;
+    }
+
+    if(this.buttonName == 'Pagar →'){
+      this._metaAnalytics.trackAddPaymentInfo();
     }
 
     const status = this.form.get('isSignUpAcepted')?.value ?? false

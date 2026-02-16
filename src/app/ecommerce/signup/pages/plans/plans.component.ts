@@ -194,9 +194,9 @@ export class PlansComponent {
     // Track plan selection
     this._tiktokAnalytics.trackViewContent({
       contents: [{
-        content_id: 'creatina-subscription-plan',
+        content_id: 'creatina-250gr-suscripcion',
         content_type: 'product',
-        content_name: 'Plan Suscripción Creatina'
+        content_name: 'Plan Suscripción Creatina 250gr'
       }],
       value: this.ENV.precioCreatinaSubscription,
       currency: 'PEN'
@@ -204,11 +204,12 @@ export class PlansComponent {
 
     // Tracking Meta Analytics
     this._metaAnalytics.trackCustomEvent('ViewContent', {
-      content_name: 'Plan Suscripción Creatina',
-      content_ids: ['creatina-subscription-plan'],
-      content_type: 'product',
+      content_name: 'Plan Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
       value: this.ENV.precioCreatinaSubscription,
-      currency: 'PEN'
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
     });
 
     if (this.onePurchaseElement) {
@@ -227,9 +228,9 @@ export class PlansComponent {
     // Track plan selection
     this._tiktokAnalytics.trackViewContent({
       contents: [{
-        content_id: 'creatina-one-purchase-plan',
+        content_id: 'creatina-monohidratada-250-gr',
         content_type: 'product',
-        content_name: 'Plan Compra Única Creatina'
+        content_name: 'Compra Única Creatina 250gr'
       }],
       value: this.ENV.precioCreatinaOnePurchase,
       currency: 'PEN'
@@ -237,8 +238,8 @@ export class PlansComponent {
 
     // Tracking Meta Analytics
     this._metaAnalytics.trackCustomEvent('ViewContent', {
-      content_name: 'Plan Compra Única Creatina',
-      content_ids: ['creatina-one-purchase-plan'],
+      content_name: 'Compra Única Creatina 250gr',
+      content_ids: ['creatina-monohidratada-250-gr'],
       content_type: 'product',
       value: this.ENV.precioCreatinaOnePurchase,
       currency: 'PEN'

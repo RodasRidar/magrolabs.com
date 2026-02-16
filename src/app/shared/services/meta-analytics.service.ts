@@ -131,6 +131,10 @@ export class MetaAnalyticsService {
     this.trackEvent('Subscribe', parameters);
   }
 
+  trackPageView(): void {
+    this.trackEvent('PageView');
+  }
+
   /**
    * Método genérico para rastrear eventos personalizados
    */

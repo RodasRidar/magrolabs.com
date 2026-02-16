@@ -153,11 +153,6 @@ export class AppComponent {
     });
 
     // Enviar tracking a Meta
-    this._metaAnalytics.trackCustomEvent('ViewContent', {
-      content_name: pageName,
-      content_ids: [url.replace('/', '').replace(/\//g, '-') || 'home'],
-      content_type: 'product_group',
-      currency: 'PEN'
-    });
+    this._metaAnalytics.trackPageView();
   }
 }

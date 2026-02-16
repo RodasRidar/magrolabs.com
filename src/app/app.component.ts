@@ -44,30 +44,17 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    // Inicializar Meta Analytics (ya no se necesita aquí, se hace en el servicio de inicialización)
-    // this._metaAnalytics.initialize();
-    
-    // Tracking automático de navegación de rutas
-    this._router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      this.trackPageView(event.url);
-    });
+    this._router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        const url = e.urlAfterRedirects ?? e.url;
 
-    this._router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        //const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
-
-        // if (currentUrl === 'registro' || currentUrl === 'crear-cuenta' || currentUrl === 'direccion' || currentUrl === 'creatina-monohidratada-100-gr' || currentUrl === 'creatina-monohidratada-250-gr' || currentUrl === 'creatina-monohidratada-3-kg' || currentUrl === 'creatina-monohidratada-250-gr#reviews') {
-        //   this.isButtonVisible = true;
-        // } else {
-        //   this.isButtonVisible = false;
-        // }
+        // Track PageView
+        this.trackPageView(url);
 
         // Limpiar contadores de reintentos en navegación exitosa
-        this.moduleRetryService.clearRetryCount(event.url);
-      }
-    });
+        this.moduleRetryService.clearRetryCount(url);
+      });
   }
 
   private setupChunkErrorHandler(): void {

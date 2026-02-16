@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../../environments/env';
 
 @Injectable({
@@ -7,13 +8,20 @@ import { environment } from '../../../environments/env';
 export class PixelInitializationService {
   private tiktokLoaded = false;
   private metaLoaded = false;
+  private platformId = inject(PLATFORM_ID);
 
   constructor() {}
 
   /**
    * Inicializa ambos pixels (TikTok y Meta) según la configuración del ambiente
+   * Solo se ejecuta en el navegador (cliente)
    */
   initializePixels(): void {
+    // Solo ejecutar en el cliente, no en SSR
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.initializeTikTokPixel();
     this.initializeMetaPixel();
   }
@@ -112,7 +120,24 @@ export class PixelInitializationService {
 
     (window as any).fbq('init', pixelId);
 
+    // Agregar noscript para Meta Pixel
+    this.addMetaPixelNoscript(pixelId);
+
     this.metaLoaded = true;
+  }
+
+  /**
+   * Agrega el elemento noscript de Meta Pixel al body
+   */
+  private addMetaPixelNoscript(pixelId: string): void {
+    const noscript = document.createElement('noscript');
+    const img = document.createElement('img');
+    img.height = 1;
+    img.width = 1;
+    img.style.display = 'none';
+    img.src = `https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`;
+    noscript.appendChild(img);
+    document.body.appendChild(noscript);
   }
 
   /**

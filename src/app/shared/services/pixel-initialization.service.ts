@@ -111,7 +111,6 @@ export class PixelInitializationService {
     })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
     (window as any).fbq('init', pixelId);
-    (window as any).fbq('track', 'PageView');
 
     // Agregar noscript para Meta Pixel
     this.addMetaPixelNoscript(pixelId);

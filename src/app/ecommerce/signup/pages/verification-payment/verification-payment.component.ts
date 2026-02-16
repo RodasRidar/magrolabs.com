@@ -104,6 +104,15 @@ export class VerificationPaymentComponent {
 
     // Validar si la dirección está fuera de Lima Metropolitana
     this.validateAddressLocation(summary!);
+
+    this._metaAnalyticsService.trackCustomEvent('ViewContent', {
+      content_name: 'Verificacion Pago Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
   }
 
   /**

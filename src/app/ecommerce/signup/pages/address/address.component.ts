@@ -13,6 +13,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { AddressApiService } from '../../../../shared/services/address-api.service';
 import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
 import { UserService } from '../../../../shared/services/user.service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { environment } from '../../../../../environments/env';
 
 export interface Address {
   searchAddress: FormControl<string>,
@@ -44,6 +46,8 @@ export class AddressComponent {
   private _addressApiService = inject(AddressApiService)
   private _userService = inject(UserService)
   private nextUrl = '';
+  private _metaAnalytics = inject(MetaAnalyticsService);
+
   stepEnum = StepEnum;
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
@@ -73,6 +77,7 @@ export class AddressComponent {
     reference: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
   });
+  ENV = environment;
 
   ngOnInit() {
     this._seo.title.setTitle('Registro | Dirección de envío');
@@ -137,6 +142,15 @@ export class AddressComponent {
         this.form.get('province')?.enable();
       });
     }
+
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Registro dirección Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
   }
 
   selectAddress(address: PlaceAPI): void {

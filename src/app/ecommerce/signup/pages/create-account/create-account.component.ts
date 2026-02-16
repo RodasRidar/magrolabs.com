@@ -27,6 +27,7 @@ import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces
 import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map, finalize } from 'rxjs';
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
 import { CookieService } from 'ngx-cookie-service';
+import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -61,6 +62,7 @@ export class CreateAccountComponent implements OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private nextUrl = '';
   private _cookieService = inject(CookieService);
+  private _metaAnalytics = inject(MetaAnalyticsService);
 
   stepEnum = StepEnum;
   ENV = environment
@@ -191,6 +193,15 @@ export class CreateAccountComponent implements OnDestroy {
       this.form.get('password')?.updateValueAndValidity();
       this.form.get('password')?.markAsTouched()
     }
+
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Registro Datos Usuario Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
   }
 
   ngOnDestroy(): void {

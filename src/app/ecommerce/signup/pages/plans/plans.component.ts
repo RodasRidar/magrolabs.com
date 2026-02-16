@@ -172,9 +172,25 @@ export class PlansComponent {
     this._summaryService.setChoosePlan(aux);
 
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Plan Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
       this.isSelectSubscription = true;
       this.isSelectOnePurchase = false;
     } else if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Compra Única Creatina 250gr',
+      content_ids: ['creatina-monohidratada-250-gr'],
+      content_type: 'product',
+      value: this.ENV.precioCreatinaOnePurchase,
+      currency: 'PEN'
+    });
       this.isSelectSubscription = false;
       this.isSelectOnePurchase = true;
     } else {

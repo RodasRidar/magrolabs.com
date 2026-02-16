@@ -253,6 +253,13 @@ export class ConfirmationComponent {
         content_name: item.product.name
       }));
 
+      this._metaAnalytics.trackCompleteRegistration({
+        content_name: 'Registro Completado',
+        status: true,
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN'
+      });
+
       this._tiktokAnalytics.trackPurchase({
         contents: contents,
         value: this.shoppingCart.total || 0,
@@ -266,6 +273,14 @@ export class ConfirmationComponent {
         value: this.shoppingCart.total || 0,
         currency: 'PEN',
         num_items: this.shoppingCart.items.length
+      });
+
+      this._metaAnalytics.trackCustomEvent('ViewContent', {
+        content_name: 'Compra Única Creatina 250gr',
+        content_ids: ['creatina-monohidratada-250-gr'],
+        content_type: 'product',
+        value: this.shoppingCart.total ,
+        currency: 'PEN'
       });
     }
   }
@@ -287,19 +302,26 @@ export class ConfirmationComponent {
       currency: 'PEN'
     });
 
-    if (this.status === ConfirmationStatus.SUBSCRIPTION_SUCCESS || this.status === ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-      this._metaAnalytics.trackPurchase({
-        content_ids: ['creatina-250gr-suscripcion'],
-        content_type: 'subscription',
-        content_category: 'suscripcion_mensual',
-        value: this.ENV.precioCreatinaSubscription,
-        currency: 'PEN'
-      });
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Confirmación Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
 
-      this._tiktokAnalytics.trackCustomEvent('Subscribe', {
-        value: this.ENV.precioCreatinaSubscription,
-        currency: 'PEN'
-      });
-    }
+    this._metaAnalytics.trackPurchase({
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      content_category: 'suscripcion_mensual',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
+
+    this._tiktokAnalytics.trackCustomEvent('Subscribe', {
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
   }
 }

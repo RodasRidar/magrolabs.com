@@ -536,6 +536,14 @@ export class CreatinasComponent implements AfterViewInit {
   }
 
   selectSubscription($event: any) {
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Plan Suscripción Creatina 250gr',
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN',
+      content_category: 'suscripcion_mensual'
+    });
     $event.preventDefault();
 
     this.isSelectSubscription.set(true);
@@ -550,6 +558,13 @@ export class CreatinasComponent implements AfterViewInit {
   }
 
   selectOnePurchase($event: any) {
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Compra Única Creatina 250gr',
+      content_ids: ['creatina-monohidratada-250-gr'],
+      content_type: 'product',
+      value: this.ENV.precioCreatinaOnePurchase,
+      currency: 'PEN'
+    });
     $event.preventDefault();
 
     this.isSelectSubscription.set(false);

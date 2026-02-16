@@ -147,6 +147,14 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this._metaAnalytics.trackCustomEvent('ViewContent', {
+      content_name: 'Checkout Compra Única Creatina 250gr',
+      content_ids: ['creatina-monohidratada-250-gr'],
+      content_type: 'product',
+      value: this._shoppingCartService.getTotalByShoppingCart(this._shoppingCartService.getShoppingCart()),
+      currency: 'PEN'
+    });
+
     this.trackInitiateCheckout();
 
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {

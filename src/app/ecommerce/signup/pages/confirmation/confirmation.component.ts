@@ -260,7 +260,7 @@ export class ConfirmationComponent {
       });
 
       this._metaAnalytics.trackPurchase({
-        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        content_ids: this.shoppingCart.items.map(item => item.product.slug.toString()),
         content_type: 'product',
         content_category: 'compra_unica',
         value: this.shoppingCart.total || 0,

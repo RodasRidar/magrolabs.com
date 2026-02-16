@@ -643,7 +643,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
     if(this.buttonName == 'Pagar →'){
       this._metaAnalytics.trackAddPaymentInfo({
-        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        content_ids: this.shoppingCart.items.map(item => item.product.slug.toString()),
         contents: this.shoppingCart.items.map(item => ({
           id: item.product.id.toString(),
           quantity: item.quantity,
@@ -1305,7 +1305,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       this._metaAnalytics.trackInitiateCheckout({
         value: this.shoppingCart.total || 0,
         currency: 'PEN',
-        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        content_ids: this.shoppingCart.items.map(item => item.product.slug.toString()),
         content_type: 'product',
         num_items: this.shoppingCart.items.length
       });

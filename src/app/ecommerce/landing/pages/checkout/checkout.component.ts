@@ -605,11 +605,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod = paymentMethod;
-    this._metaAnalytics.trackAddPaymentInfo({
-      value: this.shoppingCart.total || 0,
-      currency: 'PEN',
-      content_category: 'checkout_payment_method'
-    });
 
     this._tiktokAnalytics.trackCustomEvent('AddPaymentInfo', {
       currency: 'PEN',
@@ -647,7 +642,18 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
 
     if(this.buttonName == 'Pagar →'){
-      this._metaAnalytics.trackAddPaymentInfo();
+      this._metaAnalytics.trackAddPaymentInfo({
+        content_ids: this.shoppingCart.items.map(item => item.product.id.toString()),
+        contents: this.shoppingCart.items.map(item => ({
+          id: item.product.id.toString(),
+          quantity: item.quantity,
+          item_price: item.product.price
+        })),
+        content_type: 'product',
+        value: this.shoppingCart.total || 0,
+        currency: 'PEN',
+        content_category: 'checkout_payment_method'
+      });
     }
 
     const status = this.form.get('isSignUpAcepted')?.value ?? false

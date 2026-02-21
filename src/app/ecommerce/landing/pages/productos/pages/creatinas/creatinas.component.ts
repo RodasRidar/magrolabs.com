@@ -168,10 +168,10 @@ export class CreatinasComponent implements AfterViewInit {
       this.credits = this.ENV.creditoRegaloPorCompraMes
       this.reviews = this.ENV.nroReviews;
       this.recurrencia = '30 días';
-      this.principalImgFront = '250gr_front_mockup_2000x2000.png';
-      this.principalImgBack = '250gr_back_mockup_2000x2000.png'; // Por ahora usa la misma imagen
-      this.previewImgFront = '250gr_front_mockup_500x500.png';
-      this.previewImgBack = '250gr_back_mockup_500x500.png'; // Por ahora usa la misma imagen
+      this.principalImgFront = '250gr_front_mockup_2000x2000.webp';
+      this.principalImgBack = '250gr_back_mockup_2000x2000.webp'; // Por ahora usa la misma imagen
+      this.previewImgFront = '250gr_front_mockup_500x500.webp';
+      this.previewImgBack = '250gr_back_mockup_500x500.webp'; // Por ahora usa la misma imagen
       this.model3dUrl = '250g';
       this.previewmodel3d = '3d.png';
       // this._seo.setStructuredData(this.jsonLD_250Gr); // Removido para evitar duplicación con setAdvancedStructuredData

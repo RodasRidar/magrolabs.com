@@ -32,6 +32,7 @@ import { MetaAnalyticsService } from '../../../../../../shared/services/meta-ana
 export class CreatinasComponent implements AfterViewInit {
   @ViewChild('Subscription', { static: false }) subscriptionElement!: ElementRef<HTMLDetailsElement>;
   @ViewChild('OnePurchase', { static: false }) onePurchaseElement!: ElementRef<HTMLDetailsElement>;
+  @ViewChild('imageCarousel', { static: false }) imageCarousel!: ElementRef<HTMLDivElement>;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -63,6 +64,7 @@ export class CreatinasComponent implements AfterViewInit {
   previewmodel3d = ''
   model3dUrl = ''
   tapSelected = 1; // Por defecto muestra la imagen frontal
+  currentImageIndex = 0; // Para el carrusel móvil
 
   isOutOfStock = false;
   isFreeCreatine = false;
@@ -533,6 +535,33 @@ export class CreatinasComponent implements AfterViewInit {
     const y = ((event.clientY - rect.top) / rect.height) * 100;
     
     this.zoomBackgroundPosition = `${x}% ${y}%`;
+  }
+
+  // Carousel methods
+  onCarouselScroll(event: Event) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    const carousel = event.target as HTMLElement;
+    const scrollPosition = carousel.scrollLeft;
+    const itemWidth = carousel.offsetWidth;
+    
+    // Calcular índice actual basado en la posición del scroll
+    const index = Math.round(scrollPosition / itemWidth);
+    this.currentImageIndex = index;
+  }
+
+  scrollToImage(index: number) {
+    if (!isPlatformBrowser(this.platformId) || !this.imageCarousel) return;
+    
+    const carousel = this.imageCarousel.nativeElement;
+    const itemWidth = carousel.offsetWidth;
+    
+    carousel.scrollTo({
+      left: itemWidth * index,
+      behavior: 'smooth'
+    });
+    
+    this.currentImageIndex = index;
   }
 
   selectSubscription($event: any) {

@@ -45,12 +45,12 @@
         <div class="md:grid sm:grid-cols-2 sm:gap-x-2 sm:items-start mb-2">
             <!-- Image gallery -->
             <div class="flex flex-col-reverse">
-                <!-- Image selector -->
+                <!-- Image selector (solo desktop) -->
                 <div class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none">
                     <div class="grid grid-cols-4 gap-2" aria-orientation="horizontal" role="tablist">
                         
                         <button id="tabs-2-tab-1" (click)="selectTap(1)"
-                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
                             [class.ring-[#d07d66]]="tapSelected === 1"
                             aria-controls="tabs-2-panel-1" role="tab" type="button">
                             <span class="sr-only">Vista frontal</span>
@@ -99,7 +99,42 @@
                     </div>
                 </div>
 
-                <div class="w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto">
+                <!-- Carrusel móvil -->
+                <div class="sm:hidden w-full relative">
+                    <div class="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide" 
+                         #imageCarousel
+                         (scroll)="onCarouselScroll($event)">
+                        <!-- Imagen frontal -->
+                        <div class="snap-center shrink-0 w-full h-96 flex items-center justify-center">
+                            <img [ngSrc]="principalImgFront" priority [alt]="productName" draggable="false"
+                                class="w-auto h-full object-center object-cover mx-auto select-none"
+                                height="96"
+                                width="76">
+                        </div>
+                        <!-- Imagen trasera -->
+                        <div class="snap-center shrink-0 w-full h-96 flex items-center justify-center">
+                            <img [ngSrc]="principalImgBack" [alt]="productName + ' - vista trasera'" draggable="false"
+                                class="w-auto h-full object-center object-cover mx-auto select-none"
+                                height="96"
+                                width="76">
+                        </div>
+                    </div>
+                    
+                    <!-- Indicadores de carrusel -->
+                    <div class="flex justify-center gap-2 mt-4">
+                        <button 
+                            *ngFor="let _ of [1,2]; let i = index"
+                            (click)="scrollToImage(i)"
+                            [class.bg-[#d07d66]]="currentImageIndex === i"
+                            [class.bg-gray-300]="currentImageIndex !== i"
+                            class="w-2 h-2 rounded-full transition-colors duration-200"
+                            [attr.aria-label]="'Ver imagen ' + (i + 1)">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Versión desktop con zoom -->
+                <div class="hidden sm:block w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto">
                     <!-- Panel 1: Imagen frontal -->
                     <div class=" sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in" 
                         id="tabs-2-panel-1"
@@ -1086,7 +1121,7 @@
                     </div>
                     <div class="mt-3 w-full sm:mt-0 sm:w-auto">
                         <button type="button"
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                             [disabled]="isSubmittingReview" (click)="closeReviewModal()">
                             Cancelar
                         </button>

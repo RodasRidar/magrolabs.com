@@ -30,7 +30,7 @@ export class IndexComponent {
       name: 'Shaker Magrolabs',
       price: 80,
       description: 'Nuestra botella es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
-      imageUrl: 'LoyaltyWebShop/shaker_black.png',
+      imageUrl: 'LoyaltyWebShop/shaker_black.webp',
       color: 'Negro'
     },
     {
@@ -38,7 +38,7 @@ export class IndexComponent {
       name: 'Guantes para gimnasio',
       price: 100,
       description: 'Nuestros guantes deportivos de alta calidad los puedes utilizar para levantar pesas, hacer crossfit, montar bicicleta e ir al gimnasio. Estos guantes tienen una correa de soporte para la muñeca que ayuda a prevenir lesiones mientras te ejercitas.',
-      imageUrl: 'LoyaltyWebShop/gloves_black.png',
+      imageUrl: 'LoyaltyWebShop/gloves_black.webp',
       color: 'Negro'
     },
     {
@@ -46,7 +46,7 @@ export class IndexComponent {
       name: 'Bolsa Magrolabs',
       price: 150,
       description: 'Nuestra bolsa negra deportiva es ideal para llevar tus cosas al gimnasio o al trabajo, con un diseño único y exclusivo.',
-      imageUrl: 'LoyaltyWebShop/bag_black.png',
+      imageUrl: 'LoyaltyWebShop/bag_black.webp',
       color: 'Negro'
     },
     {
@@ -62,7 +62,7 @@ export class IndexComponent {
       name: 'Polera Magrolabs',
       price: 190,
       description: 'Nuestra polera minimalista y exclusiva hecha de algodón 100% orgánico con materiales de alta calidad y prelavado.',
-      imageUrl: 'LoyaltyWebShop/hoodie_black.png',
+      imageUrl: 'LoyaltyWebShop/hoodie_black.webp',
       color: 'Negro'
     },
     {

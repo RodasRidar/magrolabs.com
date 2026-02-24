@@ -185,12 +185,12 @@ export class CreatinasComponent implements AfterViewInit {
       this.productServicesAndWeight = this.ENV.creatinaFreeGramos + ' gr. ' + this.ENV.nroServicios100g + ' servicios.';
       this.credits = this.ENV.creditoRegaloPorCompraAño
       this.reviews = this.ENV.nroReviews;
-      this.principalImgFront = '100gr_front_mockup_2000x2000.png';
-      this.principalImgBack = '100gr_back_mockup_2000x2000.png';
+      this.principalImgFront = '100gr_front_mockup_2000x2000.webp';
+      this.principalImgBack = '100gr_back_mockup_2000x2000.webp';
       this.model3dUrl = '250g';
       this.previewmodel3d = '3d.png';
-      this.previewImgFront = '100gr_front_mockup_500x500.png';
-      this.previewImgBack = '100gr_back_mockup_500x500.png';
+      this.previewImgFront = '100gr_front_mockup_500x500.webp';
+      this.previewImgBack = '100gr_back_mockup_500x500.webp';
       // this._seo.setStructuredData(this.jsonLD_100Gr); // Removido para evitar duplicación con setAdvancedStructuredData
     }
     else if (this.slug === 'creatina-monohidratada-3-kg') {

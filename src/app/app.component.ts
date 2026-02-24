@@ -31,6 +31,9 @@ export class AppComponent {
 
   constructor(){
     afterNextRender(() => {
+      // Ocultar loader cuando todo esté cargado
+      this.hideLoaderWhenReady();
+
       window.addEventListener('scroll', () => {
         this.wasScroll.set(true);
       });
@@ -84,6 +87,75 @@ export class AppComponent {
       error.message?.includes('ChunkLoadError') ||
       (event.filename && event.filename.includes('chunk-'))
     );
+  }
+
+  private hideLoaderWhenReady(): void {
+    // Dar tiempo a Angular para renderizar el contenido inicial
+    setTimeout(() => {
+      const promises: Promise<any>[] = [];
+
+      // Esperar a que las fuentes estén cargadas
+      if (document.fonts) {
+        promises.push(document.fonts.ready);
+      }
+
+      // Esperar a que las imágenes del viewport estén cargadas
+      const images = Array.from(document.querySelectorAll('img'));
+      const viewportImages = images.filter(img => {
+        const rect = img.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+      });
+
+      console.log(`🖼️ Imágenes en viewport: ${viewportImages.length}`);
+
+      // Agregar promesas para cada imagen del viewport
+      viewportImages.forEach(img => {
+        if (!img.complete) {
+          promises.push(
+            new Promise((resolve) => {
+              img.addEventListener('load', () => {
+                console.log(`✅ Imagen cargada: ${img.src}`);
+                resolve(null);
+              });
+              img.addEventListener('error', () => {
+                console.log(`❌ Error en imagen: ${img.src}`);
+                resolve(null);
+              });
+              // Timeout de seguridad por si la imagen no carga
+              setTimeout(resolve, 3000);
+            })
+          );
+        }
+      });
+
+      // Delay mínimo para asegurar renderizado
+      promises.push(new Promise(resolve => setTimeout(resolve, 500)));
+
+      console.log(`⏳ Esperando ${promises.length} recursos...`);
+
+      // Esperar a que todo esté listo
+      Promise.all(promises)
+        .then(() => {
+          console.log('✅ Todo listo, ocultando loader');
+          
+          // Ocultar el loader inicial del HTML
+          const initialLoader = document.getElementById('initial-loader');
+          if (initialLoader) {
+            initialLoader.classList.add('hide');
+            setTimeout(() => initialLoader.remove(), 500);
+          }
+        })
+        .catch(() => {
+          console.log('⚠️ Error detectado, ocultando loader de todas formas');
+          
+          // Ocultar el loader inicial del HTML
+          const initialLoader = document.getElementById('initial-loader');
+          if (initialLoader) {
+            initialLoader.classList.add('hide');
+            setTimeout(() => initialLoader.remove(), 500);
+          }
+        });
+    }, 300);
   }
 
   private trackPageView(url: string): void {

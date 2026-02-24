@@ -6,11 +6,12 @@ import { SeoService } from '../../shared/services/seo.service';
 import { environment } from '../../../environments/env';
 import { FooterComponent } from "./components/footer/footer.component";
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule],
+  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, ButtonComponent],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {

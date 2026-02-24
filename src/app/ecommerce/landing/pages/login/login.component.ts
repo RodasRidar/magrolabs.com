@@ -132,7 +132,7 @@ export class LoginComponent implements OnInit {
     const title = 'Iniciar Sesión | Magrolabs';
     const description = `Accede a tu cuenta de Magrolabs para gestionar tu suscripción, ver pedidos y disfrutar de beneficios exclusivos. ${environment.campanaPrimeraCreatina.textos.heroOfertaMayuscula} y envío sin costo.`;
     const URL = 'https://magrolabs.com/login';
-    const image = 'https://magrolabs.com/image-meta_55.png';
+    const image = 'https://magrolabs.com/image-meta_55.webp';
     const keywords = [
       'login magrolabs', 'acceso cuenta creatina', 'iniciar sesión suplementos',
       'cuenta usuario magrolabs', 'acceso suscripción creatina', 'login Peru',

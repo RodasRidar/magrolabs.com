@@ -48,7 +48,7 @@ export class ComoFuncionaComponent implements OnInit {
     const title = '¿Cómo Funciona Magrolabs? - Suscripción de Suplementos';
     const description = 'Descubre cómo funciona la suscripción mensual de Magrolabs. Obtén tu ' + this.ENV.campanaPrimeraCreatina.textos.heroOferta + ', pruébala por ' + this.ENV.diasNormalesDePruebaOperiodoDeReflexion + ' días y recibe suplementos de alta calidad cada mes.';
     const URL = 'https://magrolabs.com/atencion-cliente/como-funciona';
-    const image = 'https://magrolabs.com/image-meta_55.png';
+    const image = 'https://magrolabs.com/image-meta_55.webp';
     const keywords = 'cómo funciona Magrolabs, suscripción suplementos, creatina oferta, período de prueba, suplementos mensuales, Magrolabs Perú';
 
     // Configuración básica de SEO

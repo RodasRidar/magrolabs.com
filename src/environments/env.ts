@@ -73,6 +73,7 @@ const campanaPrimeraCreatina = {
         
         // Textos para hero/landing
         heroOferta: `primera creatina a solo S/ ${precioFormateado}`,
+        heroOfertaLanding: `${diasNormalesDePruebaOperiodoDeReflexion} días`,
         heroOfertaMayuscula: `Primera creatina a S/ ${precioFormateado}`,
         
         // Textos para FAQs

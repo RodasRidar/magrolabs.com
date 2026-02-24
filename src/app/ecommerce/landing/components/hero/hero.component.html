@@ -1,10 +1,10 @@
 <main class="lg:relative">
-  <div class="mx-auto max-w-7xl w-full pt-4 pb-4 text-center lg:py-32 lg:text-left">
+  <div class="mx-auto max-w-7xl w-full pt-8 pb-4 text-center lg:py-32 lg:text-left">
     <div class="px-4 lg:w-1/2 sm:px-8 xl:pr-16">
       <h1
-        class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-5xl animate-fade-in-up"
-        style="font-family: 'ANZOR', serif; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
-        <span class="block text-[#d07d66] xl:inline">Suplementación</span>
+        class="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-5xl animate-fade-in-up"
+        style="font-family: 'ANZOR', serif;">
+        <span class="block  xl:inline">Suplementación</span>
         <span class="block xl:inline"> premium y eco amigable</span>
       </h1>
 
@@ -45,14 +45,16 @@
       
       <div class="animate-fade-in-up">
         <h2 class="text-pretty mt-3 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:mt-5 md:max-w-3xl">
-          Con nuestra suscripción mensual, recibe un paquete de <strong class="text-[#d07d66]">Creatina 250gr</strong>
-          por <strong class="text-[#d07d66]">S/{{ENV.precioCreatinaSubscription}}</strong>.
+          Con nuestra suscripción, recibes un paquete de <strong class="text-[#d07d66]">Creatina Monohidratada 250gr</strong>
+          a solo <strong class="text-[#d07d66]">S/{{ENV.precioCreatinaSubscription}}</strong> por mes.
         </h2>
-        <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
+        <!-- <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
           Envío gratis para siempre<span class="text-base tracking-tighter">!*</span>
-        </h2>
+        </h2> -->
         <h2 class="text-pretty mt-0 max-w-md mx-auto text-lg text-gray-700 sm:text-xl md:max-w-3xl">
-          Regístrate ahora y recibe tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}} y un regalo de <strong class="text-[#d07d66]">{{ENV.creditoRegaloPorCompraMes}} MP</strong><span class="text-base tracking-tighter">.**</span>
+          Empieza con una prueba de <strong class="text-[#d07d66]">{{ENV.campanaPrimeraCreatina.textos.heroOfertaLanding}}</strong> donde solo pagas 
+          <strong class="text-[#d07d66]">S/{{ENV.campanaPrimeraCreatina.precio}}0</strong> y con  <strong class="text-[#d07d66]">envío gratis</strong><span class="text-base tracking-tighter">!*</span>
+          <!-- y un regalo de <strong class="text-[#d07d66]">{{ENV.creditoRegaloPorCompraMes}} MP</strong><span class="text-base tracking-tighter">.**</span> -->
         </h2>
 
         <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
@@ -65,18 +67,18 @@
           </div>
         </div>
         <div class="text-left"> 
-          <p class="tracking-tighter mt-10 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
-            * Envío gratis solo para Lima Metropolitana.
+          <p class="tracking-tighter mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+            * Cancela cuando quieras, envío gratis para Lima Metropolitana.
           </p>
-          <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+          <!-- <p class="tracking-tighter mt-1 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
             ** Los {{ENV.creditoRegaloPorCompraMes}} Magropuntos (MP) pueden ser utilizados en nuestra Webshop. {{ENV.campanaPrimeraCreatina.textos.notaPie(ENV.campanaPrimeraCreatina.gramos, ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
-          </p>
-        </div>
+          </p> -->
+        </div> 
       </div>
     </div>
   </div>
   <div
-    class=" animate-fade-in-up max-lg:mt-4 relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full">
+    class=" animate-fade-in-up relative w-full h-72 sm:h-64 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:h-full">
     <img class="absolute inset-0 h-[66%] self-center object-cover mx-auto my-auto filter drop-shadow-[0px_25px_35px_rgba(0,0,0,0.6)]" src="/banner_3.png" alt="banner-landing" />
   </div>
 </main>

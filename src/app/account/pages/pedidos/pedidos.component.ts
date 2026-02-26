@@ -232,11 +232,17 @@ export class PedidosComponent implements OnInit {
 
   initializeExpandedProducts(): void {
     const expandedState: Record<string, boolean> = {};
-    this.pedidos().forEach(pedido => {
+    const pedidos = this.pedidos();
+    
+    pedidos.forEach((pedido, index) => {
+      // La última orden (primera en la lista) se muestra expandida
+      const isUltimaOrden = index === 0;
+      
       pedido.orderItems.forEach(item => {
-        expandedState[item.id] = false;
+        expandedState[item.id] = isUltimaOrden;
       });
     });
+    
     this.expandedProducts.set(expandedState);
   }
 

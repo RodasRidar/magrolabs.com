@@ -899,10 +899,10 @@
                     </div>
 
                     <div class="border-t border-gray-200 pt-4">
-                        <button (click)="toggleChargesHistory()"
-                            class="flex items-center justify-between w-full py-3 text-gray-700 hover:text-gray-900">
-                            <span class="font-medium">{{ showChargesHistory() ? 'Ocultar historial de pagos' : 'Ver
-                                historial de pagos' }}</span>
+                        <button (click)="toggleChargesHistory()" class="flex items-center justify-between w-full py-3 text-gray-700 hover:text-gray-900">
+                            <span class="font-medium">
+                                {{ showChargesHistory() ? 'Ocultar historial de pagos' : 'Ver historial de pagos' }}
+                                </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform"
                                 [ngClass]="{'rotate-90': showChargesHistory()}" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -1225,10 +1225,10 @@
                         <!-- Tarjeta de crédito de compras -->
                         <div
                             class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6 justify-items-center">
-                            <p class="text-lg font-semibold mb-2">Tus Magropuntos:</p>
-                            <p class="text-6xl font-bold mb-6 flex items-center">
+                            <p class="text-lg font-semibold mb-2 self-center">Tus Magropuntos:</p>
+                            <p class="text-6xl font-bold mb-6 flex items-center justify-center">
                                 {{userCredits()}}
-                                @if (isLoadingTier) {
+                            @if (isLoadingTier) {
                             <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
                             } @else {
                             <img [src]="tierImageRoutes?.png245x254" [alt]="tierDisplayName"
@@ -1245,7 +1245,7 @@
                                     class="text-[#d7816a] hover:text-[#b76a5a] underline">Webshop →</a>
                                 esperándote...</p>
                         </div>
-                        <div class="relative w-full rounded-lg overflow-hidden">
+                        <div class="hidden sm:block relative w-full rounded-lg overflow-hidden">
                             <img src="LoyaltyWebShop/shaker_black.webp" alt="Shaker negro con logo de Magrolabs"
                                 loading="lazy" class="w-full object-center object-cover h-[27vh] sm:h-[35vh]" />
                         </div>
@@ -1572,8 +1572,7 @@
                             <p class="text-gray-900 font-bold text-lg">{{ userName() }}</p>
 
                             <div class="space-y-1">
-                                <p class="text-gray-900 font-bold text-lg">{{ subscriptionPlan()?.description || 'Plan
-                                    de Suscripción' }}</p>
+                                <p class="text-gray-900 font-bold text-lg">{{ subscriptionPlan()?.description || 'Plan de Suscripción' }}</p>
                                 <p class="text-gray-600 text-sm">Suscripción {{
                                     getPeriodText(subscriptionPlan()?.period) }}</p>
                             </div>

@@ -183,7 +183,7 @@ export class SuscripcionComponent implements OnInit {
 
       // Guardar nombre del usuario
       if (user) {
-        const nombre = this.authService.getCurrentUser()?.first_name + ' ' + this.authService.getCurrentUser()?.last_name || 'Usuario';
+        const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
         this.userName.set(nombre);
       }
     });
@@ -1830,7 +1830,10 @@ export class SuscripcionComponent implements OnInit {
 }
 
   ngAfterViewInit(): void {
-    this.toggleChargesHistory()
+    // Solo abrir el historial de cargos si no es un dispositivo móvil
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      this.toggleChargesHistory()
+    }
   }
 }
 

@@ -20,11 +20,12 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { MonthlyRewardModalService } from '../../../shared/services/monthly-reward-modal.service';
 import { MonthlyRewardModalComponent } from '../../../shared/ui/monthly-reward-modal/monthly-reward-modal.component';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })
@@ -88,7 +89,7 @@ export class CuentaComponent implements OnInit {
     // Usar solo el primer nombre si tiene varios nombres separados por espacios
     const firstName = user.first_name.split(' ')[0];
     
-    return `¡${greeting} ${firstName} ${emoji}, qué gusto tenerte de vuelta!`;
+    return `¡${greeting} ${firstName}!, qué gusto tenerte de vuelta ${emoji}`;
   });
 
   // Computed signals
@@ -134,10 +135,10 @@ export class CuentaComponent implements OnInit {
     // Si hay descuento, calcular el precio con descuento
     if (discount > 0) {
       const discountedPrice = basePrice * (1 - discount / 100);
-      return `S/${discountedPrice.toFixed(2)} / mensual`;
+      return `S/${discountedPrice.toFixed(0)} / mes`;
     }
     
-    return `S/${basePrice}.00 / mensual`;
+    return `S/${basePrice} / mes`;
   });
 
   // Información sobre el descuento

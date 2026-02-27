@@ -54,19 +54,34 @@
                                 </div>
                             </div>
                             <a routerLink="/cuenta/mi-cuenta"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
-                                Mi Cuenta
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#000000">
+                                    <path
+                                        d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
+                                </svg>
+                                &nbsp;Mi Cuenta
                             </a>
                             <a routerLink="/cuenta/perfil"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-0">
-                                Configuración del Perfil
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#000000">
+                                    <path
+                                        d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
+                                </svg>
+                                &nbsp; Configuración del Perfil
                             </a>
                             <a (click)="logout()"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
                                 role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                Cerrar sesión
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#dc2626">
+                                    <path
+                                        d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
+                                </svg>
+                                &nbsp;Cerrar sesión
                             </a>
                         </div>
 
@@ -159,11 +174,11 @@
 }
 @if (type() === navbarTypeEnum.LANDING) {
 
- @if (ENV.isBlackFridayActive) {
-    <app-black-friday-bar></app-black-friday-bar>
- }@else {
-    <app-urgency-bar></app-urgency-bar>
- }
+@if (ENV.isBlackFridayActive) {
+<app-black-friday-bar></app-black-friday-bar>
+}@else {
+<app-urgency-bar></app-urgency-bar>
+}
 
 <div class="fixed top-[50px] left-0 right-0 z-40">
     <div class="relative bg-white shadow">
@@ -222,19 +237,34 @@
                                     </div>
                                 </div>
                                 <a routerLink="/cuenta/mi-cuenta"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                     tabindex="-1" id="user-menu-item-1">
-                                    Mi Cuenta
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                        width="20px" fill="#000000">
+                                        <path
+                                            d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
+                                    </svg>
+                                    &nbsp;Mi Cuenta
                                 </a>
                                 <a routerLink="/cuenta/perfil"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                     tabindex="-1" id="user-menu-item-0">
-                                    Configuración del Perfil
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                        width="20px" fill="#000000">
+                                        <path
+                                            d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
+                                    </svg>
+                                    &nbsp; Configuración del Perfil
                                 </a>
                                 <a (click)="logout()"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                    class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
                                     role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                    Cerrar sesión
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                        width="20px" fill="#dc2626">
+                                        <path
+                                            d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
+                                    </svg>
+                                    &nbsp;Cerrar sesión
                                 </a>
                             </div>
 
@@ -312,19 +342,34 @@
                                 </div>
                             </div>
                             <a routerLink="/cuenta/mi-cuenta"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
-                                Mi Cuenta
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#000000">
+                                    <path
+                                        d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
+                                </svg>
+                                &nbsp;Mi Cuenta
                             </a>
                             <a routerLink="/cuenta/perfil"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                 tabindex="-1" id="user-menu-item-0">
-                                Configuración del perfil
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#000000">
+                                    <path
+                                        d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
+                                </svg>
+                                &nbsp; Configuración del perfil
                             </a>
                             <a (click)="logout()"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
                                 role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                Cerrar sesión
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="20px" fill="#dc2626">
+                                    <path
+                                        d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
+                                </svg>
+                                &nbsp;Cerrar sesión
                             </a>
                         </div>
                         }

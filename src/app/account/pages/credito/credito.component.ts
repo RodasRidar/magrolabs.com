@@ -221,16 +221,16 @@ export class CreditoComponent implements OnInit {
     return date.toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'short',
-      year: undefined
+      year: 'numeric'
     });
   }
 
   formatAmount(amount: number, type: TransactionType): string {
-    const formatted = Math.abs(amount).toFixed(2);
+    const formatted = Math.abs(amount).toFixed(0);
     if (amount >= 0 && type === TransactionType.EARNED) {
-      return `+ ${formatted}`;
+      return `+ ${formatted} MP`;
     } else {
-      return `- ${formatted}`;
+      return `- ${formatted} MP`;
     }
   }
 

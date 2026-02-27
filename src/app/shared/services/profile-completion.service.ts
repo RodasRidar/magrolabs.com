@@ -97,7 +97,7 @@ export class ProfileCompletionService {
     
     // Si tiene todo completo
     if (status.isProfileComplete && status.hasSubscription) {
-      return '¡Tu perfil está completo! 🎉';
+      return '🎉 ¡Tu perfil está completo!';
     }
     
     // Si tiene perfil completo pero falta suscripción

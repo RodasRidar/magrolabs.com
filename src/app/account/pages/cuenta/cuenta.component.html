@@ -1,8 +1,8 @@
 <header>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mi Cuenta</h1>
+        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mi Cuenta.</h1>
         @if (greetingMessage() && !isLoadingDashboard()) {
-        <p class="mt-2 text-lg text-gray-600">{{ greetingMessage() }}</p>
+        <p class="mt-2 text-lg text-gray-600 font-medium">{{ greetingMessage() }}</p>
         }
     </div>
 </header>
@@ -24,9 +24,9 @@
                     style="background:linear-gradient(90deg, rgba(20, 20, 20, 1) 0%, rgb(40 40 66) 35%, #393737 100%)">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-medium leading-6 text-white">Medidor de Magropuntos</h3>
+                            <h3 class="text-xl font-medium leading-6 text-white">Magropuntos ahorrados:</h3>
                             <a routerLink="/cuenta/credito"
-                                class="flex items-center text-white text-sm hover:underline">
+                                class="hidden sm:flex items-center text-white text-sm hover:underline">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"
                                     class="mr-1" viewBox="0 0 24 24">
                                     <path
@@ -37,18 +37,18 @@
                         </div>
 
                         <div class="mt-4">
-                            <h2 class="text-5xl font-bold flex items-center max-sm:justify-center">
+                            <h2 class="text-5xl mt-4 mb-8 font-bold flex items-center max-sm:justify-start">
                                 {{loyaltyPoints()}}
                                 <img [src]="tierImageRoutes()?.pngComprimido" [alt]="tierDisplayName()"
                                     class="w-16 h-16 mx-2 select-none">
                             </h2>
 
-                            <div class="relative mt-6 mb-8 w-[94%] max-w-[975px]">
+                            <div class="relative mt-6 mb-4 w-[94%] max-w-[975px]">
                                 <!-- Barra de progreso base -->
                                 <div class="h-2.5 bg-[#f6f6f6] bg-opacity-20 rounded-r-lg"></div>
 
                                 <!-- Barra de progreso llena -->
-                                <div class="absolute top-0 left-0 h-2.5 rounded-r-lg"
+                                <div class="absolute top-0 left-0 h-2.5 rounded-r-lg animate-pulse"
                                     [style.width]="loyaltyProgressWidth()"
                                     style="transition: width 1.5s ease-in-out; background: #141414; background: linear-gradient(40deg, #221111 19%, rgba(208, 125, 102, 1) 100%);">
                                 </div>
@@ -117,16 +117,11 @@
                                 </div>
                             </div>
 
-                            <div class="mt-6">
+                            <div class="flex mt-6 animate-bounce">
+                                <span class="mr-1">🎁</span>
                                 <a routerLink="/cuenta/credito"
-                                    class="text-white hover:text-white hover:underline flex items-center">
-                                    <span class="font-medium">Recibe 30 MP gratis ahora</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
+                                    class="text-white underline hover:text-[#d7816a] flex items-center">
+                                    <span class="font-medium"> Gana 30 Magropuntos gratis → </span>
                                 </a>
                             </div>
                         </div>
@@ -198,14 +193,14 @@
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
                             <div class="mt-3 flex items-center space-x-2">
                                 <div class="flex-1 bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-white h-full rounded-full transition-all duration-500"
+                                    <div class="bg-white h-full rounded-full transition-all duration-500 animate-pulse"
                                         [style.width.%]="profileCompletionService.completionPercentage()"></div>
                                 </div>
                                 <span class="text-sm font-semibold">{{ profileCompletionService.completionPercentage()
                                     }}%</span>
                             </div>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white text-opacity-50 ml-4"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white  ml-4"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -215,13 +210,15 @@
                 }
 
                 <!-- Banner cuando el perfil está completo pero falta suscripción -->
-                @if (!profileCompletionService.isLoading() && profileCompletionService.isProfileComplete() && needsSubscription() && !lastOrder()) {
+                @if (!profileCompletionService.isLoading() && profileCompletionService.isProfileComplete() &&
+                needsSubscription() && !lastOrder()) {
                 <div
                     class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
-                            <p class="text-white text-opacity-90">Activa tu suscripción con una prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días.
+                            <p class="text-white text-opacity-90">Activa tu suscripción con una prueba de
+                                {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días.
                             </p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white text-opacity-50 ml-4"
@@ -253,16 +250,17 @@
                     <div class="px-4 py-5 sm:p-6 flex-grow">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción</h3>
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Mi Suscripción.</h3>
                                 @if (hasDiscount()) {
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#d7816a] text-white">
+                                <span
+                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#d7816a] text-white">
                                     -{{ discountPercentage() }}%
                                 </span>
                                 }
                             </div>
                             <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
                                 [ngClass]="getStatusClass(subscription()?.status)">
-                                <span class="w-2 h-2 me-1 rounded-full"
+                                <span class="w-2 h-2 me-1 rounded-full animate-pulse"
                                     [ngClass]="getDotClass(subscription()?.status)"></span>
                                 <span class="hidden bg-green-500"></span>
                                 <span class="hidden bg-yellow-500"></span>
@@ -273,13 +271,13 @@
                             </span>
                         </div>
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
-                            
+
                             @if (subscription()?.status) {
                             <div class="mt-3 space-y-2">
                                 <p><strong>Plan:</strong> {{ subscriptionPlanName() }}</p>
                                 @if (hasDiscount()) {
                                 <p class="flex items-center gap-2">
-                                    <strong>Inversión:</strong> 
+                                    <strong>Inversión:</strong>
                                     <span class="line-through text-gray-500 text-sm">S/{{ originalPrice() }}.00</span>
                                     <span class="text-[#d7816a] font-semibold">{{ subscriptionPrice() }}</span>
                                 </p>
@@ -290,25 +288,23 @@
                                 @if (subscription()?.status === statusEnum.TRIAL) {
                                 <p><strong>Próximo pago:</strong> {{ nextBillingDateFreeCreatine }}</p>
                                 } @else {
-                                <p><strong>Próximo pago:</strong> {{ nextBillingDate() ? (nextBillingDate() | date:'dd/MM/yyyy') : 'No disponible' }}</p>
+                                <p><strong>Próximo pago:</strong> {{ nextBillingDate() ? (nextBillingDate() |
+                                    date:'dd/MM/yyyy') : 'No disponible' }}</p>
                                 }
                             </div>
                             } @else {
-                            <p class="mt-3">Suscríbete a Magrolabs y recibe {{ ENV.creditoRegaloPorCompraMes }} Magropuntos para compras.</p>
+                            <p class="mt-3">¿Te quedaste sin creatina? Suscríbete a nuestra creatina mensual y gana {{
+                                ENV.creditoRegaloPorCompraMes }}
+                                Magropuntos con cada entrega, podras canjearlos por artículos exclusivos.</p>
                             }
                         </div>
                     </div>
                     <div class="px-4 pb-5 sm:px-6 sm:pb-6 mt-auto">
                         @if (needsSubscription() && !lastOrder()) {
-                        <button type="button" (click)="openVerificationPaymentModal()"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] shadow-sm transition-colors duration-200">
-                            Activar Prueba
-                        </button>
+                        <ml-button (click)="openVerificationPaymentModal()" name="Activar Prueba"></ml-button>
                         } @else {
-                        <a routerLink="/cuenta/suscripcion"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20 transition-colors duration-200">
-                            {{!subscription()?.status ? 'Suscribirme →' : 'Ver detalles'}}
-                        </a>
+                        <ml-button routerLink="/cuenta/suscripcion"
+                            [name]="!subscription()?.status ? 'Suscribirme →' : 'Ver detalles →'"></ml-button>
                         }
                     </div>
                 </div>
@@ -319,27 +315,26 @@
                 <div
                     class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="px-4 py-5 sm:p-6 flex-grow">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Último Pedido</h3>
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Último Pedido.</h3>
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
                             @if (lastOrder()) {
                             <p><strong>Producto:</strong> {{ lastOrderProductName() }}</p>
                             <p class="mt-1"><strong>Estado:</strong> {{ getOrderStatusText(lastOrder()!.status) }}</p>
                             @if (lastOrder()!.total_amount > 0) {
-                            <p class="mt-1"><strong>Total:</strong> S/{{ lastOrder()!.total_amount | number:'1.2-2' }}</p>
+                            <p class="mt-1"><strong>Total:</strong> S/{{ lastOrder()!.total_amount | number:'1.2-2' }}
+                            </p>
                             } @else {
                             <p class="mt-1"><strong>Total:</strong> S/0</p>
                             }
-                            <p class="mt-1"><strong>Fecha del pedido:</strong> {{ lastOrder()!.order_date | date:'dd/MM/yyyy' }}</p>
+                            <p class="mt-1"><strong>Fecha del pedido:</strong> {{ lastOrder()!.order_date |
+                                date:'dd/MM/yyyy' }}</p>
                             } @else {
                             <p>No hay pedidos recientes</p>
                             }
                         </div>
                     </div>
                     <div class="px-4 pb-5 sm:px-6 sm:pb-6 mt-auto">
-                        <a routerLink="/cuenta/pedidos"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20 transition-colors duration-200">
-                            Ver pedidos
-                        </a>
+                        <ml-button routerLink="/cuenta/pedidos" name="Ver pedidos →" type="secondary"></ml-button>
                     </div>
                 </div>
                 }
@@ -363,7 +358,7 @@
                     }
                     <div class="px-4 py-5 sm:p-6 flex-grow">
                         <h3 class="text-lg font-medium leading-6 text-gray-900 flex items-center">
-                            Mi Perfil
+                            Mi Perfil.
                             @if (needsBasicInfo()) {
                             <span
                                 class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
@@ -432,20 +427,10 @@
                     </div>
                     <div class="px-4 pb-5 sm:px-6 sm:pb-6 mt-auto">
                         @if (needsBasicInfo() || needsAddress()) {
-                        <a [routerLink]="['/cuenta/perfil']" [queryParams]="{ isFromFreeCreatineFlow: true }"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#d07d66] hover:bg-[#d7816a] shadow-sm transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                            </svg>
-                            {{ needsAddress() ? 'Completar Dirección' : 'Completar Perfil' }}
-                        </a>
+                        <ml-button [routerLink]="['/cuenta/perfil']" [queryParams]="{ isFromFreeCreatineFlow: true }"
+                            name="{{ needsAddress() ? 'Completar Dirección →' : 'Completar Perfil →' }}"></ml-button>
                         } @else {
-                        <a routerLink="/cuenta/perfil"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#d07d66] bg-[#d07d66]/10 hover:bg-[#d07d66]/20 transition-colors duration-200">
-                            Ver perfil
-                        </a>
+                        <ml-button routerLink="/cuenta/perfil" name="Ver perfil →" type="secondary"></ml-button>
                         }
                     </div>
                 </div>

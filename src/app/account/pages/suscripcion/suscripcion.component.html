@@ -1,11 +1,11 @@
 <header>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mi Suscripción</h1>
+        <h1 class="text-3xl font-bold leading-tight text-gray-900">Mi Suscripción.</h1>
     </div>
 </header>
 <main>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="px-1 py-8 sm:px-4">
+        <div class="px-4 py-8 sm:px-4">
             <!-- Pantalla de carga -->
             <div *ngIf="isLoading()" class="flex justify-center items-center h-64">
                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -525,7 +525,7 @@
                 <!-- Cabecera con estado -->
                 <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">Detalles de la suscripción</h3>
+                        <h3 class="text-xl font-bold text-gray-900">Detalles de tu suscripción</h3>
                     </div>
 
                     @if(isPorActivar()){
@@ -539,7 +539,7 @@
                     @else {
                     <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
                         [ngClass]="getStatusClass(subscription()!.status)">
-                        <span class="w-2 h-2 me-1 rounded-full" [ngClass]="DotClass"></span>
+                        <span class="w-2 h-2 me-1 rounded-full animate-pulse" [ngClass]="DotClass"></span>
                         <span class="hidden bg-green-500"></span>
                         <span class="hidden bg-yellow-500"></span>
                         <span class="hidden bg-red-500"></span>
@@ -555,7 +555,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Columna izquierda -->
                         <div>
-                            <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                            <dl class="grid grid-cols-1 gap-y-2 sm:gap-x-4 sm:gap-y-6 sm:grid-cols-2">
                                 <div class="sm:col-span-2">
                                     <dt class="text-sm font-medium text-gray-500">Plan</dt>
                                     <dd *ngIf="subscriptionPlan()?.description"
@@ -565,11 +565,11 @@
 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Precio</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ (subscriptionPlan()?.price ?? 0) * (1 - (subscription()?.discount ?? 0) / 100) | currency:'S/'
+                                    <dd class="mt-1 text-sm text-gray-900">{{ (subscriptionPlan()?.price ?? 0) * (1 - (subscription()?.discount ?? 0) / 100) | currency:'S/' : 'symbol':'1.0-0'
                                         }} / {{ getPeriodText(subscriptionPlan()?.period) }}</dd>
                                 </div>
 
-                                <div>
+                                <div [ngClass]="subscription()?.discount ? 'block' : 'hidden sm:block'">
                                     <dt class="text-sm font-medium text-gray-500">Descuento</dt>
                                     <dd class="mt-1 text-sm text-gray-900">{{ subscription()?.discount ?
                                         (subscription()?.discount + '%') : 'No aplica' }}</dd>
@@ -637,81 +637,88 @@
                         </div>
 
                         <!-- Columna derecha - Acciones -->
-                        <div class="flex flex-col justify-center space-y-4">
-                            <div *ngIf="subscription()!.status === statusEnum.ACTIVE || subscription()!.status === statusEnum.TRIAL" class="flex flex-col space-y-3">
-                                
-                                <button (click)="pausarSuscripcionWtsp()" 
-                                        class="flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                    </svg>
-                                    Pausar suscripción
-                                </button>
-                                <button (click)="cancelSubscription()"
-                                    class="flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    Cancelar suscripción
-                                </button>
+                        <div class="flex flex-row justify-center sm:items-center space-y-4">
+                            @if (subscription()!.status === statusEnum.ACTIVE || subscription()!.status === statusEnum.TRIAL) {
+                                <div class="flex flex-col space-y-3 max-sm:w-full">
+                                    
+                                    <button (click)="pausarSuscripcionWtsp()" 
+                                            class="sm:w-60 flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Pausar suscripción
+                                    </button>
+                                    <button (click)="cancelSubscription()"
+                                        class=" sm:w-60 flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Cancelar suscripción
+                                    </button>
+                                </div>
+                                <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
+                                <img src="mitad-package-image.png" alt="creatina Magrolabs" class="mx-auto object-cover w-[228px] h-[179px] saturate-150">
                             </div>
-
-                            <div *ngIf="subscription()!.status === statusEnum.PAUSED" class="flex flex-col space-y-3">
-                                <button (click)="reactivateSubscription(reactivateType.FROM_PAUSE)"
-                                    class="flex items-center justify-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                        fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    Reactivar suscripción
-                                </button>
+                            } @else if (subscription()!.status === statusEnum.PAUSED) {
+                                <div class="flex flex-col space-y-3 max-sm:w-full">
+                                    <button (click)="reactivateSubscription(reactivateType.FROM_PAUSE)"
+                                        class="sm:w-60 flex items-center justify-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Reactivar suscripción
+                                    </button>
+                                </div>
+                                <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
+                                <img src="mitad-package-image.png" alt="creatina Magrolabs" class="mx-auto object-cover w-[228px] h-[179px] grayscale">
                             </div>
-
-                            <div *ngIf="subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED"
-                                class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
-                                <h4 class="text-base font-semibold text-gray-900 mb-3">¿Pensando en volver?</h4>
-                                
-                                <!-- Información del precio -->
-                                <div class="bg-white border border-gray-200 rounded-md p-4 mb-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="text-sm font-medium text-gray-600">Precio de suscripción:</span>
-                                        <span class="text-2xl font-bold text-gray-900"> {{ ENV.precioCreatinaSubscription | currency : 'S/'}}/mes</span>
+                            } @else if (subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED) {
+                                <div class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
+                                    <h4 class="text-base font-semibold text-gray-900 mb-3">¿Pensando en volver?</h4>
+                                    
+                                    <!-- Información del precio -->
+                                    <div class="bg-white border border-gray-200 rounded-md p-4 mb-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-gray-600">Precio de suscripción:</span>
+                                            <span class="text-2xl font-bold text-gray-900"> {{ ENV.precioCreatinaSubscription | currency : 'S/' : 'symbol' : '1.0-0' }}/mes</span>
+                                        </div>
                                     </div>
+
+                                    <!-- Nota informativa -->
+                                    <div class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                        </svg>
+                                        <p class="text-sm text-gray-700">
+                                             Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos de bienvenida al reactivar tu suscripción y envío gratis.
+                                        </p>
+                                    </div>
+
+                                    <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
+                                        class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                        Reactivar suscripción
+                                    </button>
                                 </div>
-
-                                <!-- Nota informativa -->
-                                <div class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                    </svg>
-                                    <p class="text-sm text-gray-700">
-                                        Envío gratis. Puedes cancelar en cualquier momento. Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos de bienvenida al reactivar tu suscripción.
-                                    </p>
+                            } @else if (subscription()!.status === statusEnum.TO_CANCEL) {
+                                <div class="bg-gray-200 p-4 rounded-md">
+                                    <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
+                                    <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
+                                        class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
+                                        Activar directamente
+                                    </button>
                                 </div>
-
-                                <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
-                                    class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                    Reactivar suscripción
-                                </button>
-                            </div>
-
-                            <div *ngIf="subscription()!.status === statusEnum.TO_CANCEL"
-                                class="bg-gray-200 p-4 rounded-md">
-                                <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
-                                <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
-                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
-                                    Activar directamente
-                                </button>
+                            }
                         </div>
-                        </div>
+                    
                     </div>
                 </div>
 
@@ -925,16 +932,16 @@
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                             <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-4" id="modal-title">
-                                {{ userName() }}, qué pena que te vayas!
+                                ¡{{ userName() }}, qué pena que te vayas!
                             </h3>
                             <div class="mt-2">
-                                <p class="text-lg text-gray-700 mb-4">
-                                    Cuéntanos por qué quieres pausar/cancelar tu suscripción. ¡Valoramos tu opinión!
+                                <p class="text-base sm:text-lg text-gray-700 mb-4">
+                                    Cuéntanos por qué quieres cancelar tu suscripción:
                                 </p>
 
-                                <div class="mt-6 space-y-3">
+                                <div class="mt-6 space-y-3 ">
                                     <!-- Opciones para cancelar la suscripción -->
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason1" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('Ya no quiero consumir creatina')">
@@ -942,7 +949,7 @@
                                             Ya no quiero consumir creatina
                                         </label>
                                     </div>
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason2" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('Estoy experimentando problemas con la entrega')">
@@ -950,7 +957,7 @@
                                             Estoy experimentando problemas con la entrega
                                         </label>
                                     </div>
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason3" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('No quiero una suscripción')">
@@ -958,7 +965,7 @@
                                             No quiero una suscripción
                                         </label>
                                     </div>
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason4" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('No me gusta el sabor de la creatina')">
@@ -966,7 +973,7 @@
                                             No me gusta el sabor de la creatina
                                         </label>
                                     </div>
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason5" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('No estoy satisfecho/a con la calidad')">
@@ -974,12 +981,12 @@
                                             No estoy satisfecho/a con la calidad
                                         </label>
                                     </div>
-                                    <div class="flex items-center">
+                                    <div class="flex items-left">
                                         <input type="radio" id="reason6" name="cancellationReason"
                                             class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
                                             (change)="cancellationReason.set('Tengo suficientes creatina por ahora, se me está acumulando.')">
                                         <label for="reason6" class="ml-3 block text-sm font-medium text-gray-700">
-                                            Tengo suficientes creatina por ahora, se me está acumulando.
+                                            Tengo suficientes creatina por ahora.
                                         </label>
                                     </div>
                                 </div>
@@ -987,7 +994,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
                     <ml-button name="Cerrar" (click)="closeCancellationModal()" type="secondary-outlined"></ml-button>
                     <ml-button name="Siguiente" (click)="confirmCancellation()" [isDisabled]="!cancellationReason()"></ml-button>
                 </div>
@@ -1063,7 +1070,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-between">
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
                     <ml-button name="Continuar con la cancelación" (click)="proceedWithCancellation()" type="secondary-outlined"></ml-button>
                     <ml-button name="Pausar" (click)="pauseSubscription()" [isProcessing]="isLoading()"></ml-button>
                 </div>
@@ -1144,11 +1151,11 @@
                     <!-- Contenido del modal -->
                     <div class="text-center">
                         <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tus Magropuntos
-                            acumulados...</h3>
+                            ahorrados...</h3>
 
                         <!-- Tarjeta de crédito de compras -->
                         <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6 justify-items-center">
-                            <p class="text-lg font-semibold mb-2">Tu Magropuntos para compras</p>
+                            <p class="text-lg font-semibold mb-2">Tus Magropuntos:</p>
                             <p class="text-6xl font-bold mb-6 flex items-center">
                                 {{userCredits()}}
                                             @if (isLoadingTier) {
@@ -1160,12 +1167,18 @@
 
                         </div>
 
-                        <div class="bg-gray-50 p-4 rounded-md mb-4 mx-auto max-w-md">
-                            <p class="text-xl font-bold mb-2">Estás cerca.</p>
-                            <p class="text-sm text-gray-700">Hay un producto exclusivo de Magrolabs en la <a
+                        <div class="bg-gray-50 p-4 rounded-md sm:mb-4 mx-auto max-w-md">
+                            <p class="text-xl font-bold mb-2">Estás cerca de conseguirlo.</p>
+                            <p class="text-sm text-gray-700">Hay un producto exclusivo en la <a
                                     routerLink="/loyalty-webshop"
-                                    class="text-blue-600 hover:text-blue-800 underline">Webshop</a>
+                                    class="text-[#d7816a] hover:text-[#b76a5a] underline">Webshop →</a>
                                 esperándote...</p>
+                        </div>
+                        <div class="relative w-full rounded-lg overflow-hidden">
+                            <img src="LoyaltyWebShop/shaker_black.webp"
+                                alt="Shaker negro con logo de Magrolabs"
+                                loading="lazy"
+                                class="w-full object-center object-cover h-[27vh] sm:h-[35vh]" />
                         </div>
                     </div>
                 </div>
@@ -1201,7 +1214,7 @@
 
                     <!-- Contenido del modal -->
                     <div class="text-center">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un {{ENV.cancelDiscout}}%  de descuento extra, en tu próxima creatina!
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un de descuento extra, en tu próxima creatina!
                         </h3>
 
                         <!-- Tarjeta de descuento -->
@@ -1221,12 +1234,12 @@
                         </div>
 
                         <div class="mb-6">
-                            <p class="text-lg font-semibold text-gray-900 mb-2">No pagaras
-                                {{subscription()?.subscriptionPlan?.price | currency:'S/'}} sino 
-                                {{(subscription()?.subscriptionPlan?.price!) * (1 - ENV.cancelDiscout / 100) | currency:'S/'}} .</p>
+                            <p class="text-lg font-semibold text-gray-900 mb-2">No pagarás
+                                {{subscription()?.subscriptionPlan?.price | currency:'S/':'symbol':'1.0-0'}} sino 
+                                {{(subscription()?.subscriptionPlan?.price! * (1 - ENV.cancelDiscout / 100)).toFixed(0) | currency:'S/':'symbol':'1.0-0' }} .</p>
                             <p class="text-gray-700 leading-relaxed">
-                                ¡Nos entristecería que te vayas! Por eso, tenemos una oferta especial para ti:
-                                quédate como miembro y obtén un {{ENV.cancelDiscout}}% de descuento en tu próxima creatina.
+                                ¡Nos entristecería que te vayas! Por eso, tenemos una <strong>oferta especial</strong> para ti:
+                                Conserva tu suscripción y obtén un <strong>{{ENV.cancelDiscout}}%</strong> de descuento <strong>adicional</strong> en tu <strong>próxima creatina</strong>.
                             </p>
                         </div>
                     </div>
@@ -1371,32 +1384,32 @@
                         </div>
 
                         <div class="text-left mb-6">
-                            <h4 class="font-semibold text-gray-900 mb-3">Perderás acceso a:</h4>
-                            <ul class="space-y-2 text-gray-700">
+                            <h4 class="font-semibold text-gray-900 mb-3">No queremos que pierdas:</h4>
+                            <ul class="space-y-1 text-sm sm:text-base sm:space-y-2 text-gray-700">
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                    Tus {{userCredits()}} Magropuntos acumulados
+                                   <span>Tus <strong>{{userCredits()}} Magropuntos</strong> ahorrados.</span>
                                 </li>
-                                @if(subscription()?.discount && subscription()?.discount! > 0) {
+                                @if(!subscription()?.discount) {
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                    {{ENV.cancelDiscout}}% de descuento en tu próxima creatina
-                                </li>
+                                        <span> El <strong>{{ENV.cancelDiscout}}% de descuento</strong> en tu próxima creatina.</span>
+                                    </li>
                                 }
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                    Futuros lanzamientos
+                                    <span>Tu <strong>precio especial</strong> con el que empezaste.</span>
                                 </li>
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                    Productos exclusivos de Magrolabs
+                                    <span>El acceso a nuestros <strong>productos exclusivos</strong>.</span>
                                 </li>
                             </ul>
                         </div>
 
                         @if(lastPaymentDate() != '') {
                         <div class="text-left mb-6 space-y-4">
-                            <p class="text-gray-700">Tu suscripción se volverá inactiva después del último pago.</p>
+                            <p class="text-gray-700">Tu suscripción se cancelara después del último pago.</p>
 
                             <div class="space-y-2">
                                 <p class="text-gray-900 font-semibold">Último pago: {{ lastPaymentDate() }}</p>
@@ -1406,11 +1419,10 @@
                         <div class="text-left mb-6">
                             @if(subscription()!.status === statusEnum.TRIAL) {
                                 <p class="text-gray-700 text-sm leading-relaxed">
-                                    Tu período de prueba será cancelado inmediatamente. Puedes volver a suscribirte en cualquier momento desde nuestra página principal.
+                                   Aún estás en período de prueba y tu suscripción será cancelada inmediatamente.
                                 </p>
                             } @else {
                                 <p class="text-gray-700 text-sm leading-relaxed">
-                                    ¿Quieres recibir mensualmente una nueva creatina en tu casa de nuevo?
                                     Puedes volver a activar tu suscripción en cualquier momento desde tu cuenta.
                                 </p>
                             }
@@ -1530,11 +1542,11 @@
                                 ¿Quieres pausar tu suscripción?
                             </h3>
                             <div class="mt-2">
-                                <p class="text-lg text-gray-700 mb-4">
+                                <p class="text-base sm:text-lg text-gray-700 mb-4">
                                     Para pausar tu suscripción y no perder todos tus beneficios como: Magropuntos o precios especiales, contáctanos por WhatsApp y te ayudaremos con el proceso de forma rápida y sencilla.
                                 </p>
 
-                                <div class="bg-gray-50 p-4 rounded-md mb-4">
+                                <div class="bg-gray-50 p-4 rounded-md mb-4 text-left">
                                     <p class="text-sm text-gray-600 mb-2">
                                         <span class="font-semibold">Nuestro equipo está disponible para:</span>
                                     </p>
@@ -1545,14 +1557,11 @@
                                     </ul>
                                 </div>
 
-                                <p class="text-sm text-gray-600 text-center italic">
-                                    Te responderemos en minutos
-                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
                     <ml-button name="Abrir WhatsApp" (click)="openWhatsappForPause()"></ml-button>
                     <ml-button name="Cancelar" (click)="closeWhatsappPauseModal()" type="secondary-outlined"></ml-button>
                 </div>

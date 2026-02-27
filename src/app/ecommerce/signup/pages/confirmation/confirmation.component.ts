@@ -76,7 +76,7 @@ export class ConfirmationComponent {
 
   parrafoError = {
     parrafo1: '¡El registro se ha completado con éxito, aunque tenemos noticias!',
-    parrafo2: 'Revisamos que tu domicilio no esta dentro de Lima Metropolitana' +
+    parrafo2: 'Revisamos que tu domicilio no esta dentro de Lima Metropolitana. ' +
       'Aún así, nos pondremos en contacto contigo para confirmar tu domicilio y coordinar la entrega.',
     parrafo3: 'Ten en cuenta que:',
   }

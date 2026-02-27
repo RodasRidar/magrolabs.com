@@ -6,9 +6,11 @@
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¿Cuál eliges?
             </h1>
-            <p class="text-sm font-semibold mb-3 mt-5 text-pretty">Elige aquí tu creatina. Regístrate eligiendo la
-                opción de suscripción para recibir tu
-                {{ENV.campanaPrimeraCreatina.textos.heroOferta}} y comenzar tu periodo de prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días.</p>
+            <p class="text-sm mb-3 mt-5 text-pretty"><strong>Regístrate</strong> eligiendo la
+                opción de <strong>suscripción</strong> para recibir tu
+                <strong>{{ENV.campanaPrimeraCreatina.textos.heroOferta}}</strong> y comenzar tu <strong>periodo de
+                    prueba</strong> de <strong>{{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días</strong>.
+            </p>
         </div>
     </div>
 </div>
@@ -178,18 +180,29 @@
 
                             <div class="m-3">
                                 <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
-                                    <span class="text-sm text-left text-gray-900 font-light">
+                                    <span class="text-sm mb-1 text-left text-gray-900 font-light">
                                         Así es como funciona la suscripción:
                                     </span>
                                     <div class="flex flex-row items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960"
                                             width="18px" fill="#434343">
                                             <path
-                                                d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
+                                                d="m384-312 264-168-264-168v336Zm96.28 216Q401-96 331-126t-122.5-82.5Q156-261 126-330.96t-30-149.5Q96-560 126-629.5q30-69.5 82.5-122T330.96-834q69.96-30 149.5-30t149.04 30q69.5 30 122 82.5T834-629.28q30 69.73 30 149Q864-401 834-331t-82.5 122.5Q699-156 629.28-126q-69.73 30-149 30Zm-.28-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
                                         </svg>
-                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                            {{ENV.campanaPrimeraCreatina.textos.descripcionCarrito(ENV.campanaPrimeraCreatina.gramos)}}.
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            Iniciarás con una creatina de prueba a solo
+                                            S/{{ENV.campanaPrimeraCreatina.precio}}.
                                         </p>
+                                    </div>
+                                    <div class="flex flex-row items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                            width="20px" fill="#434343">
+                                            <path
+                                                d="M444-189v-270L216-591v270l228 132Zm72 0 228-131v-270L516-459v270Zm-72 84L180-258q-17.1-9.88-26.55-26.06Q144-300.23 144-320v-320q0-19.77 9.45-35.94Q162.9-692.12 180-702l264-153q17.13-10 36.07-10Q499-865 516-855l264 153q17.1 9.88 26.55 26.06Q816-659.77 816-640v320q0 19.77-9.45 35.94Q797.1-267.88 780-258L516-105q-17.13 10-36.07 10Q461-95 444-105Zm188-505 83-47-236-135-80 47 233 135Zm-152 88 82-47-237-134-80 46 235 135Z" />
+                                        </svg>
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            Te enviaremos {{ENV.campanaPrimeraCreatina.gramos}}g para que pruebes la
+                                            calidad.
                                     </div>
 
                                     <div class="flex flex-row items-center">
@@ -198,9 +211,9 @@
                                             <path
                                                 d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z" />
                                         </svg>
-                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                            Pruébala en {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días y si te
-                                            gusta.
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            El periodo de prueba dura {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
+                                            días.
                                         </p>
                                     </div>
 
@@ -210,32 +223,42 @@
                                             <path
                                                 d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z" />
                                         </svg>
-                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                            Recibes una creatina 250gr cada mes.
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            Pasada la prueba, tu suscripción de S/{{ENV.precioCreatinaSubscription}} se
+                                            activará.
                                         </p>
                                     </div>
-
-                                    <div class="flex flex-row items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                            width="20px" fill="#434343">
-                                            <path
-                                                d="M480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm-36-74v-49q-35-5-66-18t-57-33l-34 34q33 26 72.5 43.5T444-170Zm72 0q45-5 84.5-22.5T673-236l-34-34q-26 20-57 33t-66 18v49Zm-36-118q80 0 136-56t56-136q0-80-56-136t-136-56q-80 0-136 56t-56 136q0 80 56 136t136 56Zm244 1q26-33 43.5-72.5T790-444h-49q-5 35-18 66t-33 57l34 34Zm-488 0 34-34q-20-26-33-57t-18-66h-49q5 45 22.5 84.5T236-287Zm244-49L372-480l108-144 108 144-108 144ZM170-516h49q5-35 18-66t33-57l-34-34q-26 33-43.5 72.5T170-516Zm571 0h49q-5-45-22.5-84.5T724-673l-34 34q20 26 33 57t18 66ZM321-690q26-20 57-33t66-18v-49q-45 5-84.5 22.5T287-724l34 34Zm318 0 34-34q-33-26-72.5-43.5T516-790v49q35 5 66 18t57 33Z" />
-                                        </svg>
-                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                            Además {{ENV.creditoRegaloPorCompraMes}} Magropuntos con cada entrega.
-                                        </p>
-                                    </div>
-
                                     <div class="flex flex-row items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                                             width="20px" fill="#434343">
                                             <path
                                                 d="M276-168q-50 0-85-35t-35-85H72l24-72h84q17-22 42.24-35 25.23-13 53.76-13 28.53 0 53.76 13Q355-382 372-360h196l84-336H216l8-24q8-22 26.5-35t41.5-13h452l-36 144h84l120 168-48 168h-48q0 50-35 85t-85 35q-50 0-85-35t-35-85H396q0 50-35 85t-85 35Zm384-264h170l3-11-78-109h-65l-30 120Zm-12-248 4-16-84 336 4-16 34-136 42-168ZM24-424l18-72h198l-18 72H24Zm72-136 18-72h234l-18 72H96Zm180 320q20.4 0 34.2-13.8Q324-267.6 324-288q0-20.4-13.8-34.2Q296.4-336 276-336q-20.4 0-34.2 13.8Q228-308.4 228-288q0 20.4 13.8 34.2Q255.6-240 276-240Zm420 0q20.4 0 34.2-13.8Q744-267.6 744-288q0-20.4-13.8-34.2Q716.4-336 696-336q-20.4 0-34.2 13.8Q648-308.4 648-288q0 20.4 13.8 34.2Q675.6-240 696-240Z" />
                                         </svg>
-                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                            Todo con envío gratis para siempre.
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            Enviaremos tu creatina 250g cada mes (envío gratis).
                                         </p>
                                     </div>
+                                    <div class="flex flex-row items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960"
+                                            width="18px" fill="#434343">
+                                            <path
+                                                d="M480-48q-113 0-207.5-52.5T120-241v121H48v-240h240v72H175q48 76 128 122t177 46q75 0 140.5-28.5t114-77q48.5-48.5 77-114T840-480h72q0 90-34 168.5t-92.5 137Q727-116 648.5-82T480-48Zm-33-168v-48q-21-5-58.5-27T333-376l63-26q2 6 20 42.5t70 36.5q26 0 50.5-14.5T561-384q0-27-20.5-43.5T475-460q-31-11-78.5-35.5T349-585q0-3 13-49t86-62v-48h66v47q53 9 74.5 40t25.5 44l-59 25q-3-10-19-30t-53-20q-20 0-44 11.5T415-586q0 27 24.5 41t75.5 31q67 23 89.5 56.5T627-384q0 37-15 60t-34.5 36.5Q558-274 539.5-269t-26.5 6v47h-66ZM48-480q0-90 34-168.5t92.5-137Q233-844 311.5-878T480-912q113 0 207.5 52.5T840-719v-121h72v240H672v-72h113q-48-76-128-122t-177-46q-75 0-140.5 28.5t-114 77q-48.5 48.5-77 114T120-480H48Z" />
+                                        </svg>
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            +10 MP cada mes (canjealo por articulos exclusivos).
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-row items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                            width="20px" fill="#434343">
+                                            <path
+                                                d="m339-288 141-141 141 141 51-51-141-141 141-141-51-51-141 141-141-141-51 51 141 141-141 141 51 51ZM480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
+                                        </svg>
+                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                            Cancela o pausa tu suscripción cuando quieras.
+                                        </p>
+                                    </div>
+
                                 </div>
                             </div>
                         </details>
@@ -284,7 +307,8 @@
                                 <div class="absolute top-4 left-8 right-0 h-0.5 bg-gray-300 z-0 w-[85.5%]"></div>
                                 <!-- Paso 1: Pedido realizado -->
                                 <div class="flex flex-col items-center">
-                                    <div class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
+                                    <div
+                                        class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -295,7 +319,8 @@
                                 </div>
                                 <!-- Paso 2: Preparando -->
                                 <div class="flex flex-col items-center">
-                                    <div class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white z-10">
+                                    <div
+                                        class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white z-10">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
@@ -307,9 +332,11 @@
                                 </div>
                                 <!-- Paso 3: Enviado -->
                                 <div class="flex flex-col items-center">
-                                    <div class="rounded-full  border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
+                                    <div
+                                        class="rounded-full  border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
                                     <h3 class="mt-2 text-center font-bold text-xs">
@@ -319,15 +346,15 @@
                                     </p>
                                 </div>
                             </div>
-                             <!-- Disclaimer envío gratis -->
-                                <div class="flex justify-center items-center mt-3">
-                                    <p class="text-xs text-gray-500 font-light">
-                                        Envíos a todo el Perú (Lima Metropolitana gratis).
-                                    </p>
-                                </div>
+                            <!-- Disclaimer envío gratis -->
+                            <div class="flex justify-center items-center mt-3">
+                                <p class="text-xs text-gray-500 font-light">
+                                    Envíos a todo el Perú (Lima Metropolitana gratis).
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div class="max-sm:hidden my-2">
+                    <div class="block my-2">
                         <ml-button name="Continuar →" (click)="nextStep()"
                             [isDisabled]="isButtonDisabled()"></ml-button>
                     </div>
@@ -356,7 +383,7 @@
                     </div>
                 </div>
 
-                <div class="sm:hidden max-sm:fixed max-sm:-bottom-[10px] max-sm:left-0 max-sm:w-full max-sm:z-30">
+                <div class="hidden max-sm:fixed max-sm:-bottom-[10px] max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button"
                         class=" inline-flex w-full items-center justify-center px-4 pb-5 pt-[10px] text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
                         Continuar →

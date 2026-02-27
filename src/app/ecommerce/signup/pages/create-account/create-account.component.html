@@ -3,7 +3,7 @@
 <div class="mx-auto text-left mt-10 mb-10 max-w-3xl">
 
     @if (isCreatinaGratis) {
-    <div class="mx-auto text-left mb-4 max-w-3xl">
+    <div class="hidden sm:block mx-auto text-left mb-4 max-w-3xl">
         <app-information [information]="informationList" />
     </div>
     }
@@ -211,7 +211,7 @@
                             
                             <!-- Checkbox de aceptación de términos y condiciones -->
                             
-                                <div class="pb-2 max-sm:mb-16">
+                                <div class="pb-2">
                                     <label class="inline-flex items-center my-2 cursor-pointer">
                                         <input type="checkbox" formControlName="termsAccepted" 
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
@@ -241,10 +241,10 @@
                                 </div>
                     </div>
                 </div>
-                <div class="max-sm:hidden mt-6">
+                <div class="block mt-6">
                     <ml-button name="Continuar →" (click)="nextStep()" [isDisabled]="isProcessing || !form.valid" [isProcessing]="isProcessing"></ml-button>
                 </div>
-                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                <div class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button" [disabled]="isProcessing || !form.valid"
                         class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                         Continuar →

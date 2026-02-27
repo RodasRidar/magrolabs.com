@@ -84,7 +84,7 @@ const campanaPrimeraCreatina = {
           `Después de completar tu registro y pago de S/ ${precioFormateado}, tu primera creatina llegará a tu casa en un plazo de ${plazoMin} a ${plazoMax} horas. Te enviaremos el código de seguimiento para que puedas rastrear tu paquete en tiempo real.`,
         
         // Textos para descripciones
-        descripcionCarrito: (gramos: number) => `Creatina ${gramos}gr (primera a S/ ${precioFormateado})`,
+        descripcionCarrito: (gramos: number) => `Iniciarás con una creatina de prueba a S/${precioFormateado} (${gramos}gr)`,
         descripcionSEO: `Primera creatina a S/ ${precioFormateado}`,
         
         // Textos para promociones

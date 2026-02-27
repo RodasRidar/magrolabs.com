@@ -12,7 +12,8 @@
             </div>
 
             <!-- Sin suscripción -->
-            <div *ngIf="!isLoading() && !subscription()" class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg p-2 sm:p-6">
+            <div *ngIf="!isLoading() && !subscription()"
+                class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg p-2 sm:p-6">
                 <div class="bg-[#f6f6f6] rounded-lg shadow-lg ">
                     <div class="max-w-2xl mx-auto max-sm:px-2  max-sm:py-1 max-lg:px-6 max-lg:py-4 px-16 py-9">
                         <!-- Product details -->
@@ -51,7 +52,8 @@
                                         <p class="text-lg text-gray-900 sm:text-xl ml-2">
                                             {{ENV.precioCreatinaSubscription | currency
                                             : 'S/'}}</p>
-                                        <span class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
+                                        <span
+                                            class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
                                     </div>
 
                                 </div>
@@ -62,8 +64,9 @@
                             <section aria-labelledby="options-heading">
                                 <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
@@ -71,17 +74,20 @@
                                         <p class="ml-1 text-sm text-gray-700 font-light">Monohidratada al 100%.</p>
                                     </div>
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
                                         </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la recuperación muscular.</p>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la recuperación
+                                            muscular.</p>
                                     </div>
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
@@ -89,26 +95,31 @@
                                         <p class="ml-1 text-sm text-gray-700 font-light">Certificado de alta pureza.</p>
                                     </div>
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
                                         </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Sin sabor y fácil digestión.</p>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Sin sabor y fácil digestión.
+                                        </p>
                                     </div>
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
                                         </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza y resistencia.</p>
+                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza y resistencia.
+                                        </p>
                                     </div>
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                            fill="currentColor" aria-hidden="true">
+                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            aria-hidden="true">
                                             <path fill-rule="evenodd"
                                                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                                 clip-rule="evenodd" />
@@ -119,38 +130,43 @@
                                 <h2 class="text-gray-500 text-[12px] font-extralight">{{ENV.creatinaSubscription250}}g.
                                     {{ENV.nroServicios250g}} servicios.</h2>
                                 <h2 id="options-heading" class="sr-only">Product options</h2>
-                            
+
                                 <div class="mx-auto pt-6 pb-2" id="verificacion">
                                     <div class="space-y-4">
-                            
+
                                         <div #Subscription class="rounded-lg overflow-hidden group border"
                                             [ngClass]="{'border-gray-800': true,'border-gray-900': true}" open>
-                                            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
+                                            <summary
+                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
                                                 <div class="flex items-center">
                                                     <span class="relative size-5 shrink-0 mr-2">
-                            
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100" width="24px" fill="#000000">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                            viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100" width="24px"
+                                                            fill="#000000">
                                                             <path
                                                                 d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
-                            
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" width="24px"
-                                                            fill="#434343">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                                            viewBox="0 -960 960 960"
+                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                                                            width="24px" fill="#434343">
                                                             <path
                                                                 d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
                                                         </svg>
                                                     </span>
-                            
+
                                                     <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
                                                     <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
-                                                        <p class="max-lg:text-[10px] text-xs text-white font-extralight">
+                                                        <p
+                                                            class="max-lg:text-[10px] text-xs text-white font-extralight">
                                                             Ahorra
                                                             {{ENV.creatina2025Descuento}}</p>
                                                     </div>
                                                 </div>
-                            
+
                                                 <div class="flex items-center">
                                                     <div class="flex justify-center items-center font-extralight">
                                                         <p class="text-xs text-gray-500  line-through">
@@ -160,65 +176,76 @@
                                                             currency : 'S/'}}/mes</p>
                                                     </div>
                                                 </div>
-                            
+
                                             </summary>
-                            
                                             <div class="m-3">
-                                                <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
-                                                    <span class="text-sm text-left text-gray-900 font-light">
+                                                <div class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2">
+                                                    <span class="text-sm mb-1 text-left text-gray-900 font-light">
                                                         Así es como funciona la suscripción:
                                                     </span>
+
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"
-                                                            fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
+                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
                                                             <path
                                                                 d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z" />
                                                         </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Recibes una creatina 250gr cada mes.
+                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                                            Enviaremos tu creatina 250g cada mes por
+                                                            S/{{ENV.precioCreatinaSubscription}}.
                                                         </p>
                                                     </div>
-                            
                                                     <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
-                                                            fill="#434343">
-                                                            <path
-                                                                d="M480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm-36-74v-49q-35-5-66-18t-57-33l-34 34q33 26 72.5 43.5T444-170Zm72 0q45-5 84.5-22.5T673-236l-34-34q-26 20-57 33t-66 18v49Zm-36-118q80 0 136-56t56-136q0-80-56-136t-136-56q-80 0-136 56t-56 136q0 80 56 136t136 56Zm244 1q26-33 43.5-72.5T790-444h-49q-5 35-18 66t-33 57l34 34Zm-488 0 34-34q-20-26-33-57t-18-66h-49q5 45 22.5 84.5T236-287Zm244-49L372-480l108-144 108 144-108 144ZM170-516h49q5-35 18-66t33-57l-34-34q-26 33-43.5 72.5T170-516Zm571 0h49q-5-45-22.5-84.5T724-673l-34 34q20 26 33 57t18 66ZM321-690q26-20 57-33t66-18v-49q-45 5-84.5 22.5T287-724l34 34Zm318 0 34-34q-33-26-72.5-43.5T516-790v49q35 5 66 18t57 33Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Además {{ENV.creditoRegaloPorCompraMes}} Magropuntos con cada entrega.
-                                                        </p>
-                                                    </div>
-                            
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
-                                                            fill="#434343">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px"
+                                                            viewBox="0 -960 960 960" width="20px" fill="#434343">
                                                             <path
                                                                 d="M276-168q-50 0-85-35t-35-85H72l24-72h84q17-22 42.24-35 25.23-13 53.76-13 28.53 0 53.76 13Q355-382 372-360h196l84-336H216l8-24q8-22 26.5-35t41.5-13h452l-36 144h84l120 168-48 168h-48q0 50-35 85t-85 35q-50 0-85-35t-35-85H396q0 50-35 85t-85 35Zm384-264h170l3-11-78-109h-65l-30 120Zm-12-248 4-16-84 336 4-16 34-136 42-168ZM24-424l18-72h198l-18 72H24Zm72-136 18-72h234l-18 72H96Zm180 320q20.4 0 34.2-13.8Q324-267.6 324-288q0-20.4-13.8-34.2Q296.4-336 276-336q-20.4 0-34.2 13.8Q228-308.4 228-288q0 20.4 13.8 34.2Q255.6-240 276-240Zm420 0q20.4 0 34.2-13.8Q744-267.6 744-288q0-20.4-13.8-34.2Q716.4-336 696-336q-20.4 0-34.2 13.8Q648-308.4 648-288q0 20.4 13.8 34.2Q675.6-240 696-240Z" />
                                                         </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-3">
-                                                            Todo con envío gratis para siempre.
+                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                                            Con envio gratis para siempre.
                                                         </p>
                                                     </div>
+                                                    <div class="flex flex-row items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
+                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
+                                                            <path
+                                                                d="M480-48q-113 0-207.5-52.5T120-241v121H48v-240h240v72H175q48 76 128 122t177 46q75 0 140.5-28.5t114-77q48.5-48.5 77-114T840-480h72q0 90-34 168.5t-92.5 137Q727-116 648.5-82T480-48Zm-33-168v-48q-21-5-58.5-27T333-376l63-26q2 6 20 42.5t70 36.5q26 0 50.5-14.5T561-384q0-27-20.5-43.5T475-460q-31-11-78.5-35.5T349-585q0-3 13-49t86-62v-48h66v47q53 9 74.5 40t25.5 44l-59 25q-3-10-19-30t-53-20q-20 0-44 11.5T415-586q0 27 24.5 41t75.5 31q67 23 89.5 56.5T627-384q0 37-15 60t-34.5 36.5Q558-274 539.5-269t-26.5 6v47h-66ZM48-480q0-90 34-168.5t92.5-137Q233-844 311.5-878T480-912q113 0 207.5 52.5T840-719v-121h72v240H672v-72h113q-48-76-128-122t-177-46q-75 0-140.5 28.5t-114 77q-48.5 48.5-77 114T120-480H48Z" />
+                                                        </svg>
+                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                                            +10 MP cada mes (canjealo por articulos exclusivos).
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex flex-row items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px"
+                                                            viewBox="0 -960 960 960" width="20px" fill="#434343">
+                                                            <path
+                                                                d="m339-288 141-141 141 141 51-51-141-141 141-141-51-51-141 141-141-141-51 51 141 141-141 141 51 51ZM480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
+                                                        </svg>
+                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
+                                                            Cancela o pausa tu suscripción cuando quieras.
+                                                        </p>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                     </div>
                                 </div>
                                 @if(!showPaymentVerification()) {
-                            
-                                <div class="max-sm:hidden my-2">
+
+                                <div class="block my-2">
                                     <ml-button name="Continuar →" (click)="nextStep()"></ml-button>
                                 </div>
-                                <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
+                                <div
+                                    class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="nextStep()" type="button"
                                         class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                                         Continuar →
                                     </button>
                                 </div>
                                 }
-                                
+
                                 <!-- Sección de pago seguro -->
                                 <div class="my-6 sm:py-4 border-t border-gray-200">
                                     <p class="flex justify-center text-sm font-medium text-gray-500 my-4">
@@ -228,8 +255,8 @@
                                                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                                 clip-rule="evenodd" />
                                         </svg>
-                                        Pago seguro con <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800"
-                                            target="_blank">Flow</a>
+                                        Pago seguro con <a href="https://flowpagos.com/"
+                                            class="ml-1 hover:underline text-gray-800" target="_blank">Flow</a>
                                     </p>
                                     <div class="flex justify-center items-center gap-4">
                                         <!-- American Express -->
@@ -326,7 +353,8 @@
 
                             <div class="max-sm:hidden my-6">
                                 <ml-button [name]="isPaymentVerified() ? 'Suscríbete →' : 'Suscríbete'"
-                                    (click)="nextStep()" [isProcessing]="isLoading()" [isDisabled]="!isPaymentVerified() || isLoading()"></ml-button>
+                                    (click)="nextStep()" [isProcessing]="isLoading()"
+                                    [isDisabled]="!isPaymentVerified() || isLoading()"></ml-button>
                             </div>
                             <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
 
@@ -345,10 +373,8 @@
                                     <span class=" text-gray-600">Al completar tu pedido,
                                         declaras que eres mayor
                                         de 18 años y
-                                        aceptas las <a
-                                            href="https://magrolabs.com/politicas/terminos-y-condiciones"
-                                            target="_blank"
-                                            class="underline cursor-pointer">Términos
+                                        aceptas las <a href="https://magrolabs.com/politicas/terminos-y-condiciones"
+                                            target="_blank" class="underline cursor-pointer">Términos
                                             y
                                             condiciones</a>, <a class="underline cursor-pointer"
                                             href="https://magrolabs.com/politicas/condiciones-de-uso"
@@ -366,10 +392,11 @@
                         <div class="bg-[#e9e9e9] py-5 px-10 mb-7 rounded-xl ">
                             <p class="mb-2 font-semibold">¿Cómo funciona la suscripción?</p>
                             <p class="text-pretty text-sm">Después de realizar la verificación,
-                                enviaremos tu creatina de inmediato, comenzará tu suscripción y recibirás la mejor creatina mensualmente.</p>
+                                enviaremos tu creatina de inmediato, comenzará tu suscripción y recibirás la mejor
+                                creatina mensualmente.</p>
                         </div>
-                
-                
+
+
                         <!-- Testiminios -->
                         <section>
                             <div class="">
@@ -380,45 +407,46 @@
                                     <!-- Testimonio 1 -->
                                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                                         <div class="flex items-center gap-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover"
-                                                height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="size-14 rounded-full object-cover" height="56px"
+                                                viewBox="0 -960 960 960" width="56px" fill="#434343">
                                                 <path
                                                     d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z" />
                                             </svg>
-                
+
                                             <div>
                                                 <div class="flex justify-center gap-0.5 text-black">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
                                                 </div>
-                
+
                                                 <p class="mt-0.5 text-lg font-medium text-gray-900">Hugo Cortez L.</p>
                                             </div>
                                         </div>
-                
+
                                         <p class="mt-4 text-gray-700 text italic">
                                             “Buen producto, buen precio”
                                         </p>
@@ -426,47 +454,48 @@
                                     <!-- Testimonio 2 -->
                                     <blockquote class="rounded-lg bg-[#e9e9e9] p-4 shadow-sm sm:p-6">
                                         <div class="flex items-center gap-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover"
-                                                height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="size-14 rounded-full object-cover" height="56px"
+                                                viewBox="0 -960 960 960" width="56px" fill="#434343">
                                                 <path
                                                     d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z" />
                                             </svg>
-                
+
                                             <div>
                                                 <div class="flex justify-center gap-0.5 text-black">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                                        fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
                                                         <path
                                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
                                                 </div>
-                
+
                                                 <p class="mt-0.5 text-lg font-medium text-gray-900">
                                                     Richard Rodas
                                                 </p>
                                             </div>
                                         </div>
-                
+
                                         <p class="mt-4 text-gray-700 text italic">
                                             “Me encanta su diseño, no tiene sabor raro y se mezcla facil”
                                         </p>
@@ -474,23 +503,26 @@
                                 </div>
                                 <div class="text-center">
                                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
-                                        target="_blank" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                                        target="_blank"
+                                        class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
                                         Mira todas las reseñas →
                                     </a>
-                
+
                                 </div>
                             </div>
                         </section>
-                
+
 
                         <!-- FAQs -->
                         <div class="mx-auto max-w-3xl px-6 lg:px-8 py-10 sm:py-10">
                             <div class="space-y-4">
-                
-                                <details class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
-                                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
+
+                                <details
+                                    class="group rounded-lg bg-[#e9e9e9] p-6 [&_summary::-webkit-details-marker]:hidden">
+                                    <summary
+                                        class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
                                         <h2 class="font-semibold">¿Hay un periodo de cancelación?</h2>
-                
+
                                         <span class="relative size-5 shrink-0">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                 class="absolute inset-0 opacity-100 group-open:opacity-0" fill="none"
@@ -498,7 +530,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                
+
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                 class="absolute inset-0 opacity-0 group-open:opacity-100" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -507,10 +539,12 @@
                                             </svg>
                                         </span>
                                     </summary>
-                
+
                                     <p class="mt-4 leading-relaxed text-gray-700">
                                         Al suscribirte aceptas nuestro período de cancelación mensual.
-                                        ¿Cancelas antes de {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días de tu fecha de facturación? Entonces no habrá un pago ni entrega, caso contrario, habrá un pago y una entrega más.
+                                        ¿Cancelas antes de {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días de tu
+                                        fecha de facturación? Entonces no habrá un pago ni entrega, caso contrario,
+                                        habrá un pago y una entrega más.
                                     </p>
                                 </details>
                             </div>
@@ -530,11 +564,12 @@
 
                     @if(isPorActivar()){
 
-                        <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">
+                    <span
+                        class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">
                         <span class="w-2 h-2 me-1 rounded-full" [ngClass]="DotClass"></span>
                         <span class="hidden bg-green-600"></span>
                         Activa por pagar
-                        </span>
+                    </span>
                     }
                     @else {
                     <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
@@ -565,7 +600,8 @@
 
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500">Precio</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ (subscriptionPlan()?.price ?? 0) * (1 - (subscription()?.discount ?? 0) / 100) | currency:'S/' : 'symbol':'1.0-0'
+                                    <dd class="mt-1 text-sm text-gray-900">{{ (subscriptionPlan()?.price ?? 0) * (1 -
+                                        (subscription()?.discount ?? 0) / 100) | currency:'S/' : 'symbol':'1.0-0'
                                         }} / {{ getPeriodText(subscriptionPlan()?.period) }}</dd>
                                 </div>
 
@@ -596,9 +632,10 @@
                                             class="hover:text-[#d07d66] hover:underline flex items-center">
                                             {{ userCredits()}}
                                             @if (isLoadingTier) {
-                                                <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
+                                            <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
                                             } @else {
-                                                <img [src]="tierImageRoutes?.svg" [alt]="tierDisplayName" class="w-6 h-6 mx-1 select-none">
+                                            <img [src]="tierImageRoutes?.svg" [alt]="tierDisplayName"
+                                                class="w-6 h-6 mx-1 select-none">
                                             }
                                         </a>
                                     </dd>
@@ -626,7 +663,7 @@
                                     *ngIf="subscription()!.paused_until && subscription()!.status == statusEnum.PAUSED">
                                     <dt class="text-sm font-medium text-gray-500">Pausado hasta</dt>
                                     <dd class="mt-1 text-sm text-gray-900">{{
-                                    formatDate(subscription()!.paused_until) }}</dd>
+                                        formatDate(subscription()!.paused_until) }}</dd>
                                 </div>
                                 <div *ngIf="subscription()!.next_shipment">
                                     <dt class="text-sm font-medium text-gray-500">Próximo envío</dt>
@@ -638,87 +675,106 @@
 
                         <!-- Columna derecha - Acciones -->
                         <div class="flex flex-row justify-center sm:items-center space-y-4">
-                            @if (subscription()!.status === statusEnum.ACTIVE || subscription()!.status === statusEnum.TRIAL) {
-                                <div class="flex flex-col space-y-3 max-sm:w-full">
-                                    
-                                    <button (click)="pausarSuscripcionWtsp()" 
-                                            class="sm:w-60 flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                        </svg>
-                                        Pausar suscripción
-                                    </button>
-                                    <button (click)="cancelSubscription()"
-                                        class=" sm:w-60 flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Cancelar suscripción
-                                    </button>
-                                </div>
-                                <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
-                                <img src="mitad-package-image.png" alt="creatina Magrolabs" class="mx-auto object-cover w-[228px] h-[179px] saturate-150">
+                            @if (subscription()!.status === statusEnum.ACTIVE || subscription()!.status ===
+                            statusEnum.TRIAL) {
+                            <div class="flex flex-col space-y-3 max-sm:w-full">
+
+                                <button (click)="pausarSuscripcionWtsp()"
+                                    class="sm:w-60 flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Pausar suscripción
+                                </button>
+                                <button (click)="cancelSubscription()"
+                                    class=" sm:w-60 flex items-center justify-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Cancelar suscripción
+                                </button>
+                            </div>
+                            <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
+                                <img src="mitad-package-image.png" alt="creatina Magrolabs"
+                                    class="mx-auto object-cover w-[228px] h-[179px] saturate-150">
                             </div>
                             } @else if (subscription()!.status === statusEnum.PAUSED) {
-                                <div class="flex flex-col space-y-3 max-sm:w-full">
-                                    <button (click)="reactivateSubscription(reactivateType.FROM_PAUSE)"
-                                        class="sm:w-60 flex items-center justify-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Reactivar suscripción
-                                    </button>
-                                </div>
-                                <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
-                                <img src="mitad-package-image.png" alt="creatina Magrolabs" class="mx-auto object-cover w-[228px] h-[179px] grayscale">
+                            <div class="flex flex-col space-y-3 max-sm:w-full">
+                                <button (click)="reactivateSubscription(reactivateType.FROM_PAUSE)"
+                                    class="sm:w-60 flex items-center justify-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Reactivar suscripción
+                                </button>
                             </div>
-                            } @else if (subscription()!.status === statusEnum.CANCELLED || subscription()!.status === statusEnum.EXPIRED) {
-                                <div class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
-                                    <h4 class="text-base font-semibold text-gray-900 mb-3">¿Pensando en volver?</h4>
-                                    
-                                    <!-- Información del precio -->
-                                    <div class="bg-white border border-gray-200 rounded-md p-4 mb-4">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm font-medium text-gray-600">Precio de suscripción:</span>
-                                            <span class="text-2xl font-bold text-gray-900"> {{ ENV.precioCreatinaSubscription | currency : 'S/' : 'symbol' : '1.0-0' }}/mes</span>
-                                        </div>
-                                    </div>
+                            <div class="hidden xl:block px-11 relative bottom-[-2.0rem] right-[-5rem]">
+                                <img src="mitad-package-image.png" alt="creatina Magrolabs"
+                                    class="mx-auto object-cover w-[228px] h-[179px] grayscale">
+                            </div>
+                            } @else if (subscription()!.status === statusEnum.CANCELLED || subscription()!.status ===
+                            statusEnum.EXPIRED) {
+                            <div class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
+                                <h4 class="text-base font-semibold text-gray-900 mb-3">¿Pensando en volver?</h4>
 
-                                    <!-- Nota informativa -->
-                                    <div class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="text-sm text-gray-700">
-                                             Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos de bienvenida al reactivar tu suscripción y envío gratis.
-                                        </p>
+                                <!-- Información del precio -->
+                                <div class="bg-white border border-gray-200 rounded-md p-4 mb-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-gray-600">Precio de suscripción:</span>
+                                        <span class="text-2xl font-bold text-gray-900"> {{
+                                            ENV.precioCreatinaSubscription | currency : 'S/' : 'symbol' : '1.0-0'
+                                            }}/mes</span>
                                     </div>
-
-                                    <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
-                                        class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                        Reactivar suscripción
-                                    </button>
                                 </div>
+
+                                <!-- Nota informativa -->
+                                <div
+                                    class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="text-sm text-gray-700">
+                                        Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos de bienvenida al
+                                        reactivar tu suscripción y envío gratis.
+                                    </p>
+                                </div>
+
+                                <button (click)="reactivateSubscription(reactivateType.FROM_CANCELLATION)"
+                                    class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Reactivar suscripción
+                                </button>
+                            </div>
                             } @else if (subscription()!.status === statusEnum.TO_CANCEL) {
-                                <div class="bg-gray-200 p-4 rounded-md">
-                                    <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
-                                    <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
-                                        class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
-                                        Activar directamente
-                                    </button>
-                                </div>
+                            <div class="bg-gray-200 p-4 rounded-md">
+                                <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará
+                                    inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
+                                <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
+                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
+                                    Activar directamente
+                                </button>
+                            </div>
                             }
                         </div>
-                    
+
                     </div>
                 </div>
 
@@ -743,45 +799,53 @@
                 <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
                     <!-- Alert para pago rechazado -->
                     @if(isPorActivar()) {
-                        @if(isCardModifiedToReprocessPayment()) {
-                            <div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                <div class="flex items-center">
-                                    <div class="ml-3 flex-1">
-                                        <h4 class="text-sm font-medium text-yellow-800">Gracias por actualizar tu método de pago!</h4>
-                                        <p class="mt-1 text-sm text-yellow-700">
-                                            En unos momentos se procesará tu pago nuevamente y se te notificará por correo :)
-                                        </p>
-                                    </div>
-                                </div>
+                    @if(isCardModifiedToReprocessPayment()) {
+                    <div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="ml-3 flex-1">
+                                <h4 class="text-sm font-medium text-yellow-800">Gracias por actualizar tu método de
+                                    pago!</h4>
+                                <p class="mt-1 text-sm text-yellow-700">
+                                    En unos momentos se procesará tu pago nuevamente y se te notificará por correo :)
+                                </p>
                             </div>
-                        }@else {
-                            <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </div>
+                    </div>
+                    }@else {
+                    <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <h4 class="text-sm font-medium text-red-800">Ups! ocurrió un problema con el pago :(
+                                </h4>
+                                <p class="mt-1 text-sm text-red-700">
+                                    Tu último pago no pudo ser procesado. Por favor, vuelve a intentarlo siguiendo las
+                                    instrucciones enviadas a tu correo o cambia tu método de pago.
+                                </p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <button (click)="changePaymentMethod()" type="button"
+                                        class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                        <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                         </svg>
-                                    </div>
-                                    <div class="ml-3 flex-1">
-                                        <h4 class="text-sm font-medium text-red-800">Ups! ocurrió un problema con el pago :(</h4>
-                                        <p class="mt-1 text-sm text-red-700">
-                                            Tu último pago no pudo ser procesado. Por favor, vuelve a intentarlo siguiendo las instrucciones enviadas a tu correo o cambia tu método de pago.
-                                        </p>
-                                        <div class="mt-4 flex flex-wrap gap-2">
-                                            <button (click)="changePaymentMethod()" type="button" 
-                                                class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                                <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                                </svg>
-                                                Cambiar método de pago
-                                            </button>
-                                        </div>
-                                    </div>
+                                        Cambiar método de pago
+                                    </button>
                                 </div>
                             </div>
-                        }
+                        </div>
+                    </div>
                     }
-                    
+                    }
+
                     <div class="mb-6">
                         <!-- Próximo pago-->
                         @if(subscription()!.status === statusEnum.TRIAL){
@@ -837,7 +901,8 @@
                     <div class="border-t border-gray-200 pt-4">
                         <button (click)="toggleChargesHistory()"
                             class="flex items-center justify-between w-full py-3 text-gray-700 hover:text-gray-900">
-                            <span class="font-medium">{{ showChargesHistory() ? 'Ocultar historial de pagos' : 'Ver historial de pagos' }}</span>
+                            <span class="font-medium">{{ showChargesHistory() ? 'Ocultar historial de pagos' : 'Ver
+                                historial de pagos' }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform"
                                 [ngClass]="{'rotate-90': showChargesHistory()}" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -996,7 +1061,8 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
                     <ml-button name="Cerrar" (click)="closeCancellationModal()" type="secondary-outlined"></ml-button>
-                    <ml-button name="Siguiente" (click)="confirmCancellation()" [isDisabled]="!cancellationReason()"></ml-button>
+                    <ml-button name="Siguiente" (click)="confirmCancellation()"
+                        [isDisabled]="!cancellationReason()"></ml-button>
                 </div>
             </div>
         </div>
@@ -1054,7 +1120,8 @@
 
                                 <div class="bg-gray-50 p-4 rounded-md mb-6">
                                     <h4 class="font-semibold text-gray-800 mb-2">Período de pausa:</h4>
-                                    <p class="font-medium text-gray-700">{{ pauseStartDate() }} al {{ pauseEndDateString() }}
+                                    <p class="font-medium text-gray-700">{{ pauseStartDate() }} al {{
+                                        pauseEndDateString() }}
                                     </p>
 
                                     <h4 class="font-semibold text-gray-800 mt-4 mb-2">Próximo pago:</h4>
@@ -1071,7 +1138,8 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
-                    <ml-button name="Continuar con la cancelación" (click)="proceedWithCancellation()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Continuar con la cancelación" (click)="proceedWithCancellation()"
+                        type="secondary-outlined"></ml-button>
                     <ml-button name="Pausar" (click)="pauseSubscription()" [isProcessing]="isLoading()"></ml-button>
                 </div>
             </div>
@@ -1150,19 +1218,22 @@
 
                     <!-- Contenido del modal -->
                     <div class="text-center">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tus Magropuntos
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">¡Oh no! Estás a punto de perder tus
+                            Magropuntos
                             ahorrados...</h3>
 
                         <!-- Tarjeta de crédito de compras -->
-                        <div class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6 justify-items-center">
+                        <div
+                            class="bg-gradient-to-r from-[#94716B] to-[#C4A39C] text-white rounded-lg px-6 py-4 mx-auto max-w-md my-6 justify-items-center">
                             <p class="text-lg font-semibold mb-2">Tus Magropuntos:</p>
                             <p class="text-6xl font-bold mb-6 flex items-center">
                                 {{userCredits()}}
-                                            @if (isLoadingTier) {
-                                                <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
-                                            } @else {
-                                                <img [src]="tierImageRoutes?.png245x254" [alt]="tierDisplayName" class="w-14 h-14 mx-1 select-none">
-                                            }
+                                @if (isLoadingTier) {
+                            <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
+                            } @else {
+                            <img [src]="tierImageRoutes?.png245x254" [alt]="tierDisplayName"
+                                class="w-14 h-14 mx-1 select-none">
+                            }
                             </p>
 
                         </div>
@@ -1175,17 +1246,16 @@
                                 esperándote...</p>
                         </div>
                         <div class="relative w-full rounded-lg overflow-hidden">
-                            <img src="LoyaltyWebShop/shaker_black.webp"
-                                alt="Shaker negro con logo de Magrolabs"
-                                loading="lazy"
-                                class="w-full object-center object-cover h-[27vh] sm:h-[35vh]" />
+                            <img src="LoyaltyWebShop/shaker_black.webp" alt="Shaker negro con logo de Magrolabs"
+                                loading="lazy" class="w-full object-center object-cover h-[27vh] sm:h-[35vh]" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <ml-button name="Mantener" (click)="keepCredits()" ></ml-button>
-                    <ml-button name="Continuar con la cancelación" (click)="finalConfirmCancellation()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Mantener" (click)="keepCredits()"></ml-button>
+                    <ml-button name="Continuar con la cancelación" (click)="finalConfirmCancellation()"
+                        type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1214,7 +1284,8 @@
 
                     <!-- Contenido del modal -->
                     <div class="text-center">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un de descuento extra, en tu próxima creatina!
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">¡Obtén un de descuento extra, en tu próxima
+                            creatina!
                         </h3>
 
                         <!-- Tarjeta de descuento -->
@@ -1235,18 +1306,23 @@
 
                         <div class="mb-6">
                             <p class="text-lg font-semibold text-gray-900 mb-2">No pagarás
-                                {{subscription()?.subscriptionPlan?.price | currency:'S/':'symbol':'1.0-0'}} sino 
-                                {{(subscription()?.subscriptionPlan?.price! * (1 - ENV.cancelDiscout / 100)).toFixed(0) | currency:'S/':'symbol':'1.0-0' }} .</p>
+                                {{subscription()?.subscriptionPlan?.price | currency:'S/':'symbol':'1.0-0'}} sino
+                                {{(subscription()?.subscriptionPlan?.price! * (1 - ENV.cancelDiscout / 100)).toFixed(0)
+                                | currency:'S/':'symbol':'1.0-0' }} .</p>
                             <p class="text-gray-700 leading-relaxed">
-                                ¡Nos entristecería que te vayas! Por eso, tenemos una <strong>oferta especial</strong> para ti:
-                                Conserva tu suscripción y obtén un <strong>{{ENV.cancelDiscout}}%</strong> de descuento <strong>adicional</strong> en tu <strong>próxima creatina</strong>.
+                                ¡Nos entristecería que te vayas! Por eso, tenemos una <strong>oferta especial</strong>
+                                para ti:
+                                Conserva tu suscripción y obtén un <strong>{{ENV.cancelDiscout}}%</strong> de descuento
+                                <strong>adicional</strong> en tu <strong>próxima creatina</strong>.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
-                    <ml-button [name]="isLoading() ? 'Aplicando...' : '¡Quiero el descuento!'" (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()" [isDisabled]="isLoading()"></ml-button>
+                    <ml-button [name]="isLoading() ? 'Aplicando...' : '¡Quiero el descuento!'"
+                        (click)="acceptDiscount()" type="secondary-outlined" [isProcessing]="isLoading()"
+                        [isDisabled]="isLoading()"></ml-button>
                     <ml-button name="Continuar con la cancelación" (click)="proceedWithFinalCancellation()"></ml-button>
                 </div>
             </div>
@@ -1280,7 +1356,7 @@
 
                         <!-- Ícono informativo -->
                         <div class="bg-gray-50 rounded-lg p-6 mx-auto max-w-md my-6 border-2 border-gray-300">
-                            
+
                             <div class="space-y-4">
                                 <!-- Precio actual -->
                                 <div class="bg-white rounded-lg p-4 border border-gray-200">
@@ -1295,8 +1371,10 @@
 
                                 <!-- Flecha hacia abajo -->
                                 <div class="flex justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                     </svg>
                                 </div>
 
@@ -1315,23 +1393,28 @@
 
                         <div class="text-left mb-6 space-y-3">
                             <p class="text-gray-700 leading-relaxed">
-                                Si cancelas tu suscripción ahora y decides volver más adelante, 
-                                <span class="font-semibold">el precio de tu suscripción será de {{ENV.precioCreatinaSubscription | currency : 'S/'}} al mes</span>.
+                                Si cancelas tu suscripción ahora y decides volver más adelante,
+                                <span class="font-semibold">el precio de tu suscripción será de
+                                    {{ENV.precioCreatinaSubscription | currency : 'S/'}} al mes</span>.
                             </p>
                             <p class="text-gray-700 leading-relaxed">
-                                Este es el precio regular actual para nuevos suscriptores. 
-                                Tu precio especial de {{this.subscriptionPlan()?.price | currency : 'S/'}} solo está disponible 
+                                Este es el precio regular actual para nuevos suscriptores.
+                                Tu precio especial de {{this.subscriptionPlan()?.price | currency : 'S/'}} solo está
+                                disponible
                                 mientras mantengas tu suscripción activa.
                             </p>
                         </div>
 
                         <div class="bg-white border-l-4 border-[#d7816a] p-4 rounded">
                             <div class="flex gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                        clip-rule="evenodd" />
                                 </svg>
                                 <p class="text-xs text-gray-700 leading-relaxed">
-                                    <span class="font-semibold">¿Prefieres mantener tu precio especial?</span> 
+                                    <span class="font-semibold">¿Prefieres mantener tu precio especial?</span>
                                     Quédate como miembro y conserva tu beneficio exclusivo.
                                 </p>
                             </div>
@@ -1341,7 +1424,8 @@
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col sm:flex-row justify-center gap-3">
                     <ml-button name="Mantener mi precio especial" (click)="continueAsMember()"></ml-button>
-                    <ml-button name="Entiendo, continuar cancelación" (click)="continueToFinalConfirmation()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Entiendo, continuar cancelación" (click)="continueToFinalConfirmation()"
+                        type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1388,13 +1472,14 @@
                             <ul class="space-y-1 text-sm sm:text-base sm:space-y-2 text-gray-700">
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                   <span>Tus <strong>{{userCredits()}} Magropuntos</strong> ahorrados.</span>
+                                    <span>Tus <strong>{{userCredits()}} Magropuntos</strong> ahorrados.</span>
                                 </li>
                                 @if(!subscription()?.discount) {
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
-                                        <span> El <strong>{{ENV.cancelDiscout}}% de descuento</strong> en tu próxima creatina.</span>
-                                    </li>
+                                    <span> El <strong>{{ENV.cancelDiscout}}% de descuento</strong> en tu próxima
+                                        creatina.</span>
+                                </li>
                                 }
                                 <li class="flex items-center">
                                     <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
@@ -1418,21 +1503,23 @@
                         }
                         <div class="text-left mb-6">
                             @if(subscription()!.status === statusEnum.TRIAL) {
-                                <p class="text-gray-700 text-sm leading-relaxed">
-                                   Aún estás en período de prueba y tu suscripción será cancelada inmediatamente.
-                                </p>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                Aún estás en período de prueba y tu suscripción será cancelada inmediatamente.
+                            </p>
                             } @else {
-                                <p class="text-gray-700 text-sm leading-relaxed">
-                                    Puedes volver a activar tu suscripción en cualquier momento desde tu cuenta.
-                                </p>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                Puedes volver a activar tu suscripción en cualquier momento desde tu cuenta.
+                            </p>
                             }
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 sm:px-8 sm:py-6 flex flex-col space-y-3">
-                    <ml-button [name]="isLoading() ? 'Cancelando...' : 'Quiero cancelar'" (click)="finallyCancel()" [isDisabled]="isLoading()" [isProcessing]="isLoading()"></ml-button>
-                    <ml-button name="Continuar como miembro" (click)="continueAsMember()" type="secondary-outlined"></ml-button>
+                    <ml-button [name]="isLoading() ? 'Cancelando...' : 'Quiero cancelar'" (click)="finallyCancel()"
+                        [isDisabled]="isLoading()" [isProcessing]="isLoading()"></ml-button>
+                    <ml-button name="Continuar como miembro" (click)="continueAsMember()"
+                        type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
@@ -1465,18 +1552,18 @@
 
                         <div class="text-center mb-6">
                             @if(lastPaymentDate() != '') {
-                                <p class="text-gray-700 text-sm leading-relaxed mb-6">
-                                    Tu suscripción se cancelará inmediatamente después de tu último pago.
-                                    Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
-                                    productos!
-                                </p>
+                            <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                                Tu suscripción se cancelará inmediatamente después de tu último pago.
+                                Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
+                                productos!
+                            </p>
                             }
                             @else {
-                                <p class="text-gray-700 text-sm leading-relaxed mb-6">
-                                    Tu suscripción se cancelará inmediatamente.
-                                    Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
-                                    productos!
-                                </p>
+                            <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                                Tu suscripción se cancelará inmediatamente.
+                                Gracias por haber sido miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
+                                productos!
+                            </p>
                             }
                         </div>
 
@@ -1485,7 +1572,8 @@
                             <p class="text-gray-900 font-bold text-lg">{{ userName() }}</p>
 
                             <div class="space-y-1">
-                                <p class="text-gray-900 font-bold text-lg">{{ subscriptionPlan()?.description || 'Plan de Suscripción' }}</p>
+                                <p class="text-gray-900 font-bold text-lg">{{ subscriptionPlan()?.description || 'Plan
+                                    de Suscripción' }}</p>
                                 <p class="text-gray-600 text-sm">Suscripción {{
                                     getPeriodText(subscriptionPlan()?.period) }}</p>
                             </div>
@@ -1502,15 +1590,16 @@
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 flex justify-center">
-                    <ml-button name="Cerrar" (click)="closeSuccessCancellationModal()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Cerrar" (click)="closeSuccessCancellationModal()"
+                        type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal de solicitud de pausa por WhatsApp -->
-    <div *ngIf="showWhatsappPauseModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-        aria-modal="true">
+    <div *ngIf="showWhatsappPauseModal()" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
             <!-- Fondo oscuro -->
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -1532,9 +1621,11 @@
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                             <!-- Icono de WhatsApp -->
-                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4 sm:mx-0 sm:h-16 sm:w-16">
+                            <div
+                                class="mx-auto flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4 sm:mx-0 sm:h-16 sm:w-16">
                                 <svg class="h-10 w-10 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
                                 </svg>
                             </div>
 
@@ -1543,7 +1634,9 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-base sm:text-lg text-gray-700 mb-4">
-                                    Para pausar tu suscripción y no perder todos tus beneficios como: Magropuntos o precios especiales, contáctanos por WhatsApp y te ayudaremos con el proceso de forma rápida y sencilla.
+                                    Para pausar tu suscripción y no perder todos tus beneficios como: Magropuntos o
+                                    precios especiales, contáctanos por WhatsApp y te ayudaremos con el proceso de forma
+                                    rápida y sencilla.
                                 </p>
 
                                 <div class="bg-gray-50 p-4 rounded-md mb-4 text-left">
@@ -1563,7 +1656,8 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col  sm:flex-row-reverse gap-3 justify-center">
                     <ml-button name="Abrir WhatsApp" (click)="openWhatsappForPause()"></ml-button>
-                    <ml-button name="Cancelar" (click)="closeWhatsappPauseModal()" type="secondary-outlined"></ml-button>
+                    <ml-button name="Cancelar" (click)="closeWhatsappPauseModal()"
+                        type="secondary-outlined"></ml-button>
                 </div>
             </div>
         </div>

@@ -33,7 +33,7 @@ export class StepComponent {
           summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
         this.flag = "Gratis"
       } else {
-        this.flag = ""
+        this.flag = "S/9.90"
       }
       
       switch (this.step()) {

@@ -58,7 +58,7 @@
                                 </div>
                                 }
                             </div>
-                            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6"
+                            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-1 lg:gap-y-2 lg:grid-cols-6"
                                 [ngClass]="hideSearching ? '' : 'hidden'">
 
                                 <div class="sm:col-span-6">
@@ -193,7 +193,7 @@
                                 </div>
 
 
-                                <div class="sm:col-span-4 max-sm:mb-16">
+                                <div class="sm:col-span-4">
                                     <label for="reference"
                                         class="block text-sm/6 font-medium text-gray-900">Referencia *</label>
                                     <div class="mt-2">
@@ -220,16 +220,16 @@
 
                 <p class="mb-7 text-sm text-center" [ngClass]="hideSearching ? 'hidden' : ''">
                     <span class="cursor-pointer font-bold antialiased"
-                        (click)="hideSearching = true; isSearched = true">O ingresa tu dirección manualmente ➤</span>
+                        (click)="hideSearching = true; isSearched = true">O ingresa tu dirección manualmente →</span>
                 </p>
 
                 <hr class="mb-64 max-sm:mb-20" [ngClass]="hideSearching ? 'hidden' : ''">
 
-                <div class="max-sm:hidden mt-6" [ngClass]="isSearched ? '' : 'hidden'">
+                <div class="block mt-6" [ngClass]="isSearched ? '' : 'hidden'">
                     <ml-button name="Continuar →" (click)="nextStep()" [isDisabled]="isSaving || !form.valid" [isProcessing]="isSaving"></ml-button>
                 </div>
                 @if (isSearched) {
-                    <div class="sm:hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30" [ngClass]="{isSaving:'cursor-progress disabled', isSearched: 'hidden'}">
+                    <div class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30" [ngClass]="{isSaving:'cursor-progress disabled', isSearched: 'hidden'}">
                         <button (click)="nextStep()" type="button" [disabled]="isSaving || !form.valid"
                             class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
                             Continuar →

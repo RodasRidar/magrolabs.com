@@ -559,7 +559,8 @@
                 <!-- Cabecera con estado -->
                 <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">📋 Detalles de tu suscripción</h3>
+                        <h3 class="hidden sm:block text-xl font-bold text-gray-900">📋 Detalles de tu suscripción</h3>
+                        <h3 class="sm:hidden text-xl font-bold text-gray-900">📋 Estado:</h3>
                     </div>
 
                     @if(isPorActivar()){
@@ -580,7 +581,7 @@
                         <span class="hidden bg-red-500"></span>
                         <span class="hidden bg-blue-500"></span>
                         <span class="hidden bg-gray-500"></span>
-                        {{ getStatusText(subscription()!.status) }}
+                        <span class="text-xs">{{ getStatusText(subscription()!.status) }}</span>
                     </span>
                     }
                 </div>

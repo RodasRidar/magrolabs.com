@@ -90,7 +90,28 @@ export class AppComponent {
   }
 
   private hideLoaderWhenReady(): void {
-    // Dar tiempo a Angular para renderizar el contenido inicial
+    const MAX_LOADER_TIME = 1000; // Máximo 3 segundos
+    let loaderHidden = false;
+
+    const hideLoader = () => {
+      if (loaderHidden) return;
+      loaderHidden = true;
+
+      console.log('✅ Ocultando loader');
+      const initialLoader = document.getElementById('initial-loader');
+      if (initialLoader) {
+        initialLoader.classList.add('hide');
+        setTimeout(() => initialLoader.remove(), 500);
+      }
+    };
+
+    // Timeout máximo de 3 segundos - Se oculta sin importar nada
+    setTimeout(() => {
+      console.log('⏰ Timeout de 3 segundos alcanzado');
+      hideLoader();
+    }, MAX_LOADER_TIME);
+
+    // Intentar ocultar antes si todo está listo
     setTimeout(() => {
       const promises: Promise<any>[] = [];
 
@@ -122,7 +143,7 @@ export class AppComponent {
                 resolve(null);
               });
               // Timeout de seguridad por si la imagen no carga
-              setTimeout(resolve, 3000);
+              setTimeout(resolve, 2500);
             })
           );
         }
@@ -133,27 +154,15 @@ export class AppComponent {
 
       console.log(`⏳ Esperando ${promises.length} recursos...`);
 
-      // Esperar a que todo esté listo
+      // Esperar a que todo esté listo (pero el timeout máximo tiene prioridad)
       Promise.all(promises)
         .then(() => {
-          console.log('✅ Todo listo, ocultando loader');
-          
-          // Ocultar el loader inicial del HTML
-          const initialLoader = document.getElementById('initial-loader');
-          if (initialLoader) {
-            initialLoader.classList.add('hide');
-            setTimeout(() => initialLoader.remove(), 500);
-          }
+          console.log('✅ Todo listo antes del timeout');
+          hideLoader();
         })
         .catch(() => {
-          console.log('⚠️ Error detectado, ocultando loader de todas formas');
-          
-          // Ocultar el loader inicial del HTML
-          const initialLoader = document.getElementById('initial-loader');
-          if (initialLoader) {
-            initialLoader.classList.add('hide');
-            setTimeout(() => initialLoader.remove(), 500);
-          }
+          console.log('⚠️ Error detectado');
+          hideLoader();
         });
     }, 300);
   }

@@ -63,9 +63,9 @@
     @for (pedido of pedidos(); track pedido.id) {
     <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition hover:-translate-y-1">
       <!-- Cabecera del pedido -->
-      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between">
-        <div class="mb-2 md:mb-0">
-          <span class="block font-semibold text-gray-800">Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span>
+      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
+        <div class="mb-0">
+          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{

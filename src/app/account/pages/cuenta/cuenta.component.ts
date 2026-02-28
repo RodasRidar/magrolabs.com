@@ -474,8 +474,8 @@ export class CuentaComponent implements OnInit {
               
               // Verificar si es de hoy, tipo EARNED, y tiene descripción de bienvenida mensual
               return transaction.type === TransactionType.EARNED &&
-                     transactionDate.getTime() === today.getTime() &&
-                     transaction.description?.toLowerCase().includes('bienvenido');
+                     transactionDate.getTime() === today.getTime() 
+                     //&&transaction.description?.toLowerCase().includes('bienvenido');
             });
 
             // Si encontró una recompensa de hoy, mostrar el modal

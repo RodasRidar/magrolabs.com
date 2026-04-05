@@ -32,8 +32,7 @@
                                             id="discount-code-mobile" 
                                             name="discount-code-mobile"
                                             [formControl]="form.controls.discountCodeInput"
-                                            [disabled]="isDiscountApplied()"
-                                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
                                         @if (!isDiscountApplied()) {
                                         <button 
                                             type="button"
@@ -118,8 +117,7 @@
                                         id="discount-code" 
                                         name="discount-code"
                                         [formControl]="form.controls.discountCodeInput"
-                                        [disabled]="isDiscountApplied()"
-                                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                        class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
                                     @if (!isDiscountApplied()) {
                                     <button 
                                         type="button"
@@ -392,32 +390,9 @@
                                                     </div>
                                                     <span
                                                         [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
-                                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900">Registrarme
+                                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme
                                                         y rastrear mi pedido {{hasRequiredError('isSignUpAcepted') ||
                                                         hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
-                                                </label>
-                                            </div>
-                                            
-                                            <!-- Checkbox de aceptación de términos y condiciones -->
-                                            <div class="sm:col-span-6 col-span-6 flex items-end pb-2">
-                                                <label class="inline-flex items-center my-2 cursor-pointer"
-                                                       [ngClass]="{'cursor-not-allowed opacity-60': form.get('termsAccepted')?.disabled}">
-                                                    <input type="checkbox" formControlName="termsAccepted"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
-                                                        class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
-                                                    <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted'), 'opacity-60': form.get('termsAccepted')?.disabled}"
-                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
-                                                    </div>
-                                                    <span
-                                                        [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
-                                                        class="ms-3 text-xs font-medium text-gray-900 dark:text-gray-900 w-80 sm:w-[29rem]">Acepto los 
-                                                        <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank" 
-                                                           class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>, 
-                                                        <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank" 
-                                                           class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la 
-                                                        <a href="https://magrolabs.com/politicas/privacidad" target="_blank" 
-                                                           class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
-                                                        {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')? '*' : ''}}</span>
                                                 </label>
                                             </div>
                                             @if(hasRequiredError('isSignUpAcepted') ||
@@ -432,17 +407,6 @@
                                             </div>
                                             }
                                             
-                                            @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
-                                            <div class="sm:col-span-6 col-span-6">
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('termsAccepted')) {
-                                                    <p class="text-xs text-red-500">*Debe aceptar los términos y condiciones para continuar
-                                                    </p>
-                                                    }
-                                                </div>
-                                            </div>
-                                            }
-
                                             <!-- ENTREGA -->
 
                                             <div class="col-span-6 my-3">
@@ -468,8 +432,8 @@
                                                         <input
                                                             class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
                                                             type="text" role="combobox" aria-expanded="false"
-                                                            placeholder="Encuentra tu dirección de entrega" value=""
-                                                            formControlName="searchAddress">
+                                                            placeholder="Busca tu dirección de entrega" value=""
+                                                            formControlName="searchAddress" autocomplete="off">
 
                                                         <div role="status" class="absolute top-3 right-2"
                                                             [hidden]="!isSearchingAddress">
@@ -507,7 +471,7 @@
 
                                             <div class="col-span-6 mb-3"  [ngClass]="hideSearching ? 'hidden' : ''">
                                                 <p class="my-5 text-sm text-center">
-                                                    <span class="cursor-pointer font-bold antialiased"
+                                                    <span class="cursor-pointer font-bold antialiased text-[#d07d66]"
                                                         (click)="hideSearching = true; isSearched = true">O ingresa tu dirección manualmente →</span>
                                                 </p>
                                             </div>
@@ -708,43 +672,43 @@
                                             <div class="col-span-6">
                                                 <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
 
-                                                <div class="my-6 lg:w-72">
+                                                <!-- Acepto términos y condiciones -->
+                                                <div class="flex items-end pb-3 pt-6">
+                                                    <label class="inline-flex items-center cursor-pointer"
+                                                           [ngClass]="{'cursor-not-allowed opacity-60': form.get('termsAccepted')?.disabled}">
+                                                        <input type="checkbox" formControlName="termsAccepted"
+                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
+                                                            class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
+                                                        <div [ngClass]="{'peer-focus:ring-red-400': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted'), 'opacity-60': form.get('termsAccepted')?.disabled}"
+                                                            class="relative shrink-0 w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                        </div>
+                                                        <span
+                                                            [ngClass]="{'text-red-500 dark:text-red-500': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
+                                                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Acepto los
+                                                            <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank"
+                                                               class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>,
+                                                            <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank"
+                                                               class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la
+                                                            <a href="https://magrolabs.com/politicas/privacidad" target="_blank"
+                                                               class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
+                                                            {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted') ? '*' : ''}}</span>
+                                                    </label>
+                                                </div>
+                                                @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
+                                                <p class="text-xs text-red-500 mb-2">*Debe aceptar los términos y condiciones para continuar</p>
+                                                }
+
+                                                <div class="my-4 lg:w-72">
                                                     <ml-button [name]="buttonName"
                                                         [isDisabled]="isProcessing() || (!form.valid) "
                                                         [isProcessing]="isProcessing()"
                                                         (click)="nextStep()"></ml-button>
-                                                </div>
-
-                                                <div class="text-pretty">
-                                                    <ul class="text-sm mb-7">
-                                                        <li class="mb-1">
-                                                            <span class=" text-gray-600">Al completar tu pedido,
-                                                                declaras que eres mayor
-                                                                de 18 años y
-                                                                aceptas las <a
-                                                                    href="https://magrolabs.com/politicas/terminos-y-condiciones"
-                                                                    target="_blank"
-                                                                    class="underline cursor-pointer">Términos
-                                                                    y
-                                                                    condiciones</a>, <a class="underline cursor-pointer"
-                                                                    href="https://magrolabs.com/politicas/condiciones-de-uso"
-                                                                    target="_blank">Términos de uso</a>
-                                                                y la <a class="underline cursor-pointer"
-                                                                    href="https://magrolabs.com/politicas/privacidad"
-                                                                    target="_blank">Declaración de
-                                                                    privacidad</a> y además
-                                                                declaras que has comprobado que tu pedido y tus datos
-                                                                son correctos.</span>
-                                                        </li>
-                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-
-
                         </div>
                     </section>
                 </main>

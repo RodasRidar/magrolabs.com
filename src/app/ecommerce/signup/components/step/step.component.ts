@@ -32,8 +32,13 @@ export class StepComponent {
           summarySelection && 
           summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
         this.flag = "Gratis"
-      } else {
+      }
+      else if (environment.campanaPrimeraCreatina.tipo !== 'gratis' && 
+          summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
         this.flag = "S/9.90"
+      }
+      else {
+        this.flag = ""
       }
       
       switch (this.step()) {

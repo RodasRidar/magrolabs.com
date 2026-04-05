@@ -78,7 +78,7 @@ export class CreateAccountComponent implements OnDestroy {
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
-    termsAccepted: this._formBuilder.nonNullable.control(false, [Validators.requiredTrue]),
+    termsAccepted: this._formBuilder.nonNullable.control(true, [Validators.requiredTrue]),
   });
 
   private emailSubject = new Subject<string>();

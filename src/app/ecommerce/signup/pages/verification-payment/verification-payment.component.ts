@@ -16,7 +16,7 @@ import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../..
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowChargeStatus, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowChargeCustomerRequest, FlowChargeStatus, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
 import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of } from 'rxjs';
 import { OrderService } from '../../../../shared/services/order.service';
 import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
@@ -486,7 +486,7 @@ export class VerificationPaymentComponent {
    * @param orderId ID de la orden creada
    * @returns Solicitud de cargo al cliente
    */
-  private createChargeRequest(orderId: string) {
+  private createChargeRequest(orderId: string): FlowChargeCustomerRequest {
     // Verificar si se aplicó el código promocional P252SOLESX
     const promoCode = this.form.get('promoCode')?.value;
     const amount = promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
@@ -495,7 +495,7 @@ export class VerificationPaymentComponent {
     return {
       customerId: customerId,
       amount: amount,
-      subject: `Primera creatina prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
+      subject: `Creatina de prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
       commerceOrder: orderId,
       currency: 'PEN',
       optionals: JSON.stringify({

@@ -701,12 +701,12 @@ export class CreatinasComponent implements AfterViewInit {
       this.subscriptionElement.nativeElement.open = true;
     }
     if (isPlatformBrowser(this.platformId)) {
-    // Verificar si viene el parámetro sel=2 para seleccionar compra única
+    // Verificar si viene el parámetro sel=2 para seleccionar suscripción
     const selParam = this.route.snapshot.queryParams['sel'];
     if (selParam === '2') {
-      this.selectOnePurchase(new Event('click'));
-    } else {
       this.selectSubscription(new Event('click'));
+    } else {
+      this.selectOnePurchase(new Event('click'));
     }
     }
   }

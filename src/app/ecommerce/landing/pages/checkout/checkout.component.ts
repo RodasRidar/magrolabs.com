@@ -43,9 +43,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-    let summary = this._summaryService.getSummary();
-    // Validar si la dirección está fuera de Lima Metropolitana
-    this.validateAddressLocation(summary?.address!);
+      const summary = this._summaryService.getSummary();
+      if (summary?.address) {
+        this.validateAddressLocation(summary.address);
+      }
     }
   }
   navbarTypeEnum = NavbarTypeEnum;
@@ -121,7 +122,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     reference: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
-    termsAccepted: this._formBuilder.nonNullable.control(false, [Validators.requiredTrue]),
+    termsAccepted: this._formBuilder.nonNullable.control(true, [Validators.requiredTrue]),
     discountCodeInput: this._formBuilder.nonNullable.control('', []),
   });
   buttonName = 'Pagar →';
@@ -142,6 +143,15 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         if (!this.provinceUbigeo) {
           this.form.get('district')?.disable();
         }
+      }
+    });
+
+    // Deshabilitar/habilitar el input de código de descuento según el estado
+    effect(() => {
+      if (this.isDiscountApplied()) {
+        this.form.get('discountCodeInput')?.disable();
+      } else {
+        this.form.get('discountCodeInput')?.enable();
       }
     });
   }
@@ -409,6 +419,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
     if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
     }
+    this.revalidateDiscountCode();
     this.recalculateTotal();
   }
 
@@ -422,7 +433,38 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     if (this.shoppingCart.totalItems == 0) {
       this._router.navigate(['/bolsa']);
     }
+    this.revalidateDiscountCode();
     this.recalculateTotal();
+  }
+
+  /**
+   * Revalida el código aplicado cuando el carrito cambia.
+   * Si las condiciones ya no se cumplen, elimina el descuento automáticamente.
+   */
+  private revalidateDiscountCode(): void {
+    if (!this.isDiscountApplied()) return;
+
+    const creatina250Units = this.shoppingCart.items
+      ?.filter(item => item.product.name === 'Creatina Monohidratada 250 gr')
+      ?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+
+    const code = this.discountCode();
+
+    if (code === 'MAGRO9' && creatina250Units !== 1) {
+      this.resetDiscount();
+      this._toastService.warning('Descuento eliminado', 'El código MAGRO9 aplica solo para 1 unidad de Creatina 250 gr.');
+    } else if (code === 'M2X100' && creatina250Units !== 2) {
+      this.resetDiscount();
+      this._toastService.warning('Descuento eliminado', 'El código M2X100 aplica solo para 2 unidades de Creatina 250 gr.');
+    }
+  }
+
+  private resetDiscount(): void {
+    this.discountCode.set('');
+    this.discountAmount.set(0);
+    this.isDiscountApplied.set(false);
+    this.discountError.set('');
+    this.form.get('discountCodeInput')?.setValue('');
   }
 
   /**
@@ -439,33 +481,68 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.isApplyingDiscount.set(true);
     this.discountError.set('');
 
-    // Verificar que estemos en febrero
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth(); // 0-11 (0 = enero, 1 = febrero)
-    const currentYear = currentDate.getFullYear();
-
-    if (currentMonth !== 1) { // 1 = febrero
-      this.discountError.set('Este código de descuento solo está disponible en febrero');
+    // Verificar que estemos en abril
+    const currentMonth = new Date().getMonth(); // 0-indexed: 3 = abril
+    if (currentMonth !== 3) {
+      this.discountError.set('Este código de descuento solo está disponible en abril');
       this.isApplyingDiscount.set(false);
       return;
     }
 
-    // Validar el código
-    if (code === 'MAGR9') {
-      this.discountCode.set(code);
-      this.discountAmount.set(9);
-      this.isDiscountApplied.set(true);
-      this.discountError.set('');
-      this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
-      this.recalculateTotal();
+    // Obtener cantidad de Creatina Monohidratada 250 gr en el carrito
+    const creatina250Units = this.shoppingCart.items
+      ?.filter(item => item.product.name === 'Creatina Monohidratada 250 gr')
+      ?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+
+    if (code === 'MAGRO9') {
+      if (creatina250Units === 1) {
+        this.discountCode.set(code);
+        this.discountAmount.set(9.10);
+        this.isDiscountApplied.set(true);
+        this.discountError.set('');
+        this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
+        this.recalculateTotal();
+      } else {
+        this.discountError.set('Este código aplica solo para 1 unidad de Creatina Monohidratada 250 gr');
+        this.isDiscountApplied.set(false);
+        this.discountAmount.set(0);
+        this.discountCode.set('');
+      }
+    } else if (code === 'M2X100') {
+      if (creatina250Units === 2) {
+        this.discountCode.set(code);
+        this.discountAmount.set(38);
+        this.isDiscountApplied.set(true);
+        this.discountError.set('');
+        this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
+        this.recalculateTotal();
+      } else {
+        this.discountError.set('Este código aplica solo para 2 unidades de Creatina Monohidratada 250 gr');
+        this.isDiscountApplied.set(false);
+        this.discountAmount.set(0);
+        this.discountCode.set('');
+      }
     } else {
       this.discountError.set('Código de descuento inválido');
       this.isDiscountApplied.set(false);
       this.discountAmount.set(0);
       this.discountCode.set('');
     }
-
     this.isApplyingDiscount.set(false);
+  }
+
+  /**
+   * Calcula el porcentaje que representa el descuento sobre el subtotal del carrito
+   */
+  get discountPercentage(): number {
+    if (!this.isDiscountApplied() || this.discountAmount() <= 0) return 0;
+    const baseTotal = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+    if (baseTotal <= 0) return 0;
+    return (this.discountAmount() / baseTotal) * 100;
+  }
+
+  get discountPercentageDisplay(): number {
+    return Math.round(this.discountPercentage);
   }
 
   /**
@@ -784,7 +861,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],
-      discount: this.isDiscountApplied() ? (this.discountAmount() == 9 ? 13 : this.discountAmount()) : 0,
+      discount: this.isDiscountApplied() ? this.discountPercentage : 0,
       shipping_cost: this.isOutsideLimaMetropolitana() ? this.precioEnvioFueraLimaMetropolitana() : 0
     };
   }
@@ -998,7 +1075,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.form.get('email')?.setValue(summary?.userData?.email ?? '');
     this.form.get('password')?.setValue(summary?.userData?.password ?? '');
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
-    this.form.get('termsAccepted')?.setValue(summary?.userData?.isTermsAccepted ?? false);
+    this.form.get('termsAccepted')?.setValue(summary?.userData?.isTermsAccepted ?? true);
 
     if (summary && summary?.address?.nombreVia) {
       this.hideSearching = true;

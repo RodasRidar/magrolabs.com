@@ -87,8 +87,9 @@ export class SummaryService {
    * ⚠️ ADVERTENCIA: Solo usar en logout o casos específicos
    */
   clearSummary() {
-    // this.summaryState.next(<Summary>{});
+    this.summaryState.next(<Summary>{});
     this._cookieService.delete(this.cookieName, '/');
+    this._cookieService.delete('shopping_cart', '/');
     this._cookieService.delete(this.cookieName);
     this._cookieService.delete('promoCode');
     this._cookieService.delete('auth_token');

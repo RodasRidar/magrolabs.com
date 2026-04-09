@@ -114,6 +114,7 @@ export class ShoppingCartService {
   }
 
   clearCart() {
+    this.$ShoppingCart.next(<ShoppingCart>{ items: [], total: 0, totalItems: 0, subTotal: 0, totalDiscount: 0 });
     this.cookieService.delete(this.CART_COOKIE_NAME, '/');
   }
 }

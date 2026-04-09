@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { EMPTY, catchError } from 'rxjs';
 import {
   MetaEventParameters,
   MetaPurchaseParameters,
@@ -11,21 +12,22 @@ import {
   MetaAnalyticsConfig
 } from '../types/meta-analytics.types';
 import { environment } from '../../../environments/env';
+import { MetaApiService } from './meta-api.service';
+import { SummaryService } from './summary-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MetaAnalyticsService {
-  private config: MetaAnalyticsConfig;
-  private isInitialized = false;
+  private readonly _metaApi = inject(MetaApiService);
+  private readonly _summary = inject(SummaryService);
 
-  constructor() {
-    this.config = {
-      pixelId: environment.meta?.pixelId || '',
-      enabled: environment.meta?.enabled || false,
-      debug: environment.meta?.debug || false
-    };
-  }
+  private config: MetaAnalyticsConfig = {
+    pixelId: environment.meta?.pixelId || '',
+    enabled: environment.meta?.enabled || false,
+    debug: environment.meta?.debug || false
+  };
+  private isInitialized = false;
 
   /**
    * Inicializa el servicio de Meta Analytics
@@ -61,6 +63,20 @@ export class MetaAnalyticsService {
    */
   trackAddPaymentInfo(parameters?: MetaAddPaymentInfoParameters): void {
     this.trackEvent('AddPaymentInfo', parameters);
+
+    const userData = this._summary.getSummary()?.userData;
+    if (userData?.email && userData?.nombre && userData?.apellido) {
+      this._metaApi.trackAddPaymentInfo({
+        email: userData.email,
+        firstName: userData.nombre,
+        lastName: userData.apellido,
+        contentIds: parameters?.content_ids ?? [],
+        value: String(parameters?.value ?? 0),
+        contentType: parameters?.content_type,
+        currency: parameters?.currency,
+        contents: parameters?.contents?.map(c => ({ id: c.id, quantity: c.quantity }))
+      }).pipe(catchError(() => EMPTY)).subscribe();
+    }
   }
 
   /**
@@ -73,6 +89,16 @@ export class MetaAnalyticsService {
       return;
     }
     this.trackEvent('AddToCart', parameters);
+
+    const userData = this._summary.getSummary()?.userData;
+    this._metaApi.trackAddToCart({
+      contentIds: parameters.content_ids ?? [],
+      value: String(parameters.value),
+      email: userData?.email,
+      contentType: parameters.content_type,
+      currency: parameters.currency,
+      contents: parameters.contents?.map(c => ({ id: c.id, quantity: c.quantity }))
+    }).pipe(catchError(() => EMPTY)).subscribe();
   }
 
   /**
@@ -81,6 +107,15 @@ export class MetaAnalyticsService {
    */
   trackCompleteRegistration(parameters?: MetaCompleteRegistrationParameters): void {
     this.trackEvent('CompleteRegistration', parameters);
+
+    const userData = this._summary.getSummary()?.userData;
+    if (userData?.email && userData?.nombre && userData?.apellido) {
+      this._metaApi.trackCompleteRegistration({
+        email: userData.email,
+        firstName: userData.nombre,
+        lastName: userData.apellido
+      }).pipe(catchError(() => EMPTY)).subscribe();
+    }
   }
 
   /**
@@ -105,6 +140,19 @@ export class MetaAnalyticsService {
       return;
     }
     this.trackEvent('Purchase', parameters);
+
+    const userData = this._summary.getSummary()?.userData;
+    if (userData?.email && userData?.nombre && userData?.apellido) {
+      this._metaApi.trackPurchase({
+        email: userData.email,
+        firstName: userData.nombre,
+        lastName: userData.apellido,
+        contentIds: parameters.content_ids ?? [],
+        value: String(parameters.value),
+        contentType: parameters.content_type,
+        currency: parameters.currency
+      }).pipe(catchError(() => EMPTY)).subscribe();
+    }
   }
 
   /**

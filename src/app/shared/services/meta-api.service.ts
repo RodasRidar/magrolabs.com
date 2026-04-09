@@ -16,7 +16,7 @@ import {
   providedIn: 'root'
 })
 export class MetaApiService {
-  private readonly API_URL = `${environment.apiMagroLabs}/track`;
+  private readonly API_URL = `${environment.apiMagroLabs}/meta/track`;
 
   constructor(private http: HttpClient) { }
 

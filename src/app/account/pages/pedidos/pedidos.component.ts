@@ -12,11 +12,12 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { environment } from '../../../../environments/env';
 import { SeoService } from '../../../shared/services/seo.service';
 import { CardComponent } from '../../../shared/ui/card/card.component';
+import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 
 @Component({
   selector: 'app-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent],
+  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent],
   templateUrl: './pedidos.component.html',
 })
 export class PedidosComponent implements OnInit {
@@ -213,6 +214,20 @@ export class PedidosComponent implements OnInit {
     };
 
     return textos[estado] || estado;
+  }
+
+  getOrderStatusColor(status: string): BadgeColor {
+    const map: Record<string, BadgeColor> = {
+      PENDING_PAYMENT: 'yellow',
+      PROCESSING:      'blue',
+      SHIPPED:         'indigo',
+      DELIVERED:       'green',
+      CANCELLED:       'red',
+      REJECTED:        'red',
+      PAID:            'gray',
+      REFUNDED:        'gray',
+    };
+    return map[status] ?? 'gray';
   }
 
   generarArrayPaginas(): number[] {

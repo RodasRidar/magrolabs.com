@@ -22,11 +22,12 @@ import { MonthlyRewardModalComponent } from '../../../shared/ui/monthly-reward-m
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
+import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })
@@ -314,6 +315,17 @@ export class CuentaComponent implements OnInit {
         return 'Rechazado';
       default:
         return 'Estado desconocido';
+    }
+  }
+
+  getStatusColor(status: SubscriptionStatusEnum | undefined): BadgeColor {
+    switch (status) {
+      case SubscriptionStatusEnum.ACTIVE:    return 'green';
+      case SubscriptionStatusEnum.PAUSED:    return 'yellow';
+      case SubscriptionStatusEnum.CANCELLED: return 'red';
+      case SubscriptionStatusEnum.TRIAL:     return 'blue';
+      case SubscriptionStatusEnum.EXPIRED:   return 'gray';
+      default:                               return 'gray';
     }
   }
 

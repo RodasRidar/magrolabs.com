@@ -27,11 +27,12 @@ import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
 import { AlertComponent } from '../../../shared/ui/alert/alert.component';
+import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })
@@ -1404,6 +1405,18 @@ export class SuscripcionComponent implements OnInit {
       month: 'long',
       year: 'numeric'
     });
+  }
+
+  getStatusColor(status: SubscriptionStatusEnum): BadgeColor {
+    switch (status) {
+      case SubscriptionStatusEnum.ACTIVE:    return 'green';
+      case SubscriptionStatusEnum.PAUSED:    return 'yellow';
+      case SubscriptionStatusEnum.CANCELLED: return 'red';
+      case SubscriptionStatusEnum.TRIAL:     return 'blue';
+      case SubscriptionStatusEnum.EXPIRED:   return 'gray';
+      case SubscriptionStatusEnum.TO_CANCEL: return 'red';
+      default:                               return 'gray';
+    }
   }
 
   getStatusClass(status: SubscriptionStatusEnum): string {

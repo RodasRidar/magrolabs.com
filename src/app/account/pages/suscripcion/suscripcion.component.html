@@ -564,25 +564,13 @@
                     </div>
 
                     @if(isPorActivar()){
-
-                    <span
-                        class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">
-                        <span class="w-2 h-2 me-1 rounded-full" [ngClass]="DotClass"></span>
-                        <span class="hidden bg-green-600"></span>
-                        Activa por pagar
-                    </span>
+                    <ml-badge color="green" label="Activa por pagar" />
                     }
                     @else {
-                    <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"
-                        [ngClass]="getStatusClass(subscription()!.status)">
-                        <span class="w-2 h-2 me-1 rounded-full animate-pulse" [ngClass]="DotClass"></span>
-                        <span class="hidden bg-green-500"></span>
-                        <span class="hidden bg-yellow-500"></span>
-                        <span class="hidden bg-red-500"></span>
-                        <span class="hidden bg-blue-500"></span>
-                        <span class="hidden bg-gray-500"></span>
-                        <span class="text-xs">{{ getStatusText(subscription()!.status) }}</span>
-                    </span>
+                    <ml-badge
+                        [color]="getStatusColor(subscription()!.status)"
+                        [label]="getStatusText(subscription()!.status)"
+                        [pulse]="true" />
                     }
                 </div>
 

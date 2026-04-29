@@ -9,6 +9,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse, FlowCreateSubscriptionRequest } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
+import { InlineModalComponent } from '../../../shared/ui/inline-modal/inline-modal.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 import { Subject } from 'rxjs';
@@ -35,7 +36,7 @@ import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, SpinnerComponent, CardComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, SpinnerComponent, CardComponent, InlineModalComponent],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })

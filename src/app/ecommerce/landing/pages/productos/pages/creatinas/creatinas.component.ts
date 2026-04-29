@@ -3,6 +3,7 @@ import { environment } from '../../../../../../../environments/env';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
+import { InlineModalComponent } from '../../../../../../shared/ui/inline-modal/inline-modal.component';
 import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/summary.model';
 import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
 import { SummaryService } from '../../../../../../shared/services/summary-service.service';
@@ -25,7 +26,7 @@ import { MetaAnalyticsService } from '../../../../../../shared/services/meta-ana
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent],
+  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })

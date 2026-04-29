@@ -1049,127 +1049,83 @@
 
 
 <!-- Modal de Review -->
-<div *ngIf="isReviewModalOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-    aria-modal="true">
-    <!-- Background overlay -->
-    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-4 text-center sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeReviewModal()"></div>
-
-        <!-- Modal panel -->
-        <div
-            class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full w-full max-w-md mx-auto">
-            <form [formGroup]="reviewForm">
-                <!-- Modal header -->
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="flex items-start">
-                        <div class="w-full">
-                            <!-- Close button -->
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    Escribir reseña
-                                </h3>
-                                <button type="button"
-                                    class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150"
-                                    (click)="closeReviewModal()">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Product info -->
-                            <div class="flex items-center mb-6">
-                                <img [src]="principalImgFront" [alt]="productName" draggable="false"
-                                    class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none">
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
-                                    <p class="text-sm text-gray-500">Magrolabs</p>
-                                </div>
-                            </div>
-
-                            <!-- Rating selection -->
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-3">
-                                    Calificación *
-                                </label>
-                                <div class="flex items-center space-x-1">
-                                    <button *ngFor="let star of [1,2,3,4,5]" type="button"
-                                        class="focus:outline-none transition-colors duration-150"
-                                        (click)="setRating(star)" (mouseenter)="setHoveredRating(star)"
-                                        (mouseleave)="resetHoveredRating()">
-                                        <svg class="h-8 w-8 transition-colors duration-150"
-                                            [class.text-yellow-400]="star <= getRatingDisplay(star)"
-                                            [class.text-gray-300]="star > getRatingDisplay(star)" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div *ngIf="selectedRating === 0 && reviewForm.get('rating')?.touched"
-                                    class="mt-1 text-sm text-red-600">
-                                    Por favor selecciona una calificación
-                                </div>
-                            </div>
-
-                            <!-- Comment textarea -->
-                            <div class="mb-4">
-                                <label for="review-comment" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Tu reseña *
-                                </label>
-                                <textarea id="review-comment" formControlName="comment" rows="4"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
-                                    [class.border-red-500]="!isCommentValid && reviewForm.get('comment')?.touched"
-                                    placeholder="Comparte tu experiencia con este producto..."></textarea>
-
-                                <!-- Character count -->
-                                <div class="flex justify-between items-center mt-2">
-                                    <div class="text-sm"
-                                        [class.text-red-600]="remainingCharacters < 0 || (reviewForm.get('comment')?.value?.length || 0) < 10"
-                                        [class.text-gray-500]="remainingCharacters >= 0 && (reviewForm.get('comment')?.value?.length || 0) >= 10">
-                                        <span
-                                            *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10 && reviewForm.get('comment')?.touched">
-                                            Mínimo 10 caracteres ({{ 10 - (reviewForm.get('comment')?.value?.length ||
-                                            0) }} restantes)
-                                        </span>
-                                        <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) >= 10">
-                                            {{ remainingCharacters }} caracteres restantes
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Error message -->
-                                <div *ngIf="!isCommentValid && reviewForm.get('comment')?.touched"
-                                    class="mt-1 text-sm text-red-600">
-                                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10">
-                                        La reseña debe tener al menos 10 caracteres
-                                    </span>
-                                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) > 250">
-                                        La reseña no puede exceder 250 caracteres
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <div class="w-full sm:w-auto sm:ml-3">
-                        <ml-button [name]="isSubmittingReview ? 'Enviando...' : 'Enviar reseña'" [type]="'primary'"
-                            (click)="submitReview()" [isDisabled]="!isFormValid" [isProcessing]="isSubmittingReview">
-                        </ml-button>
-                    </div>
-                    <div class="mt-3 w-full sm:mt-0 sm:w-auto">
-                        <button type="button"
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                            [disabled]="isSubmittingReview" (click)="closeReviewModal()">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </form>
+@if (isReviewModalOpen) {
+<ml-modal [closable]="true" (closeAction)="closeReviewModal()">
+    <div mlModalHeader>
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Escribir reseña</h3>
+        <div class="flex items-center mb-4">
+            <img [src]="principalImgFront" [alt]="productName" draggable="false"
+                class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none">
+            <div class="ml-3">
+                <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
+                <p class="text-sm text-gray-500">Magrolabs</p>
+            </div>
         </div>
     </div>
-</div>
+
+    <form [formGroup]="reviewForm">
+        <!-- Rating selection -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-3">Calificación *</label>
+            <div class="flex items-center space-x-1">
+                <button *ngFor="let star of [1,2,3,4,5]" type="button"
+                    class="focus:outline-none transition-colors duration-150"
+                    (click)="setRating(star)" (mouseenter)="setHoveredRating(star)"
+                    (mouseleave)="resetHoveredRating()">
+                    <svg class="h-8 w-8 transition-colors duration-150"
+                        [class.text-yellow-400]="star <= getRatingDisplay(star)"
+                        [class.text-gray-300]="star > getRatingDisplay(star)" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                </button>
+            </div>
+            <div *ngIf="selectedRating === 0 && reviewForm.get('rating')?.touched"
+                class="mt-1 text-sm text-red-600">
+                Por favor selecciona una calificación
+            </div>
+        </div>
+
+        <!-- Comment textarea -->
+        <div class="mb-4">
+            <label for="review-comment" class="block text-sm font-medium text-gray-700 mb-2">Tu reseña *</label>
+            <textarea id="review-comment" formControlName="comment" rows="4"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
+                [class.border-red-500]="!isCommentValid && reviewForm.get('comment')?.touched"
+                placeholder="Comparte tu experiencia con este producto..."></textarea>
+
+            <div class="flex justify-between items-center mt-2">
+                <div class="text-sm"
+                    [class.text-red-600]="remainingCharacters < 0 || (reviewForm.get('comment')?.value?.length || 0) < 10"
+                    [class.text-gray-500]="remainingCharacters >= 0 && (reviewForm.get('comment')?.value?.length || 0) >= 10">
+                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10 && reviewForm.get('comment')?.touched">
+                        Mínimo 10 caracteres ({{ 10 - (reviewForm.get('comment')?.value?.length || 0) }} restantes)
+                    </span>
+                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) >= 10">
+                        {{ remainingCharacters }} caracteres restantes
+                    </span>
+                </div>
+            </div>
+
+            <div *ngIf="!isCommentValid && reviewForm.get('comment')?.touched" class="mt-1 text-sm text-red-600">
+                <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10">
+                    La reseña debe tener al menos 10 caracteres
+                </span>
+                <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) > 250">
+                    La reseña no puede exceder 250 caracteres
+                </span>
+            </div>
+        </div>
+    </form>
+
+    <div mlModalFooter class="flex flex-col sm:flex-row-reverse gap-3">
+        <ml-button [name]="isSubmittingReview ? 'Enviando...' : 'Enviar reseña'"
+            (click)="submitReview()" [isDisabled]="!isFormValid" [isProcessing]="isSubmittingReview">
+        </ml-button>
+        <ml-button name="Cancelar" (click)="closeReviewModal()" type="secondary-outlined"
+            [isDisabled]="isSubmittingReview">
+        </ml-button>
+    </div>
+</ml-modal>
+}

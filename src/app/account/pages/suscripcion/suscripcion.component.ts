@@ -28,11 +28,12 @@ import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.inter
 import { SeoService } from '../../../shared/services/seo.service';
 import { AlertComponent } from '../../../shared/ui/alert/alert.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })

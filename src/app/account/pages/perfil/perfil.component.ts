@@ -16,6 +16,7 @@ import { InputComponent } from '../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../shared/ui/select/select.component';
 import { PasswordInputComponent } from '../../../shared/ui/password-input/password-input.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 // Ahora que hemos añadido birth_date a la interfaz original, solo necesitamos definir address_id
 declare module '../../../shared/interfaces/user.interfaces' {
@@ -27,7 +28,7 @@ declare module '../../../shared/interfaces/user.interfaces' {
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, CardComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, CardComponent, PageHeaderComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })

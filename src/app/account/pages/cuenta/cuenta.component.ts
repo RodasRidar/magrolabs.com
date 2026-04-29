@@ -23,11 +23,12 @@ import { CreditTransactionService, TransactionType } from '../../../shared/servi
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })

@@ -12,6 +12,7 @@ import { LoyaltyTier, LoyaltyTierImageRoutes } from '../../../shared/interfaces/
 import { SeoService } from '../../../shared/services/seo.service';
 import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 interface TransactionHistoryItem {
   date: Date;
@@ -23,7 +24,7 @@ interface TransactionHistoryItem {
 @Component({
   selector: 'app-credito',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent],
+  imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent],
   templateUrl: './credito.component.html',
   styleUrl: './credito.component.css'
 })

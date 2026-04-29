@@ -71,8 +71,7 @@
 
             <!-- Sección promocional por tiempo limitado -->
             @if (showInstagramPromoCard()) {
-            <div
-                class="hidden sm:block bg-gradient-to-r from-red-50 to-orange-50 border border-primary rounded-lg overflow-hidden shadow-md flex-1">
+            <ml-card class="hidden sm:block flex-1" extraClass="bg-gradient-to-r from-red-50 to-orange-50 border border-primary">
                 <div class="px-6 py-5">
                     <!-- Título consolidado -->
                     <div class="text-center mb-4">
@@ -129,10 +128,9 @@
                         </ml-link-button>
                     </div>
                 </div>
-            </div>
+            </ml-card>
 
-            <div
-                class=" md:hidden bg-gradient-to-r from-red-50 to-orange-50 border border-primary rounded-lg overflow-hidden shadow-md flex-1">
+            <ml-card class="md:hidden flex-1" extraClass="bg-gradient-to-r from-red-50 to-orange-50 border border-primary">
                 <div class="p-4">
                     <!-- Título consolidado -->
                     <div class="text-center mb-4">
@@ -184,7 +182,7 @@
                         </ml-link-button>
                     </div>
                 </div>
-            </div>
+            </ml-card>
             }
         </div>
         <!-- Fin del contenedor horizontal -->

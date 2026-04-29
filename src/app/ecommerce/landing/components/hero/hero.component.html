@@ -60,10 +60,9 @@
         <div class="mt-10 sm:flex sm:justify-center lg:justify-start">
           <div class="rounded-md transition-all duration-300"
             style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
-            <a [routerLink]="'/registro'"
-              class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-hover md:py-4 md:text-lg md:px-10">
+            <ml-link-button routerLink="/registro" size="lg">
               {{ENV.campanaPrimeraCreatina.textos.ctaBoton(ENV.diasNormalesDePruebaOperiodoDeReflexion)}}
-            </a>
+            </ml-link-button>
           </div>
         </div>
         <div class="text-left"> 

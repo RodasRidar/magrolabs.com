@@ -12,11 +12,14 @@ import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analy
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { finalize } from 'rxjs/operators';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule, InputComponent, PasswordInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -76,6 +79,19 @@ export class LoginComponent implements OnInit {
   hasValidatorError(field: string) {
     const control = this.form.get(field);
     return control?.invalid && control?.touched;
+  }
+
+  get emailErrors(): string[] {
+    if (this.hasRequiredError('email')) return ['*Correo es obligatorio'];
+    if (this.hasValidatorError('email')) return ['*Correo inválido'];
+    if (this.credentialsFailed) return ['*Usuario o contraseña incorrectos'];
+    return [];
+  }
+
+  get passwordErrors(): string[] {
+    if (this.hasRequiredError('password')) return ['*Contraseña es obligatorio'];
+    if (this.hasValidatorError('password')) return ['*Debe contener mínimo 8 caracteres'];
+    return [];
   }
 
   login() {

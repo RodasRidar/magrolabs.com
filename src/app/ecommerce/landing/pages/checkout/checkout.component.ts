@@ -26,17 +26,21 @@ import { AddressApiService } from '../../../../shared/services/address-api.servi
 import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
 import { CreateOrderRequest, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
 import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { SelectComponent } from '../../../../shared/ui/select/select.component';
+import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent],
+  imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent implements OnDestroy, AfterViewInit {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('emailInput') emailInput!: ElementRef;
   @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
   @ViewChild('cellphoneInput') cellphoneInput!: ElementRef<HTMLInputElement>;
   paymentMethod: FlowPaymentMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
@@ -575,6 +579,73 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
 
     this.shoppingCart.total = baseTotal;
+  }
+
+  get firtNameErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('firtName')) e.push('*Nombres es obligatorio');
+    if (this.hasValidatorError('firtName')) e.push('*Solo se permite más de 3 letras');
+    return e;
+  }
+
+  get lastNameErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('lastName')) e.push('*Apellidos es obligatorio');
+    if (this.hasValidatorError('lastName')) e.push('*Solo se permite más de 3 letras');
+    return e;
+  }
+
+  get emailErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('email')) e.push('*Correo es obligatorio');
+    if (this.hasExistEmail()) e.push('*El correo ya está registrado');
+    if (this.hasInvalidEmail()) e.push('*Correo inválido o no existente');
+    if (this.hasValidatorError('email') && !this.hasRequiredError('email') && !this.hasExistEmail() && !this.hasInvalidEmail()) e.push('*Formato de correo inválido');
+    return e;
+  }
+
+  get passwordErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('password')) e.push('*Contraseña es obligatorio');
+    if (this.hasValidatorError('password')) e.push('*Debe contener mínimo 8 caracteres');
+    return e;
+  }
+
+  get streetAddressErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('streetAddress')) e.push('*Campo obligatorio');
+    if (this.hasValidatorError('streetAddress')) e.push('*Solo se permite más de 3 caracteres');
+    return e;
+  }
+
+  get departmentErrors(): string[] {
+    return this.hasRequiredError('department') ? ['*Departamento es obligatorio'] : [];
+  }
+
+  get provinceErrors(): string[] {
+    return this.hasRequiredError('province') ? ['*Provincia es obligatorio'] : [];
+  }
+
+  get districtErrors(): string[] {
+    return this.hasRequiredError('district') ? ['*Distrito es obligatorio'] : [];
+  }
+
+  get postalCodeErrors(): string[] {
+    return this.hasValidatorError('postalCode') ? ['*Solo se permite 5 dígitos'] : [];
+  }
+
+  get numberErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('number')) e.push('*Campo obligatorio');
+    if (this.hasValidatorError('number') && !this.hasRequiredError('number')) e.push('*Formato: números, letras, / . , -');
+    return e;
+  }
+
+  get referenceErrors(): string[] {
+    const e: string[] = [];
+    if (this.hasRequiredError('reference')) e.push('*Campo obligatorio');
+    if (this.hasValidatorError('reference')) e.push('*Se permite de 3 a 250 caracteres');
+    return e;
   }
 
   hasValidatorError(field: string) {
@@ -1120,7 +1191,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   }
 
-  private focusAndErrorInput(input: ElementRef<HTMLInputElement>, controlName: string) {
+  private focusAndErrorInput(input: ElementRef, controlName: string) {
     const control = this.form.get(controlName);
     if (controlName === 'nroDocument') {
       control?.setErrors({ nroDocumentExists: true });
@@ -1132,8 +1203,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       control?.setErrors({ required: true });
     }
     setTimeout(() => {
-      input.nativeElement.focus();
-      input.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const el = input.nativeElement as HTMLElement;
+      const focusTarget = el.tagName === 'INPUT' ? el : (el.querySelector('input') ?? el);
+      (focusTarget as HTMLElement).focus();
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
   }
 

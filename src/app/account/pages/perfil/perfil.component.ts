@@ -11,6 +11,10 @@ import { AddressService, PlaceAPI, Ubigeo } from '../../../shared/services/addre
 import { AddressApiService } from '../../../shared/services/address-api.service';
 import { CreateAddressRequest } from '../../../shared/interfaces/address.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormFieldComponent } from '../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../shared/ui/input/input.component';
+import { SelectComponent } from '../../../shared/ui/select/select.component';
+import { PasswordInputComponent } from '../../../shared/ui/password-input/password-input.component';
 
 // Ahora que hemos añadido birth_date a la interfaz original, solo necesitamos definir address_id
 declare module '../../../shared/interfaces/user.interfaces' {
@@ -22,7 +26,7 @@ declare module '../../../shared/interfaces/user.interfaces' {
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'
 })
@@ -51,9 +55,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
   isEditingPassword = signal(false);
   isEditingAddress = signal(false);
   isLoading = signal(true); // Comenzamos con estado de carga
-  showCurrentPassword = signal(false);
-  showNewPassword = signal(false);
-  showConfirmPassword = signal(false);
   submitAttempted = signal(false);
   formSubmitted = signal(false);
   
@@ -865,21 +866,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.loadUserData();
   }
   
-  // Helpers para contraseñas
-  togglePasswordVisibility(field: 'current' | 'new' | 'confirm'): void {
-    switch (field) {
-      case 'current':
-        this.showCurrentPassword.update(value => !value);
-        break;
-      case 'new':
-        this.showNewPassword.update(value => !value);
-        break;
-      case 'confirm':
-        this.showConfirmPassword.update(value => !value);
-        break;
-    }
-  }
-  
   // Validación de campos
   hasError(form: FormGroup, controlName: string, errorType?: string): boolean {
     const control = form.get(controlName);
@@ -944,5 +930,102 @@ export class PerfilComponent implements OnInit, OnDestroy {
       this.passwordForm.hasError('passwordMismatch') && 
       this.passwordForm.get('confirm_password')?.value
     );
+  }
+
+  // --- ml-form-field error getters ---
+
+  // profileForm
+  get firstNameErrors(): string[] {
+    if (this.hasError(this.profileForm, 'first_name', 'required')) return ['El nombre es obligatorio'];
+    return [];
+  }
+
+  get lastNameErrors(): string[] {
+    if (this.hasError(this.profileForm, 'last_name', 'required')) return ['El apellido es obligatorio'];
+    return [];
+  }
+
+  get documentTypeErrors(): string[] {
+    if (this.hasError(this.profileForm, 'documentType', 'required')) return ['El tipo de documento es obligatorio'];
+    return [];
+  }
+
+  get documentNumberErrors(): string[] {
+    if (this.hasError(this.profileForm, 'documentNumber', 'required')) return ['El número de documento es obligatorio'];
+    if (this.hasError(this.profileForm, 'documentNumber', 'minlength') || this.hasError(this.profileForm, 'documentNumber', 'maxlength'))
+      return [`El ${this.getDocumentLabel()} debe tener entre ${this.getDocumentMinLength()} y ${this.getDocumentMaxLength()} caracteres`];
+    if (this.hasError(this.profileForm, 'documentNumber', 'pattern')) return ['El formato del documento no es válido'];
+    if (this.hasDocumentExistsError()) return ['Este número de documento ya está registrado'];
+    return [];
+  }
+
+  get birthDateErrors(): string[] {
+    if (this.hasError(this.profileForm, 'birth_date', 'required')) return ['La fecha de nacimiento es obligatoria'];
+    return [];
+  }
+
+  get phoneErrors(): string[] {
+    if (this.hasError(this.profileForm, 'phone', 'required')) return ['El teléfono es obligatorio'];
+    if (this.hasError(this.profileForm, 'phone', 'pattern')) return ['Ingrese un número válido que comience con 9 seguido de 8 dígitos'];
+    if (this.hasPhoneExistsError()) return ['Este número de teléfono ya está registrado'];
+    return [];
+  }
+
+  // addressForm
+  get addrStreetAddressErrors(): string[] {
+    if (this.hasError(this.addressForm, 'streetAddress', 'required')) return ['La calle/avenida es obligatoria'];
+    if (this.hasError(this.addressForm, 'streetAddress', 'pattern')) return ['El formato de la calle/avenida no es válido'];
+    return [];
+  }
+
+  get addrNumberErrors(): string[] {
+    if (this.hasError(this.addressForm, 'number', 'required')) return ['Campo obligatorio'];
+    if (this.hasError(this.addressForm, 'number', 'pattern')) return ['Solo se permiten caracteres alfanuméricos y . - / (máximo 20 caracteres)'];
+    return [];
+  }
+
+  get addrDepartmentErrors(): string[] {
+    if (this.hasError(this.addressForm, 'department', 'required')) return ['El departamento es obligatorio'];
+    return [];
+  }
+
+  get addrProvinceErrors(): string[] {
+    if (this.hasError(this.addressForm, 'province', 'required')) return ['La provincia es obligatoria'];
+    return [];
+  }
+
+  get addrDistrictErrors(): string[] {
+    if (this.hasError(this.addressForm, 'district', 'required')) return ['El distrito es obligatorio'];
+    return [];
+  }
+
+  get addrPostalCodeErrors(): string[] {
+    if (this.hasError(this.addressForm, 'postalCode', 'pattern')) return ['El código postal debe tener 5 dígitos numéricos'];
+    return [];
+  }
+
+  get addrReferenceErrors(): string[] {
+    if (this.hasError(this.addressForm, 'reference', 'required')) return ['La referencia es obligatoria'];
+    if (this.hasError(this.addressForm, 'reference', 'pattern')) return ['La referencia contiene caracteres no permitidos'];
+    if (this.hasError(this.addressForm, 'reference', 'minlength')) return ['La referencia debe tener al menos 3 caracteres'];
+    return [];
+  }
+
+  // passwordForm
+  get currentPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'current_password', 'required')) return ['La contraseña actual es obligatoria'];
+    return [];
+  }
+
+  get newPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'new_password', 'required')) return ['La nueva contraseña es obligatoria'];
+    if (this.hasError(this.passwordForm, 'new_password', 'minlength')) return ['La contraseña debe tener al menos 8 caracteres'];
+    return [];
+  }
+
+  get confirmPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'confirm_password', 'required')) return ['Debes confirmar la contraseña'];
+    if (this.getPasswordMatchError()) return ['Las contraseñas no coinciden'];
+    return [];
   }
 }

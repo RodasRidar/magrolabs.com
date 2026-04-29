@@ -14,47 +14,24 @@
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
       <form class="space-y-6" [formGroup]="form">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700"> Correo* </label>
-          <div class="mt-1">
-            <input id="email" name="email" type="email" formControlName="email" autocomplete="email" required
-              placeholder="tu@example.com"
-              [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasValidatorError('email') || credentialsFailed }"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
-          </div>
-          @if(hasRequiredError('email') || hasValidatorError('email')) {
-          <div class="p-2">
-            @if(hasRequiredError('email')) {
-            <p class="text-xs text-red-500">*Correo es obligatorio</p>
-            }
-            @if(hasValidatorError('email')) {
-            <p class="text-xs text-red-500">*Correo inválido</p>
-            }
-          </div>
-          }
-        </div>
+        <ml-input
+          label="Correo"
+          inputId="email"
+          inputType="email"
+          [required]="true"
+          placeholder="tu@example.com"
+          autocomplete="email"
+          [errors]="emailErrors"
+          formControlName="email"
+        />
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700"> Contraseña* </label>
-          <div class="mt-1">
-            <input id="password" name="password" type="password" autocomplete="current-password" required formControlName="password"
-              [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password') || credentialsFailed }"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
-          </div>
-          @if(hasRequiredError('password') || hasValidatorError('password')) {
-          <div class="p-2">
-            @if(hasRequiredError('password')) {
-            <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
-            }
-            @if(hasValidatorError('password')) {
-            <p class="text-xs text-red-500">*Debe contener mínimo 8 caracteres</p>
-            <!-- <p class="text-xs text-red-500">*Contener al menos una letra mayúscula</p>
-            <p class="text-xs text-red-500">*Contener al menos una número</p>
-            <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
-            }
-          </div>
-          }
-        </div>
+        <ml-password-input
+          label="Contraseña"
+          inputId="password"
+          [required]="true"
+          [errors]="passwordErrors"
+          formControlName="password"
+        />
 
         <div class="flex items-center justify-between">
           <div class="flex items-center">

@@ -1,0 +1,27 @@
+<div>
+  <label [for]="_id()" class="block text-sm font-medium leading-6 text-gray-700">
+    {{ label() }}@if (required()) { <span class="text-red-500">*</span> }
+  </label>
+  <div class="mt-1">
+    <input
+      [id]="_id()"
+      [type]="inputType()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      [disabled]="isDisabled()"
+      [readOnly]="readonly()"
+      [attr.autocomplete]="autocomplete() ?? null"
+      [attr.maxlength]="maxLength() ?? null"
+      [class]="inputClass()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+  @if (hasErrors()) {
+    <div class="mt-1 px-1">
+      @for (error of errors(); track $index) {
+        <p class="text-xs text-red-500">{{ error }}</p>
+      }
+    </div>
+  }
+</div>

@@ -28,6 +28,9 @@ import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChang
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -44,7 +47,7 @@ export interface SignUp {
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule, FormFieldComponent, InputComponent, PasswordInputComponent],
   templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent implements OnDestroy {
@@ -278,6 +281,48 @@ export class CreateAccountComponent implements OnDestroy {
       name: 'Canjea tus Magropuntos por artículos exclusivos.',
     }
   ]
+
+  get firtNameErrors(): string[] {
+    if (this.hasRequiredError('firtName')) return ['*Nombres es obligatorio'];
+    if (this.hasValidatorError('firtName')) return ['*Solo se permite más de 3 letras'];
+    return [];
+  }
+
+  get lastNameErrors(): string[] {
+    if (this.hasRequiredError('lastName')) return ['*Apellidos es obligatorio'];
+    if (this.hasValidatorError('lastName')) return ['*Solo se permite más de 3 letras'];
+    return [];
+  }
+
+  get cellphoneErrors(): string[] {
+    if (this.hasRequiredError('cellphone')) return ['*El número de celular es obligatorio'];
+    if (this.hasValidatorError('cellphone')) return ['*Número inválido, solo se permite 9 dígitos'];
+    if (this.hasExistCellphone()) return ['*El número de celular ya está registrado'];
+    return [];
+  }
+
+  get nroDocumentErrors(): string[] {
+    const type = this.form.get('typeDocument')?.value;
+    if (this.hasRequiredError('nroDocument')) return ['*Número de documento es obligatorio'];
+    if (this.hasValidatorError('nroDocument') && type === 'DNI') return ['*DNI permite 8 dígitos'];
+    if (this.hasValidatorError('nroDocument') && type === 'CE') return ['*Carnet Ext. permite 12 alfanuméricos'];
+    if (this.hasValidatorError('nroDocument') && type === 'PASSPORT') return ['*Pasaporte permite 12 alfanuméricos'];
+    if (this.hasExistDocument()) return ['*El documento ya está registrado'];
+    return [];
+  }
+
+  get createAccountEmailErrors(): string[] {
+    if (this.hasRequiredError('email')) return ['*Correo es obligatorio'];
+    if (this.hasExistEmail()) return ['*El correo ya está registrado'];
+    if (this.hasValidatorError('email')) return ['*Correo inválido o no existente'];
+    return [];
+  }
+
+  get createAccountPasswordErrors(): string[] {
+    if (this.hasRequiredError('password')) return ['*Contraseña es obligatorio'];
+    if (this.hasValidatorError('password')) return ['*Debe contener mínimo 8 caracteres'];
+    return [];
+  }
 
   hasValidatorError(field: string) {
     const control = this.form.get(field);

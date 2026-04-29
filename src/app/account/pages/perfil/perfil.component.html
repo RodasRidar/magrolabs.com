@@ -69,111 +69,76 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Nombre -->
                             <div class="form-group">
-                                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nombre<span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="first_name" formControlName="first_name"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'first_name')">
-                                <div *ngIf="hasError(profileForm, 'first_name', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El nombre es obligatorio
-                                </div>
+                                <ml-input
+                                    label="Nombre"
+                                    inputId="first_name"
+                                    inputType="text"
+                                    [required]="true"
+                                    [errors]="firstNameErrors"
+                                    formControlName="first_name"
+                                />
                             </div>
 
                             <!-- Apellido -->
                             <div class="form-group">
-                                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Apellido<span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="last_name" formControlName="last_name"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'last_name')">
-                                <div *ngIf="hasError(profileForm, 'last_name', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El apellido es obligatorio
-                                </div>
+                                <ml-input
+                                    label="Apellido"
+                                    inputId="last_name"
+                                    inputType="text"
+                                    [required]="true"
+                                    [errors]="lastNameErrors"
+                                    formControlName="last_name"
+                                />
                             </div>
 
                             <!-- DNI -->
                             <div class="form-group">
-                                <label for="documentType" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Tipo de documento<span class="text-red-500">*</span>
-                                </label>
-                                <select id="documentType" formControlName="documentType"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'documentType')">
-                                    <option *ngFor="let type of typeDocuments" [value]="type.value">{{ type.label }}
-                                    </option>
-                                </select>
-                                <div *ngIf="hasError(profileForm, 'documentType', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El tipo de documento es obligatorio
-                                </div>
+                                <ml-select
+                                    label="Tipo de documento"
+                                    inputId="documentType"
+                                    [required]="true"
+                                    [errors]="documentTypeErrors"
+                                    formControlName="documentType"
+                                >
+                                    <option *ngFor="let type of typeDocuments" [value]="type.value">{{ type.label }}</option>
+                                </ml-select>
                             </div>
 
                             <div class="form-group">
-                                <label for="documentNumber" class="block text-sm font-medium text-gray-700 mb-1">
-                                    {{ getDocumentLabel() }}<span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="documentNumber" formControlName="documentNumber"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'documentNumber')"
-                                    (input)="limitDigits('documentNumber', getDocumentMaxLength())">
-                                <div *ngIf="hasError(profileForm, 'documentNumber', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El número de documento es obligatorio
-                                </div>
-                                <div *ngIf="hasError(profileForm, 'documentNumber', 'minlength') || hasError(profileForm, 'documentNumber', 'maxlength')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El {{ getDocumentLabel() }} debe tener entre {{ getDocumentMinLength() }} y {{
-                                    getDocumentMaxLength() }} caracteres
-                                </div>
-                                <div *ngIf="hasError(profileForm, 'documentNumber', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El formato del documento no es válido
-                                </div>
-                                <div *ngIf="hasDocumentExistsError()" class="mt-1 text-sm text-red-500">
-                                    Este número de documento ya está registrado
-                                </div>
+                                <ml-input
+                                    [label]="getDocumentLabel()"
+                                    inputId="documentNumber"
+                                    inputType="text"
+                                    [required]="true"
+                                    [maxLength]="getDocumentMaxLength()"
+                                    [errors]="documentNumberErrors"
+                                    formControlName="documentNumber"
+                                />
                             </div>
 
                             <!-- Fecha de nacimiento -->
                             <div class="form-group">
-                                <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Fecha de nacimiento<span class="text-red-500">*</span>
-                                </label>
-                                <input type="date" id="birth_date" formControlName="birth_date"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'birth_date')">
-                                <div *ngIf="hasError(profileForm, 'birth_date', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La fecha de nacimiento es obligatoria
-                                </div>
-                                <div class="mt-1 text-xs text-gray-500">dd/mm/aaaa</div>
+                                <ml-input
+                                    label="Fecha de nacimiento"
+                                    inputId="birth_date"
+                                    inputType="date"
+                                    [required]="true"
+                                    [errors]="birthDateErrors"
+                                    formControlName="birth_date"
+                                />
                             </div>
 
                             <!-- Teléfono -->
                             <div class="form-group">
-                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Teléfono<span class="text-red-500">*</span>
-                                </label>
-                                <input type="tel" id="phone" formControlName="phone"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(profileForm, 'phone')"
-                                    (input)="limitDigits('phone', 9)">
-                                <div *ngIf="hasError(profileForm, 'phone', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El teléfono es obligatorio
-                                </div>
-                                <div *ngIf="hasError(profileForm, 'phone', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    Ingrese un número válido que comience con 9 seguido de 8 dígitos
-                                </div>
-                                <div *ngIf="hasPhoneExistsError()" class="mt-1 text-sm text-red-500">
-                                    Este número de teléfono ya está registrado
-                                </div>
-                                <div class="mt-1 text-xs text-gray-500">Ingrese 9 dígitos comenzando con 9</div>
+                                <ml-input
+                                    label="Teléfono"
+                                    inputId="phone"
+                                    inputType="tel"
+                                    [required]="true"
+                                    [maxLength]="9"
+                                    [errors]="phoneErrors"
+                                    formControlName="phone"
+                                />
                             </div>
 
                             <!-- Email -->
@@ -285,137 +250,99 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Calle/Avenida/Jiron -->
                             <div class="form-group">
-                                <label for="streetAddress" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Calle/Avenida/Jiron<span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="streetAddress" formControlName="streetAddress"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'streetAddress')">
-                                <div *ngIf="hasError(addressForm, 'streetAddress', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La calle/avenida es obligatoria
-                                </div>
-                                <div *ngIf="hasError(addressForm, 'streetAddress', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El formato de la calle/avenida no es válido
-                                </div>
+                                <ml-input
+                                    label="Calle/Avenida/Jiron"
+                                    inputId="streetAddress"
+                                    inputType="text"
+                                    [required]="true"
+                                    [errors]="addrStreetAddressErrors"
+                                    formControlName="streetAddress"
+                                />
                             </div>
 
                             <!-- Número -->
                             <div class="form-group">
-                                <label for="number" class="block text-sm font-medium text-gray-700 mb-1">
-                                    N°/Mz/Lt<span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" id="number" formControlName="number"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'number')"
-                                    (input)="limitDigits('number', 20)">
-                                <div *ngIf="hasError(addressForm, 'number', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    Campo obligatorio
-                                </div>
-                                <div *ngIf="hasError(addressForm, 'number', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    Solo se permiten caracteres alfanuméricos y . - / (máximo 20 caracteres)
-                                </div>
+                                <ml-input
+                                    label="N°/Mz/Lt"
+                                    inputId="number"
+                                    inputType="text"
+                                    [required]="true"
+                                    [maxLength]="20"
+                                    [errors]="addrNumberErrors"
+                                    formControlName="number"
+                                />
                             </div>
 
                             <!-- Departamento -->
                             <div class="form-group">
-                                <label for="department" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Departamento<span class="text-red-500">*</span>
-                                </label>
-                                <select id="department" formControlName="department"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'department')"
-                                    (change)="selectDepartment($event)">
+                                <ml-select
+                                    label="Departamento"
+                                    inputId="department"
+                                    [required]="true"
+                                    [errors]="addrDepartmentErrors"
+                                    formControlName="department"
+                                    (selectionChange)="selectDepartment($event)"
+                                >
                                     <option value="">Seleccione un departamento</option>
-                                    <option *ngFor="let department of departments$ | async"
-                                        [value]="department.id_ubigeo">
+                                    <option *ngFor="let department of departments$ | async" [value]="department.id_ubigeo">
                                         {{ department.nombre_ubigeo }}
                                     </option>
-                                </select>
-                                <div *ngIf="hasError(addressForm, 'department', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El departamento es obligatorio
-                                </div>
+                                </ml-select>
                             </div>
 
                             <!-- Provincia -->
                             <div class="form-group">
-                                <label for="province" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Provincia<span class="text-red-500">*</span>
-                                </label>
-                                <select id="province" formControlName="province"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'province')"
-                                    (change)="selectProvince($event)">
+                                <ml-select
+                                    label="Provincia"
+                                    inputId="province"
+                                    [required]="true"
+                                    [errors]="addrProvinceErrors"
+                                    formControlName="province"
+                                    (selectionChange)="selectProvince($event)"
+                                >
                                     <option value="">Seleccione una provincia</option>
                                     <option *ngFor="let province of provinces$ | async" [value]="province.id_ubigeo">
                                         {{ province.nombre_ubigeo }}
                                     </option>
-                                </select>
-                                <div *ngIf="hasError(addressForm, 'province', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La provincia es obligatoria
-                                </div>
+                                </ml-select>
                             </div>
 
                             <!-- Distrito -->
                             <div class="form-group">
-                                <label for="district" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Distrito<span class="text-red-500">*</span>
-                                </label>
-                                <select id="district" formControlName="district"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'district')"
-                                    (change)="selectDistrict($event)">
+                                <ml-select
+                                    label="Distrito"
+                                    inputId="district"
+                                    [required]="true"
+                                    [errors]="addrDistrictErrors"
+                                    formControlName="district"
+                                    (selectionChange)="selectDistrict($event)"
+                                >
                                     <option value="">Seleccione un distrito</option>
                                     <option *ngFor="let district of districts$ | async" [value]="district.id_ubigeo">
                                         {{ district.nombre_ubigeo }}
                                     </option>
-                                </select>
-                                <div *ngIf="hasError(addressForm, 'district', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El distrito es obligatorio
-                                </div>
+                                </ml-select>
                             </div>
 
                             <!-- Código Postal -->
                             <div class="form-group">
-                                <label for="postalCode" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Código Postal
-                                </label>
-                                <input type="text" id="postalCode" formControlName="postalCode"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'postalCode')"
-                                    (input)="limitDigits('postalCode', 5)">
-                                <div *ngIf="hasError(addressForm, 'postalCode', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    El código postal debe tener 5 dígitos numéricos
-                                </div>
+                                <ml-input
+                                    label="Código Postal"
+                                    inputId="postalCode"
+                                    inputType="text"
+                                    [maxLength]="5"
+                                    [errors]="addrPostalCodeErrors"
+                                    formControlName="postalCode"
+                                />
                             </div>
 
                             <!-- Referencia -->
                             <div class="form-group md:col-span-2">
-                                <label for="reference" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Referencia<span class="text-red-500">*</span>
-                                </label>
-                                <textarea id="reference" formControlName="reference" rows="3"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(addressForm, 'reference')"></textarea>
-                                <div *ngIf="hasError(addressForm, 'reference', 'required')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La referencia es obligatoria
-                                </div>
-                                <div *ngIf="hasError(addressForm, 'reference', 'pattern')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La referencia contiene caracteres no permitidos
-                                </div>
-                                <div *ngIf="hasError(addressForm, 'reference', 'minlength')"
-                                    class="mt-1 text-sm text-red-500">
-                                    La referencia debe tener al menos 3 caracteres
-                                </div>
+                                <ml-form-field label="Referencia" inputId="reference" [required]="true" [errors]="addrReferenceErrors">
+                                    <textarea id="reference" formControlName="reference" rows="3"
+                                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
+                                        [class.border-red-500]="hasError(addressForm, 'reference')"></textarea>
+                                </ml-form-field>
                             </div>
                         </div>
 
@@ -504,105 +431,35 @@
                     <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
                         <!-- Contraseña actual -->
                         <div class="form-group mb-4">
-                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">
-                                Contraseña actual<span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <input [type]="showCurrentPassword() ? 'text' : 'password'" id="current_password"
-                                    formControlName="current_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(passwordForm, 'current_password')">
-                                <button type="button" (click)="togglePasswordVisibility('current')"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                                    <svg *ngIf="!showCurrentPassword()" xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    <svg *ngIf="showCurrentPassword()" xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div *ngIf="hasError(passwordForm, 'current_password', 'required')"
-                                class="mt-1 text-sm text-red-500">
-                                La contraseña actual es obligatoria
-                            </div>
+                            <ml-password-input
+                                label="Contraseña actual"
+                                inputId="current_password"
+                                [required]="true"
+                                [errors]="currentPasswordErrors"
+                                formControlName="current_password"
+                            />
                         </div>
 
                         <!-- Nueva contraseña -->
                         <div class="form-group mb-4">
-                            <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">
-                                Nueva contraseña<span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <input [type]="showNewPassword() ? 'text' : 'password'" id="new_password"
-                                    formControlName="new_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(passwordForm, 'new_password')">
-                                <button type="button" (click)="togglePasswordVisibility('new')"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                                    <svg *ngIf="!showNewPassword()" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    <svg *ngIf="showNewPassword()" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div *ngIf="hasError(passwordForm, 'new_password', 'required')"
-                                class="mt-1 text-sm text-red-500">
-                                La nueva contraseña es obligatoria
-                            </div>
-                            <div *ngIf="hasError(passwordForm, 'new_password', 'minlength')"
-                                class="mt-1 text-sm text-red-500">
-                                La contraseña debe tener al menos 8 caracteres
-                            </div>
+                            <ml-password-input
+                                label="Nueva contraseña"
+                                inputId="new_password"
+                                [required]="true"
+                                [errors]="newPasswordErrors"
+                                formControlName="new_password"
+                            />
                         </div>
 
                         <!-- Confirmar contraseña -->
                         <div class="form-group mb-4">
-                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">
-                                Confirmar contraseña<span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <input [type]="showConfirmPassword() ? 'text' : 'password'" id="confirm_password"
-                                    formControlName="confirm_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    [class.border-red-500]="hasError(passwordForm, 'confirm_password') || getPasswordMatchError()">
-                                <button type="button" (click)="togglePasswordVisibility('confirm')"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                                    <svg *ngIf="!showConfirmPassword()" xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    <svg *ngIf="showConfirmPassword()" xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div *ngIf="hasError(passwordForm, 'confirm_password', 'required')"
-                                class="mt-1 text-sm text-red-500">
-                                Debes confirmar la contraseña
-                            </div>
-                            <div *ngIf="getPasswordMatchError()" class="mt-1 text-sm text-red-500">
-                                Las contraseñas no coinciden
-                            </div>
+                            <ml-password-input
+                                label="Confirmar contraseña"
+                                inputId="confirm_password"
+                                [required]="true"
+                                [errors]="confirmPasswordErrors"
+                                formControlName="confirm_password"
+                            />
                         </div>
 
                         <!-- Botones de acción -->

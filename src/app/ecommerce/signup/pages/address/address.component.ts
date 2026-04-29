@@ -14,6 +14,9 @@ import { AddressApiService } from '../../../../shared/services/address-api.servi
 import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
 import { UserService } from '../../../../shared/services/user.service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { environment } from '../../../../../environments/env';
 
 export interface Address {
@@ -30,7 +33,7 @@ export interface Address {
 @Component({
   selector: 'app-address',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InputComponent, SelectComponent],
   templateUrl: './address.component.html',
   styleUrl: './address.component.css'
 })
@@ -351,6 +354,44 @@ export class AddressComponent {
     } else {
       this._router.navigate(['/registro/verificacion']);
     }
+  }
+
+  get streetAddressErrors(): string[] {
+    if (this.hasRequiredError('streetAddress')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('streetAddress')) return ['*Solo se permite más de 3 caracteres'];
+    return [];
+  }
+
+  get departmentErrors(): string[] {
+    if (this.hasRequiredError('department')) return ['*Departamento es obligatorio'];
+    return [];
+  }
+
+  get provinceErrors(): string[] {
+    if (this.hasRequiredError('province')) return ['*Provincia es obligatorio'];
+    return [];
+  }
+
+  get districtErrors(): string[] {
+    if (this.hasRequiredError('district')) return ['*Distrito es obligatorio'];
+    return [];
+  }
+
+  get postalCodeErrors(): string[] {
+    if (this.hasValidatorError('postalCode')) return ['*Solo se permite 5 dígitos'];
+    return [];
+  }
+
+  get numberErrors(): string[] {
+    if (this.hasRequiredError('number')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('number') && !this.hasRequiredError('number')) return ['*Formato: números, letras, / . , -'];
+    return [];
+  }
+
+  get referenceErrors(): string[] {
+    if (this.hasRequiredError('reference')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('reference')) return ['*Se permite de 3 a 250 caracteres'];
+    return [];
   }
 
   hasValidatorError(field: string) {

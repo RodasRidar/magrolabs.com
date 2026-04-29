@@ -23,44 +23,40 @@
                                 </ul>
 
                                 <form class="mt-4">
-                                    <label for="discount-code-mobile" class="block text-sm font-medium text-gray-700">
-                                        Código de descuento
-                                    </label>
-                                    <div class="flex space-x-2 mt-1">
-                                        <input 
-                                            type="text" 
-                                            id="discount-code-mobile" 
-                                            name="discount-code-mobile"
-                                            [formControl]="form.controls.discountCodeInput"
-                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
-                                        @if (!isDiscountApplied()) {
-                                        <button 
-                                            type="button"
-                                            (click)="applyDiscountCode()"
-                                            [disabled]="isApplyingDiscount()"
-                                            class="bg-primary text-sm font-medium text-white rounded-md px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
-                                            {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
-                                        </button>
-                                        } @else {
-                                        <button 
-                                            type="button"
-                                            (click)="removeDiscountCode()"
-                                            class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
-                                            Eliminar
-                                        </button>
+                                    <ml-form-field label="Código de descuento" inputId="discount-code-mobile" [errors]="discountError() ? [discountError()] : []">
+                                        <div class="flex space-x-2">
+                                            <input 
+                                                type="text" 
+                                                id="discount-code-mobile" 
+                                                name="discount-code-mobile"
+                                                [formControl]="form.controls.discountCodeInput"
+                                                class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                            @if (!isDiscountApplied()) {
+                                            <button 
+                                                type="button"
+                                                (click)="applyDiscountCode()"
+                                                [disabled]="isApplyingDiscount()"
+                                                class="bg-primary text-sm font-medium text-white rounded-md px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                                                {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
+                                            </button>
+                                            } @else {
+                                            <button 
+                                                type="button"
+                                                (click)="removeDiscountCode()"
+                                                class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
+                                                Eliminar
+                                            </button>
+                                            }
+                                        </div>
+                                        @if (isDiscountApplied()) {
+                                        <p class="mt-2 text-xs text-green-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Código aplicado exitosamente
+                                        </p>
                                         }
-                                    </div>
-                                    @if (discountError()) {
-                                    <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
-                                    }
-                                    @if (isDiscountApplied()) {
-                                    <p class="mt-2 text-xs text-green-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                        </svg>
-                                        Código aplicado exitosamente
-                                    </p>
-                                    }
+                                    </ml-form-field>
                                 </form>
 
                             </div>
@@ -108,44 +104,40 @@
 
                         <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
                             <form class="mb-6">
-                                <label for="discount-code" class="block text-sm font-medium text-gray-700">
-                                    Código de descuento
-                                </label>
-                                <div class="flex space-x-2 mt-1">
-                                    <input 
-                                        type="text" 
-                                        id="discount-code" 
-                                        name="discount-code"
-                                        [formControl]="form.controls.discountCodeInput"
-                                        class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
-                                    @if (!isDiscountApplied()) {
-                                    <button 
-                                        type="button"
-                                        (click)="applyDiscountCode()"
-                                        [disabled]="isApplyingDiscount()"
-                                        class="bg-primary text-sm font-medium text-white rounded-md px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
-                                        {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
-                                    </button>
-                                    } @else {
-                                    <button 
-                                        type="button"
-                                        (click)="removeDiscountCode()"
-                                        class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
-                                        Eliminar
-                                    </button>
+                                <ml-form-field label="Código de descuento" inputId="discount-code" [errors]="discountError() ? [discountError()] : []">
+                                    <div class="flex space-x-2">
+                                        <input 
+                                            type="text" 
+                                            id="discount-code" 
+                                            name="discount-code"
+                                            [formControl]="form.controls.discountCodeInput"
+                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                        @if (!isDiscountApplied()) {
+                                        <button 
+                                            type="button"
+                                            (click)="applyDiscountCode()"
+                                            [disabled]="isApplyingDiscount()"
+                                            class="bg-primary text-sm font-medium text-white rounded-md px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                                            {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
+                                        </button>
+                                        } @else {
+                                        <button 
+                                            type="button"
+                                            (click)="removeDiscountCode()"
+                                            class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
+                                            Eliminar
+                                        </button>
+                                        }
+                                    </div>
+                                    @if (isDiscountApplied()) {
+                                    <p class="mt-2 text-xs text-green-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Código aplicado exitosamente
+                                    </p>
                                     }
-                                </div>
-                                @if (discountError()) {
-                                <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
-                                }
-                                @if (isDiscountApplied()) {
-                                <p class="mt-2 text-xs text-green-600 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Código aplicado exitosamente
-                                </p>
-                                }
+                                </ml-form-field>
                             </form>
 
                             <dl class="text-sm font-medium text-gray-500 space-y-6">
@@ -195,44 +187,27 @@
                                                     [queryParams]="{'returnUrl':'/checkout'}">Iniciar sesión</a>
                                             </div>
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="first-name"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">Nombres
-                                                    *</label>
-                                                <div class="mt-2">
-                                                    <input type="text" name="first-name" id="first-name"
-                                                        autocomplete="given-name" formControlName="firtName"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('firtName')) {
-                                                    <p class="text-xs text-red-500">*Nombres es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('firtName')) {
-                                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                                    }
-                                                </div>
+                                                <ml-input
+                                                    label="Nombres"
+                                                    inputId="first-name"
+                                                    inputType="text"
+                                                    autocomplete="given-name"
+                                                    [required]="true"
+                                                    [errors]="firtNameErrors"
+                                                    formControlName="firtName"
+                                                />
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="last-name"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">Apellidos
-                                                    *</label>
-                                                <div class="mt-2">
-                                                    <input type="text" name="last-name" id="last-name"
-                                                        autocomplete="family-name" formControlName="lastName"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('lastName')) {
-                                                    <p class="text-xs text-red-500">*Apellidos es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('lastName')) {
-                                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                                    }
-                                                </div>
+                                                <ml-input
+                                                    label="Apellidos"
+                                                    inputId="last-name"
+                                                    inputType="text"
+                                                    autocomplete="family-name"
+                                                    [required]="true"
+                                                    [errors]="lastNameErrors"
+                                                    formControlName="lastName"
+                                                />
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
@@ -322,61 +297,28 @@
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="email"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    Correo *</label>
-                                                <div class="mt-2">
-                                                    <input formControlName="email" #emailInput id="email" name="email"
-                                                        type="email" autocomplete="email" placeholder="tu@example.com"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasInvalidEmail() || hasValidatorError('email')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                @if(hasRequiredError('email') || hasValidatorError('email') || hasExistEmail() || hasInvalidEmail()) {
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('email')) {
-                                                    <p class="text-xs text-red-500">*Correo es obligatorio</p>
-                                                    }
-                                                    @if(hasExistEmail()) {
-                                                    <p class="text-xs text-red-500">
-                                                        *El correo ya está registrado
-                                                    </p>
-                                                    }
-                                                    @if(hasInvalidEmail()) {
-                                                    <p class="text-xs text-red-500">*Correo inválido o no existente</p>
-                                                    }
-                                                    @if(hasValidatorError('email') && !hasRequiredError('email') && !hasExistEmail() && !hasInvalidEmail()) {
-                                                    <p class="text-xs text-red-500">*Formato de correo inválido</p>
-                                                    }
-                                                </div>
-                                                }
+                                                <ml-input
+                                                    #emailInput
+                                                    label="Correo"
+                                                    inputId="email"
+                                                    inputType="email"
+                                                    autocomplete="email"
+                                                    placeholder="tu@example.com"
+                                                    [required]="true"
+                                                    [errors]="emailErrors"
+                                                    formControlName="email"
+                                                />
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6"
                                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
-                                                <label for="password"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    Contraseña *</label>
-                                                <div class="mt-2">
-                                                    <input formControlName="password" name="password" type="password"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                @if(hasRequiredError('password') || hasValidatorError('password')) {
-                                                <div class="p-2">
-
-                                                    @if(hasRequiredError('password')) {
-                                                    <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('password')) {
-                                                    <p class="text-xs text-red-500">*Debe contener mínimo 8 caracteres
-                                                    </p>
-                                                    <!-- <p class="text-xs text-red-500">*Contener al menos una letra mayúscula</p>
-                                                    <p class="text-xs text-red-500">*Contener al menos una número</p>
-                                                    <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
-                                                    }
-                                                </div>
-
-                                                }
+                                                <ml-password-input
+                                                    label="Contraseña"
+                                                    inputId="password"
+                                                    [required]="true"
+                                                    [errors]="passwordErrors"
+                                                    formControlName="password"
+                                                />
                                             </div>
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
                                                 <label class="inline-flex items-center my-2 cursor-pointer" 
@@ -479,171 +421,105 @@
                                                 [ngClass]="hideSearching ? '' : 'hidden'">
 
                                                 <div class="sm:col-span-6">
-                                                    <label for="street-address"
-                                                        class="block text-sm/6 font-medium text-gray-900">Avenida /
-                                                        Calle / Jirón
-                                                        *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" autocomplete="street-address"
-                                                            (input)="limitDigits(70, 'streetAddress')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress') || hasValidatorError('streetAddress')}"
-                                                            formControlName="streetAddress">
-
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('streetAddress')) {
-                                                            <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                            }
-                                                            @if(hasValidatorError('streetAddress')) {
-                                                            <p class="text-xs text-red-500">*Solo se permite más de 3
-                                                                caracteres</p>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    <ml-input
+                                                        label="Avenida / Calle / Jirón"
+                                                        inputId="street-address"
+                                                        inputType="text"
+                                                        autocomplete="street-address"
+                                                        [required]="true"
+                                                        [maxLength]="70"
+                                                        [errors]="streetAddressErrors"
+                                                        formControlName="streetAddress"
+                                                    />
                                                 </div>
 
                                                 <div class="sm:col-span-3 sm:col-start-1">
-                                                    <label for="city"
-                                                        class="block text-sm/6 font-medium text-gray-900">Departamento
-                                                        *</label>
-                                                    <div class="mt-2">
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('department')}"
-                                                            (change)="selectDepartment($event)"
-                                                            formControlName="department" [value]="departmentUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (departments$ | async; as departmentsList) {
+                                                    <ml-select
+                                                        label="Departamento"
+                                                        inputId="department"
+                                                        [required]="true"
+                                                        [errors]="departmentErrors"
+                                                        formControlName="department"
+                                                        (selectionChange)="selectDepartment($event)"
+                                                    >
+                                                        @if (departments$ | async; as departmentsList) {
                                                             @for (item of departmentsList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
+                                                                <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
                                                             }
-                                                            }
-                                                        </select>
-
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('department')) {
-                                                            <small class="text-xs text-red-500">*Departamento es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="sm:col-span-3">
-                                                    <label for="province"
-                                                        class="block text-sm/6 font-medium text-gray-900">Provincia
-                                                        *</label>
-                                                    <div class="mt-2">
-
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('province')}"
-                                                            (change)="selectProvince($event)" formControlName="province"
-                                                            [value]="provinceUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (provinces$ | async; as provincesList) {
-                                                            @for (item of provincesList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
-                                                            }
-                                                            }
-                                                        </select>
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('province')) {
-                                                            <small class="text-xs text-red-500">*Provincia es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="sm:col-span-3">
-                                                    <label for="district"
-                                                        class="block text-sm/6 font-medium text-gray-900">Distrito
-                                                        *</label>
-                                                    <div class="mt-2">
-
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
-                                                            formControlName="district" [value]="districtUbigeo" (change)="selectDistrict($event)"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (districts$ | async; as districtsList) {
-                                                            @for (item of districtsList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
-                                                            }
-                                                            }
-
-                                                        </select>
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('district')) {
-                                                            <small class="text-xs text-red-500">*Distrito es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="sm:col-span-3">
-                                                    <label for="region"
-                                                        class="block text-sm/6 font-medium text-gray-900">Código
-                                                        Postal</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" (input)="limitDigits(5, 'postalCode')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('postalCode')}"
-                                                            formControlName="postalCode">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        <!-- @if(hasRequiredError('postalCode')) {
-                                                        <p class="text-xs text-red-500">*Código Postal es obligatorio
-                                                        </p>
-                                                        } -->
-                                                        @if(hasValidatorError('postalCode')) {
-                                                        <p class="text-xs text-red-500">*Solo se permite 5 dígitos</p>
                                                         }
-                                                    </div>
+                                                    </ml-select>
+                                                </div>
+
+
+                                                <div class="sm:col-span-3">
+                                                    <ml-select
+                                                        label="Provincia"
+                                                        inputId="province"
+                                                        [required]="true"
+                                                        [errors]="provinceErrors"
+                                                        formControlName="province"
+                                                        (selectionChange)="selectProvince($event)"
+                                                    >
+                                                        @if (provinces$ | async; as provincesList) {
+                                                            @for (item of provincesList; track $index) {
+                                                                <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
+                                                            }
+                                                        }
+                                                    </ml-select>
+                                                </div>
+
+                                                <div class="sm:col-span-3">
+                                                    <ml-select
+                                                        label="Distrito"
+                                                        inputId="district"
+                                                        [required]="true"
+                                                        [errors]="districtErrors"
+                                                        formControlName="district"
+                                                        (selectionChange)="selectDistrict($event)"
+                                                    >
+                                                        @if (districts$ | async; as districtsList) {
+                                                            @for (item of districtsList; track $index) {
+                                                                <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
+                                                            }
+                                                        }
+                                                    </ml-select>
+                                                </div>
+
+                                                <div class="sm:col-span-3">
+                                                    <ml-input
+                                                        label="Código Postal"
+                                                        inputId="postalCode"
+                                                        inputType="text"
+                                                        [maxLength]="5"
+                                                        [errors]="postalCodeErrors"
+                                                        formControlName="postalCode"
+                                                    />
                                                 </div>
 
                                                 <div class="sm:col-span-2">
-                                                    <label for="number"
-                                                        class="block text-sm/6 font-medium text-gray-900">N° / Mz. / Lt. *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" id="number" name="number" placeholder="Ej: 123, Mz A Lt 5"
-                                                            (input)="limitDigits(20, 'number')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            formControlName="number"
-                                                            [ngClass]="{'ring-red-500 ring-2': hasRequiredError('number') || hasValidatorError('number')}">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        @if(hasRequiredError('number')) {
-                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                        }
-                                                        @if(hasValidatorError('number') && !hasRequiredError('number')) {
-                                                        <p class="text-xs text-red-500">*Formato: números, letras, / . , -</p>
-                                                        }
-                                                    </div>
+                                                    <ml-input
+                                                        label="N° / Mz. / Lt."
+                                                        inputId="number"
+                                                        inputType="text"
+                                                        placeholder="Ej: 123, Mz A Lt 5"
+                                                        [required]="true"
+                                                        [maxLength]="20"
+                                                        [errors]="numberErrors"
+                                                        formControlName="number"
+                                                    />
                                                 </div>
 
 
                                                 <div class="sm:col-span-4 mb-2">
-                                                    <label for="reference"
-                                                        class="block text-sm/6 font-medium text-gray-900">Referencia *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" id="reference" name="reference" formControlName="reference"
-                                                            placeholder="Ej: Casa azul al lado del parque"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('reference') || hasValidatorError('reference')}"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        @if(hasRequiredError('reference')) {
-                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                        }
-                                                        @if(hasValidatorError('reference')) {
-                                                        <p class="text-xs text-red-500">*Se permite de 3 a 250
-                                                            caracteres</p>
-                                                        }
-                                                    </div>
+                                                    <ml-input
+                                                        label="Referencia"
+                                                        inputId="reference"
+                                                        inputType="text"
+                                                        placeholder="Ej: Casa azul al lado del parque"
+                                                        [required]="true"
+                                                        [errors]="referenceErrors"
+                                                        formControlName="reference"
+                                                    />
                                                 </div>
 
                                             </div>

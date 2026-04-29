@@ -204,7 +204,7 @@
 
                 <div class="px-6 py-5 max-h-[400px] overflow-y-auto">
                     <div *ngIf="isLoadingTransactions" class="flex justify-center py-4">
-                        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-accent"></div>
+                        <ml-spinner />
                     </div>
 
                     <div *ngIf="!isLoadingTransactions && transactionHistory.length === 0" class="text-center py-8">
@@ -245,7 +245,7 @@
 
                 <div class="px-6 pb-5">
                     <div *ngIf="isLoadingInvitations" class="flex justify-center py-4">
-                        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-accent"></div>
+                        <ml-spinner size="lg" color="accent" />
                     </div>
 
                     <div *ngIf="!isLoadingInvitations" class="py-3">

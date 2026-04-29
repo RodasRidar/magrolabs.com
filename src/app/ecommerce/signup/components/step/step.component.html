@@ -2,7 +2,8 @@
 <div class="max-w-[40rem] sm:mx-auto mx-5">
     <h2 class="sr-only bg-gray-900">Paso a paso de registro</h2>
     <p class="sr-only bg-gray-300">Haz clic en los pasos para continuar</p>
-    <div class="after:mt-4 after:block after:h-1 after:w-full after:rounded-lg after:bg-gray-200">
+    <div class="relative pb-5">
+        <div class="absolute top-4 left-5 right-5 h-1 rounded-lg bg-gray-300 z-0"></div>
         <ol class="grid grid-cols-5 text-sm font-medium text-gray-500">
             <!-- Elegir plan -->
             <li class="relative flex justify-start">
@@ -44,7 +45,7 @@
 <div class="relative">
     <!-- Pasos del timeline -->
     <div class="flex items-center justify-between my-10 sm:my-20 relative">
-        <div class="absolute top-5 sm:top-8 left-9 sm:left-12 right-9 sm:right-8 h-0.5 bg-gray-300 z-0"></div>
+        <div class="absolute top-5 sm:top-8 left-9 sm:left-12 right-9 sm:right-8 h-1 bg-gray-300 z-0"></div>
 
         <!-- Paso 1: Recibido -->
         <div class="flex flex-col items-center">
@@ -136,7 +137,7 @@
 @if (type() === 'delivery-preview') {
 <div class="relative">
     <div class="flex items-center justify-between my-2 sm:my-2 relative">
-        <div class="absolute top-4 left-4 right-4 h-0.5 bg-gray-300 z-0"></div>
+        <div class="absolute top-4 left-4 right-4 h-0.5 bg-gray-900 z-0"></div>
 
         <!-- Paso 1: Preparando -->
         <div class="flex flex-col items-center">

@@ -102,7 +102,7 @@ export class CartComponent {
       purple: 'text-purple-500',
       pink: 'text-pink-500',
       sky: 'text-sky-500',
-      orange: 'text-[#d7816a]',
+      orange: 'text-primary-hover',
       teal: 'text-teal-500',
       lime: 'text-lime-500',
       fuchsia: 'text-fuchsia-500',

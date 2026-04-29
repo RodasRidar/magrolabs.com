@@ -13,8 +13,8 @@
 
             <!-- Sin suscripción -->
             <div *ngIf="!isLoading() && !subscription()"
-                class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg p-2 sm:p-6">
-                <div class="bg-[#f6f6f6] rounded-lg shadow-lg ">
+                class="bg-surface overflow-hidden shadow rounded-lg p-2 sm:p-6">
+                <div class="bg-surface rounded-lg shadow-lg ">
                     <div class="max-w-2xl mx-auto max-sm:px-2  max-sm:py-1 max-lg:px-6 max-lg:py-4 px-16 py-9">
                         <!-- Product details -->
                         <div class=" lg:self-end">
@@ -28,7 +28,7 @@
                                     </div>
                                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
                                         target="_blank"
-                                        class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
+                                        class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline">
                                         ({{reviewStats.totalReviews}} reseñas)
                                     </a>
                                 </div>
@@ -53,7 +53,7 @@
                                             {{ENV.precioCreatinaSubscription | currency
                                             : 'S/'}}</p>
                                         <span
-                                            class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
+                                            class="ml-2 px-3 py-1 bg-primary text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
                                     </div>
 
                                 </div>
@@ -159,7 +159,7 @@
                                                     </span>
 
                                                     <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
-                                                    <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
+                                                    <div class="p-[0.35rem]  bg-primary rounded-2xl">
                                                         <p
                                                             class="max-lg:text-[10px] text-xs text-white font-extralight">
                                                             Ahorra
@@ -240,7 +240,7 @@
                                 <div
                                     class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="nextStep()" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                                         Continuar →
                                     </button>
                                 </div>
@@ -360,7 +360,7 @@
 
                                 <button (click)="nextStep()" type="button"
                                     [disabled]="!isPaymentVerified() || isLoading()"
-                                    class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                    class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                                     Suscríbete →
                                 </button>
                             </div>
@@ -504,7 +504,7 @@
                                 <div class="text-center">
                                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
                                         target="_blank"
-                                        class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                                        class="text-primary hover:text-primary-hover w-fit hover:underline">
                                         Mira todas las reseñas →
                                     </a>
 
@@ -555,7 +555,7 @@
 
             <!-- Información de la suscripción -->
             <div *ngIf="!isLoading() && subscription()"
-                class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+                class="bg-surface overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                 <!-- Cabecera con estado -->
                 <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <div>
@@ -630,7 +630,7 @@
                                     <dd class="mt-1 text-sm text-gray-900">
                                         <span *ngIf="isLoadingCredits()">Cargando...</span>
                                         <a *ngIf="!isLoadingCredits()" routerLink="/cuenta/credito"
-                                            class="hover:text-[#d07d66] hover:underline flex items-center">
+                                            class="hover:text-primary hover:underline flex items-center">
                                             {{ userCredits()}}
                                             @if (isLoadingTier) {
                                             <div class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"></div>
@@ -739,9 +739,9 @@
 
                                 <!-- Nota informativa -->
                                 <div
-                                    class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-[#d7816a] rounded">
+                                    class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-primary-hover rounded">
                                     <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5 text-[#d7816a] flex-shrink-0 mt-0.5" viewBox="0 0 20 20"
+                                        class="h-5 w-5 text-primary-hover flex-shrink-0 mt-0.5" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path fill-rule="evenodd"
                                             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -769,7 +769,7 @@
                                 <p class="text-sm text-gray-700">Tu suscripción aún no ha sido cancelada, se cancelará
                                     inmediatamente después de tu último pago. ¿Quieres continuar con tu suscripción?</p>
                                 <button (click)="reactivateSubscription(reactivateType.FROM_TO_CANCEL)"
-                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-[#d7816a] ">
+                                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-primary-hover ">
                                     Activar directamente
                                 </button>
                             </div>
@@ -792,7 +792,7 @@
 
             <!-- Card de información de pago -->
             <div *ngIf="!isLoading() && subscription() && subscription()!.status !== statusEnum.CANCELLED && subscription()!.status !== statusEnum.EXPIRED"
-                class="mt-8 bg-[#f6f6f6] overflow-hidden shadow rounded-lg">
+                class="mt-8 bg-surface overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-xl font-bold text-gray-900">💳 Información de pago</h3>
                 </div>
@@ -868,7 +868,7 @@
                             }
 
                             <button (click)="openCardRegistration.set(true)" type="button"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-[#f6f6f6] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-surface hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -945,7 +945,7 @@
                                                 Estado</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-[#f6f6f6] divide-y divide-gray-200">
+                                    <tbody class="bg-surface divide-y divide-gray-200">
                                         <tr *ngFor="let charge of charges()">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
                                                 formatDate(charge.requestDate) }}</td>
@@ -983,8 +983,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeCancellationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1009,7 +1009,7 @@
                                     <!-- Opciones para cancelar la suscripción -->
                                     <div class="flex items-left">
                                         <input type="radio" id="reason1" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('Ya no quiero consumir creatina')">
                                         <label for="reason1" class="ml-3 block text-sm font-medium text-gray-700">
                                             Ya no quiero consumir creatina
@@ -1017,7 +1017,7 @@
                                     </div>
                                     <div class="flex items-left">
                                         <input type="radio" id="reason2" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('Estoy experimentando problemas con la entrega')">
                                         <label for="reason2" class="ml-3 block text-sm font-medium text-gray-700">
                                             Estoy experimentando problemas con la entrega
@@ -1025,7 +1025,7 @@
                                     </div>
                                     <div class="flex items-left">
                                         <input type="radio" id="reason3" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('No quiero una suscripción')">
                                         <label for="reason3" class="ml-3 block text-sm font-medium text-gray-700">
                                             No quiero una suscripción
@@ -1033,7 +1033,7 @@
                                     </div>
                                     <div class="flex items-left">
                                         <input type="radio" id="reason4" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('No me gusta el sabor de la creatina')">
                                         <label for="reason4" class="ml-3 block text-sm font-medium text-gray-700">
                                             No me gusta el sabor de la creatina
@@ -1041,7 +1041,7 @@
                                     </div>
                                     <div class="flex items-left">
                                         <input type="radio" id="reason5" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('No estoy satisfecho/a con la calidad')">
                                         <label for="reason5" class="ml-3 block text-sm font-medium text-gray-700">
                                             No estoy satisfecho/a con la calidad
@@ -1049,7 +1049,7 @@
                                     </div>
                                     <div class="flex items-left">
                                         <input type="radio" id="reason6" name="cancellationReason"
-                                            class="h-4 w-4 text-[#d7816a] focus:ring-[#d7816a]"
+                                            class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
                                             (change)="cancellationReason.set('Tengo suficientes creatina por ahora, se me está acumulando.')">
                                         <label for="reason6" class="ml-3 block text-sm font-medium text-gray-700">
                                             Tengo suficientes creatina por ahora.
@@ -1078,8 +1078,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closePauseModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1109,7 +1109,7 @@
                                     <div class="w-full flex items-center mb-4">
                                         <input type="range" min="1" max="3" step="1" [value]="pauseDurationMonths()"
                                             (input)="updatePauseDuration($event)"
-                                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#d7816a]">
+                                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-hover">
                                     </div>
 
                                     <!-- Indicadores min/max -->
@@ -1156,8 +1156,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeReactivationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1202,12 +1202,12 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <!-- Botón para cerrar el modal -->
                     <div class="absolute top-0 right-0 pt-3 pr-3">
                         <button type="button" (click)="closeFinalCancelModal()"
-                            class="bg-[#f6f6f6] rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
+                            class="bg-surface rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
                             <span class="sr-only">Cerrar</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -1243,7 +1243,7 @@
                             <p class="text-xl font-bold mb-2">Estás cerca de conseguirlo.</p>
                             <p class="text-sm text-gray-700">Hay un producto exclusivo en la <a
                                     routerLink="/loyalty-webshop"
-                                    class="text-[#d7816a] hover:text-[#b76a5a] underline">Webshop →</a>
+                                    class="text-primary-hover hover:text-[#b76a5a] underline">Webshop →</a>
                                 esperándote...</p>
                         </div>
                         <div class="hidden sm:block relative w-full rounded-lg overflow-hidden">
@@ -1271,8 +1271,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeDiscountModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1339,8 +1339,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeNewPriceWarningModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1406,9 +1406,9 @@
                             </p>
                         </div>
 
-                        <div class="bg-white border-l-4 border-[#d7816a] p-4 rounded">
+                        <div class="bg-white border-l-4 border-primary-hover p-4 rounded">
                             <div class="flex gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d7816a] flex-shrink-0"
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-hover flex-shrink-0"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
                                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -1441,8 +1441,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-6 pt-6 pb-4 sm:p-8 sm:pb-6 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeFinalConfirmationModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">
@@ -1535,8 +1535,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full max-w-md mx-auto">
-                <div class="bg-[#f6f6f6] px-6 pt-6 pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full max-w-md mx-auto">
+                <div class="bg-surface px-6 pt-6 pb-4 relative">
                     <!-- Contenido del modal -->
                     <div class="text-center">
                         <h3 class="text-2xl font-bold text-gray-900 mb-8">Membresía cancelada</h3>
@@ -1606,8 +1606,8 @@
 
             <!-- Modal -->
             <div
-                class="inline-block align-middle bg-[#f6f6f6] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                <div class="bg-[#f6f6f6] px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                class="inline-block align-middle bg-surface rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                     <!-- Botón para cerrar -->
                     <button (click)="closeWhatsappPauseModal()"
                         class="absolute top-3 right-3 text-gray-400 hover:text-gray-500">

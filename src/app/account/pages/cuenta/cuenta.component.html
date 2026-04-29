@@ -45,7 +45,7 @@
 
                             <div class="relative mt-6 mb-4 w-[94%] max-w-[975px]">
                                 <!-- Barra de progreso base -->
-                                <div class="h-2.5 bg-[#f6f6f6] bg-opacity-20 rounded-r-lg"></div>
+                                <div class="h-2.5 bg-surface bg-opacity-20 rounded-r-lg"></div>
 
                                 <!-- Barra de progreso llena -->
                                 <div class="absolute top-0 left-0 h-2.5 rounded-r-lg animate-pulse"
@@ -120,7 +120,7 @@
                             <div class="flex mt-6 animate-bounce">
                                 <span class="mr-1">🎁</span>
                                 <a routerLink="/cuenta/credito"
-                                    class="text-white underline hover:text-[#d7816a] flex items-center">
+                                    class="text-white underline hover:text-primary-hover flex items-center">
                                     <span class="font-medium"> Gana 30 Magropuntos gratis → </span>
                                 </a>
                             </div>
@@ -134,7 +134,7 @@
             @if (isLoadingDashboard()) {
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Skeleton Card 1 -->
-                <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg animate-pulse">
+                <div class="bg-surface overflow-hidden shadow rounded-lg animate-pulse">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
                         <div class="space-y-3">
@@ -149,7 +149,7 @@
                 </div>
 
                 <!-- Skeleton Card 2 -->
-                <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg animate-pulse">
+                <div class="bg-surface overflow-hidden shadow rounded-lg animate-pulse">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
                         <div class="space-y-3">
@@ -164,7 +164,7 @@
                 </div>
 
                 <!-- Skeleton Card 3 -->
-                <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg animate-pulse">
+                <div class="bg-surface overflow-hidden shadow rounded-lg animate-pulse">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
                         <div class="space-y-3">
@@ -187,7 +187,7 @@
                 <!-- Banner de completitud de perfil -->
                 @if (!profileCompletionService.isLoading() && !profileCompletionService.isProfileComplete()) {
                 <div
-                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
+                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-primary-hover rounded-lg shadow-lg p-6 text-white">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
@@ -213,7 +213,7 @@
                 @if (!profileCompletionService.isLoading() && profileCompletionService.isProfileComplete() &&
                 needsSubscription() && !lastOrder()) {
                 <div
-                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-[#d7816a] rounded-lg shadow-lg p-6 text-white">
+                    class="col-span-1 sm:col-span-2 lg:col-span-3 bg-gradient-to-r from-[#1f1b19] to-primary-hover rounded-lg shadow-lg p-6 text-white">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
@@ -232,11 +232,11 @@
 
                 <!-- Resumen de Suscripción -->
                 @if ((profileCompletionService.isProfileComplete() || profileCompletionService.hasSubscription())) {
-                <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg transition-all duration-300 flex flex-col hover:shadow-lg hover:-translate-y-1"
-                    [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsSubscription() && !lastOrder()}">
+                <div class="bg-surface overflow-hidden shadow rounded-lg transition-all duration-300 flex flex-col hover:shadow-lg hover:-translate-y-1"
+                    [ngClass]="{'ring-4 ring-primary ring-opacity-60 shadow-xl': needsSubscription() && !lastOrder()}">
                     @if (needsSubscription() && !lastOrder()) {
                     <div
-                        class="bg-gradient-to-r from-[#1f1b19] to-[#d7816a] px-4 py-2 flex items-center justify-between">
+                        class="bg-gradient-to-r from-[#1f1b19] to-primary-hover px-4 py-2 flex items-center justify-between">
                         <span class="text-white text-sm font-semibold flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -253,7 +253,7 @@
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">💳 Mi Suscripción.</h3>
                                 @if (hasDiscount()) {
                                 <span
-                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#d7816a] text-white">
+                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-hover text-white">
                                     -{{ discountPercentage() }}%
                                 </span>
                                 }
@@ -279,7 +279,7 @@
                                 <p class="flex items-center gap-2">
                                     <strong>Inversión:</strong>
                                     <span class="line-through text-gray-500 text-sm">S/{{ originalPrice() }}.00</span>
-                                    <span class="text-[#d7816a] font-semibold">{{ subscriptionPrice() }}</span>
+                                    <span class="text-primary-hover font-semibold">{{ subscriptionPrice() }}</span>
                                 </p>
                                 } @else {
                                 <p><strong>Inversión:</strong> {{ subscriptionPrice() }}</p>
@@ -313,7 +313,7 @@
                 <!-- Último Pedido -->
                 @if (shouldShowLastOrderCard()) {
                 <div
-                    class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                    class="bg-surface overflow-hidden shadow rounded-lg flex flex-col hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="px-4 py-5 sm:p-6 flex-grow">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">📦 Último Pedido.</h3>
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
@@ -340,11 +340,11 @@
                 }
 
                 <!-- Información Personal -->
-                <div class="bg-[#f6f6f6] overflow-hidden shadow rounded-lg transition-all duration-300 flex flex-col hover:shadow-lg hover:-translate-y-1"
-                    [ngClass]="{'ring-4 ring-[#d07d66] ring-opacity-60 shadow-xl': needsBasicInfo() || needsAddress()}">
+                <div class="bg-surface overflow-hidden shadow rounded-lg transition-all duration-300 flex flex-col hover:shadow-lg hover:-translate-y-1"
+                    [ngClass]="{'ring-4 ring-primary ring-opacity-60 shadow-xl': needsBasicInfo() || needsAddress()}">
                     @if (needsBasicInfo() || needsAddress()) {
                     <div
-                        class="bg-gradient-to-r from-[#1f1b19] to-[#d7816a] px-4 py-2 flex items-center justify-between">
+                        class="bg-gradient-to-r from-[#1f1b19] to-primary-hover px-4 py-2 flex items-center justify-between">
                         <span class="text-white text-sm font-semibold flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
                                 fill="currentColor">

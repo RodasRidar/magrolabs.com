@@ -12,20 +12,20 @@
                         </a>
                     </div>
                     <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                        <a routerLink="/cuenta/mi-cuenta" routerLinkActive="border-[#d07d66] border-b-2  text-gray-900"
+                        <a routerLink="/cuenta/mi-cuenta" routerLinkActive="border-primary border-b-2  text-gray-900"
                             class="text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:border-b-2 inline-flex items-center px-1 pt-1 text-sm font-medium"
                             aria-current="page">
                             Mi Cuenta
                         </a>
-                        <a routerLink="/cuenta/suscripcion" routerLinkActive="border-[#d07d66] text-gray-900 border-b-2"
+                        <a routerLink="/cuenta/suscripcion" routerLinkActive="border-primary text-gray-900 border-b-2"
                             class="text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:border-b-2 inline-flex items-center px-1 pt-1  text-sm font-medium">
                             Mi Suscripción
                         </a>
-                        <a routerLink="/cuenta/credito" routerLinkActive="border-[#d07d66] text-gray-900 border-b-2"
+                        <a routerLink="/cuenta/credito" routerLinkActive="border-primary text-gray-900 border-b-2"
                             class="text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:border-b-2 inline-flex items-center px-1 pt-1  text-sm font-medium">
                             Mis Magropuntos
                         </a>
-                        <a routerLink="/cuenta/pedidos" routerLinkActive="border-[#d07d66] text-gray-900 border-b-2"
+                        <a routerLink="/cuenta/pedidos" routerLinkActive="border-primary text-gray-900 border-b-2"
                             class="text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:border-b-2 inline-flex items-center px-1 pt-1  text-sm font-medium">
                             Mis Pedidos
                         </a>
@@ -62,7 +62,7 @@
                     <div class="ml-3 relative">
                         <div>
                             <button type="button"
-                                class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                                class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                 id="user-menu-button" aria-expanded="false" aria-haspopup="true"
                                 (click)="toggleUserMenu()">
                                 <span class="sr-only">Abrir menú de usuario</span>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="-mr-2 flex items-center sm:hidden">
                     <button type="button"
-                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66]"
+                        class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                         aria-controls="mobile-menu" aria-expanded="false" (click)="toggleMobileMenu()">
                         <span class="sr-only">Abrir menú principal</span>
                         <svg class="block h-6 w-6" [class.hidden]="isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@
                 <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-900">Menú</h2>
                     <button type="button" (click)="closeMobileMenu()"
-                        class="rounded-md p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#d07d66]">
+                        class="rounded-md p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary">
                         <span class="sr-only">Cerrar menú</span>
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -152,23 +152,23 @@
                 <!-- Enlaces de navegación -->
                 <div class="pt-2 pb-3 space-y-1">
                     <a routerLink="/cuenta/mi-cuenta" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-[#ffe8e2] border-[#d07d66] border-l-4 text-gray-900"
+                        routerLinkActive="bg-primary-surface-light border-primary border-l-4 text-gray-900"
                         class="text-gray-600 block pl-3 pr-4 py-3 text-base font-medium hover:bg-gray-50 transition-colors duration-200"
                         aria-current="page">
                         Mi Cuenta
                     </a>
                     <a routerLink="/cuenta/suscripcion" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-[#ffe8e2] border-[#d07d66] border-l-4 text-gray-900"
+                        routerLinkActive="bg-primary-surface-light border-primary border-l-4 text-gray-900"
                         class="text-gray-600 block pl-3 pr-4 py-3 border-l-4 border-transparent text-base font-medium hover:bg-gray-50 transition-colors duration-200">
                         Mi Suscripción
                     </a>
                     <a routerLink="/cuenta/credito" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-[#ffe8e2] border-[#d07d66] border-l-4 text-gray-900"
+                        routerLinkActive="bg-primary-surface-light border-primary border-l-4 text-gray-900"
                         class="text-gray-600 block pl-3 pr-4 py-3 border-l-4 border-transparent text-base font-medium hover:bg-gray-50 transition-colors duration-200">
                         Mis Magropuntos
                     </a>
                     <a routerLink="/cuenta/pedidos" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-[#ffe8e2] border-[#d07d66] border-l-4 text-gray-900"
+                        routerLinkActive="bg-primary-surface-light border-primary border-l-4 text-gray-900"
                         class="text-gray-600 block pl-3 pr-4 py-3 border-l-4 border-transparent text-base font-medium hover:bg-gray-50 transition-colors duration-200">
                         Mis Pedidos
                     </a>

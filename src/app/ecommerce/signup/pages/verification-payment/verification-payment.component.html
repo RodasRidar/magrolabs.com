@@ -145,14 +145,14 @@
                                     <div class="text-right">
                                         @if (form.get('promoCode')?.value === 'P252SOLESX') {
                                             <p class="text-xs text-gray-500 line-through">{{ENV.campanaPrimeraCreatina.precio | currency : 'S/'}}</p>
-                                            <p class="text-2xl font-bold text-[#d7816a]">{{firstCreatinePrice() | currency : 'S/'}}</p>
+                                            <p class="text-2xl font-bold text-primary-hover">{{firstCreatinePrice() | currency : 'S/'}}</p>
                                         } @else {
                                             <p class="text-2xl font-bold text-gray-900">{{firstCreatinePrice() | currency : 'S/'}}</p>
                                         }
                                     </div>
                                 </div>
                                 @if (form.get('promoCode')?.value === 'P252SOLESX') {
-                                    <div class="mt-2 flex items-center gap-2 text-xs text-white bg-[#d7816a] rounded px-3 py-2">
+                                    <div class="mt-2 flex items-center gap-2 text-xs text-white bg-primary-hover rounded px-3 py-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
@@ -217,7 +217,7 @@
                     </div>-->
 
                     <!-- Nota informativa -->
-                    <div class="mt-4 p-3 bg-white border-l-4 border-[#d7816a] rounded">
+                    <div class="mt-4 p-3 bg-white border-l-4 border-primary-hover rounded">
                         <div class="flex gap-2">
                             <p class="text-xs text-gray-700 leading-relaxed">
                                 <span class="font-semibold">Cancela cuando quieras.</span> Si cancelas durante los primeros {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días, @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {no pagarás nada más} @else {solo habrás pagado los {{ENV.campanaPrimeraCreatina.precio | currency : 'S/'}}}
@@ -277,7 +277,7 @@
                                 <input type="text" id="card-number" name="card-number" autocomplete="identity-card-number"
                                     [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardNumber')}"
                                     formControlName="cardNumber" (input)="formatCardNumber()"
-                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
                             </div>
                         </div>
 
@@ -289,7 +289,7 @@
                                     placeholder="MM / AAAA"
                                     [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardExpiration')}"
                                     formControlName="cardExpiration"
-                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
                             </div>
                         </div>
 
@@ -299,7 +299,7 @@
                                 <input type="text" name="cvc" id="cvc" autocomplete="csc"
                                     [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardCvv')}"
                                     formControlName="cardCvv"
-                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
                             </div>
                         </div>
 
@@ -310,7 +310,7 @@
                                 <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
                                     [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cardName')}"
                                     formControlName="cardName"
-                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm">
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
                             </div>
                         </div>
 
@@ -368,7 +368,7 @@
                     <div class="col-span-2 max-lg:col-span-3">
                         <div class="mt-2">
                             <input type="text"
-                                class="block disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500 w-full rounded-md border-0 py-[0.56rem] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6"
+                                class="block disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500 w-full rounded-md border-0 py-[0.56rem] text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6"
                                 formControlName="promoCode" placeholder="Ingresa tu código">
                    
                             <div *ngIf="form.get('promoCode')?.invalid && form.get('promoCode')?.touched">
@@ -537,7 +537,7 @@
                 </div>
                 <div class="text-center">
                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
-                        target="_blank" class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                        target="_blank" class="text-primary hover:text-primary-hover w-fit hover:underline">
                         Mira todas las reseñas →
                     </a>
 

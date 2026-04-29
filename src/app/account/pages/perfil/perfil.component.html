@@ -19,7 +19,7 @@
                 <p class="text-gray-600 mb-6">Aquí encontrarás tus datos personales</p>
 
                 <!-- Error en carga de perfil -->
-                <div *ngIf="isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="text-center py-8">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-red-500 mb-4" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -29,14 +29,14 @@
                         <h2 class="text-xl font-semibold text-gray-800 mb-2">No pudimos cargar tus datos</h2>
                         <p class="text-gray-600 mb-4">Ha ocurrido un error al obtener tu información personal.</p>
                         <button (click)="retryLoad()"
-                            class="px-6 py-2 bg-[#d07d66] text-white rounded-md hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]">
+                            class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
                             Intentar nuevamente
                         </button>
                     </div>
                 </div>
 
                 <!-- Skeleton para carga de perfil -->
-                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
@@ -52,10 +52,10 @@
                 </div>
 
                 <!-- Formulario de perfil -->
-                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar Datos Personales</h2>
-                        <button (click)="toggleProfileEdit()" class="text-[#d07d66] hover:text-[#d7816a]"
+                        <button (click)="toggleProfileEdit()" class="text-primary hover:text-primary-hover"
                             [attr.aria-label]="isEditingProfile() ? 'Cancelar edición' : 'Editar perfil'">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -73,7 +73,7 @@
                                     Nombre<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="first_name" formControlName="first_name"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'first_name')">
                                 <div *ngIf="hasError(profileForm, 'first_name', 'required')"
                                     class="mt-1 text-sm text-red-500">
@@ -87,7 +87,7 @@
                                     Apellido<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="last_name" formControlName="last_name"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'last_name')">
                                 <div *ngIf="hasError(profileForm, 'last_name', 'required')"
                                     class="mt-1 text-sm text-red-500">
@@ -101,7 +101,7 @@
                                     Tipo de documento<span class="text-red-500">*</span>
                                 </label>
                                 <select id="documentType" formControlName="documentType"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'documentType')">
                                     <option *ngFor="let type of typeDocuments" [value]="type.value">{{ type.label }}
                                     </option>
@@ -117,7 +117,7 @@
                                     {{ getDocumentLabel() }}<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="documentNumber" formControlName="documentNumber"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'documentNumber')"
                                     (input)="limitDigits('documentNumber', getDocumentMaxLength())">
                                 <div *ngIf="hasError(profileForm, 'documentNumber', 'required')"
@@ -144,7 +144,7 @@
                                     Fecha de nacimiento<span class="text-red-500">*</span>
                                 </label>
                                 <input type="date" id="birth_date" formControlName="birth_date"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'birth_date')">
                                 <div *ngIf="hasError(profileForm, 'birth_date', 'required')"
                                     class="mt-1 text-sm text-red-500">
@@ -159,7 +159,7 @@
                                     Teléfono<span class="text-red-500">*</span>
                                 </label>
                                 <input type="tel" id="phone" formControlName="phone"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(profileForm, 'phone')"
                                     (input)="limitDigits('phone', 9)">
                                 <div *ngIf="hasError(profileForm, 'phone', 'required')"
@@ -189,11 +189,11 @@
                         <!-- Botones de acción -->
                         <div class="flex justify-end space-x-4 mt-6" *ngIf="isEditingProfile()">
                             <button type="button" (click)="toggleProfileEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]">
+                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
                                 Cancelar
                             </button>
                             <button type="submit"
-                                class="px-6 py-2 bg-[#d07d66] text-white rounded-md hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]"
+                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                                 [disabled]="isLoading() || profileForm.invalid || formSubmitted()">
                                 <span *ngIf="isLoading()">
                                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
@@ -217,7 +217,7 @@
                 <p class="text-gray-600 mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p>
 
                 <!-- Skeleton para sección de dirección mientras se carga -->
-                <div *ngIf="loadingAddress() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="loadingAddress() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
@@ -232,10 +232,10 @@
                 </div>
 
                 <!-- Formulario de dirección -->
-                <div *ngIf="!loadingAddress() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="!loadingAddress() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar dirección</h2>
-                        <button (click)="toggleAddressEdit()" class="text-[#d07d66] hover:text-[#d7816a]"
+                        <button (click)="toggleAddressEdit()" class="text-primary hover:text-primary-hover"
                             [attr.aria-label]="isEditingAddress() ? 'Cancelar edición' : 'Editar dirección'">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -253,7 +253,7 @@
                             </label>
                             <div class="relative">
                                 <input type="text" id="searchAddress" formControlName="searchAddress"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     placeholder="Escribe tu dirección para buscarla">
                                 <div *ngIf="isSearchingAddress()"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -270,7 +270,7 @@
 
                             <!-- Resultados de búsqueda -->
                             <div *ngIf="addressList.length > 0"
-                                class="mt-2 bg-[#f6f6f6] border rounded-md shadow-md max-h-60 overflow-y-auto">
+                                class="mt-2 bg-surface border rounded-md shadow-md max-h-60 overflow-y-auto">
                                 <ul>
                                     <li *ngFor="let address of addressList"
                                         class="p-3 border-b hover:bg-gray-50 cursor-pointer"
@@ -289,7 +289,7 @@
                                     Calle/Avenida/Jiron<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="streetAddress" formControlName="streetAddress"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'streetAddress')">
                                 <div *ngIf="hasError(addressForm, 'streetAddress', 'required')"
                                     class="mt-1 text-sm text-red-500">
@@ -307,7 +307,7 @@
                                     N°/Mz/Lt<span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="number" formControlName="number"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'number')"
                                     (input)="limitDigits('number', 20)">
                                 <div *ngIf="hasError(addressForm, 'number', 'required')"
@@ -326,7 +326,7 @@
                                     Departamento<span class="text-red-500">*</span>
                                 </label>
                                 <select id="department" formControlName="department"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'department')"
                                     (change)="selectDepartment($event)">
                                     <option value="">Seleccione un departamento</option>
@@ -347,7 +347,7 @@
                                     Provincia<span class="text-red-500">*</span>
                                 </label>
                                 <select id="province" formControlName="province"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'province')"
                                     (change)="selectProvince($event)">
                                     <option value="">Seleccione una provincia</option>
@@ -367,7 +367,7 @@
                                     Distrito<span class="text-red-500">*</span>
                                 </label>
                                 <select id="district" formControlName="district"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'district')"
                                     (change)="selectDistrict($event)">
                                     <option value="">Seleccione un distrito</option>
@@ -387,7 +387,7 @@
                                     Código Postal
                                 </label>
                                 <input type="text" id="postalCode" formControlName="postalCode"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'postalCode')"
                                     (input)="limitDigits('postalCode', 5)">
                                 <div *ngIf="hasError(addressForm, 'postalCode', 'pattern')"
@@ -402,7 +402,7 @@
                                     Referencia<span class="text-red-500">*</span>
                                 </label>
                                 <textarea id="reference" formControlName="reference" rows="3"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(addressForm, 'reference')"></textarea>
                                 <div *ngIf="hasError(addressForm, 'reference', 'required')"
                                     class="mt-1 text-sm text-red-500">
@@ -422,11 +422,11 @@
                         <!-- Botones de acción -->
                         <div class="flex justify-end space-x-4 mt-6">
                             <button type="button" (click)="toggleAddressEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]">
+                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
                                 Cancelar
                             </button>
                             <button type="submit"
-                                class="px-6 py-2 bg-[#d07d66] text-white rounded-md hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]"
+                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                                 [disabled]="isSavingAddress() || addressForm.invalid">
                                 <span *ngIf="isSavingAddress()">
                                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
@@ -479,7 +479,7 @@
                 <p class="text-gray-600 mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p>
 
                 <!-- Skeleton para sección de contraseña mientras se carga el perfil -->
-                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
@@ -488,10 +488,10 @@
                 </div>
 
                 <!-- Formulario de contraseña -->
-                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-[#f6f6f6] rounded-lg shadow-md p-6 mb-8">
+                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar contraseña</h2>
-                        <button (click)="togglePasswordEdit()" class="text-[#d07d66] hover:text-[#d7816a]"
+                        <button (click)="togglePasswordEdit()" class="text-primary hover:text-primary-hover"
                             [attr.aria-label]="isEditingPassword() ? 'Cancelar edición' : 'Editar contraseña'">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -510,7 +510,7 @@
                             <div class="relative">
                                 <input [type]="showCurrentPassword() ? 'text' : 'password'" id="current_password"
                                     formControlName="current_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(passwordForm, 'current_password')">
                                 <button type="button" (click)="togglePasswordVisibility('current')"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
@@ -542,7 +542,7 @@
                             <div class="relative">
                                 <input [type]="showNewPassword() ? 'text' : 'password'" id="new_password"
                                     formControlName="new_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(passwordForm, 'new_password')">
                                 <button type="button" (click)="togglePasswordVisibility('new')"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
@@ -578,7 +578,7 @@
                             <div class="relative">
                                 <input [type]="showConfirmPassword() ? 'text' : 'password'" id="confirm_password"
                                     formControlName="confirm_password"
-                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#d89785]"
+                                    class="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
                                     [class.border-red-500]="hasError(passwordForm, 'confirm_password') || getPasswordMatchError()">
                                 <button type="button" (click)="togglePasswordVisibility('confirm')"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
@@ -608,11 +608,11 @@
                         <!-- Botones de acción -->
                         <div class="flex justify-end space-x-4 mt-6" *ngIf="isEditingPassword()">
                             <button type="button" (click)="togglePasswordEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]">
+                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
                                 Cancelar
                             </button>
                             <button type="submit"
-                                class="px-6 py-2 bg-[#d07d66] text-white rounded-md hover:bg-[#d7816a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d89785]"
+                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                                 [disabled]="loadingPassword() || passwordForm.invalid || formSubmitted() || getPasswordMatchError()">
                                 <span *ngIf="loadingPassword()">
                                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"

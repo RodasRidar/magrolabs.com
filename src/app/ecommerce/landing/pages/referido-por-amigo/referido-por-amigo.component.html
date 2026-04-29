@@ -6,14 +6,14 @@
             <div class="max-w-xl max-lg:max-w-sm">
                 <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                     @if (isRefered) {
-                    <strong class="text-[#d07d66] font-bold ">{{name}}</strong> te invita a probar la {{ENV.campanaPrimeraCreatina.textos.heroOferta}}!
+                    <strong class="text-primary font-bold ">{{name}}</strong> te invita a probar la {{ENV.campanaPrimeraCreatina.textos.heroOferta}}!
                     }
                     @else{
                     Te invitamos a probar una creatina.
                     }
                 </h1>
                 <p class="mt-4 text-base text-gray-700">
-                    ¡Recibes <strong class="text-[#d07d66] font-extrabold">{{ENV.campanaPrimeraCreatina.textos.heroOferta}} y
+                    ¡Recibes <strong class="text-primary font-extrabold">{{ENV.campanaPrimeraCreatina.textos.heroOferta}} y
                         {{ENV.creditoRegaloPorCompraMes}} de Magropuntos para compras</strong>!
                     Regístrate a continuación para una
                     suscripción. Durante tu período de prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días 
@@ -200,7 +200,7 @@
         </div>
         <div class="text-center">
             <a [routerLink]="'/productos/creatinas/creatina-monohidratada-250-gr'" [fragment]="'reviews'"
-                class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                class="text-primary hover:text-primary-hover w-fit hover:underline">
                 Mira todas las reseñas →
             </a>
         </div>

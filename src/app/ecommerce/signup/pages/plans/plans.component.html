@@ -35,7 +35,7 @@
                     </div>
                     <a href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
                         target="_blank"
-                        class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
+                        class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline">
                         ({{reviewStats.totalReviews}} reseñas)
                     </a>
                 </div>
@@ -57,7 +57,7 @@
                         <p class="text-lg text-gray-900 sm:text-xl ml-2">{{ENV.precioCreatinaSubscription | currency :
                             'S/'}}</p>
                         <span
-                            class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
+                            class="ml-2 px-3 py-1 bg-primary text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
                     </div>
                     }
                     @if(isSelectOnePurchase) {
@@ -159,7 +159,7 @@
                                     </span>
 
                                     <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
-                                    <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
+                                    <div class="p-[0.35rem]  bg-primary rounded-2xl">
                                         <p class="max-lg:text-[10px] text-xs text-white font-extralight">Ahorra
                                             {{ENV.creatina2025Descuento}}</p>
                                     </div>
@@ -385,7 +385,7 @@
 
                 <div class="hidden max-sm:fixed max-sm:-bottom-[10px] max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button"
-                        class=" inline-flex w-full items-center justify-center px-4 pb-5 pt-[10px] text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                        class=" inline-flex w-full items-center justify-center px-4 pb-5 pt-[10px] text-lg font-medium text-white bg-primary hover:bg-primary-hover">
                         Continuar →
                     </button>
                 </div>

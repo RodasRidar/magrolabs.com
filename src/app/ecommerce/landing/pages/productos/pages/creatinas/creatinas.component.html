@@ -51,7 +51,7 @@
 
                         <button id="tabs-2-tab-1" (click)="selectTap(1)"
                             class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 1" aria-controls="tabs-2-panel-1" role="tab"
+                            [class.ring-primary]="tapSelected === 1" aria-controls="tabs-2-panel-1" role="tab"
                             type="button">
                             <span class="sr-only">Vista frontal</span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
@@ -59,14 +59,14 @@
                                     class="w-full h-full object-center object-cover select-none" height="96" width="96"
                                     lazyLoad>
                             </span>
-                            <span [class.ring-[#d07d66]]="tapSelected === 1"
+                            <span [class.ring-primary]="tapSelected === 1"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button>
 
                         <button id="tabs-2-tab-2" (click)="selectTap(2)"
                             class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 2" aria-controls="tabs-2-panel-2" role="tab"
+                            [class.ring-primary]="tapSelected === 2" aria-controls="tabs-2-panel-2" role="tab"
                             type="button">
                             <span class="sr-only">Vista trasera</span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
@@ -74,14 +74,14 @@
                                     class="w-full h-full object-center object-cover select-none" height="96" width="96"
                                     lazyLoad>
                             </span>
-                            <span [class.ring-[#d07d66]]="tapSelected === 2"
+                            <span [class.ring-primary]="tapSelected === 2"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button>
 
                         <!-- <button id="tabs-2-tab-3" (click)="selectTap(3)"
                             class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 3"
+                            [class.ring-primary]="tapSelected === 3"
                             aria-controls="tabs-2-panel-3" role="tab" type="button">
                             <span class="sr-only">Modelo 3D</span>
                             <span class="absolute inset-0 rounded-md overflow-hidden">
@@ -89,7 +89,7 @@
                                     class="w-full h-full object-center object-contain p-8 select-none" height="96" width="96" lazyLoad>
                             </span>
                             <span
-                                [class.ring-[#d07d66]]="tapSelected === 3"
+                                [class.ring-primary]="tapSelected === 3"
                                 class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
                                 aria-hidden="true"></span>
                         </button> -->
@@ -118,7 +118,7 @@
                     <!-- Indicadores de carrusel -->
                     <div class="flex justify-center gap-2 mt-4">
                         <button *ngFor="let _ of [1,2]; let i = index" (click)="scrollToImage(i)"
-                            [class.bg-[#d07d66]]="currentImageIndex === i" [class.bg-gray-300]="currentImageIndex !== i"
+                            [class.bg-primary]="currentImageIndex === i" [class.bg-gray-300]="currentImageIndex !== i"
                             class="w-2 h-2 rounded-full transition-colors duration-200"
                             [attr.aria-label]="'Ver imagen ' + (i + 1)">
                         </button>
@@ -208,7 +208,7 @@
                                         <p class="sr-only">{{reviewStats.averageRating}} out of 5 stars</p>
                                     </div>
                                     <a [routerLink]="'/productos/creatinas/'+slug" [fragment]="'reviews'"
-                                        class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
+                                        class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline">
                                         ({{reviewStats.totalReviews}} reseñas)</a>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@
                                         <div class="flex  items-center font-extralight">
                                             <p class="text-base text-gray-500 sm:text-lg line-through">
                                                 {{ENV.creatinaFreePrecio | currency : 'S/'}}</p>
-                                            <p class="text-lg text-[#d7816a] sm:text-xl ml-2">
+                                            <p class="text-lg text-primary-hover sm:text-xl ml-2">
                                                 {{ENV.campanaPrimeraCreatina.textos.ofertaCorta}}
                                             </p>
                                             <span
@@ -238,7 +238,7 @@
                                         <div
                                             class="mt-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-3 max-w-md">
                                             <p class="text-sm text-gray-700 leading-relaxed">
-                                                <span class="font-semibold text-[#d07d66]">Creatina
+                                                <span class="font-semibold text-primary">Creatina
                                                     {{ENV.campanaPrimeraCreatina.gramos}}gr para tus
                                                     {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de
                                                     prueba.</span>
@@ -257,7 +257,7 @@
                                         <p class="text-lg text-gray-900 sm:text-xl ml-2">{{productPriceSubscription |
                                             currency : 'S/'}}</p>
                                         <span
-                                            class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
+                                            class="ml-2 px-3 py-1 bg-primary text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
                                     </div>
                                     }
                                     @if(isSelectOnePurchase()) {
@@ -410,7 +410,7 @@
                                                     </span>
 
                                                     <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
-                                                    <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
+                                                    <div class="p-[0.35rem]  bg-primary rounded-2xl">
                                                         <p
                                                             class="max-lg:text-[10px] text-xs text-white font-extralight">
                                                             Ahorra {{ENV.creatina2025Descuento}}</p>
@@ -594,7 +594,7 @@
                                 <div
                                     class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="irRegistro()" type="button" [disabled]="isButtonDisabled()"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Lo quiero →'}}
                                     </button>
                                 </div>
@@ -607,7 +607,7 @@
                                 <div
                                     class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button (click)="agregarCarrito()" type="button" [disabled]="isButtonDisabled()"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                                         {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
                                     </button>
                                 </div>
@@ -622,7 +622,7 @@
                                 <div
                                     class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                                     <button routerLink="/registro" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
+                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover">
                                         Lo quiero →
                                     </button>
                                 </div>
@@ -895,7 +895,7 @@
                                             <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
 
                                             <div [style.width.%]="reviewStats.percentages[5]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
+                                                class="absolute inset-y-0 bg-primary border border-primary rounded-full">
                                             </div>
                                         </div>
                                     </div>
@@ -920,7 +920,7 @@
                                             <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
 
                                             <div [style.width.%]="reviewStats.percentages[4]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
+                                                class="absolute inset-y-0 bg-primary border border-primary rounded-full">
                                             </div>
                                         </div>
                                     </div>
@@ -944,7 +944,7 @@
                                             <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
 
                                             <div [style.width.%]="reviewStats.percentages[3]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
+                                                class="absolute inset-y-0 bg-primary border border-primary rounded-full">
                                             </div>
                                         </div>
                                     </div>
@@ -968,7 +968,7 @@
                                             <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
 
                                             <div [style.width.%]="reviewStats.percentages[2]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
+                                                class="absolute inset-y-0 bg-primary border border-primary rounded-full">
                                             </div>
                                         </div>
                                     </div>
@@ -992,7 +992,7 @@
                                             <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
 
                                             <div [style.width.%]="reviewStats.percentages[1]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
+                                                class="absolute inset-y-0 bg-primary border border-primary rounded-full">
                                             </div>
                                         </div>
                                     </div>
@@ -1119,7 +1119,7 @@
                                     Tu reseña *
                                 </label>
                                 <textarea id="review-comment" formControlName="comment" rows="4"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm resize-none"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
                                     [class.border-red-500]="!isCommentValid && reviewForm.get('comment')?.touched"
                                     placeholder="Comparte tu experiencia con este producto..."></textarea>
 

@@ -1,3 +1,3 @@
 .activate {
-    color: #d7816a !important;
+    color: theme(colors.primary.hover) !important;
 }

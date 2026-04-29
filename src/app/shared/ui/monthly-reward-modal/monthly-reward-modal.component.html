@@ -33,7 +33,7 @@
                              alt="Magropuntos" 
                              class="w-12 h-12 select-none">
                         <div class="text-center">
-                            <p class="text-5xl font-extrabold bg-gradient-to-r from-[#1f1b19] to-[#d07d66] bg-clip-text text-transparent">
+                            <p class="text-5xl font-extrabold bg-gradient-to-r from-[#1f1b19] to-primary bg-clip-text text-transparent">
                                 +{{ modalService.rewardData()?.points || ENV.creditoRegaloPorCompraMes }}
                             </p>
                             <p class="text-sm text-gray-600 font-medium mt-1">Magropuntos</p>
@@ -48,9 +48,9 @@
                 </div>
 
                 <!-- Información adicional -->
-                <div class="bg-gradient-to-r from-[#f6f6f6] to-gray-100 rounded-lg p-4 mb-6">
+                <div class="bg-gradient-to-r from-surface to-gray-100 rounded-lg p-4 mb-6">
                     <div class="flex items-start">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d07d66] mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                         </svg>
                         <div>
@@ -68,12 +68,12 @@
                 <div class="flex flex-col sm:flex-row gap-3">
                     <button type="button"
                             (click)="closeModal()"
-                            class="flex-1 inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] transition-colors duration-200">
+                            class="flex-1 inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200">
                         Cerrar
                     </button>
                     <button type="button"
                             (click)="navigateToWebshop()"
-                            class="flex-1 inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-[#d07d66] to-[#d7816a] hover:from-[#c26e5a] hover:to-[#c97560] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] shadow-lg transition-all duration-200 transform hover:scale-105">
+                            class="flex-1 inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary to-primary-hover hover:from-primary-dark hover:to-[#c97560] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-lg transition-all duration-200 transform hover:scale-105">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
                         </svg>
@@ -85,7 +85,7 @@
                 <div class="mt-4 text-center">
                     <button type="button"
                             (click)="navigateToCredits()"
-                            class="text-sm text-[#d07d66] hover:text-[#d7816a] font-medium hover:underline transition-colors duration-200">
+                            class="text-sm text-primary hover:text-primary-hover font-medium hover:underline transition-colors duration-200">
                         Ver mi historial de Magropuntos →
                     </button>
                 </div>

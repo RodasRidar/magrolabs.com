@@ -1,6 +1,6 @@
 <!--ping Barra de Urgencia - Minimalista -->
 @if (isVisible) {
-<div class="bg-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
+<div class="bg-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-primary/20">
     <!--ping Contenido -->
     <div class="w-full max-w-7xl px-2 sm:px-6">
         <!-- Wrapper para desktop: centrado normal -->
@@ -11,9 +11,9 @@
                 <div class="flex items-center gap-2">
                     <span class="text-sm sm:text-base text-gray-300">
                         @if (isLastChance) {
-                             Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
+                             Ultima oportunidad: <span class="text-primary font-semibold">{{getOfferText()}} </span>
                         } @else {
-                            <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
+                            <span class="text-primary font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
                         }
                     </span>
                 </div>
@@ -25,11 +25,11 @@
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
                     <div class="flex items-center gap-1 font-mono text-sm font-semibold">
-                        <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                        <span class="text-primary">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
                         <span class="text-gray-600">:</span>
-                        <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                        <span class="text-primary">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
                         <span class="text-gray-600">:</span>
-                        <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                        <span class="text-primary">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
                     </div>
                 </div>
             </div>
@@ -43,9 +43,9 @@
                     <div class="flex items-center gap-2">
                         <span class="text-sm text-gray-300">
                             @if (isLastChance) {
-                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
+                                 Ultima oportunidad: <span class="text-primary font-semibold">{{getOfferText()}} </span>
                             } @else {
-                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}} 
+                                <span class="text-primary font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}} 
                             }
                         </span>
                     </div>
@@ -55,11 +55,11 @@
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
                         <div class="flex items-center gap-1 font-mono text-sm font-semibold">
-                            <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                            <span class="text-primary">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
                             <span class="text-gray-600">:</span>
-                            <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                            <span class="text-primary">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
                             <span class="text-gray-600">:</span>
-                            <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            <span class="text-primary">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
                         </div>
                     </div>
                 </div>
@@ -69,9 +69,9 @@
                     <div class="flex items-center gap-2">
                         <span class="text-sm text-gray-300">
                             @if (isLastChance) {
-                                 Ultima oportunidad: <span class="text-[#d07d66] font-semibold">{{getOfferText()}} </span>
+                                 Ultima oportunidad: <span class="text-primary font-semibold">{{getOfferText()}} </span>
                             } @else {
-                                <span class="text-[#d07d66] font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
+                                <span class="text-primary font-semibold">Oferta por tiempo limitado. </span> {{getOfferText()}}
                             }
                         </span>
                     </div>
@@ -81,11 +81,11 @@
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-gray-400 uppercase tracking-wide">Termina en</span>
                         <div class="flex items-center gap-1 font-mono text-sm font-semibold">
-                            <span class="text-[#d07d66]">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
+                            <span class="text-primary">{{ timeLeft.hours.toString().padStart(2, '0') }}h</span>
                             <span class="text-gray-600">:</span>
-                            <span class="text-[#d07d66]">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
+                            <span class="text-primary">{{ timeLeft.minutes.toString().padStart(2, '0') }}m</span>
                             <span class="text-gray-600">:</span>
-                            <span class="text-[#d07d66]">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
+                            <span class="text-primary">{{ timeLeft.seconds.toString().padStart(2, '0') }}s</span>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
 </div>
 } @else {
 <!--ping Barra de Envío - Minimalista -->
-<div class="bg-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-[#d07d66]/20">
+<div class="bg-black h-[50px] flex items-center justify-center text-white overflow-hidden fixed top-0 left-0 right-0 z-40 border-b border-primary/20">
     <!--ping Contenido -->
     <div class="w-full max-w-7xl px-4 sm:px-6">
         <div class="flex items-center justify-center">
@@ -104,7 +104,7 @@
                 <!--ping Envío Express -->
                 <div class="flex items-center gap-2">
                     <span class="text-sm sm:text-base text-gray-300">
-                        Envío <span class="text-[#d07d66] font-semibold">Express 24h</span>
+                        Envío <span class="text-primary font-semibold">Express 24h</span>
                     </span>
                 </div>
 
@@ -114,7 +114,7 @@
                 <!--ping Envío gratis -->
                 <div class="flex items-center gap-2">
                     <span class="text-sm sm:text-base text-gray-300">
-                        <span class="text-[#d07d66] font-semibold">Envío gratis</span> a Lima Metropolitana
+                        <span class="text-primary font-semibold">Envío gratis</span> a Lima Metropolitana
                     </span>
                 </div>
             </div>

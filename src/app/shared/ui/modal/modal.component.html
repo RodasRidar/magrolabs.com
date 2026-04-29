@@ -25,7 +25,7 @@
                 ¡Mientras sigas siendo miembro, ahorras para tus artículos favoritos!
               </p>
             </div>
-            <div class="grid  grid-cols-1 gap-x-4 gap-y-4 bg-[#f6f6f6] p-2">
+            <div class="grid  grid-cols-1 gap-x-4 gap-y-4 bg-surface p-2">
               <span class="text-base text-left text-gray-900 font-extrabold mt-2">
                 Así es como funciona:
               </span>
@@ -63,13 +63,13 @@
                 <div class="col-span-8">
                   <div class="mt-2">
                     <input type="text" [value]="urlShared" readonly disabled
-                      class=" text-sm  block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66]">
+                      class=" text-sm  block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary">
                   </div>
                 </div>
 
                 <div class="col-span-2 mt-2">
                   <button type="button" (click)="copyShareUrl()"
-                    class="text-sm rounded-s-none rounded-md p-2 inline-flex items-center justify-center px-4 py-2  text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                    class="text-sm rounded-s-none rounded-md p-2 inline-flex items-center justify-center px-4 py-2  text-white bg-primary hover:bg-primary-hover disabled:bg-indigo-400 disabled:cursor-not-allowed">
                     
                     <span class="max-sm:hidden">
                       Copiar

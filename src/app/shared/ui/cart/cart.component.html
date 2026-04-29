@@ -41,7 +41,7 @@
                       <div>
                         <div class="flex justify-between font-light text-sm text-gray-900 text-pretty mb-2">
                           
-                            <a [routerLink]="['/productos/creatinas',item.product.slug]" routerLinkActive="router-link-active" class="max-w-[70%] hover:underline hover:text-[#d7816a]">
+                            <a [routerLink]="['/productos/creatinas',item.product.slug]" routerLinkActive="router-link-active" class="max-w-[70%] hover:underline hover:text-primary-hover">
                               {{ item.product.name.trim() }}
                             </a>
                           @if (item.product.is_on_sale && item.product.discountPercentage) {

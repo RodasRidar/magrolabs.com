@@ -36,7 +36,7 @@
                                     <input type="text" name="first-name" id="first-name" autocomplete="given-name"
                                         formControlName="firtName"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6">
 
                                 </div>
                                 <div class="p-2">
@@ -56,7 +56,7 @@
                                     <input type="text" name="last-name" id="last-name" autocomplete="family-name"
                                         formControlName="lastName"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6">
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('lastName')) {
@@ -79,9 +79,9 @@
                                     <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
                                         autocomplete="tel"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
-                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
+                                        class="appearance-none w-full p-2.5 outline-none focus:border-primary
                                          block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
-                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
+                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                                         formControlName="cellphone" />
                                 </div>
                                 <div class="p-2">
@@ -106,7 +106,7 @@
                                 <div class="mt-2 flex items-center">
                                     <div class="flex items-center">
                                         <select formControlName="typeDocument"
-                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-[#d07d66]">
+                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-primary">
                                             <option value="DNI">DNI</option>
                                             <option value="CE">Carnet Ext.</option>
                                             <option value="PASSPORT">Pasaporte</option>
@@ -115,9 +115,9 @@
                                     <input [type]="form.get('typeDocument')?.value == 'DNI' ? 'number' : 'text'"
                                         placeholder="87654321" autocomplete="identity-card-number"
                                         (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
-                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
+                                        class="appearance-none w-full p-2.5 outline-none focus:border-primary
                                          block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
-                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
+                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
                                         formControlName="nroDocument" />
                                 </div>
@@ -149,7 +149,7 @@
                                     <input formControlName="email" id="email" name="email" type="email"
                                         autocomplete="email" placeholder="tu@example.com"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6">
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('email') || hasValidatorError('email')) {
@@ -177,7 +177,7 @@
                                 <div class="mt-2">
                                     <input formControlName="password" name="password" type="password"
                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
+                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6">
                                 </div>
                                 <div class="p-2">
                                     @if(hasRequiredError('password')) {
@@ -222,11 +222,11 @@
                                         <span [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
                                             class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900 w-fit">Acepto los 
                                             <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>, 
+                                            class="underline cursor-pointer hover:text-primary">Términos y condiciones</a>, 
                                             <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la 
+                                            class="underline cursor-pointer hover:text-primary">Términos de uso</a> y la 
                                             <a href="https://magrolabs.com/politicas/privacidad" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
+                                            class="underline cursor-pointer hover:text-primary">Declaración de privacidad</a>
                                             {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')? '*' : ''}}</span>
                                     </label>
                                     @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
@@ -246,7 +246,7 @@
                 </div>
                 <div class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button" [disabled]="isProcessing || !form.valid"
-                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                         Continuar →
                     </button>
                 </div>

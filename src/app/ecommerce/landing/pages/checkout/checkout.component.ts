@@ -24,8 +24,9 @@ import { OrderService } from '../../../../shared/services/order.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { AddressApiService } from '../../../../shared/services/address-api.service';
 import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
-import { CreateOrderRequest, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
-import { UpdateUserRequest } from '../../../../shared/interfaces/user.interfaces';
+import { CreateOrderRequest, PaymentMethod } from '../../../../shared/interfaces/order.interfaces';
+import { CheckoutRequest } from '../../../../shared/interfaces/checkout.interfaces';
+import { CheckoutService } from '../../../../shared/services/checkout.service';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
@@ -81,6 +82,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private _orderService = inject(OrderService)
   private _authService = inject(AuthService)
   private _addressApiService = inject(AddressApiService)
+  private _checkoutService = inject(CheckoutService)
   //
   private _addressService = inject(AddressService)
   addressList: PlaceAPI[] = [];
@@ -820,86 +822,82 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.processPayment();
   }
 
+  /**
+   * Procesa el checkout en una sola llamada al backend (POST /api/v1/checkout).
+   *
+   * El backend ejecuta usuario + dirección + orden en una transacción Prisma
+   * y luego inicia el pago en Flow. Si Flow falla post-commit, el backend
+   * soft-deletea la orden y devuelve 502; aquí lo manejamos como error genérico.
+   *
+   * El interceptor de auth agrega el JWT cuando hay sesión iniciada — el
+   * backend infiere "cliente nuevo" vs "cliente existente" según haya o no
+   * Authorization header.
+   */
   private processPayment(): void {
-    const userId = this._summaryService.getSummary()?.userData?.id;
-
-    if (!userId) {
-      this.createCustomerAndCreatePayment();
-    } else {
-      this.updateCustomerAndCreatePayment(userId);
-    }
-  }
-
-  private createCustomerAndCreatePayment(): void {
     this.saveUserDataForOnePurchase();
-    const userRequest = this.createUserRequest();
 
-    //Crear usuario
-    this._authService.register(userRequest).pipe(
-      tap((response) => {
-        // Actualizar userData inmediatamente después de crear el usuario
+    const summary = this._summaryService.getSummary();
+    const knownUserId = summary?.userData?.id;
+    const knownAddressId = summary?.address?.id;
+
+    const userRequest = this.createUserRequest();
+    const addressRequest = this.createAddressRequest();
+    const orderRequest = this.createOrderRequest();
+    const paymentRequest = this.createPaymentRequest();
+
+    const checkoutRequest: CheckoutRequest = {
+      user: {
+        email: userRequest.email,
+        password: userRequest.password,
+        first_name: userRequest.first_name,
+        last_name: userRequest.last_name,
+        phone: userRequest.phone,
+        documentNumber: userRequest.documentNumber,
+        documentType: userRequest.documentType,
+        isSignUpAcepted: userRequest.isSignUpAcepted,
+      },
+      address: {
+        ...addressRequest,
+        // Solo enviamos id de dirección si el usuario ya estaba registrado
+        // (el backend lo usa si además recibe JWT; si no, ignora y crea una nueva).
+        ...(knownUserId && knownAddressId ? { id: knownAddressId } : {}),
+      },
+      order: {
+        items: orderRequest.orderItems,
+        discount: orderRequest.discount,
+        code_discount: orderRequest.code_discount,
+        shipping_cost: orderRequest.shipping_cost,
+      },
+      payment: {
+        paymentMethod: paymentRequest.paymentMethod,
+        subject: paymentRequest.subject,
+        urlReturn: paymentRequest.urlReturn,
+        currency: paymentRequest.currency,
+      },
+    };
+
+    this._checkoutService.processCheckout(checkoutRequest).pipe(
+      finalize(() => {
+        this.isProcessing.set(false);
+      })
+    ).subscribe({
+      next: (response) => {
+        // Sincronizar el summary local con el resultado del backend
         const userData = this._summaryService.getSummary()?.userData;
         if (userData) {
           this._summaryService.setUserData({
             ...userData,
             id: response.data.user.id,
-            referralCode: response.data.user.referralCode
+            orderId: response.data.order.id,
           });
         }
-      }),
-      //Crear direccion
-      switchMap((response) => {
-        return this._addressApiService.createAddress(this.createAddressRequest()).pipe(
-          tap(addressResponse => {
-            // Actualizar addressData inmediatamente después de crear la dirección
-            const addressData = this._summaryService.getSummary()?.address;
-            if (addressData) {
-              this._summaryService.setAddress({
-                ...addressData,
-                id: addressResponse.data.address.id,
-              });
-            }
-          })
-        );
-      }),
-      //Actualizar direccion de usuario
-      switchMap(addressResponse => {
-        const addressId = addressResponse.data.address.id;
-        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-        return this._userService.updateUser(userId, { address_id: addressId });
-      }),
-      //Crear Orden de compra
-      switchMap(() => {
-        return this._orderService.createOrder(this.createOrderRequest()).pipe(
-          tap(orderResponse => {
-            // Actualizar userData con el orderId
-            const userData = this._summaryService.getSummary()?.userData;
-            if (userData) {
-              this._summaryService.setUserData({
-                ...userData,
-                orderId: orderResponse.data.order.id,
-              });
-            }
-          })
-        );
-      }),
-      //Crear pago en flow
-      switchMap((orderResponse) => {
-        let createPaymentRequest = this.createPaymentRequest();
-        createPaymentRequest.commerceOrder = orderResponse.data.order.id;
-        return this._flowService.createPayment(createPaymentRequest);
-      }),
-      finalize(() => {
-        this.isProcessing.set(false);
-      })
-    ).subscribe({
-      next: (paymentResponse) => {
-        this.allowNavigation.set(true); // Permitir navegación al procesar el pago exitosamente
+
+        this.allowNavigation.set(true);
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
-        window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
+        window.location.href = response.data.payment.url + '?token=' + response.data.payment.token;
       },
       error: (err) => {
-        console.error('Error creating payment: ', err);
+        console.error('Error en checkout: ', err);
         this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
         this.handleCustomerError(err);
       }
@@ -990,126 +988,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
 
     return registerRequest;
-  }
-
-  private updateCustomerAndCreatePayment(userId: string): void {
-    this.saveUserDataForOnePurchase();
-    const updateUserRequest: UpdateUserRequest = {
-      first_name: this.form.get('firtName')?.value ?? '',
-      last_name: this.form.get('lastName')?.value ?? '',
-      phone: this.form.get('cellphone')?.value ?? '',
-      documentNumber: this.form.get('nroDocument')?.value ?? '',
-      documentType: this.form.get('typeDocument')?.value ?? 'DNI',
-      email: this.form.get('email')?.value ?? '',
-      isSignUpAcepted: this.form.get('isSignUpAcepted')?.value ?? false,
-    }
-
-    //Actualizar usuario
-    this._userService.updateUser(userId, updateUserRequest).pipe(
-      tap((response) => {
-        // Actualizar userData inmediatamente después de actualizar el usuario
-        const userData = this._summaryService.getSummary()?.userData;
-        if (userData) {
-          this._summaryService.setUserData({
-            ...userData,
-            id: response.id,
-          });
-        }
-      }),
-      //Crear o actualizar direccion
-      switchMap(() => {
-        const addressId = this._summaryService.getSummary()?.address?.id;
-        
-        if (addressId) {
-          // Si existe ID, actualizar dirección existente
-          return this._addressApiService.updateAddress(
-            addressId,
-            this.createAddressRequest()
-          ).pipe(
-            tap(response => {
-              // Actualizar addressData inmediatamente después de actualizar la dirección
-              const addressData = this._summaryService.getSummary()?.address;
-              if (addressData) {
-                this._summaryService.setAddress({
-                  ...addressData,
-                  id: response.data.address.id,
-                });
-              }
-            })
-          );
-        } else {
-          // Si no existe ID, crear nueva dirección
-          return this._addressApiService.createAddress(this.createAddressRequest()).pipe(
-            tap(addressResponse => {
-              // Actualizar addressData inmediatamente después de crear la dirección
-              const addressData = this._summaryService.getSummary()?.address;
-              if (addressData) {
-                this._summaryService.setAddress({
-                  ...addressData,
-                  id: addressResponse.data.address.id,
-                });
-              }
-            })
-          );
-        }
-      }),
-      //Actualizar o crear orden
-      switchMap(() => {
-        const orderId = this._summaryService.getSummary()?.userData?.orderId;
-        
-        if (orderId) {
-          // Si existe orderId, actualizar orden existente
-          const orderDetails = this.createOrderDetailsWithPaymentMethod();
-          return this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
-            tap(orderResponse => {
-              // Actualizar userData con el orderId
-              const userData = this._summaryService.getSummary()?.userData;
-              if (userData) {
-                this._summaryService.setUserData({
-                  ...userData,
-                  orderId: orderResponse.data.order.id,
-                });
-              }
-            })
-          );
-        } else {
-          // Si no existe orderId, crear nueva orden
-          return this._orderService.createOrder(this.createOrderRequest()).pipe(
-            tap(orderResponse => {
-              // Actualizar userData con el orderId
-              const userData = this._summaryService.getSummary()?.userData;
-              if (userData) {
-                this._summaryService.setUserData({
-                  ...userData,
-                  orderId: orderResponse.data.order.id,
-                });
-              }
-            })
-          );
-        }
-      }),
-      //Crear pago en flow
-      switchMap((orderResponse) => {
-        let createPaymentRequest = this.createPaymentRequest();
-        createPaymentRequest.commerceOrder = orderResponse.data.order.id;
-        return this._flowService.createPayment(createPaymentRequest);
-      }),
-      finalize(() => {
-        this.isProcessing.set(false);
-      })
-    ).subscribe({
-      next: (paymentResponse) => {
-        this.allowNavigation.set(true); // Permitir navegación al procesar el pago exitosamente
-        console.log('Summary', this._summaryService.getSummary())
-        this._toastService.success('¡Listo!', 'Datos actualizados correctamente.');
-        window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
-      },
-      error: (err) => {
-        console.error('Error creating payment: ', err);
-        this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
-        this.handleCustomerError(err);
-      }
-    });
   }
 
   private handleCustomerError(err: any): void {
@@ -1399,28 +1277,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       department: this.form.get('department')?.value ?? '',
       reference: this.form.get('reference')?.value ?? '',
     });
-  }
-
-  private createOrderDetailsWithPaymentMethod(): UpdateOrderDetailsRequest {
-    let orderDetails: UpdateOrderDetailsRequest = {
-      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-    };
-
-    switch (this.paymentMethod) {
-      case FlowPaymentMethod.BANK_TRANSFER:
-        orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
-        break;
-      case FlowPaymentMethod.PAGO_EFECTIVO:
-        orderDetails.payment_method = PaymentMethod.PAGO_EFECTIVO;
-        break;
-      case FlowPaymentMethod.YAPE:
-        orderDetails.payment_method = PaymentMethod.YAPE;
-        break;
-      default:
-        orderDetails.payment_method = PaymentMethod.CREDIT_CARD;
-    }
-
-    return orderDetails;
   }
 
     /**

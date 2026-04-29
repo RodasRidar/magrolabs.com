@@ -26,11 +26,12 @@ import { CookieService } from 'ngx-cookie-service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
+import { AlertComponent } from '../../../shared/ui/alert/alert.component';
 
 @Component({
   selector: 'app-suscripcion',
   standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent],
+  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent],
   templateUrl: './suscripcion.component.html',
   styleUrl: './suscripcion.component.css'
 })

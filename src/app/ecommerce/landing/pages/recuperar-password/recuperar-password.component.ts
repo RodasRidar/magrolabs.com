@@ -8,11 +8,12 @@ import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CardComponent } from '../../../../shared/ui/card/card.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 
 @Component({
   selector: 'app-recuperar-password',
   standalone: true,
-  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink, CardComponent],
+  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink, CardComponent, AlertComponent],
   templateUrl: './recuperar-password.component.html',
   styleUrl: './recuperar-password.component.css'
 })

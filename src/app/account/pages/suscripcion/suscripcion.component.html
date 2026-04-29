@@ -801,49 +801,31 @@
                     <!-- Alert para pago rechazado -->
                     @if(isPorActivar()) {
                     @if(isCardModifiedToReprocessPayment()) {
-                    <div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <div class="flex items-center">
-                            <div class="ml-3 flex-1">
-                                <h4 class="text-sm font-medium text-yellow-800">Gracias por actualizar tu método de
-                                    pago!</h4>
-                                <p class="mt-1 text-sm text-yellow-700">
-                                    En unos momentos se procesará tu pago nuevamente y se te notificará por correo :)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <ml-alert type="warning" class="mb-6">
+                        <h4 class="text-sm font-medium text-yellow-800">Gracias por actualizar tu método de pago!</h4>
+                        <p class="mt-1 text-sm text-yellow-700">
+                            En unos momentos se procesará tu pago nuevamente y se te notificará por correo :)
+                        </p>
+                    </ml-alert>
                     }@else {
-                    <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                        clip-rule="evenodd" />
+                    <ml-alert type="error" class="mb-6">
+                        <h4 class="text-sm font-medium text-red-800">Ups! ocurrió un problema con el pago :(</h4>
+                        <p class="mt-1 text-sm text-red-700">
+                            Tu último pago no pudo ser procesado. Por favor, vuelve a intentarlo siguiendo las
+                            instrucciones enviadas a tu correo o cambia tu método de pago.
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <button (click)="changePaymentMethod()" type="button"
+                                class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                 </svg>
-                            </div>
-                            <div class="ml-3 flex-1">
-                                <h4 class="text-sm font-medium text-red-800">Ups! ocurrió un problema con el pago :(
-                                </h4>
-                                <p class="mt-1 text-sm text-red-700">
-                                    Tu último pago no pudo ser procesado. Por favor, vuelve a intentarlo siguiendo las
-                                    instrucciones enviadas a tu correo o cambia tu método de pago.
-                                </p>
-                                <div class="mt-4 flex flex-wrap gap-2">
-                                    <button (click)="changePaymentMethod()" type="button"
-                                        class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                        <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                        </svg>
-                                        Cambiar método de pago
-                                    </button>
-                                </div>
-                            </div>
+                                Cambiar método de pago
+                            </button>
                         </div>
-                    </div>
+                    </ml-alert>
                     }
                     }
 

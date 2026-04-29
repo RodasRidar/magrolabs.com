@@ -403,3 +403,6 @@ dist/*
 .env
 */.DS_Store
 app/.DS_Store
+
+# Agent Tools
+.atl/

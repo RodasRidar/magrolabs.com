@@ -19,7 +19,7 @@
                 <p class="text-gray-600 mb-6">Aquí encontrarás tus datos personales</p>
 
                 <!-- Error en carga de perfil -->
-                <div *ngIf="isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="isProfileError()" padding="md" class="mb-8">
                     <div class="text-center py-8">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-red-500 mb-4" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -33,10 +33,10 @@
                             Intentar nuevamente
                         </button>
                     </div>
-                </div>
+                </ml-card>
 
                 <!-- Skeleton para carga de perfil -->
-                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="loadingProfile() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
@@ -49,10 +49,10 @@
                             <div class="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
                         </div>
                     </div>
-                </div>
+                </ml-card>
 
                 <!-- Formulario de perfil -->
-                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="!loadingProfile() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar Datos Personales</h2>
                         <button (click)="toggleProfileEdit()" class="text-primary hover:text-primary-hover"
@@ -175,14 +175,14 @@
                             </button>
                         </div>
                     </form>
-                </div>
+                </ml-card>
 
                 <!-- Sección de Dirección -->
                 <h1 class="text-2xl font-bold mb-2">Dirección</h1>
                 <p class="text-gray-600 mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p>
 
                 <!-- Skeleton para sección de dirección mientras se carga -->
-                <div *ngIf="loadingAddress() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="loadingAddress() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
@@ -194,10 +194,10 @@
                             <div class="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
                         </div>
                     </div>
-                </div>
+                </ml-card>
 
                 <!-- Formulario de dirección -->
-                <div *ngIf="!loadingAddress() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="!loadingAddress() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar dirección</h2>
                         <button (click)="toggleAddressEdit()" class="text-primary hover:text-primary-hover"
@@ -399,23 +399,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </ml-card>
 
                 <!-- Sección de Contraseña -->
                 <h1 class="text-2xl font-bold mb-2">Contraseña</h1>
                 <p class="text-gray-600 mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p>
 
                 <!-- Skeleton para sección de contraseña mientras se carga el perfil -->
-                <div *ngIf="loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="loadingProfile() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
                         <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
                     </div>
                     <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
-                </div>
+                </ml-card>
 
                 <!-- Formulario de contraseña -->
-                <div *ngIf="!loadingProfile() && !isProfileError()" class="bg-surface rounded-lg shadow-md p-6 mb-8">
+                <ml-card *ngIf="!loadingProfile() && !isProfileError()" padding="md" class="mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Modificar contraseña</h2>
                         <button (click)="togglePasswordEdit()" class="text-primary hover:text-primary-hover"
@@ -486,7 +486,7 @@
                             </button>
                         </div>
                     </form>
-                </div>
+                </ml-card>
             </div>
         </div>
     </div>

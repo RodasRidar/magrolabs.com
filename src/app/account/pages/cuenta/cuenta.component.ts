@@ -21,11 +21,12 @@ import { MonthlyRewardModalService } from '../../../shared/services/monthly-rewa
 import { MonthlyRewardModalComponent } from '../../../shared/ui/monthly-reward-modal/monthly-reward-modal.component';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { CardComponent } from '../../../shared/ui/card/card.component';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })

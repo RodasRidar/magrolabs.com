@@ -11,11 +11,12 @@ import { FlowPaymentMethod, FlowPaymentRequest } from '../../../shared/models/fl
 import { AuthService } from '../../../shared/services/auth.service';
 import { environment } from '../../../../environments/env';
 import { SeoService } from '../../../shared/services/seo.service';
+import { CardComponent } from '../../../shared/ui/card/card.component';
 
 @Component({
   selector: 'app-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent],
+  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent],
   templateUrl: './pedidos.component.html',
 })
 export class PedidosComponent implements OnInit {

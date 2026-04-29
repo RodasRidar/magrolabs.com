@@ -7,11 +7,12 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from './order-summary-item/order-summary-item.component';
+import { CardComponent } from '../../../../shared/ui/card/card.component';
 
 @Component({
   selector: 'app-bolsa',
   standalone: true,
-  imports: [RouterLink, FooterComponent, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe],
+  imports: [RouterLink, FooterComponent, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe, CardComponent],
   templateUrl: './bolsa.component.html'
 })
 export class BolsaComponent {

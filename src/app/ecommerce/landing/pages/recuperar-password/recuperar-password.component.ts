@@ -7,11 +7,12 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { CardComponent } from '../../../../shared/ui/card/card.component';
 
 @Component({
   selector: 'app-recuperar-password',
   standalone: true,
-  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink, CardComponent],
   templateUrl: './recuperar-password.component.html',
   styleUrl: './recuperar-password.component.css'
 })

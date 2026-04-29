@@ -17,7 +17,7 @@
 
     <div class="max-w-7xl sm:mx-auto sm:px-6 lg:px-8 m-4">
         <!-- Sección de explicación -->
-        <div id="ahorra-mas" class="bg-surface overflow-hidden shadow rounded-lg mb-8">
+        <ml-card id="ahorra-mas" class="mb-8">
             <div class="px-4 py-4 sm:p-8 flex flex-col md:flex-row gap-6">
                 <!-- Sección de explicación 
                 <div class="flex-shrink-0">
@@ -33,11 +33,11 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </ml-card>
         <!-- Contenedor horizontal para las dos secciones principales -->
         <div class="flex flex-col lg:flex-row gap-8 mb-8">
             <!-- Sección principal - Crédito disponible -->
-            <div class="bg-surface-alt overflow-hidden shadow rounded-lg flex-1">
+            <ml-card surface="alt" class="flex-1">
                 <div class="px-4 py-4 sm:p-8 flex flex-col md:flex-row justify-between items-center">
                     <div class="flex-1">
                         <h2 class="text-xl font-bold text-gray-900 mb-6">Magropuntos ahorrados:</h2>
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="mt-8 flex flex-col sm:flex-row gap-4">
-                            <ml-link-button routerLink="/loyalty-webshop" target="_blank">
+                            <ml-link-button [routerLink]="'/loyalty-webshop'" target="_blank">
                               Ver Webshop →
                             </ml-link-button>
                             <!-- Enlace para acceder a la sección de ahorro rápido
@@ -71,7 +71,7 @@
                         <img src="/articulos-fit.png" alt="Camisetas apiladas" class="w-32 sm:w-64 h-auto">
                     </div>
                 </div>
-            </div>
+            </ml-card>
 
             <!-- Sección promocional por tiempo limitado -->
             @if (showInstagramPromoCard()) {
@@ -198,7 +198,7 @@
         <!-- Resúmenes: Historial e Invitaciones -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Historial de transacciones -->
-            <div class="bg-surface overflow-hidden shadow rounded-lg">
+            <ml-card>
                 <div class="px-6 py-5 border-b border-gray-300">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">💰 Tu historial de ahorro:</h3>
                      <p class="text-gray-600 mt-2">
@@ -234,10 +234,10 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </ml-card>
 
             <!-- Invitaciones -->
-            <div class="bg-surface overflow-hidden shadow rounded-lg">
+            <ml-card>
                 <div class="px-6 py-5 border-b border-gray-300">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">🔗 Tus invitaciones</h3>
                     <p class="text-gray-600 mt-2">
@@ -289,11 +289,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </ml-card>
         </div>
 
         <!-- FAQ o información adicional si es necesario -->
-        <div class="mt-8 bg-surface overflow-hidden shadow rounded-lg">
+        <ml-card class="mt-8">
             <div class="px-6 py-5 border-b border-gray-300">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">❓ Preguntas frecuentes</h3>
             </div>
@@ -322,6 +322,6 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </ml-card>
     </div>
 </main>

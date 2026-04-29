@@ -15,11 +15,12 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
+import { CardComponent } from '../../../../shared/ui/card/card.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule, InputComponent, PasswordInputComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule, InputComponent, PasswordInputComponent, CardComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

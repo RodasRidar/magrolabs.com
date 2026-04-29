@@ -522,68 +522,11 @@
                                 </div>
                                 }
                                 <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto">
-                                    <!-- Timeline de seguimiento -->
-                                    <div class="relative">
-                                        <!-- Contenido del timeline -->
-                                        <div class="flex items-center justify-between my-2 sm:my-2 relative">
-                                            <!-- Línea horizontal que conecta los círculos -->
-                                            <div class="absolute top-4 left-8 right-0 h-0.5 bg-gray-300 z-0 w-[85.5%]">
-                                            </div>
-                                            <!-- Paso 1: Pedido realizado -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">Preparando</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{preparandoDate}}</p>
-                                            </div>
-                                            <!-- Paso 2: Preparando -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">
-                                                    Enviado</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{enviadoDate}}</p>
-                                            </div>
-                                            <!-- Paso 3: Enviado -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full  border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">
-                                                    Entregado</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{entregadoDate}}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <!-- Disclaimer envío gratis -->
-                                        <div class="flex justify-center items-center mt-3">
-                                            <p class="text-xs text-gray-500 font-light">
-                                                Envíos a todo el Perú (Lima Metropolitana gratis).
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <app-step
+                                        type="delivery-preview"
+                                        [preparandoDate]="preparandoDate"
+                                        [enviadoDate]="enviadoDate"
+                                        [entregadoDate]="entregadoDate" />
                                 </div>
                                 @if(!isFreeCreatine){
                                 @if (isSelectSubscription()) {

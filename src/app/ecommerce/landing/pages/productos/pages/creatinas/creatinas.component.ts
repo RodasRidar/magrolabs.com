@@ -22,11 +22,12 @@ import { forkJoin } from 'rxjs';
 import { OrderStatus } from '../../../../../../shared/interfaces/order.interfaces';
 import { TiktokAnalyticsService } from '../../../../../../shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from '../../../../../../shared/services/meta-analytics.service';
+import { StepComponent } from '../../../../../signup/components/step/step.component';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent],
+  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })

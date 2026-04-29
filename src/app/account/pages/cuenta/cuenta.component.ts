@@ -25,11 +25,12 @@ import { CardComponent } from '../../../shared/ui/card/card.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 import { ActionCardComponent } from '../../../shared/ui/action-card/action-card.component';
+import { LoyaltyMeterComponent } from '../../../shared/ui/loyalty-meter/loyalty-meter.component';
 
 @Component({
   selector: 'app-cuenta',
   standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent],
+  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.css'
 })

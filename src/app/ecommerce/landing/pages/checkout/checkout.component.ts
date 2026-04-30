@@ -898,10 +898,76 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       },
       error: (err) => {
         console.error('Error en checkout: ', err);
-        this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
-        this.handleCustomerError(err);
+        this.handleCheckoutError(err);
       }
     });
+  }
+
+  /**
+   * Maneja los códigos de error del endpoint POST /api/v1/checkout (saga flow-first).
+   *
+   * - USER_EXISTS (409): cliente nuevo con email ya registrado → enfoca email + sugerencia de login.
+   * - PRODUCT_NOT_FOUND / INSUFFICIENT_STOCK (400): problema con el carrito.
+   * - ADDRESS_NOT_FOUND (404): dirección referenciada no existe.
+   * - FLOW_PAYMENT_INIT_FAILED (502): Flow no pudo iniciar el pago — sin efectos en BD,
+   *   el cliente puede reintentar limpio.
+   * - DB_FAILED_AFTER_FLOW_INIT (500): caso raro — el pago se inició pero la BD falló.
+   *   Persistimos la orphanFlowReference en localStorage para soporte y mostramos
+   *   un mensaje específico al cliente.
+   * - Cualquier otro: fallback al handler legacy.
+   */
+  private handleCheckoutError(err: any): void {
+    const code = err?.error?.code;
+
+    if (code === 'USER_EXISTS') {
+      this._toastService.error('Cuenta existente', 'Este correo ya está registrado. Inicia sesión y vuelve a intentar.');
+      this.focusAndErrorInput(this.emailInput, 'email');
+      return;
+    }
+
+    if (code === 'INSUFFICIENT_STOCK' || code === 'PRODUCT_NOT_FOUND') {
+      const message = err?.error?.message || 'Uno de los productos no está disponible. Revisa tu carrito.';
+      this._toastService.error('Ups!', message);
+      return;
+    }
+
+    if (code === 'ADDRESS_NOT_FOUND') {
+      this._toastService.error('Ups!', 'La dirección de envío no es válida. Por favor, revisa los datos.');
+      return;
+    }
+
+    if (code === 'FLOW_PAYMENT_INIT_FAILED' || code === 'FLOW_INVALID_CREATE_RESPONSE') {
+      this._toastService.error(
+        'Error al iniciar el pago',
+        'No pudimos comunicarnos con el sistema de pagos. Intenta nuevamente en unos momentos.'
+      );
+      return;
+    }
+
+    if (code === 'DB_FAILED_AFTER_FLOW_INIT') {
+      const ref = err?.error?.orphanFlowReference;
+      if (ref && isPlatformBrowser(this.platformId)) {
+        try {
+          localStorage.setItem(
+            'orphanFlowReference',
+            JSON.stringify({ ...ref, timestamp: new Date().toISOString() })
+          );
+        } catch { /* localStorage puede fallar en SSR/incognito; ignorar */ }
+      }
+      this._toastService.error(
+        'Pago iniciado, pedido no registrado',
+        'Si ya pagaste, contacta a soporte mencionando tu correo electrónico. No vuelvas a pagar todavía.'
+      );
+      return;
+    }
+
+    // Compatibilidad con el handler legacy (código 501 de errores de duplicado del backend antiguo).
+    if (err?.error?.code === 501) {
+      this.handleCustomerError(err);
+      return;
+    }
+
+    this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
   }
 
   private createOrderRequest(): CreateOrderRequest {

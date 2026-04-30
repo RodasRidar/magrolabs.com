@@ -14,11 +14,12 @@ import { SeoService } from '../../../shared/services/seo.service';
 import { CardComponent } from '../../../shared/ui/card/card.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
+import { StepComponent } from '../../../ecommerce/signup/components/step/step.component';
 
 @Component({
   selector: 'app-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, SpinnerComponent],
+  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, SpinnerComponent, StepComponent],
   templateUrl: './pedidos.component.html',
 })
 export class PedidosComponent implements OnInit {

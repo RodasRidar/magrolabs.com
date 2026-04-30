@@ -113,7 +113,7 @@ export class ConfirmationComponent {
     this._route.queryParams.subscribe(params => {
       let status = params['status'] ?? localStorage.getItem('status');
       if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
-        this.trackCompleteSuscription(false);
+        this.trackCompleteSuscription();
         this.openWelcomeModal();
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
         this.sendWelcomeEmail();
@@ -122,7 +122,7 @@ export class ConfirmationComponent {
       }
       else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
         this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
-        this.trackCompleteSuscription(true);
+        this.trackCompleteSuscription();
         // Decrementar unidades disponibles
         UrgencyBarComponent.decrementUnits();
       }
@@ -285,22 +285,7 @@ export class ConfirmationComponent {
     }
   }
 
-  private trackCompleteSuscription(isOutsideLimaMetropolitana: boolean) {
-    this._tiktokAnalytics.trackCompleteRegistration({
-      contents: [{
-        content_id: 'registration',
-        content_type: 'product_group',
-        content_name: isOutsideLimaMetropolitana ? 'Registro Completado (Fuera de Lima Metropolitana)' : 'Registro Completado'
-      }]
-    });
-
-    // Tracking Meta Analytics
-    this._metaAnalytics.trackCompleteRegistration({
-      content_name: isOutsideLimaMetropolitana ? 'Registro Completado (Fuera de Lima Metropolitana)' : 'Registro Completado',
-      status: true,
-      value: this.ENV.precioCreatinaSubscription,
-      currency: 'PEN'
-    });
+  private trackCompleteSuscription() {
 
     this._metaAnalytics.trackCustomEvent('ViewContent', {
       content_name: 'Confirmación Suscripción Creatina 250gr',

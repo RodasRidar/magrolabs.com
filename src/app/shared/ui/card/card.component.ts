@@ -15,8 +15,9 @@ export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
   `,
 })
 export class CardComponent {
-  surface = input<CardSurface>('default');
-  padding = input<CardPadding>('none');
+  surface   = input<CardSurface>('default');
+  padding   = input<CardPadding>('none');
+  extraClass = input<string>('');
 
   protected readonly cardClass = computed(() => {
     const surfaceClass =
@@ -33,6 +34,7 @@ export class CardComponent {
       surfaceClass,
       'overflow-hidden rounded-lg shadow',
       paddingMap[this.padding()],
+      this.extraClass(),
     ].filter(Boolean);
 
     return parts.join(' ');

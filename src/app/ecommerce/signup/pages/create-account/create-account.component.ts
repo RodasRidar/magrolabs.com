@@ -250,7 +250,7 @@ export class CreateAccountComponent implements OnDestroy {
       });
     }
   }
-  
+
   private validateDocumentWithServer(document: string): void {
     this.isProcessing = true;
     const control = this.form.get('nroDocument');
@@ -385,7 +385,7 @@ export class CreateAccountComponent implements OnDestroy {
     //const customerId = this._summaryService.getSummary()?.userData?.customerId;
     const userId = this._summaryService.getSummary()?.userData?.id;
     let userData = this.getUserDataFromForm();
-    if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0 )|| this.isCreatinaGratis) {
+    if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0) || this.isCreatinaGratis) {
       userData.isSignUpAcepted = true;
     }
     if (userId) {
@@ -464,7 +464,7 @@ export class CreateAccountComponent implements OnDestroy {
       }
     });
   }
-  
+
   isSignUpAceptedChange() {
     if (this.form.get('isSignUpAcepted')?.value) {
 
@@ -501,7 +501,7 @@ export class CreateAccountComponent implements OnDestroy {
       }
     }
   }
-  
+
   private createNewCustomerByApi(userData: UserDataSummary) {
     const registerRequest: RegisterUserRequest = {
       email: userData.email,
@@ -530,13 +530,28 @@ export class CreateAccountComponent implements OnDestroy {
       .subscribe(response => {
         userData.id = response.data.user.id;
         userData.referralCode = response.data.user.referralCode;
-        
+
         // Track successful registration
-          this._tiktokAnalytics.identify({
-            email: response.data.user.email,
-            external_id: response.data.user.id,
-            phone_number: response.data.user.phone
-          });          
+        this._tiktokAnalytics.identify({
+          email: response.data.user.email,
+          external_id: response.data.user.id,
+          phone_number: response.data.user.phone
+        });
+        this._tiktokAnalytics.trackCompleteRegistration({
+          contents: [{
+            content_id: 'registration',
+            content_type: 'product_group',
+            content_name: 'Registro Completado'
+          }]
+        });
+
+        // Tracking Meta Analytics
+        this._metaAnalytics.trackCompleteRegistration({
+          content_name: 'Registro Completado',
+          status: true,
+          value: this.ENV.precioCreatinaSubscription,
+          currency: 'PEN'
+        });
         this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         this.saveUserDataAndNavigate(userData);
       });

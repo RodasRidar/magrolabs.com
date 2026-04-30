@@ -13,12 +13,13 @@ export class StepItemComponent {
   StepEnum = StepEnum;
   flag : InputSignal<string> = input("");
   step = input.required<StepEnum>();
+  isCurrent = input.required<boolean>();
   isCompleted = input.required<boolean>();
 
-  get bgColor() : string  { 
-    return this.isCompleted() ? 'bg-gray-900' : 'bg-gray-300'
+  get bgColor() : string  {
+    return (this.isCompleted() || this.isCurrent()) ? 'bg-gray-900' : 'bg-gray-300';
   }
-  get iconColor() : string  { 
-    return this.isCompleted() ? '#ffffff' : '#828282'
+  get iconColor() : string  {
+    return (this.isCompleted() || this.isCurrent()) ? '#ffffff' : '#828282';
   }
 }

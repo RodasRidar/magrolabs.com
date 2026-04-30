@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MonthlyRewardModalService } from '../../services/monthly-reward-modal.service';
 import { environment } from '../../../../environments/env';
+import { InlineModalComponent } from '../inline-modal/inline-modal.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-monthly-reward-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InlineModalComponent, ButtonComponent],
   templateUrl: './monthly-reward-modal.component.html',
 })
 export class MonthlyRewardModalComponent {

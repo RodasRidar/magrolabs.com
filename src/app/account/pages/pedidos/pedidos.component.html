@@ -65,12 +65,11 @@
       <!-- Cabecera del pedido -->
       <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
         <div class="mb-0">
-          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span>
+          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase()
+            }}</span>
         </div>
         <div class="flex items-center gap-2">
-          <ml-badge
-            size="md"
-            [color]="getOrderStatusColor(pedido.status)"
+          <ml-badge size="md" [color]="getOrderStatusColor(pedido.status)"
             [label]="obtenerTextoEstado(pedido.status)" />
         </div>
       </div>
@@ -127,10 +126,9 @@
                   <p class="font-medium text-gray-800">{{ item.quantity }}</p>
 
                   <div class="mt-6 flex flex-col gap-2 w-fit">
-                    <ml-button *ngIf="pedido.status === 'DELIVERED'"
-                      (click)="escribirResena(item.product.id); $event.stopPropagation()"
-                      name="Escribir reseña →" type="secondary">
-                    </ml-button>
+                    <a *ngIf="pedido.status === 'DELIVERED'"
+                      class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
+                      (click)="escribirResena(item.product.id); $event.stopPropagation()">Escribir reseña →</a>
                   </div>
                 </div>
               </div>
@@ -150,42 +148,36 @@
           <div class="flex flex-col gap-1">
             <div class="flex items-center gap-2">
               <span class="font-semibold text-gray-700">Total:</span>
-              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2' }}</span>
+              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2'
+                }}</span>
             </div>
             @if (pedido.shipping_cost !== undefined && pedido.shipping_cost !== null) {
-              <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-600">Costo de envío:</span>
-                <span class="text-sm font-medium text-gray-800">
-                  {{ pedido.shipping_cost === 0 ? 'Gratis' : (pedido.shipping_cost | currency:'S/':'symbol':'1.2-2') }}
-                </span>
-              </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">Costo de envío:</span>
+              <span class="text-sm font-medium text-gray-800">
+                {{ pedido.shipping_cost === 0 ? 'Gratis' : (pedido.shipping_cost | currency:'S/':'symbol':'1.2-2') }}
+              </span>
+            </div>
             }
           </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <ml-button 
+          <ml-button
             *ngIf="pedido.status !== 'REFUNDED' && pedido.status !== 'REJECTED' && pedido.status !== 'CANCELLED' && pedido.status !== 'PENDING_PAYMENT'"
-            (click)="seguirCompra(pedido.id)" 
-            name="Seguir mi compra" 
-            type="primary">
+            (click)="seguirCompra(pedido.id)" name="Seguir mi compra" type="primary">
           </ml-button>
 
-          <ml-button 
+          <ml-button
             *ngIf="(pedido.status === 'PAID' || pedido.status === 'SHIPPED' || pedido.status === 'DELIVERED') && pedido.total_amount !== 0"
-            (click)="descargarBoleta(pedido.id)" 
-            name="Descargar boleta" 
-            type="secondary-outlined">
+            (click)="descargarBoleta(pedido.id)" name="Descargar boleta" type="secondary-outlined">
           </ml-button>
 
           @if (pedido.status === 'PENDING_PAYMENT') {
           <div class="flex gap-2">
-            <ml-button
-              (click)="pagarPedido(pedido.id, pedido.total_amount, pedido.id)"
-              name="Pagar"
-              type="primary">
+            <ml-button (click)="pagarPedido(pedido.id, pedido.total_amount, pedido.id)" name="Pagar" type="primary">
             </ml-button>
-            
+
             <!--
             TODO: Descomentar cuando se implemente el cancelar pedido(si se cancela un pedido que esta ligado a una subscripcion, se debe cancelar la subscripcion)
             <ml-button
@@ -251,90 +243,19 @@
     <div class="p-2 sm:p-6">
       <!-- Timeline de seguimiento -->
       <div class="relative">
-        <!-- Contenido del timeline -->
-        <div class="flex items-center justify-between my-10 sm:my-20 relative">
-          <!-- Línea horizontal que conecta los círculos -->
-          <div class="absolute top-8 left-4 right-0 h-0.5 bg-gray-300 z-0 w-[90%]"></div>
-
-          <!-- Paso 1: Recibido -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-primary-hover z-10">
-              <svg class="w-8 h-8 text-primary-hover" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Recibimos tu pedido</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ formatearFechaCompleta(pedidoSeleccionado()?.created_at || '') }}</p>
-          </div>
-
-          <!-- Paso 2: En proceso -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-primary-hover z-10">
-              <svg class="w-8 h-8 text-primary-hover" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Pedido en proceso</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{
-            pedidoSeleccionado()?.status === 'PROCESSING' || pedidoSeleccionado()?.status === 'PAID' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
-            }}</p>
-          </div>
-
-          <!-- Paso 3: En camino -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-primary-hover z-10"
-              [ngClass]="{'border-primary-hover': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
-              <svg class="w-8 h-8"
-                [ngClass]="{'text-primary-hover': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
-              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
-              ¡Vamos en camino!</h3>
-            <p class="text-gray-600 text-center  min-h-[24px]">{{ pedidoSeleccionado()?.status === 'SHIPPED' ||
-              pedidoSeleccionado()?.status === 'SHIPPED' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
-              }}</p>
-          </div>
-
-          <!-- Paso 4: Entregado -->
-          <div class="flex flex-col items-center">
-            <div class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 z-10"
-              [ngClass]="{'border-primary-hover': pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}">
-              <svg class="w-8 h-8"
-                [ngClass]="{'text-primary-hover': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
-              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': pedidoSeleccionado()?.status !== 'DELIVERED'}">
-              ¡Tu pedido llegó!</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ pedidoSeleccionado()?.status === 'DELIVERED' ?
-              formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : '' }}</p>
-          </div>
-        </div>
-
-        <!-- Información de entrega -->
-        <div class="flex items-center justify-center mt-8 border-t border-gray-200 pt-6">
-          <svg class="w-8 h-8 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span class="text-base sm:text-xl font-semibold">Entrega a domicilio de {{ENV.plazoDeEntregaHorasCreatinaFree.min}} a {{ENV.plazoDeEntregaHorasCreatinaFree.max}} horas.</span>
-        </div>
+        <app-step
+          type="order-tracking"
+          [orderStatus]="pedidoSeleccionado()?.status ?? ''"
+          [orderCreatedAt]="pedidoSeleccionado()?.created_at ?? ''"
+          [orderUpdatedAt]="pedidoSeleccionado()?.updated_at ?? ''"
+          [deliveryHoursMin]="ENV.plazoDeEntregaHorasCreatinaFree.min"
+          [deliveryHoursMax]="ENV.plazoDeEntregaHorasCreatinaFree.max" />
 
         <!-- Seguimiento en tiempo real con Olva Courier -->
         @if (pedidoSeleccionado()?.trackingNumber) {
         <div class="mt-8 pt-6 border-t border-gray-100">
-          <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
+          <div
+            class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
             <div class="flex flex-col gap-4">
               <!-- Título y número de tracking -->
               <div class="flex items-center gap-3">
@@ -342,7 +263,8 @@
                   <svg class="w-5 h-5 text-[#f9b52f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div class="flex-1">
@@ -352,14 +274,13 @@
                   </p>
                 </div>
               </div>
-              
+
               <!-- Botón de rastreo -->
-              <button 
-                (click)="abrirSeguimientoOlva()"
+              <button (click)="abrirSeguimientoOlva()"
                 class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-gray-900 text-sm font-medium rounded-lg transition-all duration-200">
                 <span>Rastrear con Olva Courier</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </button>

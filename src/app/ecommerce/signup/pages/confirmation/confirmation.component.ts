@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
@@ -16,6 +16,10 @@ import { EmailService } from '../../../../shared/services/email.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
+import { OrderService } from '../../../../shared/services/order.service';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { OrderResponse } from '../../../../shared/interfaces/order.interfaces';
+import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-confirmation',
@@ -34,6 +38,8 @@ export class ConfirmationComponent {
   private _emailService = inject(EmailService)
   private _tiktokAnalytics = inject(TiktokAnalyticsService)
   private _metaAnalytics = inject(MetaAnalyticsService)
+  private _orderService = inject(OrderService)
+  private _authService = inject(AuthService)
 
   ENV = environment
   confirmationStatusEnum = ConfirmationStatus
@@ -42,6 +48,14 @@ export class ConfirmationComponent {
   status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
   creditos = '{{ENV.creditoRegaloPorCompraMes}} Magropuntos';
   shoppingCart = this._shoppingCartService.getShoppingCart();
+
+  /**
+   * Si está poblado, la pantalla muestra el modo "rico" con detalles del pedido.
+   * Si null, fallback a la UI minimalista (suscripciones y casos sin orderId).
+   */
+  order = signal<OrderResponse | null>(null);
+  /** True mientras buscamos la orden en el backend (skeleton). */
+  loadingOrder = signal(false);
 
   informationExitoList: Information[] = [
     { name: `Tu periodo de prueba comienza despues de recibir tu creatina de prueba.` },
@@ -98,66 +112,128 @@ export class ConfirmationComponent {
     this._seo.setCanonicalURL('magrolabs.com/registro/confirmacion');
     this._seo.setIndexFollow(false);
 
-    let summary = this._summaryService.getSummary()
-
-    if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
-      this._router.navigate(['registro/verificacion']);
-      return;
-    }
-
-    this.creditos = summary?.chosePlan?.selection ==
-      SummaryEnum.CREATINA_3KG ? this.ENV.creditoRegaloPorCompraAño + ' Magropuntos'
-      : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
-    this.clientName = summary?.userData?.nombre ?? '';
-
     this._route.queryParams.subscribe(params => {
-      let status = params['status'] ?? localStorage.getItem('status');
-      if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
-        this.trackCompleteSuscription();
-        this.openWelcomeModal();
-        this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
-        this.sendWelcomeEmail();
-        // Decrementar unidades disponibles
-        UrgencyBarComponent.decrementUnits();
+      const status = params['status'] ?? localStorage.getItem('status');
+      const orderIdParam: string | null = params['orderId'] ?? null;
+      const isAuthenticated = this._authService.isAuthenticated();
+
+      // Determinar si activamos modo rico (cliente con sesión + orden a consultar)
+      const tryRichMode = isAuthenticated && (orderIdParam || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION);
+
+      if (tryRichMode) {
+        this.hydrateOrderDetails(orderIdParam);
+      } else {
+        // Flujo legacy: requiere summary completo (típicamente suscripción)
+        const summary = this._summaryService.getSummary();
+        if (!summary?.address || !summary?.userData || !summary?.chosePlan) {
+          this._router.navigate(['registro/verificacion']);
+          return;
+        }
+        this.clientName = summary?.userData?.nombre ?? '';
+        this.creditos = summary?.chosePlan?.selection ==
+          SummaryEnum.CREATINA_3KG ? this.ENV.creditoRegaloPorCompraAño + ' Magropuntos'
+          : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
       }
-      else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-        this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
-        this.trackCompleteSuscription();
-        // Decrementar unidades disponibles
-        UrgencyBarComponent.decrementUnits();
+
+      this.runStatusSideEffects(status);
+      this.cleanupAfterConfirmation();
+    });
+  }
+
+  /**
+   * Recupera la orden del backend (por orderId explícito o trayendo la última
+   * del usuario autenticado) y puebla el signal `order` para activar la UI rica.
+   * Si falla, deja `order` en null y el render cae al fallback minimalista.
+   */
+  private hydrateOrderDetails(orderIdParam: string | null): void {
+    this.loadingOrder.set(true);
+
+    const fetchByLastOrder$ = this._orderService.getMyOrders(1, 1).pipe(
+      switchMap(list => {
+        const first = list?.data?.orders?.[0];
+        if (!first) return of(null);
+        return this._orderService.getOrderById(first.id);
+      })
+    );
+
+    const source$ = orderIdParam
+      ? this._orderService.getOrderById(orderIdParam)
+      : fetchByLastOrder$;
+
+    source$.pipe(
+      catchError(err => {
+        console.warn('No se pudo hidratar detalles de la orden — se usa UI minimalista', err);
+        return of(null);
+      })
+    ).subscribe(detail => {
+      this.loadingOrder.set(false);
+      const orderResp = (detail as any)?.data?.order ?? null;
+      if (orderResp) {
+        this.order.set(orderResp);
+        // El nombre del cliente viene del propio backend para evitar depender de summary
+        const customerFirstName = orderResp?.customer?.first_name ?? this._summaryService.getSummary()?.userData?.nombre ?? '';
+        this.clientName = customerFirstName;
+      } else {
+        // Fallback con summary si lo hay
+        this.clientName = this._summaryService.getSummary()?.userData?.nombre ?? '';
       }
-      else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+    });
+  }
+
+  /**
+   * Ejecuta los side-effects asociados al status (analytics, emails, modales,
+   * decremento de unidades). Mismos comportamientos que el componente original.
+   */
+  private runStatusSideEffects(status: any): void {
+    if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
+      this.trackCompleteSuscription();
+      this.openWelcomeModal();
+      this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
+      this.sendWelcomeEmail();
+      UrgencyBarComponent.decrementUnits();
+    } else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+      this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
+      this.trackCompleteSuscription();
+      UrgencyBarComponent.decrementUnits();
+    } else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+      this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
+      this.sendOrderConfirmationEmail();
+      this.trackPurchaseComplete();
+      UrgencyBarComponent.decrementUnits();
+    } else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+      this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+      this.trackPurchaseComplete();
+      UrgencyBarComponent.decrementUnits();
+    } else {
+      // Sin status pero con orderId (modo rico): tratar como compra registrada
+      if (this.order() || this._authService.isAuthenticated()) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
-        // Enviar email de confirmación de orden
         this.sendOrderConfirmationEmail();
         this.trackPurchaseComplete();
-        // Decrementar unidades disponibles
         UrgencyBarComponent.decrementUnits();
-      }
-      else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
-        this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
-        this.trackPurchaseComplete();
-        // Decrementar unidades disponibles
-        UrgencyBarComponent.decrementUnits();
-      }
-      else {
+      } else {
         this._router.navigate(['registro/verificacion']);
       }
-      this._summaryService.clearSummary();
-      this._shoppingCartService.clearCart();
-      
-      // Preservar datos importantes antes de limpiar localStorage
-      const unitsAvailable = localStorage.getItem('unitsAvailable');
-      const isLastChance = localStorage.getItem('isLastChance');
-      const offerEndTime = localStorage.getItem('offerEndTime');
-      
-      localStorage.clear();
-      
-      // Restaurar datos importantes
-      if (unitsAvailable) localStorage.setItem('unitsAvailable', unitsAvailable);
-      if (isLastChance) localStorage.setItem('isLastChance', isLastChance);
-      if (offerEndTime) localStorage.setItem('offerEndTime', offerEndTime);
-    });
+    }
+  }
+
+  /**
+   * Limpia summary, carrito y localStorage preservando los datos de la
+   * UrgencyBar. Mismo comportamiento que el componente original.
+   */
+  private cleanupAfterConfirmation(): void {
+    this._summaryService.clearSummary();
+    this._shoppingCartService.clearCart();
+
+    const unitsAvailable = localStorage.getItem('unitsAvailable');
+    const isLastChance = localStorage.getItem('isLastChance');
+    const offerEndTime = localStorage.getItem('offerEndTime');
+
+    localStorage.clear();
+
+    if (unitsAvailable) localStorage.setItem('unitsAvailable', unitsAvailable);
+    if (isLastChance) localStorage.setItem('isLastChance', isLastChance);
+    if (offerEndTime) localStorage.setItem('offerEndTime', offerEndTime);
   }
 
   openWelcomeModal() {
@@ -183,7 +259,7 @@ export class ConfirmationComponent {
     const today = new Date();
     let deliveryDate = new Date(today);
     let daysAdded = 0;
-    
+
     while (daysAdded < days) {
       deliveryDate.setDate(deliveryDate.getDate() + 1);
       // Saltar fines de semana (sábado = 6, domingo = 0)
@@ -191,8 +267,71 @@ export class ConfirmationComponent {
         daysAdded++;
       }
     }
-    
+
     return deliveryDate.toLocaleDateString();
+  }
+
+  /**
+   * Devuelve un id corto y legible para mostrar en la UI a partir del UUID
+   * completo de la orden. Ej: "abcd-1234".
+   */
+  shortOrderId(fullId: string | undefined | null): string {
+    if (!fullId) return '';
+    // Tomar primer y último bloques de 4 caracteres del UUID
+    const clean = fullId.replace(/-/g, '');
+    return clean.length >= 8 ? `${clean.slice(0, 4).toUpperCase()}-${clean.slice(-4).toUpperCase()}` : fullId;
+  }
+
+  /** Etiqueta amigable para el método de pago de la orden. */
+  paymentMethodLabel(method: string | undefined | null): string {
+    switch (method) {
+      case 'CREDIT_CARD': return 'Tarjeta de crédito';
+      case 'DEBIT_CARD': return 'Tarjeta de débito';
+      case 'BANK_TRANSFER': return 'Transferencia bancaria';
+      case 'YAPE': return 'Yape';
+      case 'PAGO_EFECTIVO': return 'PagoEfectivo';
+      case 'PAYPAL': return 'PayPal';
+      default: return 'Pago en línea';
+    }
+  }
+
+  /** Etiqueta amigable para el estado de la orden. */
+  orderStatusLabel(status: string | undefined | null): string {
+    switch (status) {
+      case 'PENDING_PAYMENT': return 'Pendiente de pago';
+      case 'PAID': return 'Pagado';
+      case 'PROCESSING': return 'En preparación';
+      case 'SHIPPED': return 'En camino';
+      case 'DELIVERED': return 'Entregado';
+      case 'CANCELLED': return 'Cancelado';
+      case 'REFUNDED': return 'Reembolsado';
+      case 'REJECTED': return 'Rechazado';
+      default: return status ?? '';
+    }
+  }
+
+  /** Devuelve la URL de la imagen principal del producto, si existe. */
+  productImage(orderItem: any): string | null {
+    const img = orderItem?.product?.images?.[0]?.image_url;
+    return img ?? null;
+  }
+
+  /** Subtotal calculado a partir de los orderItems (sin envío, sin descuento). */
+  subtotal(): number {
+    const items = this.order()?.orderItems ?? [];
+    return items.reduce((sum, it) => {
+      const unit = (it as any).unit_price ?? (it as any).price ?? 0;
+      return sum + Number(unit) * Number(it.quantity);
+    }, 0);
+  }
+
+  /** Cálculo del descuento absoluto a partir del % almacenado en la orden. */
+  discountAmount(): number {
+    const o = this.order();
+    if (!o) return 0;
+    const discountPct = Number((o as any).discount ?? 0);
+    if (!discountPct) return 0;
+    return Math.round((this.subtotal() * discountPct) / 100);
   }
 
   /**
@@ -200,7 +339,7 @@ export class ConfirmationComponent {
    */
   private sendWelcomeEmail(): void {
     const summary = this._summaryService.getSummary();
-    const userEmail = summary?.userData?.email;
+    const userEmail = summary?.userData?.email ?? (this.order() as any)?.customer?.email;
 
     if (!userEmail) {
       console.warn('No se encontró email del usuario para enviar email de bienvenida');
@@ -214,8 +353,6 @@ export class ConfirmationComponent {
         },
         error: (error) => {
           console.error('Error al enviar email de bienvenida:', error);
-          // No mostramos error al usuario ya que es un proceso en segundo plano
-          // El usuario ya completó exitosamente su registro
         }
       });
   }
@@ -225,7 +362,7 @@ export class ConfirmationComponent {
    */
   private sendOrderConfirmationEmail(): void {
     const summary = this._summaryService.getSummary();
-    const userEmail = summary?.userData?.email;
+    const userEmail = summary?.userData?.email ?? (this.order() as any)?.customer?.email;
 
     if (!userEmail) {
       console.warn('No se encontró email del usuario para enviar email de confirmación de orden');
@@ -239,8 +376,6 @@ export class ConfirmationComponent {
         },
         error: (error) => {
           console.error('Error al enviar email de confirmación de orden:', error);
-          // No mostramos error al usuario ya que es un proceso en segundo plano
-          // El usuario ya completó exitosamente su compra
         }
       });
   }

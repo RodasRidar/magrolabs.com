@@ -882,6 +882,19 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       })
     ).subscribe({
       next: (response) => {
+        // Persistir sesión si el backend nos devuelve tokens (cliente nuevo o auto-login).
+        // Esto permite que si el usuario aprieta "atrás" desde Flow y vuelve al checkout,
+        // el JWT siga vivo en cookies y el reentry funcione transparente.
+        if (response.data.tokens) {
+          this._authService.setSessionFromCheckout(response.data.tokens, {
+            id: response.data.user.id,
+            email: response.data.user.email,
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            isSignUpAcepted: true,
+          });
+        }
+
         // Sincronizar el summary local con el resultado del backend
         const userData = this._summaryService.getSummary()?.userData;
         if (userData) {
@@ -906,9 +919,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   /**
    * Maneja los códigos de error del endpoint POST /api/v1/checkout (saga flow-first).
    *
-   * - USER_EXISTS (409): cliente nuevo con email ya registrado → enfoca email + sugerencia de login.
+   * - USER_EXISTS (409): cliente nuevo con email ya registrado y SIN password → enfoca email.
+   * - USER_EXISTS_WRONG_PASSWORD (409): email existe pero password no coincide → enfoca password.
+   * - ORDER_ALREADY_PAID (409): la orden previa ya se pagó (race con callback de Flow) →
+   *   redirige a /registro/confirmacion con el orderId.
    * - PRODUCT_NOT_FOUND / INSUFFICIENT_STOCK (400): problema con el carrito.
    * - ADDRESS_NOT_FOUND (404): dirección referenciada no existe.
+   * - PASSWORD_REQUIRED (400): cliente nuevo sin password — error de validación frontend.
    * - FLOW_PAYMENT_INIT_FAILED (502): Flow no pudo iniciar el pago — sin efectos en BD,
    *   el cliente puede reintentar limpio.
    * - DB_FAILED_AFTER_FLOW_INIT (500): caso raro — el pago se inició pero la BD falló.
@@ -919,9 +936,45 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private handleCheckoutError(err: any): void {
     const code = err?.error?.code;
 
+    if (code === 'ORDER_ALREADY_PAID') {
+      const orderId = err?.error?.orderId;
+      this._toastService.success(
+        '¡Ya completaste tu pago!',
+        'Te llevamos a la confirmación de tu pedido.'
+      );
+      this.allowNavigation.set(true);
+      this._router.navigate(['/registro/confirmacion'], {
+        queryParams: orderId ? { orderId } : undefined,
+      });
+      return;
+    }
+
+    if (code === 'USER_EXISTS_WRONG_PASSWORD') {
+      this._toastService.error(
+        'Contraseña incorrecta',
+        'Este correo ya tiene una cuenta. Ingresa la contraseña correcta o usa "Olvidé mi contraseña".'
+      );
+      // Foco en password (no hay ViewChild dedicado; setear error para visibilidad)
+      const passwordControl = this.form.get('password');
+      passwordControl?.setErrors({ wrongPassword: true });
+      passwordControl?.markAsTouched();
+      return;
+    }
+
     if (code === 'USER_EXISTS') {
-      this._toastService.error('Cuenta existente', 'Este correo ya está registrado. Inicia sesión y vuelve a intentar.');
+      this._toastService.error(
+        'Cuenta existente',
+        'Este correo ya está registrado. Ingresa tu contraseña para continuar.'
+      );
       this.focusAndErrorInput(this.emailInput, 'email');
+      return;
+    }
+
+    if (code === 'PASSWORD_REQUIRED') {
+      this._toastService.error('Falta contraseña', 'Crea una contraseña para continuar.');
+      const passwordControl = this.form.get('password');
+      passwordControl?.setErrors({ required: true });
+      passwordControl?.markAsTouched();
       return;
     }
 

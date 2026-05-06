@@ -6,133 +6,126 @@
     Si no, cae al fallback minimalista de abajo.
 -->
 @if (order(); as ord) {
-    <div class="max-w-3xl mx-auto px-4 pt-6 pb-16 text-gray-800">
-        <!-- Hero de confirmación -->
-        <div class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6 flex items-start gap-4">
-            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-            </div>
-            <div class="flex-1">
-                <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
-                    ¡Pedido confirmado{{ clientName ? ', ' + clientName : '' }}!
-                </h1>
-                <p class="text-sm sm:text-base text-gray-700 mt-1">
-                    Pedido <span class="font-mono font-semibold">#{{ shortOrderId(ord.id) }}</span>
-                    @if (ord.customer?.email) {
-                        · enviamos confirmación a <span class="font-semibold">{{ ord.customer.email }}</span>
-                    }
-                </p>
-                <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                    Estado: {{ orderStatusLabel(ord.status) }}
-                </span>
-            </div>
+<div class="max-w-3xl mx-auto px-4 pt-6 pb-16 text-gray-800">
+    <!-- Hero de confirmación -->
+    <div class="bg-green-50 border border-green-200 rounded-xl p-6 my-6 flex items-start gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+            </svg>
         </div>
-
-        <!-- Resumen de items -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
-            <h2 class="text-lg font-bold mb-4">Resumen de tu pedido</h2>
-            <ul class="divide-y divide-gray-100">
-                @for (item of ord.orderItems; track item.id) {
-                    <li class="flex items-center gap-4 py-3">
-                        @if (productImage(item)) {
-                            <img [src]="productImage(item)" [alt]="item.product?.name" class="w-16 h-16 rounded-lg object-cover bg-gray-50 shrink-0" />
-                        } @else {
-                            <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                        }
-                        <div class="flex-1 min-w-0">
-                            <p class="font-semibold text-gray-900 truncate">{{ item.product?.name ?? 'Producto' }}</p>
-                            <p class="text-sm text-gray-600">Cantidad: {{ item.quantity }}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold">S/ {{ ((item.unit_price ?? item.price ?? 0) * item.quantity) | number: '1.2-2' }}</p>
-                        </div>
-                    </li>
-                }
-            </ul>
-
-            <div class="border-t border-gray-200 mt-4 pt-4 space-y-1.5 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Subtotal</span>
-                    <span class="font-medium">S/ {{ subtotal() | number: '1.2-2' }}</span>
-                </div>
-                @if (discountAmount() > 0) {
-                    <div class="flex justify-between text-green-700">
-                        <span>Descuento ({{ ord.discount }}%)</span>
-                        <span>− S/ {{ discountAmount() | number: '1.2-2' }}</span>
-                    </div>
-                }
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Envío</span>
-                    <span class="font-medium">
-                        @if (ord.shipping_cost && ord.shipping_cost > 0) {
-                            S/ {{ ord.shipping_cost | number: '1.2-2' }}
-                        } @else {
-                            <span class="text-green-700 font-semibold">Gratis</span>
-                        }
-                    </span>
-                </div>
-                <div class="flex justify-between text-base font-bold pt-2 border-t border-gray-100 mt-2">
-                    <span>Total pagado</span>
-                    <span>S/ {{ ord.total_amount | number: '1.2-2' }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dirección + Método de pago -->
-        <div class="grid sm:grid-cols-2 gap-4 mb-5">
-            <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dirección de envío</h3>
-                @if (ord.address; as addr) {
-                    <p class="font-semibold text-gray-900">
-                        {{ ord.customer?.first_name }} {{ ord.customer?.last_name }}
-                    </p>
-                    <p class="text-sm text-gray-700 mt-1">
-                        {{ addr.avenue }}@if (addr.number) { {{ ' ' + addr.number }} }
-                    </p>
-                    <p class="text-sm text-gray-700">
-                        {{ addr.district }}, {{ addr.province }}
-                    </p>
-                    <p class="text-sm text-gray-700">{{ addr.department }}</p>
-                    @if (addr.reference) {
-                        <p class="text-xs text-gray-500 mt-2 italic">"{{ addr.reference }}"</p>
-                    }
-                } @else {
-                    <p class="text-sm text-gray-500">Te contactaremos para confirmar la dirección.</p>
-                }
-            </div>
-
-            <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Método de pago</h3>
-                <p class="font-semibold text-gray-900">{{ paymentMethodLabel(ord.payment_method) }}</p>
-                <p class="text-sm text-gray-700 mt-1">
-                    Pagado el {{ ord.order_date | date: 'longDate' }}
-                </p>
-                <span class="inline-block mt-3 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                    Pago verificado
-                </span>
-            </div>
-        </div>
-
-        <!-- Próximos pasos / información -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximos pasos</h3>
-            <app-information [information]="informationCompraExitoRegistroList" />
-        </div>
-
-        <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <ml-button type="primary" name="Ir a mis pedidos" [routerLink]="['/cuenta/pedidos']" />
-            <a [routerLink]="['/']" class="text-sm font-semibold text-gray-700 hover:text-gray-900 underline-offset-4 hover:underline px-2 py-2 sm:py-0">
-                Seguir comprando
-            </a>
+        <div class="flex-1">
+            <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
+                ¡Pedido confirmado{{ clientName ? ', ' + clientName : '' }}!
+            </h1>
+            <p class="text-sm sm:text-base text-gray-700 mt-1">
+                Pedido <span class="font-mono font-semibold">#{{ shortOrderId(ord.id) }}</span>
+            </p>
+            <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                Estado: {{ orderStatusLabel(ord.status) }}
+            </span>
         </div>
     </div>
+
+    <!-- Resumen de items -->
+    <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
+        <h2 class="text-lg font-bold mb-4">Resumen de tu pedido</h2>
+        <ul class="divide-y divide-gray-100">
+            @for (item of ord.orderItems; track item.id) {
+            <li class="flex items-center gap-4 py-3">
+                @if (productImage(item)) {
+                <img [src]="productImage(item)" [alt]="item.product?.name"
+                    class="w-16 h-16 rounded-lg object-cover bg-gray-50 shrink-0" />
+                } @else {
+                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                }
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-gray-900 truncate">{{ item.product?.name ?? 'Producto' }}</p>
+                    <p class="text-sm text-gray-600">Cantidad: {{ item.quantity }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold">S/ {{ ((item.unit_price || item.price || 0) * item.quantity) | number:
+                        '1.2-2' }}</p>
+                </div>
+            </li>
+            }
+        </ul>
+
+        <div class="border-t border-gray-200 mt-4 pt-4 space-y-1.5 text-sm">
+            <div class="flex justify-between">
+                <span class="text-gray-600">Subtotal</span>
+                <span class="font-medium">S/ {{ subtotal() | number: '1.2-2' }}</span>
+            </div>
+            @if (discountAmount() > 0) {
+            <div class="flex justify-between text-green-700">
+                <span>Descuento</span>
+                <span>− S/ {{ discountAmount() | number: '1.2-2' }}</span>
+            </div>
+            }
+            <div class="flex justify-between">
+                <span class="text-gray-600">Envío</span>
+                <span class="font-medium">
+                    @if (ord.shipping_cost && ord.shipping_cost > 0) {
+                    S/ {{ ord.shipping_cost | number: '1.2-2' }}
+                    } @else {
+                    <span class="text-green-700 font-semibold">Gratis</span>
+                    }
+                </span>
+            </div>
+            <div class="flex justify-between text-base font-bold pt-2 border-t border-gray-100 mt-2">
+                <span>Total pagado</span>
+                <span>S/ {{ ord.total_amount | number: '1.2-2' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dirección + Método de pago -->
+    <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dirección de envío</h3>
+            @if (ord.address; as addr) {
+            <p class="text-sm text-gray-700 mt-1">
+                {{ addr.avenue }}@if (addr.number) { {{ ' ' + addr.number }} }
+            </p>
+            <p class="text-sm text-gray-700">
+                {{ addr.district }}, {{ addr.province }}, {{ addr.department }}
+            </p>
+            @if (addr.reference) {
+            <p class="text-xs text-gray-500 mt-2 italic">"{{ addr.reference }}"</p>
+            }
+            } @else {
+            <p class="text-sm text-gray-500">Te contactaremos para confirmar la dirección.</p>
+            }
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Método de pago</h3>
+            <p class="font-semibold text-gray-900">{{ paymentMethodLabel(ord.payment_method) }}</p>
+            <p class="text-sm text-gray-700 mt-1">
+                Pagado el {{ ord.order_date | date: 'longDate' }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Próximos pasos / información -->
+    <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximos pasos</h3>
+        <app-information [information]="informationCompraExitoRegistroList" />
+    </div>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <ml-button type="primary" name="Ir a mis pedidos" [routerLink]="['/cuenta/pedidos']" />
+    </div>
+</div>
 }
 
 <!--
@@ -140,83 +133,83 @@
     Se mantiene el comportamiento original del componente.
 -->
 @if (!order() && !loadingOrder()) {
-    <div class="px-4 pt-4 mx-auto ">
-        <div class="text-gray-700  md:mb-0">
-            <div class="relative mt-7 mb-2 lg:mt-9">
+<div class="px-4 pt-4 mx-auto ">
+    <div class="text-gray-700  md:mb-0">
+        <div class="relative mt-7 mb-2 lg:mt-9">
 
-                @if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
-                <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    ¡Felicidades {{clientName}}!
-                </h1>
-                <p class="text-xl font-extrabold mt-5">{{parrafoExito.parrafo1}}</p>
-                <p class="text-base">{{parrafoExito.parrafo2}}</p>
+            @if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                ¡Felicidades {{clientName}}!
+            </h1>
+            <p class="text-xl font-extrabold mt-5">{{parrafoExito.parrafo1}}</p>
+            <p class="text-base">{{parrafoExito.parrafo2}}</p>
 
-                <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
-                }
-                @else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-                <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    ¡Hola {{clientName}}!
-                </h1>
-                <p class="text-xl font-extrabold mt-5">{{parrafoError.parrafo1}}</p>
-                <p class="text-base">{{parrafoError.parrafo2}}</p>
+            <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
+            }
+            @else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                ¡Hola {{clientName}}!
+            </h1>
+            <p class="text-xl font-extrabold mt-5">{{parrafoError.parrafo1}}</p>
+            <p class="text-base">{{parrafoError.parrafo2}}</p>
 
-                <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
-                }@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
-                <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    ¡Felicidades {{clientName}}!
-                </h1>
+            <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
+            }@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                ¡Felicidades {{clientName}}!
+            </h1>
 
-                <p class="text-xl font-extrabold mt-5">{{parrafoCompraConRegistroExito.parrafo1}}</p>
-                <p class="text-base">{{parrafoCompraConRegistroExito.parrafo2}}</p>
+            <p class="text-xl font-extrabold mt-5">{{parrafoCompraConRegistroExito.parrafo1}}</p>
+            <p class="text-base">{{parrafoCompraConRegistroExito.parrafo2}}</p>
 
-                <p class="text-base mt-5">{{parrafoCompraConRegistroExito.parrafo3}}</p>
-                }
-                @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
-                <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    ¡Felicidades {{clientName}}!
-                </h1>
-                <p class="text-xl font-extrabold mt-5">{{parrafoCompraSinRegistroExito.parrafo1}}</p>
-                <p class="text-base">{{parrafoCompraSinRegistroExito.parrafo2}}</p>
-                <p class="text-base  mt-5">{{parrafoCompraSinRegistroExito.parrafo3}}</p>
-                }
+            <p class="text-base mt-5">{{parrafoCompraConRegistroExito.parrafo3}}</p>
+            }
+            @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                ¡Felicidades {{clientName}}!
+            </h1>
+            <p class="text-xl font-extrabold mt-5">{{parrafoCompraSinRegistroExito.parrafo1}}</p>
+            <p class="text-base">{{parrafoCompraSinRegistroExito.parrafo2}}</p>
+            <p class="text-base  mt-5">{{parrafoCompraSinRegistroExito.parrafo3}}</p>
+            }
 
-            </div>
         </div>
     </div>
-    @if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
-    <app-information [information]="informationExitoList" class="mt-5" />
-    <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-        <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
-    </div>
-    }
-    @else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-    <app-information [information]="informationErrorList" class="mt-5" />
-    <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-        <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
-    </div>
-    }
-    @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
-    <app-information [information]="informationCompraExitoRegistroList" class="mt-5" />
-    <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-        <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
-    </div>
-    }
-    @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
-    <app-information [information]="informationCompraExitoSinRegistroList" class="mt-5" />
-    <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-        <ml-button type='primary' name="Ir a Inicio" [routerLink]="['/']" />
-    </div>
-    }
+</div>
+@if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
+<app-information [information]="informationExitoList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+</div>
+}
+@else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+<app-information [information]="informationErrorList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+</div>
+}
+@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+<app-information [information]="informationCompraExitoRegistroList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+</div>
+}
+@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+<app-information [information]="informationCompraExitoSinRegistroList" class="mt-5" />
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Ir a Inicio" [routerLink]="['/']" />
+</div>
+}
 }
 
 <!-- Skeleton mientras hidratamos detalles del pedido (modo rico). -->
 @if (loadingOrder() && !order()) {
-    <div class="max-w-3xl mx-auto px-4 pt-6 pb-16 animate-pulse">
-        <div class="bg-gray-100 rounded-xl h-24 mb-6"></div>
-        <div class="bg-gray-100 rounded-xl h-56 mb-5"></div>
-        <div class="grid sm:grid-cols-2 gap-4 mb-5">
-            <div class="bg-gray-100 rounded-xl h-32"></div>
-            <div class="bg-gray-100 rounded-xl h-32"></div>
-        </div>
+<div class="max-w-3xl mx-auto px-4 pt-6 pb-16 animate-pulse">
+    <div class="bg-gray-100 rounded-xl h-24 mb-6"></div>
+    <div class="bg-gray-100 rounded-xl h-56 mb-5"></div>
+    <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="bg-gray-100 rounded-xl h-32"></div>
+        <div class="bg-gray-100 rounded-xl h-32"></div>
     </div>
+</div>
 }

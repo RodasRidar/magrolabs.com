@@ -487,10 +487,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.isApplyingDiscount.set(true);
     this.discountError.set('');
 
-    // Verificar que estemos en abril
-    const currentMonth = new Date().getMonth(); // 0-indexed: 3 = abril
-    if (currentMonth !== 3) {
-      this.discountError.set('Este código de descuento solo está disponible en abril');
+    // Verificar que estemos en mayo
+    const currentMonth = new Date().getMonth(); // 0-indexed: 4 = Mayo
+    if (currentMonth !== 4) {
+      this.discountError.set('Este código de descuento solo está disponible en mayo');
       this.isApplyingDiscount.set(false);
       return;
     }

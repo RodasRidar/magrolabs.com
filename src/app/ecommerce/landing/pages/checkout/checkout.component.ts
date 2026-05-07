@@ -195,8 +195,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
     this.trackInitiateCheckout();
 
-    // Si está autenticado y tiene tarjeta enrolada en Flow, mostrarla como opción
-    this.hydrateEnrolledCardForAuthenticated();
+    // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
+    this.hydrateEnrolledCard();
 
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
       if (shoppingCart && shoppingCart.items.length > 0) {
@@ -961,27 +961,47 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   /**
-   * Si el cliente está autenticado y tiene flowCustomerId, consulta sus datos
-   * en Flow y popula el signal `enrolledCard` para que aparezca como opción
-   * de pago. Llamado desde ngOnInit (best-effort, falla silenciosamente).
+   * Carga la tarjeta enrolada del cliente y la expone en el signal `enrolledCard`.
+   * Fuente de verdad:
+   *   1. summary.userData.customerId  — disponible para guest y autenticado
+   *   2. currentUser$.flowCustomerId  — solo autenticado, cargado asíncrono desde cookie
    *
-   * Importante: NO usamos getCurrentUser() síncrono porque retorna null antes
-   * de que loadUserFromStorage (afterNextRender en AuthService) cargue el
-   * user de la cookie. Esperamos al observable currentUser$.
+   * Si ninguna fuente tiene customerId, no hay nada que hidratar.
+   * Llamado desde ngOnInit (best-effort, falla silenciosamente).
    */
-  private hydrateEnrolledCardForAuthenticated(): void {
+  private hydrateEnrolledCard(): void {
+    const summaryCustomerId = this._summaryService.getSummary()?.userData?.customerId;
+
+    // Caso 1: el customerId ya está en el summary (guest o autenticado)
+    if (summaryCustomerId) {
+      this.flowCustomerId.set(summaryCustomerId);
+      this._flowService.getCustomer(summaryCustomerId).subscribe({
+        next: (customer) => {
+          if (customer.last4CardDigits && customer.creditCardType) {
+            this.enrolledCard.set({
+              last4: customer.last4CardDigits,
+              brand: customer.creditCardType,
+            });
+          }
+        },
+        error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
+      });
+      return;
+    }
+
+    // Caso 2: no está en el summary pero el usuario está autenticado —
+    // esperamos al observable para obtener flowCustomerId desde la cookie.
     if (!this._authService.isAuthenticated()) return;
 
     this._authService.currentUser$.pipe(
       filter((user): user is NonNullable<typeof user> => !!user),
       take(1),
     ).subscribe(user => {
-      const flowCustomerId = user.flowCustomerId
-        ?? this._summaryService.getSummary()?.userData?.customerId;
-      if (!flowCustomerId) return;
+      const customerId = user.flowCustomerId;
+      if (!customerId) return;
 
-      this.flowCustomerId.set(flowCustomerId);
-      this._flowService.getCustomer(flowCustomerId).subscribe({
+      this.flowCustomerId.set(customerId);
+      this._flowService.getCustomer(customerId).subscribe({
         next: (customer) => {
           if (customer.last4CardDigits && customer.creditCardType) {
             this.enrolledCard.set({
@@ -1283,7 +1303,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    this._toastService.error('Ups!', 'Error al generar el pago. Por favor, intenta nuevamente.');
+    this._toastService.error('Ups!', err?.error?.error?.message || 'Error al procesar tu pedido. Intenta nuevamente.');
   }
 
   private createOrderRequest(): CreateOrderRequest {

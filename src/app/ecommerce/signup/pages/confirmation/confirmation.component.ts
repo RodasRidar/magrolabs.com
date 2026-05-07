@@ -279,7 +279,7 @@ export class ConfirmationComponent {
     if (!fullId) return '';
     // Tomar primer y último bloques de 4 caracteres del UUID
     const clean = fullId.replace(/-/g, '');
-    return clean.length >= 8 ? `${clean.slice(0, 4).toUpperCase()}-${clean.slice(-4).toUpperCase()}` : fullId;
+    return clean.length >= 8 ? `${clean.slice(0, 8).toUpperCase()}` : fullId;
   }
 
   /** Etiqueta amigable para el método de pago de la orden. */

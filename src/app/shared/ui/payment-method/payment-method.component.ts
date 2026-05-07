@@ -17,14 +17,14 @@ export class PaymentMethodComponent {
   ngOnInit(): void {
     this.paymentMethod.emit(FlowPaymentMethod.DEBIT_CREDIT_CARD);
 
-    const last4CardDigits = this._summaryService.getSummary()?.userData?.last4CardDigits || '';
-    const creditCardType = this._summaryService.getSummary()?.userData?.creditCardType || '';
+    const last4CardDigits =  localStorage.getItem('last4CardDigits') || '';
+    const creditCardType =  localStorage.getItem('creditCardType') || '';
 
-    if(this._summaryService.getSummary()?.userData?.isPaymentVerified) {
+    if(this._summaryService.getSummary()?.userData?.isPaymentVerified || true) {
       this.radios.unshift({
         name: '**** **** **** ' + last4CardDigits + ' (' + creditCardType + ')',
         description: 'Paga con tu tarjeta '+ creditCardType + 'que termina en ' + last4CardDigits + ' registrada en tu cuenta.',
-        icon: `CARD_ENROLLED`,
+        icon: creditCardType.toUpperCase(),
         id: FlowPaymentMethod.CARD_ENROLLED,
       })
     }
@@ -57,13 +57,13 @@ export class PaymentMethodComponent {
       icon: `PAGO_EFECTIVO`,
       id: FlowPaymentMethod.PAGO_EFECTIVO,
     }*/,
-    {
-      name: 'Suscripción mensual',
-      // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',
-      description: 'Ahorra '+ this.env.creatina2025Descuento +' y llévate una ' + this.env.campanaPrimeraCreatina.textos.heroOferta + '.',
-      icon: `RECURRENT_PAYMENT`,
-      id: FlowPaymentMethod.RECURRENT_PAYMENT,
-    }
+    // {
+    //   name: 'Suscripción mensual',
+    //   // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',
+    //   description: 'Ahorra '+ this.env.creatina2025Descuento +' y llévate una ' + this.env.campanaPrimeraCreatina.textos.heroOferta + '.',
+    //   icon: `RECURRENT_PAYMENT`,
+    //   id: FlowPaymentMethod.RECURRENT_PAYMENT,
+    // }
   ];
 
   selectPaymentMethod( id: FlowPaymentMethod ) {

@@ -3,7 +3,8 @@
         @for (item of radios; track $index) {
         <li>
             <label [for]="item.name" class="block relative">
-                <input (click)="selectPaymentMethod(item.id)" [id]="item.name" type="radio" [checked]="$index === 0" name="payment" class="sr-only peer" />
+                <input (click)="selectPaymentMethod(item.id)" [id]="item.name" type="radio" [checked]="$index === 0"
+                    name="payment" class="sr-only peer" />
                 <div
                     class="w-full flex gap-x-3 items-start p-4 cursor-pointer rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 duration-200">
                     <div class="flex-none">
@@ -14,25 +15,42 @@
                                 d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
                         </svg>
                         }
+                        @else if (item.icon == 'VISA') {
+                        <div class="w-6">
+                            <img src="/logo_visa.png" alt="visa" class="h-full">
+                        </div>
+                        }
+                        @else if (item.icon == 'MASTERCARD') {
+                        <div class="w-6">
+                            <img src="/logo_mastercard.svg" alt="mastercard" class="h-full">
+                        </div>
+                        }
+                        @else if (item.icon.includes('AME')) {
+                        <div class="w-6">
+                            <img src="/logo_amex.svg" alt="amex" class="h-full">        
+                        </div>
+                        }
                         @else if (item.icon == 'RECURRENT_PAYMENT') {
-                            <div class="h-6">
-                                <img src="/20percent-off.png" alt="pago efectivo" class="h-full">
-                            </div>
+                        <div class="w-6">
+                            <img src="/20percent-off.png" alt="pago efectivo" class="h-full">
+                        </div>
                         }
                         @else if (item.icon == 'YAPE') {
-                            <div class="h-6">
-                                <img src="/logo_yape.png" alt="yape" class="h-full">
-                            </div>
+                        <div class="w-6">
+                            <img src="/logo_yape.png" alt="yape" class="h-full">
+                        </div>
                         }
                         @else if (item.icon == 'PAGO_EFECTIVO') {
-                            <div class="h-6">
-                                <img src="logo_pagoefectivo.png" alt="pago efectivo logo" class="h-full">
-                            </div>
+                        <div class="w-6">
+                            <img src="logo_pagoefectivo.png" alt="pago efectivo logo" class="h-full">
+                        </div>
                         }
                         @else if (item.icon == 'CARD_ENROLLED') {
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                <path d="M160-640h640v-80H160v80Zm-80-80q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v240H160v240h164v80H160q-33 0-56.5-23.5T80-240v-480ZM598-80 428-250l56-56 114 112 226-226 56 58L598-80ZM160-720v480-180 113-413Z"/>
-                            </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#434343">
+                            <path
+                                d="M160-640h640v-80H160v80Zm-80-80q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v240H160v240h164v80H160q-33 0-56.5-23.5T80-240v-480ZM598-80 428-250l56-56 114 112 226-226 56 58L598-80ZM160-720v480-180 113-413Z" />
+                        </svg>
                         }
                         @else {
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -68,8 +86,8 @@
                     d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                     clip-rule="evenodd" />
             </svg>
-            Pago seguro con <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800"
-                target="_blank"> Flow</a>
+            Pago seguro con <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800" target="_blank">
+                Flow</a>
         </p>
     </ul>
 </div>

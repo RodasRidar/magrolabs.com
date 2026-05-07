@@ -57,11 +57,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   navbarTypeEnum = NavbarTypeEnum;
   ENV = environment;
   cartHas250Creatine = signal(false);
-  isProcessing =  signal(false);
+  isProcessing = signal(false);
   isOutsideLimaMetropolitana = signal(false);
   precioEnvioFueraLimaMetropolitana = signal(this.ENV.precioEnvioFueraLimaMetropolitana);
   allowNavigation = signal(false); // Señal para permitir navegación cuando el pago se procesa correctamente
-  
+
   // Variables para código de descuento
   discountAmount = signal(0);
   discountCode = signal('');
@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   userAddress: PlaceAPI | null = null;
 
   isSearched = false;
-  hideSearching = false;
+  hideSearching = true;
   departmentEmpty = true;
   provinceEmpty = true;
   isSaving = false;
@@ -140,7 +140,16 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         this.form.disable();
       } else {
         this.form.enable();
-        
+
+        // Si el usuario está autenticado, los campos de identidad no son editables
+        if (this._authService.isAuthenticated()) {
+          this.form.get('email')?.disable({ emitEvent: false });
+          this.form.get('nroDocument')?.disable({ emitEvent: false });
+          this.form.get('typeDocument')?.disable({ emitEvent: false });
+          this.form.get('password')?.disable({ emitEvent: false });
+          this.form.get('isSignUpAcepted')?.disable({ emitEvent: false });
+        }
+
         // Re-aplicar el estado de disable específico para province y district
         // si no hay departamento seleccionado
         if (!this.departmentUbigeo) {
@@ -274,7 +283,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       }
     });
 
-    this.setValuesInFormFromSummary();
+    if (this._authService.isAuthenticated()) {
+      this.setValuesInFormFromAuthUser();
+    } else {
+      this.setValuesInFormFromSummary();
+    }
 
     this.form.get('district')?.valueChanges.subscribe(() => {
       this.validateAddressLocation({
@@ -285,8 +298,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         distrito: this.form.get('district')?.value ?? '',
         provincia: this.form.get('province')?.value ?? ''
       } as AddressSummary);
-      });
-      
+    });
+
     this.form.get('department')?.valueChanges.subscribe(() => {
       this.validateAddressLocation({
         tipoVia: this.form.get('tipoVia')?.value ?? '',
@@ -296,7 +309,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         distrito: this.form.get('district')?.value ?? '',
         provincia: this.form.get('province')?.value ?? ''
       } as AddressSummary);
-      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -419,11 +432,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
     this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
     this._shoppingCartService.setShoppingCart(this.shoppingCart);
-    if(this.isOutsideLimaMetropolitana()){
-    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
-    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
-    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
-    if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
+    if (this.isOutsideLimaMetropolitana()) {
+      if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
+      if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 2);
+      if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 3);
+      if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 4);
     }
     this.revalidateDiscountCode();
     this.recalculateTotal();
@@ -478,7 +491,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
    */
   applyDiscountCode(): void {
     const code = this.form.get('discountCodeInput')?.value?.trim().toUpperCase();
-    
+
     if (!code) {
       this.discountError.set('Por favor, ingresa un código de descuento');
       return;
@@ -551,6 +564,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     return Math.round(this.discountPercentage);
   }
 
+  get isAuthUser(): boolean {
+    return this._authService.isAuthenticated();
+  }
+
   /**
    * Elimina el código de descuento aplicado
    */
@@ -569,7 +586,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
    */
   private recalculateTotal(): void {
     let baseTotal = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-    
+
     // Agregar costo de envío si está fuera de Lima Metropolitana
     if (this.isOutsideLimaMetropolitana()) {
       baseTotal += this.precioEnvioFueraLimaMetropolitana();
@@ -741,16 +758,22 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   selectDepartment(event: any): void {
-    this.districts$ = this._addressService.getDistricts('');
     this.departmentUbigeo = event.target.value;
+    this.provinceUbigeo = '';
+    this.districtUbigeo = '';
     this.provinces$ = this._addressService.getProvinces(this.departmentUbigeo);
+    this.districts$ = this._addressService.getDistricts('');
+    this.form.get('province')?.setValue('');
+    this.form.get('district')?.setValue('');
     this.form.get('province')?.enable();
     this.form.get('district')?.disable();
   }
 
   selectProvince(event: any): void {
     this.provinceUbigeo = event.target.value;
+    this.districtUbigeo = '';
     this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
+    this.form.get('district')?.setValue('');
     this.form.get('district')?.enable();
   }
 
@@ -768,7 +791,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       currency: 'PEN',
       value: this.shoppingCart.total || 0
     });
-    
+
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.buttonName = 'Continuar →';
 
@@ -799,7 +822,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    if(this.buttonName == 'Pagar →'){
+    if (this.buttonName == 'Pagar →') {
       this._metaAnalytics.trackAddPaymentInfo({
         content_ids: this.shoppingCart.items.map(item => item.product.slug.toString()),
         contents: this.shoppingCart.items.map(item => ({
@@ -1133,6 +1156,70 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
   }
 
+  private setValuesInFormFromAuthUser(): void {
+    // Llamamos al endpoint /profile para obtener datos frescos con la dirección incluida.
+    // La cookie puede no tener address si la sesión se creó durante un checkout anterior.
+    this.isProcessing.set(true);
+    this._userService.getCurrentUser().pipe(
+      catchError(() => EMPTY),
+      finalize(() => this.isProcessing.set(false))
+    ).subscribe(user => {
+      this.form.get('firtName')?.setValue(user.first_name, { emitEvent: false });
+      this.form.get('lastName')?.setValue(user.last_name, { emitEvent: false });
+      this.form.get('cellphone')?.setValue(user.phone ?? '', { emitEvent: false });
+      this.form.get('nroDocument')?.setValue(user.documentNumber ?? '', { emitEvent: false });
+      this.form.get('typeDocument')?.setValue(user.documentType ?? 'DNI', { emitEvent: false });
+      this.form.get('email')?.setValue(user.email, { emitEvent: false });
+      this.form.get('isSignUpAcepted')?.setValue(false, { emitEvent: false });
+      this.form.get('termsAccepted')?.setValue(true, { emitEvent: false });
+
+      // El usuario ya está registrado: la contraseña no es necesaria
+      const passwordControl = this.form.get('password');
+      passwordControl?.clearValidators();
+      passwordControl?.updateValueAndValidity({ emitEvent: false });
+
+      if (user.address) {
+        this.hideSearching = true;
+        this.isSearched = true;
+
+        this._addressService.getDepartments().pipe(
+          map(() => {
+            this.departmentUbigeo = user.address!.department_ubigeo;
+            this.provinces$ = this._addressService.getProvinces(this.departmentUbigeo);
+            return this.departmentUbigeo;
+          }),
+          switchMap((departmentUbigeo) =>
+            this._addressService.getProvinces(departmentUbigeo).pipe(
+              map(() => {
+                this.provinceUbigeo = user.address!.province_ubigeo;
+                this.districts$ = this._addressService.getDistricts(this.provinceUbigeo);
+                return this.provinceUbigeo;
+              })
+            )
+          ),
+          switchMap((provinceUbigeo) =>
+            this._addressService.getDistricts(provinceUbigeo).pipe(
+              map(() => {
+                this.districtUbigeo = user.address!.district_ubigeo;
+                return this.districtUbigeo;
+              })
+            )
+          )
+        ).subscribe(() => {
+          this.form.get('streetAddress')?.setValue(user.address!.avenue ?? '');
+          this.form.get('number')?.setValue(user.address!.number ?? '');
+          this.form.get('postalCode')?.setValue(user.address!.postalcode ?? '');
+          this.form.get('district')?.setValue(user.address!.district_ubigeo);
+          this.form.get('province')?.setValue(user.address!.province_ubigeo);
+          this.form.get('department')?.setValue(user.address!.department_ubigeo);
+          this.form.get('reference')?.setValue(user.address!.reference ?? '');
+          this.form.get('district')?.enable();
+          this.form.get('province')?.enable();
+        });
+      }
+    });
+  }
+
   private setValuesInFormFromSummary() {
     let summary = this._summaryService.getSummary()
     this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
@@ -1381,7 +1468,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._summaryService.setChoosePlan({
       selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       descriptionOne: 'Monohidratada 100%',
-      descriptionTwo: 'Compra única de S/' + this.shoppingCart.total+ '.',
+      descriptionTwo: 'Compra única de S/' + this.shoppingCart.total + '.',
       quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
     });
 
@@ -1398,26 +1485,26 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-    /**
-     * Valida si la dirección del usuario está fuera de Lima Metropolitana
-     */
-    private validateAddressLocation(addressSummary: AddressSummary): void {
-      console.log('Validating address location:', addressSummary);
-      if (addressSummary.department && addressSummary.provincia) {
-        // Verificar si NO es Lima Metropolitana
-        // Lima Metropolitana = departamento "Lima" y provincia "Lima"
-        if (addressSummary.department?.toLowerCase() !== '3926' || addressSummary.provincia?.toLowerCase() !== '3927') {
-          this.isOutsideLimaMetropolitana.set(true);
-          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
-          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *2);
-          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *3);
-          if(this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana *4);
-        } else {
-          this.isOutsideLimaMetropolitana.set(false);
-        }
-        this.recalculateTotal();
+  /**
+   * Valida si la dirección del usuario está fuera de Lima Metropolitana
+   */
+  private validateAddressLocation(addressSummary: AddressSummary): void {
+    console.log('Validating address location:', addressSummary);
+    if (addressSummary.department && addressSummary.provincia) {
+      // Verificar si NO es Lima Metropolitana
+      // Lima Metropolitana = departamento "Lima" y provincia "Lima"
+      if (addressSummary.department?.toLowerCase() !== '3926' || addressSummary.provincia?.toLowerCase() !== '3927') {
+        this.isOutsideLimaMetropolitana.set(true);
+        if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 1) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana);
+        if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 4) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 2);
+        if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 10) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 3);
+        if (this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart) > 16) this.precioEnvioFueraLimaMetropolitana.set(this.ENV.precioEnvioFueraLimaMetropolitana * 4);
+      } else {
+        this.isOutsideLimaMetropolitana.set(false);
       }
-    }          
+      this.recalculateTotal();
+    }
+  }
 
   private trackInitiateCheckout(): void {
     // Obtener items del carrito para tracking
@@ -1443,5 +1530,22 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         num_items: this.shoppingCart.items.length
       });
     }
+  }
+
+  get cellphoneErrors(): string[] {
+    if (this.hasRequiredError('cellphone')) return ['*El número de celular es obligatorio'];
+    if (this.hasValidatorError('cellphone')) return ['*Número inválido, solo se permite 9 dígitos'];
+    if (this.hasExistCellphone()) return ['*El número de celular ya está registrado'];
+    return [];
+  }
+
+  get nroDocumentErrors(): string[] {
+    const type = this.form.get('typeDocument')?.value;
+    if (this.hasRequiredError('nroDocument')) return ['*Número de documento es obligatorio'];
+    if (this.hasValidatorError('nroDocument') && type === 'DNI') return ['*DNI permite 8 dígitos'];
+    if (this.hasValidatorError('nroDocument') && type === 'CE') return ['*Carnet Ext. permite 12 alfanuméricos'];
+    if (this.hasValidatorError('nroDocument') && type === 'PASSPORT') return ['*Pasaporte permite 12 alfanuméricos'];
+    if (this.hasExistDocument()) return ['*El documento ya está registrado'];
+    return [];
   }
 }

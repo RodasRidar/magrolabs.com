@@ -80,14 +80,34 @@ export class PaymentMethodComponent {
   /** El widget de Flow se renderiza solo cuando ADD_CARD está activo y hay token. */
   showWidget = computed(() => this.currentSelection() === 'ADD_CARD' && !!this.flowToken());
 
+  /**
+   * Flag interno que sube a true cuando el widget emite cardAddedSuccessfully(true).
+   * Lo usa el effect para autoseleccionar CARD_ENROLLED apenas la tarjeta
+   * recién enrolada esté disponible en el input enrolledCard.
+   */
+  private justEnrolled = signal(false);
+
   constructor() {
-    // Si la tarjeta enrolada llega después del init (fetch async desde backend),
-    // y el cliente aún no había elegido nada, autoseleccionarla.
     effect(() => {
       const card = this.enrolledCard();
-      if (card && this.currentSelection() === null) {
+      const selection = this.currentSelection();
+
+      // Caso 1: aún no hay nada seleccionado y llegó una tarjeta enrolada
+      // (cliente autenticado al iniciar) → autoseleccionar.
+      if (card && selection === null) {
         this.currentSelection.set('CARD_ENROLLED');
         this.emitSelection('CARD_ENROLLED');
+        return;
+      }
+
+      // Caso 2: el cliente acaba de enrolar una tarjeta vía widget. La selección
+      // está en ADD_CARD pero ya hay enrolledCard poblado por el padre tras el
+      // getCustomer post-enrolamiento → cambiar a CARD_ENROLLED para que la
+      // tarjeta recién agregada quede seleccionada.
+      if (card && this.justEnrolled() && selection === 'ADD_CARD') {
+        this.currentSelection.set('CARD_ENROLLED');
+        this.emitSelection('CARD_ENROLLED');
+        this.justEnrolled.set(false);
       }
     });
   }
@@ -134,5 +154,10 @@ export class PaymentMethodComponent {
 
   onCardEnrolled(success: boolean): void {
     this.cardEnrolled.emit(success);
+    if (success) {
+      // Marcar enrolamiento exitoso. El effect cambiará a CARD_ENROLLED apenas
+      // el padre popule enrolledCard tras su getCustomer.
+      this.justEnrolled.set(true);
+    }
   }
 }

@@ -913,12 +913,22 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
    * Determina si el cliente puede enrolar tarjeta (modo CHARGE).
    * - Cliente autenticado: siempre.
    * - Guest: solo si activó el flag "Registrarse" (isSignUpAcepted).
-   * Si está deshabilitado, el componente <app-payment-method> oculta el acordeón
-   * y solo muestra Yape (más la tarjeta enrolada si existiera, que en guest no aplica).
+   * Si está deshabilitado, el componente <app-payment-method> oculta el acordeón.
    */
   canEnrollCard(): boolean {
     if (this._authService.isAuthenticated()) return true;
     return !!this.form.get('isSignUpAcepted')?.value;
+  }
+
+  /**
+   * Determina si el cliente debe ver la opción "tarjeta vía portal Flow"
+   * (redirect, sin enrolar tarjeta). Aplica solo al guest sin flag de registro:
+   * no le guardamos la tarjeta, pero le permitimos pagar con ella vía Flow.
+   * Mutuamente excluyente con canEnrollCard.
+   */
+  canPayCardViaPortal(): boolean {
+    if (this._authService.isAuthenticated()) return false;
+    return !this.form.get('isSignUpAcepted')?.value;
   }
 
   /**

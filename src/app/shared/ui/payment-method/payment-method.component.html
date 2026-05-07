@@ -47,7 +47,45 @@
             </li>
         }
 
-        <!-- Opción 2: Agregar Tarjeta + acordeón widget pegado abajo (continuación visual) -->
+        <!-- Opción "tarjeta vía portal Flow" (guest sin flag de registro) -->
+        @if (canPayCardViaPortal()) {
+            <li>
+                <label class="block relative cursor-pointer">
+                    <input
+                        type="radio"
+                        name="payment-selection"
+                        class="sr-only"
+                        [checked]="currentSelection() === 'CARD_PORTAL'"
+                        (change)="selectOption('CARD_PORTAL')" />
+                    <div
+                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                        [class.ring-2]="currentSelection() === 'CARD_PORTAL'"
+                        [class.ring-[#D7816A]]="currentSelection() === 'CARD_PORTAL'">
+                        <div class="flex-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#434343">
+                                <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Z" />
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="leading-none text-gray-800 font-medium">Paga con tu tarjeta de crédito o débito</h3>
+                            <p class="mt-1 text-sm text-gray-600">Te llevamos al portal seguro de Flow para completar tu pago.</p>
+                        </div>
+                        <div
+                            class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
+                            [class.bg-[#D7816A]]="currentSelection() === 'CARD_PORTAL'"
+                            [class.border-[#D7816A]]="currentSelection() === 'CARD_PORTAL'">
+                            @if (currentSelection() === 'CARD_PORTAL') {
+                                <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
+                                    <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
+                                </svg>
+                            }
+                        </div>
+                    </div>
+                </label>
+            </li>
+        }
+
+        <!-- Opción "Agregar Tarjeta" + acordeón widget pegado abajo (continuación visual) -->
         @if (canEnrollCard()) {
             <li>
                 <label class="block relative cursor-pointer">

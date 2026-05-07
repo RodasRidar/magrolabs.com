@@ -8,8 +8,15 @@ import { FlowWidgetAddCardComponent } from '../flow-widget-add-card/flow-widget-
 /**
  * Identificadores de selección visibles en el componente.
  * Internamente mapean a FlowPaymentMethod cuando aplica.
+ *
+ * - CARD_ENROLLED: tarjeta ya guardada del cliente (cargo síncrono).
+ * - ADD_CARD: enrolar nueva tarjeta vía widget de Flow Elements (cargo síncrono).
+ * - CARD_PORTAL: tarjeta sin enrolar — redirect al portal Flow para que el
+ *   cliente ingrese su tarjeta directamente. Aplica al guest sin flag de
+ *   registro (no queremos guardarle la tarjeta).
+ * - YAPE: redirect al portal Flow con paymentMethod=152.
  */
-export type PaymentSelection = 'CARD_ENROLLED' | 'ADD_CARD' | 'YAPE';
+export type PaymentSelection = 'CARD_ENROLLED' | 'ADD_CARD' | 'CARD_PORTAL' | 'YAPE';
 
 export interface PaymentMethodSelection {
   selection: PaymentSelection;
@@ -44,6 +51,13 @@ export class PaymentMethodComponent {
 
   /** Cambia a true cuando el flag "Registrarse" del checkout permite enrolar tarjeta como guest. */
   canEnrollCard = input<boolean>(true);
+
+  /**
+   * True cuando se debe ofrecer pagar con tarjeta vía redirect al portal Flow
+   * (sin enrolar). Solo aplica al guest sin flag de registro.
+   * Mutuamente excluyente con canEnrollCard.
+   */
+  canPayCardViaPortal = input<boolean>(false);
 
   /** Emite cada vez que el cliente cambia de método de pago. */
   paymentMethodChanged = output<PaymentMethodSelection>();
@@ -105,6 +119,10 @@ export class PaymentMethodComponent {
         flowMethod = FlowPaymentMethod.CARD_ENROLLED;
         break;
       case 'ADD_CARD':
+      case 'CARD_PORTAL':
+        // Ambos son tarjeta de crédito/débito desde la perspectiva de Flow.
+        // La diferencia (charge síncrono vs portal) la decide el parent
+        // según `selection` al construir el body del checkout.
         flowMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
         break;
       case 'YAPE':

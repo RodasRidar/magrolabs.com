@@ -117,8 +117,11 @@ export class ConfirmationComponent {
       const orderIdParam: string | null = params['orderId'] ?? null;
       const isAuthenticated = this._authService.isAuthenticated();
 
-      // Determinar si activamos modo rico (cliente con sesión + orden a consultar)
-      const tryRichMode = isAuthenticated && (orderIdParam || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION);
+      // Determinar si activamos modo rico (cliente con sesión + orden a consultar).
+      // Caso especial: si llegamos con orderIdParam, intentamos modo rico aunque
+      // isAuthenticated() sea false en este tick — el interceptor agregará el JWT
+      // si las cookies se sincronizaron. Si la hidratación falla, caemos a fallback.
+      const tryRichMode = (isAuthenticated || !!orderIdParam) && (orderIdParam || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION || status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION);
 
       if (tryRichMode) {
         this.hydrateOrderDetails(orderIdParam);
@@ -135,7 +138,7 @@ export class ConfirmationComponent {
           : this.ENV.creditoRegaloPorCompraMes + ' Magropuntos';
       }
 
-      this.runStatusSideEffects(status);
+      this.runStatusSideEffects(status, orderIdParam);
       this.cleanupAfterConfirmation();
     });
   }
@@ -183,8 +186,14 @@ export class ConfirmationComponent {
   /**
    * Ejecuta los side-effects asociados al status (analytics, emails, modales,
    * decremento de unidades). Mismos comportamientos que el componente original.
+   *
+   * @param orderIdParam Si está presente, asumimos que el cliente llegó tras
+   *   un checkout exitoso (modo CHARGE redirige acá con orderId). En ese caso,
+   *   NO redirigimos a verificacion aunque order() aún no esté hidratada y
+   *   isAuthenticated() retorne false momentáneamente — la hidratación async
+   *   se encarga de poblar la UI rica.
    */
-  private runStatusSideEffects(status: any): void {
+  private runStatusSideEffects(status: any, orderIdParam?: string | null): void {
     if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
       this.trackCompleteSuscription();
       this.openWelcomeModal();
@@ -205,8 +214,10 @@ export class ConfirmationComponent {
       this.trackPurchaseComplete();
       UrgencyBarComponent.decrementUnits();
     } else {
-      // Sin status pero con orderId (modo rico): tratar como compra registrada
-      if (this.order() || this._authService.isAuthenticated()) {
+      // Sin status pero con orderId (modo rico): tratar como compra registrada.
+      // Si hay orderIdParam confiamos en la hidratación async — no redirigimos
+      // aunque order() y isAuthenticated() estén false en este tick.
+      if (orderIdParam || this.order() || this._authService.isAuthenticated()) {
         this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;
         this.sendOrderConfirmationEmail();
         this.trackPurchaseComplete();

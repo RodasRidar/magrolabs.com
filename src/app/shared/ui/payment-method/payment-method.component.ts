@@ -59,6 +59,13 @@ export class PaymentMethodComponent {
    */
   canPayCardViaPortal = input<boolean>(false);
 
+  /**
+   * Bloquea la selección y el widget cuando el padre está procesando un pago.
+   * Aplica clases visuales de "deshabilitado" y deshabilita los inputs radio
+   * para evitar que el cliente cambie de método mientras la API responde.
+   */
+  disabled = input<boolean>(false);
+
   /** Emite cada vez que el cliente cambia de método de pago. */
   paymentMethodChanged = output<PaymentMethodSelection>();
 
@@ -109,7 +116,7 @@ export class PaymentMethodComponent {
         this.emitSelection('CARD_ENROLLED');
         this.justEnrolled.set(false);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit(): void {
@@ -124,6 +131,7 @@ export class PaymentMethodComponent {
   }
 
   selectOption(selection: PaymentSelection): void {
+    if (this.disabled()) return;
     this.currentSelection.set(selection);
     this.emitSelection(selection);
 

@@ -1,14 +1,19 @@
 <div class="max-w-md">
-    <ul class="space-y-3 lg:space-y-4">
+    <ul
+        class="space-y-3 lg:space-y-4 transition"
+        [class.opacity-60]="disabled()"
+        [class.pointer-events-none]="disabled()"
+        [attr.aria-disabled]="disabled() ? 'true' : null">
 
         <!-- Opción 1: tarjeta enrolada del cliente (si existe) -->
         @if (enrolledCard(); as card) {
             <li>
-                <label class="block relative cursor-pointer">
+                <label class="block relative" [class.cursor-pointer]="!disabled()" [class.cursor-not-allowed]="disabled()">
                     <input
                         type="radio"
                         name="payment-selection"
                         class="sr-only"
+                        [disabled]="disabled()"
                         [checked]="currentSelection() === 'CARD_ENROLLED'"
                         (change)="selectOption('CARD_ENROLLED')" />
                     <div
@@ -50,11 +55,12 @@
         <!-- Opción "tarjeta vía portal Flow" (guest sin flag de registro) -->
         @if (canPayCardViaPortal()) {
             <li>
-                <label class="block relative cursor-pointer">
+                <label class="block relative" [class.cursor-pointer]="!disabled()" [class.cursor-not-allowed]="disabled()">
                     <input
                         type="radio"
                         name="payment-selection"
                         class="sr-only"
+                        [disabled]="disabled()"
                         [checked]="currentSelection() === 'CARD_PORTAL'"
                         (change)="selectOption('CARD_PORTAL')" />
                     <div
@@ -88,11 +94,12 @@
         <!-- Opción "Agregar Tarjeta" + acordeón widget pegado abajo (continuación visual) -->
         @if (canEnrollCard()) {
             <li>
-                <label class="block relative cursor-pointer">
+                <label class="block relative" [class.cursor-pointer]="!disabled()" [class.cursor-not-allowed]="disabled()">
                     <input
                         type="radio"
                         name="payment-selection"
                         class="sr-only"
+                        [disabled]="disabled()"
                         [checked]="currentSelection() === 'ADD_CARD'"
                         (change)="selectOption('ADD_CARD')" />
                     <div
@@ -164,11 +171,12 @@
 
         <!-- Opción 3: Yape (siempre visible) -->
         <li>
-            <label class="block relative cursor-pointer">
+            <label class="block relative" [class.cursor-pointer]="!disabled()" [class.cursor-not-allowed]="disabled()">
                 <input
                     type="radio"
                     name="payment-selection"
                     class="sr-only"
+                    [disabled]="disabled()"
                     [checked]="currentSelection() === 'YAPE'"
                     (change)="selectOption('YAPE')" />
                 <div

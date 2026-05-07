@@ -451,6 +451,7 @@
                                                     [flowToken]="flowToken()"
                                                     [canEnrollCard]="canEnrollCard()"
                                                     [canPayCardViaPortal]="canPayCardViaPortal()"
+                                                    [disabled]="isProcessing()"
                                                     (paymentMethodChanged)="onPaymentSelectionChanged($event)"
                                                     (enrollmentRequested)="onEnrollmentRequested()"
                                                     (cardEnrolled)="onCardEnrolled($event)" />

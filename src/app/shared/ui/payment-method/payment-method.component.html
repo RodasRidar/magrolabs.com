@@ -8,10 +8,13 @@
                     <input
                         type="radio"
                         name="payment-selection"
-                        class="sr-only peer"
+                        class="sr-only"
                         [checked]="currentSelection() === 'CARD_ENROLLED'"
                         (change)="selectOption('CARD_ENROLLED')" />
-                    <div class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 transition">
+                    <div
+                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                        [class.ring-2]="currentSelection() === 'CARD_ENROLLED'"
+                        [class.ring-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'">
                         <div class="flex-none">
                             @if (card.brand.toUpperCase() === 'VISA') {
                                 <img src="/logo_visa.png" alt="Visa" class="w-6 h-auto" />
@@ -29,7 +32,10 @@
                             <h3 class="leading-none text-gray-800 font-medium">{{ card.brand }} •••• {{ card.last4 }}</h3>
                             <p class="mt-1 text-sm text-gray-600">Paga con tu tarjeta guardada.</p>
                         </div>
-                        <div class="flex-none flex items-center justify-center w-4 h-4 rounded-full border peer-checked:bg-[#D7816A] text-white transition">
+                        <div
+                            class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
+                            [class.bg-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'"
+                            [class.border-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'">
                             @if (currentSelection() === 'CARD_ENROLLED') {
                                 <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
                                     <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
@@ -41,17 +47,24 @@
             </li>
         }
 
-        <!-- Opción 2: Agregar Tarjeta (acordeón con widget de Flow) -->
+        <!-- Opción 2: Agregar Tarjeta + acordeón widget pegado abajo (continuación visual) -->
         @if (canEnrollCard()) {
             <li>
                 <label class="block relative cursor-pointer">
                     <input
                         type="radio"
                         name="payment-selection"
-                        class="sr-only peer"
+                        class="sr-only"
                         [checked]="currentSelection() === 'ADD_CARD'"
                         (change)="selectOption('ADD_CARD')" />
-                    <div class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 transition">
+                    <div
+                        class="w-full flex gap-x-3 items-start p-4 border bg-white shadow-sm transition"
+                        [class.rounded-lg]="currentSelection() !== 'ADD_CARD'"
+                        [class.rounded-t-lg]="currentSelection() === 'ADD_CARD'"
+                        [class.rounded-b-none]="currentSelection() === 'ADD_CARD'"
+                        [class.border-b-0]="currentSelection() === 'ADD_CARD'"
+                        [class.ring-2]="currentSelection() === 'ADD_CARD'"
+                        [class.ring-[#D7816A]]="currentSelection() === 'ADD_CARD'">
                         <div class="flex-none">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#434343">
                                 <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
@@ -67,7 +80,10 @@
                             </h3>
                             <p class="mt-1 text-sm text-gray-600">Tu tarjeta queda guardada para tu próxima compra.</p>
                         </div>
-                        <div class="flex-none flex items-center justify-center w-4 h-4 rounded-full border peer-checked:bg-[#D7816A] text-white transition">
+                        <div
+                            class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
+                            [class.bg-[#D7816A]]="currentSelection() === 'ADD_CARD'"
+                            [class.border-[#D7816A]]="currentSelection() === 'ADD_CARD'">
                             @if (currentSelection() === 'ADD_CARD') {
                                 <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
                                     <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
@@ -77,9 +93,17 @@
                     </div>
                 </label>
 
-                <!-- Acordeón: widget de Flow -->
-                @if (currentSelection() === 'ADD_CARD') {
-                    <div class="mt-3 mx-1 border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+                <!-- Acordeón pegado a la card de arriba (sin mt) — solo visible cuando ADD_CARD está seleccionado -->
+                <div
+                    class="overflow-hidden border-l border-r border-b border-gray-200 bg-gray-50 transition-all duration-300"
+                    [class.max-h-0]="currentSelection() !== 'ADD_CARD'"
+                    [class.opacity-0]="currentSelection() !== 'ADD_CARD'"
+                    [class.max-h-[500px]]="currentSelection() === 'ADD_CARD'"
+                    [class.opacity-100]="currentSelection() === 'ADD_CARD'"
+                    [class.rounded-b-lg]="currentSelection() === 'ADD_CARD'"
+                    [class.ring-2]="currentSelection() === 'ADD_CARD'"
+                    [class.ring-[#D7816A]]="currentSelection() === 'ADD_CARD'">
+                    @if (currentSelection() === 'ADD_CARD') {
                         @if (flowToken(); as tk) {
                             <div class="p-3 sm:p-4">
                                 <app-flow-widget-add-card
@@ -95,8 +119,8 @@
                                 Preparando el formulario seguro de tarjeta…
                             </div>
                         }
-                    </div>
-                }
+                    }
+                </div>
             </li>
         }
 
@@ -106,10 +130,13 @@
                 <input
                     type="radio"
                     name="payment-selection"
-                    class="sr-only peer"
+                    class="sr-only"
                     [checked]="currentSelection() === 'YAPE'"
                     (change)="selectOption('YAPE')" />
-                <div class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm ring-[#D7816A] peer-checked:ring-2 transition">
+                <div
+                    class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                    [class.ring-2]="currentSelection() === 'YAPE'"
+                    [class.ring-[#D7816A]]="currentSelection() === 'YAPE'">
                     <div class="flex-none">
                         <img src="/logo_yape.png" alt="Yape" class="w-6 h-auto" />
                     </div>
@@ -117,7 +144,10 @@
                         <h3 class="leading-none text-gray-800 font-medium">Yape</h3>
                         <p class="mt-1 text-sm text-gray-600">Paga con Yape u otras billeteras.</p>
                     </div>
-                    <div class="flex-none flex items-center justify-center w-4 h-4 rounded-full border peer-checked:bg-[#D7816A] text-white transition">
+                    <div
+                        class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
+                        [class.bg-[#D7816A]]="currentSelection() === 'YAPE'"
+                        [class.border-[#D7816A]]="currentSelection() === 'YAPE'">
                         @if (currentSelection() === 'YAPE') {
                             <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
                                 <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SummaryService } from '../../services/summary-service.service';
 import { FlowPaymentMethod } from '../../models/flow.model';
@@ -54,17 +54,39 @@ export class PaymentMethodComponent {
   /** Emite cuando el widget de Flow confirma que la tarjeta se enroló exitosamente. */
   cardEnrolled = output<boolean>();
 
-  /** Selección actual. Default: tarjeta enrolada si existe, si no Agregar Tarjeta. */
-  currentSelection = signal<PaymentSelection>('ADD_CARD');
+  /**
+   * Selección actual del cliente. null = aún no eligió.
+   * Si hay enrolledCard cuando se monta el componente, se preselecciona CARD_ENROLLED.
+   * Si NO hay enrolledCard, se deja null para que el cliente elija activamente —
+   * así no se monta el widget (ni se ve el loader) hasta que el cliente toca
+   * "Agregar Tarjeta".
+   */
+  currentSelection = signal<PaymentSelection | null>(null);
 
-  /** Marca true cuando el widget está visible (acordeón expandido). */
+  /** El widget de Flow se renderiza solo cuando ADD_CARD está activo y hay token. */
   showWidget = computed(() => this.currentSelection() === 'ADD_CARD' && !!this.flowToken());
 
+  constructor() {
+    // Si la tarjeta enrolada llega después del init (fetch async desde backend),
+    // y el cliente aún no había elegido nada, autoseleccionarla.
+    effect(() => {
+      const card = this.enrolledCard();
+      if (card && this.currentSelection() === null) {
+        this.currentSelection.set('CARD_ENROLLED');
+        this.emitSelection('CARD_ENROLLED');
+      }
+    });
+  }
+
   ngOnInit(): void {
-    // Default: si hay tarjeta enrolada, ofrecerla como primera opción.
-    const initial: PaymentSelection = this.enrolledCard() ? 'CARD_ENROLLED' : 'ADD_CARD';
-    this.currentSelection.set(initial);
-    this.emitSelection(initial);
+    // Default solo si la tarjeta ya estaba disponible al init (caso síncrono raro).
+    // En el caso normal, enrolledCard está null al init y el effect() se encarga
+    // cuando llegue la respuesta async de getCustomer.
+    if (this.enrolledCard()) {
+      this.currentSelection.set('CARD_ENROLLED');
+      this.emitSelection('CARD_ENROLLED');
+    }
+    // Sin enrolledCard: dejamos currentSelection en null. El cliente elige.
   }
 
   selectOption(selection: PaymentSelection): void {

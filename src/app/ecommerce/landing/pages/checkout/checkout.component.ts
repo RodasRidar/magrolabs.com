@@ -7,7 +7,7 @@ import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analy
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, take, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent, PaymentMethodSelection, EnrolledCardInfo, PaymentSelection } from '../../../../shared/ui/payment-method/payment-method.component';
@@ -95,8 +95,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   isSaving = false;
   isSearchingAddress = false;
 
-  /** Selección actual del método de pago en el componente <app-payment-method>. */
-  paymentSelection = signal<PaymentSelection>('ADD_CARD');
+  /** Selección actual del método de pago en el componente <app-payment-method>. null = el cliente aún no eligió. */
+  paymentSelection = signal<PaymentSelection | null>(null);
   /** Tarjeta enrolada del cliente (si está autenticado y tiene flowCustomerId). */
   enrolledCard = signal<EnrolledCardInfo | null>(null);
   /** Token devuelto por POST /api/v1/checkout/prepare-card para montar el widget. */
@@ -925,24 +925,34 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
    * Si el cliente está autenticado y tiene flowCustomerId, consulta sus datos
    * en Flow y popula el signal `enrolledCard` para que aparezca como opción
    * de pago. Llamado desde ngOnInit (best-effort, falla silenciosamente).
+   *
+   * Importante: NO usamos getCurrentUser() síncrono porque retorna null antes
+   * de que loadUserFromStorage (afterNextRender en AuthService) cargue el
+   * user de la cookie. Esperamos al observable currentUser$.
    */
   private hydrateEnrolledCardForAuthenticated(): void {
     if (!this._authService.isAuthenticated()) return;
-    const flowCustomerId = this._authService.getCurrentUser()?.flowCustomerId
-      ?? this._summaryService.getSummary()?.userData?.customerId;
-    if (!flowCustomerId) return;
 
-    this.flowCustomerId.set(flowCustomerId);
-    this._flowService.getCustomer(flowCustomerId).subscribe({
-      next: (customer) => {
-        if (customer.last4CardDigits && customer.creditCardType) {
-          this.enrolledCard.set({
-            last4: customer.last4CardDigits,
-            brand: customer.creditCardType,
-          });
-        }
-      },
-      error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
+    this._authService.currentUser$.pipe(
+      filter((user): user is NonNullable<typeof user> => !!user),
+      take(1),
+    ).subscribe(user => {
+      const flowCustomerId = user.flowCustomerId
+        ?? this._summaryService.getSummary()?.userData?.customerId;
+      if (!flowCustomerId) return;
+
+      this.flowCustomerId.set(flowCustomerId);
+      this._flowService.getCustomer(flowCustomerId).subscribe({
+        next: (customer) => {
+          if (customer.last4CardDigits && customer.creditCardType) {
+            this.enrolledCard.set({
+              last4: customer.last4CardDigits,
+              brand: customer.creditCardType,
+            });
+          }
+        },
+        error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
+      });
     });
   }
 
@@ -1012,6 +1022,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     // - PORTAL: Yape (siempre) o tarjeta sin enrolar (no aplica con esta UI).
     const selection = this.paymentSelection();
     const customerId = this.flowCustomerId();
+
+    if (selection === null) {
+      this._toastService.warning('Selecciona método de pago', 'Elige cómo quieres pagar antes de continuar.');
+      this.isProcessing.set(false);
+      return;
+    }
+
     const useChargeMode =
       (selection === 'CARD_ENROLLED' && !!customerId) ||
       (selection === 'ADD_CARD' && !!customerId && this.cardEnrolledOk());

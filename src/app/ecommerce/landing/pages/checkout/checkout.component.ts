@@ -871,6 +871,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       last_name: lastName,
       documentNumber: this.form.get('nroDocument')?.value || undefined,
       urlReturn: this.ENV.flowUrlReturn,
+      // Si ya tenemos un customerId del prepare-card previo (cliente alternando
+      // entre tarjeta/Yape varias veces), reusarlo para que el backend NO haga
+      // createCustomer otra vez. Evita el 502 de "externalId duplicado".
+      customerId: this.flowCustomerId() || undefined,
     }).pipe(
       finalize(() => this.preparingCard.set(false))
     ).subscribe({

@@ -117,6 +117,13 @@ export interface PrepareCardRequest {
   last_name: string;
   documentNumber?: string;
   urlReturn: string;
+  /**
+   * Reuso de customer Flow existente. Si el frontend ya hizo prepare-card
+   * antes y tiene el customerId cacheado, lo manda aquí para que el backend
+   * salte createCustomer (evita 502 "externalId duplicado" al alternar
+   * entre opciones de pago).
+   */
+  customerId?: string;
 }
 
 export interface PrepareCardResponseData {

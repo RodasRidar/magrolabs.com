@@ -826,15 +826,26 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   /**
    * Listener del componente <app-payment-method>. Sincroniza la selección
-   * (CARD_ENROLLED, ADD_CARD, YAPE) con el flowPaymentMethod usado para crear
-   * el body del checkout.
+   * (CARD_ENROLLED, ADD_CARD, CARD_PORTAL, YAPE) con el flowPaymentMethod
+   * usado para crear el body del checkout.
+   *
+   * Si el cliente cambia a una opción distinta de ADD_CARD, invalidamos
+   * el token y el flag cardEnrolledOk: Flow no permite reusar tokens tras
+   * handleCardSubscribed, así que si el cliente vuelve a ADD_CARD,
+   * pediremos un token nuevo automáticamente vía enrollmentRequested.
    */
   onPaymentSelectionChanged(event: PaymentMethodSelection): void {
+    const previousSelection = this.paymentSelection();
     this.paymentSelection.set(event.selection);
     this.selectPaymentMethod(event.flowMethod);
-    // Si el cliente cambió a otra opción y había enrolado una tarjeta nueva,
-    // mantenemos cardEnrolledOk para no perderla; pero si vuelve a ADD_CARD
-    // sin token, el evento enrollmentRequested la pedirá de nuevo.
+
+    // Si nos alejamos de ADD_CARD, invalidar token (no se puede reusar en Flow).
+    // No tocamos enrolledCard ni flowCustomerId — esos pueden seguir vigentes
+    // si la tarjeta ya quedó guardada exitosamente.
+    if (previousSelection === 'ADD_CARD' && event.selection !== 'ADD_CARD') {
+      this.flowToken.set(null);
+      this.cardEnrolledOk.set(false);
+    }
   }
 
   /**
@@ -866,6 +877,20 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       next: (resp) => {
         this.flowCustomerId.set(resp.data.customerId);
         this.flowToken.set(resp.data.token);
+
+        // Persistir el customerId en el summary y en el AuthService.
+        // El FlowWidgetAddCardComponent lee customerId desde summary.userData
+        // o desde authService.getCurrentUser().flowCustomerId al completar el
+        // enrolamiento. Si no lo guardamos aquí, el widget hace getCustomer('')
+        // y devuelve 400 "Customer not found".
+        const existing = this._summaryService.getSummary()?.userData;
+        this._summaryService.setUserData({
+          ...(existing ?? ({} as UserDataSummary)),
+          customerId: resp.data.customerId,
+        });
+        if (this._authService.isAuthenticated()) {
+          this._authService.updateFlowCustomerId(resp.data.customerId);
+        }
       },
       error: (err) => {
         const code = err?.error?.code;

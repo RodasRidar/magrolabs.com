@@ -449,7 +449,13 @@
                                             </div>
 
                                             <div class="col-span-6">
-                                                <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
+                                                <app-payment-method
+                                                    [enrolledCard]="enrolledCard()"
+                                                    [flowToken]="flowToken()"
+                                                    [canEnrollCard]="canEnrollCard()"
+                                                    (paymentMethodChanged)="onPaymentSelectionChanged($event)"
+                                                    (enrollmentRequested)="onEnrollmentRequested()"
+                                                    (cardEnrolled)="onCardEnrolled($event)" />
 
                                                 <!-- Acepto términos y condiciones -->
                                                 <div class="flex items-end pb-3 pt-6">

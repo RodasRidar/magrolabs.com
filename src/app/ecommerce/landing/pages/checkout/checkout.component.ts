@@ -10,7 +10,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
-import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
+import { PaymentMethodComponent, PaymentMethodSelection, EnrolledCardInfo, PaymentSelection } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { environment } from '../../../../../environments/env';
 import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
@@ -94,6 +94,19 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   provinceEmpty = true;
   isSaving = false;
   isSearchingAddress = false;
+
+  /** Selección actual del método de pago en el componente <app-payment-method>. */
+  paymentSelection = signal<PaymentSelection>('ADD_CARD');
+  /** Tarjeta enrolada del cliente (si está autenticado y tiene flowCustomerId). */
+  enrolledCard = signal<EnrolledCardInfo | null>(null);
+  /** Token devuelto por POST /api/v1/checkout/prepare-card para montar el widget. */
+  flowToken = signal<string | null>(null);
+  /** flowCustomerId obtenido en prepare-card o ya conocido del user autenticado. */
+  flowCustomerId = signal<string | null>(null);
+  /** True cuando el widget confirma que la tarjeta nueva fue enrolada exitosamente. */
+  cardEnrolledOk = signal(false);
+  /** True mientras se ejecuta prepare-card. */
+  preparingCard = signal(false);
 
   departmentUbigeo = '';
   provinceUbigeo = '';
@@ -181,6 +194,9 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     });
 
     this.trackInitiateCheckout();
+
+    // Si está autenticado y tiene tarjeta enrolada en Flow, mostrarla como opción
+    this.hydrateEnrolledCardForAuthenticated();
 
     this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
       if (shoppingCart && shoppingCart.items.length > 0) {
@@ -808,6 +824,128 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Listener del componente <app-payment-method>. Sincroniza la selección
+   * (CARD_ENROLLED, ADD_CARD, YAPE) con el flowPaymentMethod usado para crear
+   * el body del checkout.
+   */
+  onPaymentSelectionChanged(event: PaymentMethodSelection): void {
+    this.paymentSelection.set(event.selection);
+    this.selectPaymentMethod(event.flowMethod);
+    // Si el cliente cambió a otra opción y había enrolado una tarjeta nueva,
+    // mantenemos cardEnrolledOk para no perderla; pero si vuelve a ADD_CARD
+    // sin token, el evento enrollmentRequested la pedirá de nuevo.
+  }
+
+  /**
+   * Listener del componente <app-payment-method>. Cuando el cliente selecciona
+   * "Agregar Tarjeta" y aún no hay token, pedimos prepare-card al backend.
+   */
+  onEnrollmentRequested(): void {
+    if (this.flowToken() || this.preparingCard()) return;
+
+    // Validar que el form tenga lo mínimo para identificar al cliente.
+    const email = this.form.get('email')?.value?.trim();
+    const firstName = this.form.get('firtName')?.value?.trim();
+    const lastName = this.form.get('lastName')?.value?.trim();
+    if (!email || !firstName || !lastName) {
+      this._toastService.warning('Completa tus datos', 'Necesitamos tu nombre y correo antes de registrar la tarjeta.');
+      return;
+    }
+
+    this.preparingCard.set(true);
+    this._checkoutService.prepareCard({
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      documentNumber: this.form.get('nroDocument')?.value || undefined,
+      urlReturn: this.ENV.flowUrlReturn,
+    }).pipe(
+      finalize(() => this.preparingCard.set(false))
+    ).subscribe({
+      next: (resp) => {
+        this.flowCustomerId.set(resp.data.customerId);
+        this.flowToken.set(resp.data.token);
+      },
+      error: (err) => {
+        const code = err?.error?.code;
+        if (code === 'EMAIL_ALREADY_REGISTERED') {
+          this._toastService.error(
+            'Cuenta existente',
+            'Este correo ya está registrado. Inicia sesión para continuar con tu tarjeta guardada.'
+          );
+          this.focusAndErrorInput(this.emailInput, 'email');
+          return;
+        }
+        console.error('prepare-card falló', err);
+        this._toastService.error('Ups!', 'No pudimos preparar el formulario de tarjeta. Intenta nuevamente.');
+      }
+    });
+  }
+
+  /** Listener del widget interno de Flow. */
+  onCardEnrolled(success: boolean): void {
+    this.cardEnrolledOk.set(success);
+    if (success) {
+      // Tras enrolar exitosamente, leemos los datos de la tarjeta para mostrarla
+      // como "tarjeta enrolada" y permitir cargo directo.
+      const customerId = this.flowCustomerId();
+      if (customerId) {
+        this._flowService.getCustomer(customerId).subscribe({
+          next: (customer) => {
+            if (customer.last4CardDigits && customer.creditCardType) {
+              this.enrolledCard.set({
+                last4: customer.last4CardDigits,
+                brand: customer.creditCardType,
+              });
+            }
+          },
+          error: () => { /* silencioso — no bloqueamos el pago */ }
+        });
+      }
+      this._toastService.success('¡Tarjeta registrada!', 'Ya puedes confirmar tu pago.');
+    } else {
+      this._toastService.error('Ups!', 'No se pudo registrar la tarjeta. Intenta con otra.');
+    }
+  }
+
+  /**
+   * Determina si el cliente puede enrolar tarjeta (modo CHARGE).
+   * - Cliente autenticado: siempre.
+   * - Guest: solo si activó el flag "Registrarse" (isSignUpAcepted).
+   * Si está deshabilitado, el componente <app-payment-method> oculta el acordeón
+   * y solo muestra Yape (más la tarjeta enrolada si existiera, que en guest no aplica).
+   */
+  canEnrollCard(): boolean {
+    if (this._authService.isAuthenticated()) return true;
+    return !!this.form.get('isSignUpAcepted')?.value;
+  }
+
+  /**
+   * Si el cliente está autenticado y tiene flowCustomerId, consulta sus datos
+   * en Flow y popula el signal `enrolledCard` para que aparezca como opción
+   * de pago. Llamado desde ngOnInit (best-effort, falla silenciosamente).
+   */
+  private hydrateEnrolledCardForAuthenticated(): void {
+    if (!this._authService.isAuthenticated()) return;
+    const flowCustomerId = this._authService.getCurrentUser()?.flowCustomerId
+      ?? this._summaryService.getSummary()?.userData?.customerId;
+    if (!flowCustomerId) return;
+
+    this.flowCustomerId.set(flowCustomerId);
+    this._flowService.getCustomer(flowCustomerId).subscribe({
+      next: (customer) => {
+        if (customer.last4CardDigits && customer.creditCardType) {
+          this.enrolledCard.set({
+            last4: customer.last4CardDigits,
+            brand: customer.creditCardType,
+          });
+        }
+      },
+      error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
+    });
+  }
+
   nextStep() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -868,6 +1006,38 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     const orderRequest = this.createOrderRequest();
     const paymentRequest = this.createPaymentRequest();
 
+    // Determinar modo de pago:
+    // - CHARGE: el cliente seleccionó tarjeta (enrolada o recién agregada vía widget).
+    //   Requiere flowCustomerId y, en el caso ADD_CARD, que cardEnrolledOk sea true.
+    // - PORTAL: Yape (siempre) o tarjeta sin enrolar (no aplica con esta UI).
+    const selection = this.paymentSelection();
+    const customerId = this.flowCustomerId();
+    const useChargeMode =
+      (selection === 'CARD_ENROLLED' && !!customerId) ||
+      (selection === 'ADD_CARD' && !!customerId && this.cardEnrolledOk());
+
+    if (selection === 'ADD_CARD' && !useChargeMode) {
+      this._toastService.warning('Tarjeta pendiente', 'Termina de registrar tu tarjeta antes de pagar.');
+      this.isProcessing.set(false);
+      return;
+    }
+
+    const paymentBody: CheckoutRequest['payment'] = useChargeMode
+      ? {
+          mode: 'CHARGE',
+          paymentMethod: paymentRequest.paymentMethod,
+          subject: paymentRequest.subject,
+          currency: paymentRequest.currency,
+          customerId: customerId!,
+        }
+      : {
+          mode: 'PORTAL',
+          paymentMethod: paymentRequest.paymentMethod,
+          subject: paymentRequest.subject,
+          urlReturn: paymentRequest.urlReturn,
+          currency: paymentRequest.currency,
+        };
+
     const checkoutRequest: CheckoutRequest = {
       user: {
         email: userRequest.email,
@@ -891,12 +1061,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         code_discount: orderRequest.code_discount,
         shipping_cost: orderRequest.shipping_cost,
       },
-      payment: {
-        paymentMethod: paymentRequest.paymentMethod,
-        subject: paymentRequest.subject,
-        urlReturn: paymentRequest.urlReturn,
-        currency: paymentRequest.currency,
-      },
+      payment: paymentBody,
     };
 
     this._checkoutService.processCheckout(checkoutRequest).pipe(
@@ -929,8 +1094,27 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         }
 
         this.allowNavigation.set(true);
-        this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
-        window.location.href = response.data.payment.url + '?token=' + response.data.payment.token;
+
+        // Bifurcación según el modo:
+        // - PORTAL: redirigimos al portal de Flow para que el cliente complete el pago.
+        // - CHARGE: el cargo ya se ejecutó síncronamente; vamos directo a la confirmación.
+        if (response.data.payment) {
+          this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
+          window.location.href = response.data.payment.url + '?token=' + response.data.payment.token;
+          return;
+        }
+
+        if (response.data.charge) {
+          this._toastService.success('¡Pago confirmado!', 'Tu pedido se procesó exitosamente.');
+          this._router.navigate(['/registro/confirmacion'], {
+            queryParams: { orderId: response.data.order.id },
+          });
+          return;
+        }
+
+        // Sin payment ni charge — backend respondió mal
+        console.error('Respuesta de checkout sin payment ni charge', response);
+        this._toastService.error('Ups!', 'Respuesta inesperada del servidor.');
       },
       error: (err) => {
         console.error('Error en checkout: ', err);

@@ -57,7 +57,10 @@ export class StepComponent {
         environment.campanaPrimeraCreatina.tipo !== 'gratis' &&
         summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION
       ) {
-        this.flag = 'S/9.90';
+        this.flag = environment.campanaPrimeraCreatina.precio.toLocaleString('es-PE', {
+          style: 'currency',
+          currency: 'PEN',
+        });
       } else {
         this.flag = '';
       }

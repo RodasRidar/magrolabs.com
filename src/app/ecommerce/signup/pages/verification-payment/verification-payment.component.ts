@@ -164,7 +164,7 @@ export class VerificationPaymentComponent {
 
   nextStep() {
     this.isLoading.set(true);
-    
+
     if (this.paymentMethod() === FlowPaymentMethod.RECURRENT_PAYMENT) {
       this.handleRecurrentPaymentOption();
       return;
@@ -172,8 +172,8 @@ export class VerificationPaymentComponent {
 
     const promoCode = this.form.get('promoCode')?.value;
     if (promoCode === 'FREE') {
-      this._router.navigate(['registro/confirmacion'], { 
-        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA } 
+      this._router.navigate(['registro/confirmacion'], {
+        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA }
       });
       this.isLoading.set(false);
       return;
@@ -219,12 +219,12 @@ export class VerificationPaymentComponent {
       this.handleVerifiedPayment();
       return;
     }
-    
+
     const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-    const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false 
-      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION 
+    const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false
+      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
       : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
-    
+
     const paymentRequest = this.createPaymentRequest();
     localStorage.setItem('status', status.toString());
     const wasSubscription = this._summaryService.getSummary()?.userData?.isSubscription ?? false;
@@ -240,53 +240,53 @@ export class VerificationPaymentComponent {
       this.processNewOrderPayment(paymentRequest);
     }
   }
-//TODO: Cancelar la suscripción en flow tambien?
+  //TODO: Cancelar la suscripción en flow tambien?
   processCancelAndCreateNewOrder(orderId: string, paymentRequest: FlowPaymentRequest) {
-      const orderRequest = this.createOrderRequest(false);
-      const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';
-      
-      this._orderService.cancelOrder(orderId).pipe(
-        switchMap(response => {
-          console.log('Order canceled: ', response);
-          return this._subscriptionService.cancelSubscription(subscriptionId, 'Cancelación desde verificación de pago');
-        }),
-        switchMap(response => {
-          console.log('Subscription canceled: ', response);
-          return this._flowService.cancelSubscription(subscriptionId, AtPeriodEnd.IMMEDIATE);
-        }),
-        switchMap(response => {
-          console.log('flowService cancelSubscription: ', response);
-          return this._orderService.createOrder(orderRequest);
-        }),
-        switchMap(response => {
-          paymentRequest.commerceOrder = response.data.order.id;
-          this.updateUserDataWithOrderId(response.data.order.id);
-          return this._flowService.createPayment(paymentRequest);
-        }),
-        catchError(error => {
-          console.error('Error creating payment: ', error);
-          this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-          return throwError(() => error);
-        }),
-        finalize(() => {
-          this._summaryService.setUserData({
-            ...this._summaryService.getSummary()?.userData as UserDataSummary,
-            isSubscription: false
-          });
-          this.isLoading.set(false);
-        })
-      ).subscribe({
-        next: (response) => {
-          window.location.href = response.url + '?token=' + response.token;
-        }
-      });
+    const orderRequest = this.createOrderRequest(false);
+    const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';
+
+    this._orderService.cancelOrder(orderId).pipe(
+      switchMap(response => {
+        console.log('Order canceled: ', response);
+        return this._subscriptionService.cancelSubscription(subscriptionId, 'Cancelación desde verificación de pago');
+      }),
+      switchMap(response => {
+        console.log('Subscription canceled: ', response);
+        return this._flowService.cancelSubscription(subscriptionId, AtPeriodEnd.IMMEDIATE);
+      }),
+      switchMap(response => {
+        console.log('flowService cancelSubscription: ', response);
+        return this._orderService.createOrder(orderRequest);
+      }),
+      switchMap(response => {
+        paymentRequest.commerceOrder = response.data.order.id;
+        this.updateUserDataWithOrderId(response.data.order.id);
+        return this._flowService.createPayment(paymentRequest);
+      }),
+      catchError(error => {
+        console.error('Error creating payment: ', error);
+        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: false
+        });
+        this.isLoading.set(false);
+      })
+    ).subscribe({
+      next: (response) => {
+        window.location.href = response.url + '?token=' + response.token;
+      }
+    });
   }
 
   private handleVerifiedPayment(): void {
     this._toastService.success('¡Genial!', 'Verificación exitosa.');
     setTimeout(() => {
-      this._router.navigate(['registro/confirmacion'], { 
-        queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+      this._router.navigate(['registro/confirmacion'], {
+        queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS }
       });
     }, 2000);
     this.isLoading.set(false);
@@ -295,8 +295,8 @@ export class VerificationPaymentComponent {
   private createPaymentRequest(): FlowPaymentRequest {
 
     const status = this.form.get('isSignUpAcepted')?.value ?? false
-    ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
-    : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
+      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
 
     return {
       amount: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? 2 : this.ENV.precioCreatinaOnePurchase,
@@ -312,7 +312,7 @@ export class VerificationPaymentComponent {
 
   private processExistingOrderPayment(orderId: string, paymentRequest: FlowPaymentRequest): void {
     const orderDetails = this.createOrderDetailsWithPaymentMethod();
-    
+
     this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
       switchMap(response => {
         paymentRequest.commerceOrder = response.data.order.id;
@@ -339,7 +339,7 @@ export class VerificationPaymentComponent {
 
   private processNewOrderPayment(paymentRequest: FlowPaymentRequest): void {
     const orderRequest = this.createOrderRequest(false);
-    
+
     this._orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
         paymentRequest.commerceOrder = response.data.order.id;
@@ -387,81 +387,81 @@ export class VerificationPaymentComponent {
     const orderRequest = this.createOrderRequest(true);
 
     this._orderService.cancelOrder(orderId).pipe(
-        switchMap(response => {
-          console.log('Order canceled: ', response);
-          return this._orderService.createOrder(orderRequest);
-        }),
-        switchMap(response => {
-          this.updateUserDataWithOrderId(response.data.order.id);
-          
-          // 1. Realizar el cargo de la primera creatina (9.90 soles)
-          const chargeRequest = this.createChargeRequest(response.data.order.id);
-          return this._flowService.chargeCustomer(chargeRequest);
-        }),
-        switchMap(chargeResponse => {
-          console.log('Charge completed: ', chargeResponse);
-          
-          // Validar el estado del cargo antes de continuar
-          if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
-            // Si el cargo no fue exitoso, lanzar error
-            throw new Error('CHARGE_FAILED');
-          }
-          
-          // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
-          return this._flowService.createSubscription(subscription);
-        }),
-        switchMap(flowResponse => {
-          console.log('Flow Subscription created: ', flowResponse);
-          return this.createBackendSubscription();
-        }),
-        switchMap(subscriptionResponse => {
-          const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
-          return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-        }),
-        switchMap(subscriptionOrderResponse => {
-          console.log('Subscription order created: ', subscriptionOrderResponse);
-          const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-          return this._orderService.updateOrderDetails(orderId, {
-            status: OrderStatus.PROCESSING
-          });
-        }),
-        switchMap(orderUpdateResponse => {
-          const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-          if (!userId) {
-            return of(null);
-          }
-          
-          // Agregar 10 créditos al usuario por la suscripción
-          return this._creditTransactionService.createTransaction({
-            user_id: userId,
-            type: TransactionType.EARNED,
-            amount: this.ENV.creditoRegaloPorCompraMes,
-            description: '¡Bienvenido a Magrolabs!',
-            source: PaymentMethod.CREDIT_CARD
-          });
-        }),
-        catchError(error => {
-          // Manejo especial para error de cargo fallido
-          if (error.message === 'CHARGE_FAILED') {
-            this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
-            this.resetPaymentVerification();
-            return throwError(() => error);
-          }
-          return this.handleSubscriptionError(error);
-        }),
-        finalize(() => {
-          this._summaryService.setUserData({
-            ...this._summaryService.getSummary()?.userData as UserDataSummary,
-            isSubscription: true
-          });
-          this.isLoading.set(false);
-        })
-      ).subscribe({
-        next: (response) => {
-          console.log('Order updated and credits added: ', response);
-          this.navigateToConfirmation();
+      switchMap(response => {
+        console.log('Order canceled: ', response);
+        return this._orderService.createOrder(orderRequest);
+      }),
+      switchMap(response => {
+        this.updateUserDataWithOrderId(response.data.order.id);
+
+        // 1. Realizar el cargo de la primera creatina (9.90 soles)
+        const chargeRequest = this.createChargeRequest(response.data.order.id);
+        return this._flowService.chargeCustomer(chargeRequest);
+      }),
+      switchMap(chargeResponse => {
+        console.log('Charge completed: ', chargeResponse);
+
+        // Validar el estado del cargo antes de continuar
+        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
+          // Si el cargo no fue exitoso, lanzar error
+          throw new Error('CHARGE_FAILED');
         }
-      });
+
+        // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
+        return this._flowService.createSubscription(subscription);
+      }),
+      switchMap(flowResponse => {
+        console.log('Flow Subscription created: ', flowResponse);
+        return this.createBackendSubscription();
+      }),
+      switchMap(subscriptionResponse => {
+        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
+        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
+      }),
+      switchMap(subscriptionOrderResponse => {
+        console.log('Subscription order created: ', subscriptionOrderResponse);
+        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+        return this._orderService.updateOrderDetails(orderId, {
+          status: OrderStatus.PROCESSING
+        });
+      }),
+      switchMap(orderUpdateResponse => {
+        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+        if (!userId) {
+          return of(null);
+        }
+
+        // Agregar 10 créditos al usuario por la suscripción
+        return this._creditTransactionService.createTransaction({
+          user_id: userId,
+          type: TransactionType.EARNED,
+          amount: this.ENV.creditoRegaloPorCompraMes,
+          description: '¡Bienvenido a Magrolabs!',
+          source: PaymentMethod.CREDIT_CARD
+        });
+      }),
+      catchError(error => {
+        // Manejo especial para error de cargo fallido
+        if (error.message === 'CHARGE_FAILED') {
+          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+          this.resetPaymentVerification();
+          return throwError(() => error);
+        }
+        return this.handleSubscriptionError(error);
+      }),
+      finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: true
+        });
+        this.isLoading.set(false);
+      })
+    ).subscribe({
+      next: (response) => {
+        console.log('Order updated and credits added: ', response);
+        this.navigateToConfirmation();
+      }
+    });
   }
 
   /**
@@ -469,7 +469,7 @@ export class VerificationPaymentComponent {
    * Nota: El cargo de la primera creatina se realiza antes de crear la suscripción
    */
   private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
-    if(localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
+    if (localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
       return {
         planId: this.ENV.flowPlanIdTest,
         customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
@@ -493,7 +493,7 @@ export class VerificationPaymentComponent {
     const promoCode = this.form.get('promoCode')?.value;
     const amount = promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
     const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
-    
+
     return {
       customerId: customerId,
       amount: amount,
@@ -510,7 +510,7 @@ export class VerificationPaymentComponent {
 
   private createOrderRequest(isSubscription: boolean): CreateOrderRequest {
     let paymentMethod = PaymentMethod.CREDIT_CARD;
-    switch(this.paymentMethod()) {
+    switch (this.paymentMethod()) {
       case FlowPaymentMethod.BANK_TRANSFER:
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         break;
@@ -540,7 +540,7 @@ export class VerificationPaymentComponent {
           discount: 20
           */
         ],
-        
+
       };
     }
     return {
@@ -561,8 +561,8 @@ export class VerificationPaymentComponent {
     let orderDetails: UpdateOrderDetailsRequest = {
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
     };
-    
-    switch(this.paymentMethod()) {
+
+    switch (this.paymentMethod()) {
       case FlowPaymentMethod.BANK_TRANSFER:
         orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
         break;
@@ -575,7 +575,7 @@ export class VerificationPaymentComponent {
       default:
         orderDetails.payment_method = PaymentMethod.CREDIT_CARD;
     }
-    
+
     return orderDetails;
   }
 
@@ -599,22 +599,22 @@ export class VerificationPaymentComponent {
     this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
       switchMap(response => {
         this.updateUserDataWithOrderId(response.data.order.id);
-        
+
         // 1. Realizar el cargo de la primera creatina (9.90 soles)
         const chargeRequest = this.createChargeRequest(response.data.order.id);
         return this._flowService.chargeCustomer(chargeRequest);
       }),
       switchMap(chargeResponse => {
         console.log('Charge completed: ', chargeResponse);
-        
+
         // Validar el estado del cargo antes de continuar
         if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
           // Si el cargo no fue exitoso, lanzar error
           throw new Error('CHARGE_FAILED');
         }
-        
+
         const existingSubscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId;
-        
+
         if (existingSubscriptionId) {
           this._summaryService.setUserData({
             ...this._summaryService.getSummary()?.userData as UserDataSummary,
@@ -643,7 +643,7 @@ export class VerificationPaymentComponent {
         if (!userId) {
           return of(null);
         }
-        
+
         // Agregar 10 créditos al usuario por la suscripción
         return this._creditTransactionService.createTransaction({
           user_id: userId,
@@ -679,24 +679,24 @@ export class VerificationPaymentComponent {
 
   private processNewOrderSubscription(subscription: FlowCreateSubscriptionRequest): void {
     const orderRequest = this.createOrderRequest(true);
-    
+
     this._orderService.createOrder(orderRequest).pipe(
       switchMap(response => {
         this.updateUserDataWithOrderId(response.data.order.id);
-        
+
         // 1. Realizar el cargo de la primera creatina (9.90 soles)
         const chargeRequest = this.createChargeRequest(response.data.order.id);
         return this._flowService.chargeCustomer(chargeRequest);
       }),
       switchMap(chargeResponse => {
         console.log('Charge completed: ', chargeResponse);
-        
+
         // Validar el estado del cargo antes de continuar
         if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
           // Si el cargo no fue exitoso, lanzar error
           throw new Error('CHARGE_FAILED');
         }
-        
+
         // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
         return this._flowService.createSubscription(subscription);
       }),
@@ -708,62 +708,62 @@ export class VerificationPaymentComponent {
         const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
         return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
       }),
-        switchMap(subscriptionOrderResponse => {
-          console.log('Subscription order created: ', subscriptionOrderResponse);
-          const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-          return this._orderService.updateOrderDetails(orderId, {
-            status: OrderStatus.PROCESSING
-          });
-        }),
-        switchMap(orderUpdateResponse => {
-          const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-          if (!userId) {
-            return of(null);
-          }
-          
-          // Agregar 10 créditos al usuario por la suscripción
-          return this._creditTransactionService.createTransaction({
-            user_id: userId,
-            type: TransactionType.EARNED,
-            amount: this.ENV.creditoRegaloPorCompraMes,
-            description: '¡Bienvenido a Magrolabs!',
-            source: PaymentMethod.CREDIT_CARD
-          });
-        }),
-        catchError(error => {
-          // Manejo especial para error de cargo fallido
-          if (error.message === 'CHARGE_FAILED') {
-            this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
-            this.resetPaymentVerification();
-            return throwError(() => error);
-          }
-          return this.handleSubscriptionError(error);
-        }),
-        finalize(() => {
-          this._summaryService.setUserData({
-            ...this._summaryService.getSummary()?.userData as UserDataSummary,
-            isSubscription: true
-          });
-          this.isLoading.set(false);
-        })
-      ).subscribe({
-        next: (response) => {
-          console.log('Order updated and credits added: ', response);
-          this.navigateToConfirmation();
+      switchMap(subscriptionOrderResponse => {
+        console.log('Subscription order created: ', subscriptionOrderResponse);
+        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
+        return this._orderService.updateOrderDetails(orderId, {
+          status: OrderStatus.PROCESSING
+        });
+      }),
+      switchMap(orderUpdateResponse => {
+        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
+        if (!userId) {
+          return of(null);
         }
-      });
-  }  private createBackendSubscription() {
+
+        // Agregar 10 créditos al usuario por la suscripción
+        return this._creditTransactionService.createTransaction({
+          user_id: userId,
+          type: TransactionType.EARNED,
+          amount: this.ENV.creditoRegaloPorCompraMes,
+          description: '¡Bienvenido a Magrolabs!',
+          source: PaymentMethod.CREDIT_CARD
+        });
+      }),
+      catchError(error => {
+        // Manejo especial para error de cargo fallido
+        if (error.message === 'CHARGE_FAILED') {
+          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+          this.resetPaymentVerification();
+          return throwError(() => error);
+        }
+        return this.handleSubscriptionError(error);
+      }),
+      finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: true
+        });
+        this.isLoading.set(false);
+      })
+    ).subscribe({
+      next: (response) => {
+        console.log('Order updated and credits added: ', response);
+        this.navigateToConfirmation();
+      }
+    });
+  } private createBackendSubscription() {
     const subscriptionRequestAPI: CreateSubscriptionRequest = {
       subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
       start_date: new Date(
-        Date.now() + 
-        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 
-        24 * 60 * 60 * 1000 - 
+        Date.now() +
+        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) *
+        24 * 60 * 60 * 1000 -
         5 * 60 * 60 * 1000
       ).toISOString(),
       status: SubscriptionStatusEnum.TRIAL
     };
-    
+
     return this._subscriptionService.createSubscription(subscriptionRequestAPI)
   }
 
@@ -773,9 +773,9 @@ export class VerificationPaymentComponent {
       subscription_id: subscriptionId,
       order_id,
       shipment_date: new Date(
-        Date.now() + 
-        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) * 
-        24 * 60 * 60 * 1000 - 
+        Date.now() +
+        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) *
+        24 * 60 * 60 * 1000 -
         5 * 60 * 60 * 1000
       ).toISOString()
     };
@@ -795,9 +795,9 @@ export class VerificationPaymentComponent {
       this._toastService.success('¡Genial!', 'Suscripción creada correctamente.');
       return;
     }
-    
+
     this._router.navigate(['registro/confirmacion'], {
-      queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS } 
+      queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS }
     });
   }
 
@@ -820,7 +820,7 @@ export class VerificationPaymentComponent {
     cardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
     this.form.get('cardNumber')?.setValue(cardNumber, { emitEvent: false });
   }
-  
+
   selectPaymentMethod(paymentMethod: FlowPaymentMethod) {
     this.paymentMethod.set(paymentMethod);
     if (paymentMethod === FlowPaymentMethod.RECURRENT_PAYMENT) {
@@ -875,7 +875,7 @@ export class VerificationPaymentComponent {
           this.isLoading.set(false);
         }),
         switchMap(response => {
-          return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
+          return this._userService.updateUser(userData.id!, { flowCustomerId: response.customerId })
         }),
         switchMap(response => {
           console.log('Customer updated: ', response);
@@ -914,7 +914,7 @@ export class VerificationPaymentComponent {
           this.isLoading.set(false);
         }),
         switchMap(response => {
-          return this._userService.updateUser(userData.id!, {flowCustomerId: response.customerId})
+          return this._userService.updateUser(userData.id!, { flowCustomerId: response.customerId })
         }),
         switchMap(response => {
           //console.log('Customer updated: ', response);
@@ -966,13 +966,13 @@ export class VerificationPaymentComponent {
   private resetPaymentVerification(): void {
     // Resetear el estado de verificación de pago
     this.isPaymentVerified.set(false);
-    
+
     // Limpiar el label de la tarjeta registrada
     this.labelCardRegisted.set('**** **** **** ');
-    
+
     // Limpiar el token actual para forzar la recarga del widget
     this.flowToken.set('');
-    
+
     // Solicitar un nuevo token para registrar otra tarjeta
     const customerId = this._summaryService.getSummary()?.userData?.customerId;
     if (customerId) {
@@ -994,11 +994,11 @@ export class VerificationPaymentComponent {
 
   trackAddPaymentInfo() {
     this._metaAnalyticsService.trackAddPaymentInfo({
-        content_ids: ['creatina-250gr-suscripcion'],
-        content_type: 'subscription',
-        content_category: 'suscripcion_mensual',
-        value: this.ENV.precioCreatinaSubscription,
-        currency: 'PEN'
+      content_ids: ['creatina-250gr-suscripcion'],
+      content_type: 'subscription',
+      content_category: 'suscripcion_mensual',
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
     });
   }
 }

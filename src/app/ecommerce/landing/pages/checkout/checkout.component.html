@@ -253,7 +253,7 @@
                                             </div>}
                                             @if (!isAuthUser) {
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
-                                                <label class="inline-flex items-center my-2 cursor-pointer"
+                                                <label class="inline-flex items-center my-2 cursor-pointer py-2"
                                                     [ngClass]="{'cursor-not-allowed opacity-60': form.get('isSignUpAcepted')?.disabled}">
                                                     <input #isSignUpAceptedInput type="checkbox"
                                                         (change)="isSignUpAceptedChange()"

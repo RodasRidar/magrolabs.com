@@ -96,6 +96,8 @@
                                     inputType="email"
                                     autocomplete="email"
                                     formControlName="email"
+                                    [required]="true"
+                                    [errors]="createAccountEmailErrors"
                                 />
                             </div>
 
@@ -107,6 +109,7 @@
                                     [required]="true"
                                     [errors]="createAccountPasswordErrors"
                                     formControlName="password"
+                                    [showStrength]="true"
                                 />
                             </div>
 
@@ -115,7 +118,7 @@
 
                         </div>
                         @if(!isCreatinaGratis){
-                            <div class=" flex items-end">
+                            <div class=" flex items-end py-2">
                                 <label class="inline-flex items-center my-2 cursor-pointer">
                                     <input type="checkbox" formControlName="isSignUpAcepted" class="sr-only peer" (change)="isSignUpAceptedChange()">
                                     <div
@@ -129,7 +132,7 @@
                             
                             <!-- Checkbox de aceptación de términos y condiciones -->
                             
-                                <div class="pb-2">
+                                <div class="py-2">
                                     <label class="inline-flex items-center my-2 cursor-pointer">
                                         <input type="checkbox" formControlName="termsAccepted" 
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"

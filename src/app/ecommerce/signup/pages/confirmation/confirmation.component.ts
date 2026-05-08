@@ -230,10 +230,17 @@ export class ConfirmationComponent {
 
   /**
    * Limpia summary, carrito y localStorage preservando los datos de la
-   * UrgencyBar. Mismo comportamiento que el componente original.
+   * UrgencyBar.
+   *
+   * IMPORTANTE: usamos `clearSummaryOnly()` (no `clearSummary()`) para no
+   * borrar las cookies de auth (`auth_token`, `refresh_token`, `user_data`)
+   * que el checkout acaba de persistir vía `setSessionFromCheckout`. De lo
+   * contrario el cliente perdería el autologin recién hecho y al ir a
+   * /cuenta/pedidos el interceptor no podría adjuntar el JWT (401 → lista
+   * vacía).
    */
   private cleanupAfterConfirmation(): void {
-    this._summaryService.clearSummary();
+    this._summaryService.clearSummaryOnly();
     this._shoppingCartService.clearCart();
 
     const unitsAvailable = localStorage.getItem('unitsAvailable');

@@ -2,6 +2,8 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
+import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
+import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { CreditTransactionService } from '../../../../../../shared/services/credit-transactions.service';
 import { catchError, finalize, of } from 'rxjs';
@@ -113,7 +115,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
 @Component({
   selector: 'app-clothing',
   standalone: true,
-  imports: [ButtonComponent, NgOptimizedImage, RouterLink],
+  imports: [ButtonComponent, NgOptimizedImage, RouterLink, AccordionGroupComponent, AccordionItemComponent],
   templateUrl: './clothing.component.html',
   styleUrl: './clothing.component.css'
 })

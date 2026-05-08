@@ -758,92 +758,28 @@
             Resolvemos todas tus dudas sobre la creatina monohidratada y nuestro servicio de suscripción.
         </p>
     </div>
-    <div class="space-y-4">
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloOferta}}</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
-                {{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}
-            </p>
-        </details>
+    <ml-accordion-group>
+        <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloOferta">
+            <p class="leading-relaxed text-gray-700">{{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}</p>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion}}</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
+        <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion">
+            <p class="leading-relaxed text-gray-700">
                 {{ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
             </p>
-        </details>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿Qué hace diferente a la creatina de Magrolabs?</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
-                Nuestra creatina es 100% monohidratada pura, sin rellenos ni aditivos. Tiene una solubilidad superior, 
-                no deja sabor residual y es más fácil de absorber por el organismo. Además, nuestro empaque es eco amigable 
+        <ml-accordion-item title="¿Qué hace diferente a la creatina de Magrolabs?">
+            <p class="leading-relaxed text-gray-700">
+                Nuestra creatina es 100% monohidratada pura, sin rellenos ni aditivos. Tiene una solubilidad superior,
+                no deja sabor residual y es más fácil de absorber por el organismo. Además, nuestro empaque es eco amigable
                 y cada lote está certificado por laboratorios independientes.
             </p>
-        </details>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿Hay un periodo de cancelación o compromiso mínimo?</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
-                <strong>No hay compromiso mínimo.</strong> Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo adicional. 
+        <ml-accordion-item title="¿Hay un periodo de cancelación o compromiso mínimo?">
+            <p class="leading-relaxed text-gray-700">
+                <strong>No hay compromiso mínimo.</strong> Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo adicional.
                 @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {
                     Si cancelas durante este período de prueba, no pagas nada.
                 } @else {
@@ -851,55 +787,25 @@
                 }
                 Después del período de prueba, puedes cancelar cuando quieras, solo asegúrate de hacerlo {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días antes de tu próxima fecha de facturación.
             </p>
-        </details>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿Cuántos gramos debo tomar al día y cuánto dura un paquete?</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
+        <ml-accordion-item title="¿Cuántos gramos debo tomar al día y cuánto dura un paquete?">
+            <p class="leading-relaxed text-gray-700">
                 La dosis recomendada es de 5 gramos diarios (aproximadamente una cucharada) o si eres más avanzado
-                1 gramo por cada kilogramo de peso. 
-                Nuestro paquete de 250gr te durará aproximadamente 1 mes, dependiendo de tu dosis. 
+                1 gramo por cada kilogramo de peso.
+                Nuestro paquete de 250gr te durará aproximadamente 1 mes, dependiendo de tu dosis.
                 Por eso nuestras entregas son mensuales, siempre tendrás creatina disponible.
             </p>
-        </details>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h3 class="font-semibold">¿El envío es realmente gratis y a qué zonas llegan?</h3>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-            <p class="mt-4 leading-relaxed text-gray-700">
-                Sí, el envío es completamente gratis para {{ENV.envioGratisA.LIMA_METRO}}. 
-                Realizamos envíos a todo el Perú con un costo adicional que se calcula según la zona. 
+        <ml-accordion-item title="¿El envío es realmente gratis y a qué zonas llegan?">
+            <p class="leading-relaxed text-gray-700">
+                Sí, el envío es completamente gratis para {{ENV.envioGratisA.LIMA_METRO}}.
+                Realizamos envíos a todo el Perú con un costo adicional que se calcula según la zona.
                 Trabajamos con couriers confiables y tu pedido siempre viene con código de seguimiento.
             </p>
-        </details>
-    </div>
+        </ml-accordion-item>
+    </ml-accordion-group>
 </section>
 } @placeholder {
     <section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-white animate-pulse">

@@ -5,11 +5,13 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordion-group.component';
+import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 
 @Component({
   selector: 'app-referido-por-amigo',
   standalone: true,
-  imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent],
+  imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent, AccordionGroupComponent, AccordionItemComponent],
   templateUrl: './referido-por-amigo.component.html',
   styleUrl: './referido-por-amigo.component.css'
 })

@@ -7,11 +7,13 @@ import { environment } from '../../../environments/env';
 import { FooterComponent } from "./components/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { AccordionGroupComponent } from '../../shared/ui/accordion/accordion-group.component';
+import { AccordionItemComponent } from '../../shared/ui/accordion/accordion-item.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, ButtonComponent],
+  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, ButtonComponent, AccordionGroupComponent, AccordionItemComponent],
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {

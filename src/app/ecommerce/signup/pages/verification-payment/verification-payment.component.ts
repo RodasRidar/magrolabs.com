@@ -14,6 +14,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
+import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordion-group.component';
+import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowChargeCustomerRequest, FlowChargeStatus, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
@@ -32,7 +34,7 @@ import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics
 @Component({
   selector: 'app-verification-payment',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent],
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {

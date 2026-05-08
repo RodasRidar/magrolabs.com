@@ -23,11 +23,13 @@ import { OrderStatus } from '../../../../../../shared/interfaces/order.interface
 import { TiktokAnalyticsService } from '../../../../../../shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from '../../../../../../shared/services/meta-analytics.service';
 import { StepComponent } from '../../../../../signup/components/step/step.component';
+import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
+import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent],
+  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })

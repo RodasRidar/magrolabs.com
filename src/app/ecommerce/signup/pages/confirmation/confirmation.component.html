@@ -66,7 +66,14 @@
             </div>
             @if (discountAmount() > 0) {
             <div class="flex justify-between text-green-700">
-                <span>Descuento</span>
+                <span class="flex items-center gap-x-2">
+                    {{ discountLabel() }}
+                    @if (discountBadge()) {
+                        <span class="rounded-full bg-green-100 text-green-800 text-xs py-0.5 px-2 font-medium tracking-wide">
+                            {{ discountBadge() }}
+                        </span>
+                    }
+                </span>
                 <span>− S/ {{ discountAmount() | number: '1.2-2' }}</span>
             </div>
             }

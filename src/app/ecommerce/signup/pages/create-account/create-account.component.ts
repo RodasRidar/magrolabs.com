@@ -530,29 +530,12 @@ export class CreateAccountComponent implements OnDestroy {
       .subscribe(response => {
         userData.id = response.data.user.id;
         userData.referralCode = response.data.user.referralCode;
-
         // Track successful registration
         this._tiktokAnalytics.identify({
           email: response.data.user.email,
           external_id: response.data.user.id,
           phone_number: response.data.user.phone
         });
-        this._tiktokAnalytics.trackCompleteRegistration({
-          contents: [{
-            content_id: 'registration',
-            content_type: 'product_group',
-            content_name: 'Registro Completado'
-          }]
-        });
-
-        // Tracking Meta Analytics
-        this._metaAnalytics.trackCompleteRegistration({
-          content_name: 'Registro Completado',
-          status: true,
-          value: this.ENV.precioCreatinaSubscription,
-          currency: 'PEN'
-        });
-        this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
         this.saveUserDataAndNavigate(userData);
       });
   }
@@ -578,6 +561,22 @@ export class CreateAccountComponent implements OnDestroy {
       userData.customerId = customerId;
     }
 
+    this._tiktokAnalytics.trackCompleteRegistration({
+      contents: [{
+        content_id: 'registration',
+        content_type: 'product_group',
+        content_name: 'Registro Completado'
+      }]
+    });
+
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCompleteRegistration({
+      content_name: 'Registro Completado',
+      status: true,
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
+    this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
     this._summaryService.setUserData(userData);
     this.isProcessing = false;
 

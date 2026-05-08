@@ -6,7 +6,7 @@
         <div class="text-gray-600 mb-10 md:mb-0">
             <div class="relative mt-7 mb-8 lg:mt-9" show-back-button="true">
                 <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    Elige la dirección de entrega.
+                    Dirección de entrega.
                 </h1>
             </div>
 
@@ -71,6 +71,7 @@
                                         [maxLength]="70"
                                         [errors]="streetAddressErrors"
                                         formControlName="streetAddress"
+                                        placeholder="Av.Javier Prado"
                                     />
                                 </div>
 
@@ -102,6 +103,7 @@
                                         (selectionChange)="selectProvince($event)"
                                     >
                                         @if (provinces$ | async; as provincesList) {
+                                            <option value="0">Seleccione una provincia</option>
                                             @for (item of provincesList; track $index) {
                                                 <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
                                             }
@@ -119,6 +121,7 @@
                                         (selectionChange)="selectDistrict($event)"
                                     >
                                         @if (districts$ | async; as districtsList) {
+                                            <option value="0">Seleccione un distrito</option>
                                             @for (item of districtsList; track $index) {
                                                 <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
                                             }
@@ -126,7 +129,7 @@
                                     </ml-select>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <!-- <div class="sm:col-span-3">
                                     <ml-input
                                         label="Código Postal"
                                         inputId="postalCode"
@@ -135,14 +138,14 @@
                                         [errors]="postalCodeErrors"
                                         formControlName="postalCode"
                                     />
-                                </div>
+                                </div> -->
 
-                                <div class="sm:col-span-2">
+                                <div class="sm:col-span-3">
                                     <ml-input
                                         label="N° / Mz. / Lt."
                                         inputId="number"
                                         inputType="text"
-                                        placeholder="Ej: 123, Mz A Lt 5"
+                                        placeholder="403"
                                         [required]="true"
                                         [maxLength]="20"
                                         [errors]="numberErrors"
@@ -151,7 +154,7 @@
                                 </div>
 
 
-                                <div class="sm:col-span-4">
+                                <div class="sm:col-span-6">
                                     <ml-input
                                         label="Referencia"
                                         inputId="reference"

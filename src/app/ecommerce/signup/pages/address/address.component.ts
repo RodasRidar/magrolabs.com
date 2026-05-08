@@ -55,8 +55,8 @@ export class AddressComponent {
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
 
-  isSearched = false;
-  hideSearching = false;
+  isSearched = true;
+  hideSearching = true;
   departmentEmpty = true;
   provinceEmpty = true;
   isSaving = false;

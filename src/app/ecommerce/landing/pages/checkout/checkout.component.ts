@@ -27,6 +27,8 @@ import { CreateAddressRequest } from '../../../../shared/interfaces/address.inte
 import { CreateOrderRequest, PaymentMethod } from '../../../../shared/interfaces/order.interfaces';
 import { CheckoutRequest } from '../../../../shared/interfaces/checkout.interfaces';
 import { CheckoutService } from '../../../../shared/services/checkout.service';
+import { CouponService } from '../../../../shared/services/coupon.service';
+import { DiscountType } from '../../../../shared/interfaces/coupon.interfaces';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
@@ -62,9 +64,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   precioEnvioFueraLimaMetropolitana = signal(this.ENV.precioEnvioFueraLimaMetropolitana);
   allowNavigation = signal(false); // Señal para permitir navegación cuando el pago se procesa correctamente
 
-  // Variables para código de descuento
-  discountAmount = signal(0);
+  // Variables para código de descuento.
+  // El backend (POST /coupons/validate) resuelve type+value+amount; el
+  // front solo persiste el resultado en signals y no calcula nada.
+  discountAmount = signal(0);                                    // soles
   discountCode = signal('');
+  discountType = signal<DiscountType | null>(null);
+  discountValue = signal(0);                                     // 10 (=10%) ó 9.10 (=S/.9.10)
   isDiscountApplied = signal(false);
   discountError = signal('');
   isApplyingDiscount = signal(false);
@@ -83,6 +89,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private _authService = inject(AuthService)
   private _addressApiService = inject(AddressApiService)
   private _checkoutService = inject(CheckoutService)
+  private _couponService = inject(CouponService)
   //
   private _addressService = inject(AddressService)
   addressList: PlaceAPI[] = [];
@@ -527,83 +534,89 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   /**
-   * Aplica el código de descuento si es válido
+   * Aplica un código de descuento llamando al backend.
+   *
+   * El backend (POST /api/v1/coupons/validate) valida estado, fechas,
+   * usos, subtotal mínimo, productos elegibles y qty mínima por
+   * producto. Si pasa, devuelve `{ type, value, amount }` y aquí lo
+   * persistimos en signals. Si falla, mapeamos el `code` del error a un
+   * mensaje amigable.
    */
   applyDiscountCode(): void {
-    const code = this.form.get('discountCodeInput')?.value?.trim().toUpperCase();
+    const rawCode: string = this.form.get('discountCodeInput')?.value ?? '';
+    const code = rawCode.trim();
 
     if (!code) {
       this.discountError.set('Por favor, ingresa un código de descuento');
       return;
     }
 
-    this.isApplyingDiscount.set(true);
-    this.discountError.set('');
+    const subtotal = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+    const items = (this.shoppingCart.items ?? []).map(it => ({
+      product_id: it.product.id,
+      quantity: it.quantity,
+    }));
 
-    // Verificar que estemos en mayo
-    const currentMonth = new Date().getMonth(); // 0-indexed: 4 = Mayo
-    if (currentMonth !== 4) {
-      this.discountError.set('Este código de descuento solo está disponible en mayo');
-      this.isApplyingDiscount.set(false);
+    if (items.length === 0 || subtotal <= 0) {
+      this.discountError.set('Tu carrito está vacío.');
       return;
     }
 
-    // Obtener cantidad de Creatina Monohidratada 250 gr en el carrito
-    const creatina250Units = this.shoppingCart.items
-      ?.filter(item => item.product.name === 'Creatina Monohidratada 250 gr')
-      ?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+    this.isApplyingDiscount.set(true);
+    this.discountError.set('');
 
-    if (code === 'MAGRO9') {
-      if (creatina250Units === 1) {
-        this.discountCode.set(code);
-        this.discountAmount.set(9.10);
+    this._couponService.validateCoupon({ code, items, subtotal }).pipe(
+      finalize(() => this.isApplyingDiscount.set(false)),
+    ).subscribe({
+      next: response => {
+        const data = response.data;
+        this.discountCode.set(data.code);
+        this.discountType.set(data.discount_type);
+        this.discountValue.set(data.discount_value);
+        this.discountAmount.set(data.discount_amount);
         this.isDiscountApplied.set(true);
         this.discountError.set('');
         this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
         this.recalculateTotal();
         this.saveUserDataForOnePurchase();
-      } else {
-        this.discountError.set('Este código aplica solo para 1 unidad de Creatina Monohidratada 250 gr');
+      },
+      error: err => {
+        const errorCode: string | undefined = err?.error?.error?.code;
+        this.discountError.set(this.mapCouponErrorToMessage(errorCode));
         this.isDiscountApplied.set(false);
         this.discountAmount.set(0);
         this.discountCode.set('');
-      }
-    } else if (code === 'M2X100') {
-      if (creatina250Units === 2) {
-        this.discountCode.set(code);
-        this.discountAmount.set(38);
-        this.isDiscountApplied.set(true);
-        this.discountError.set('');
-        this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
-        this.recalculateTotal();
-        this.saveUserDataForOnePurchase();
-      } else {
-        this.discountError.set('Este código aplica solo para 2 unidades de Creatina Monohidratada 250 gr');
-        this.isDiscountApplied.set(false);
-        this.discountAmount.set(0);
-        this.discountCode.set('');
-      }
-    } else {
-      this.discountError.set('Código de descuento inválido');
-      this.isDiscountApplied.set(false);
-      this.discountAmount.set(0);
-      this.discountCode.set('');
-    }
-    this.isApplyingDiscount.set(false);
+        this.discountType.set(null);
+        this.discountValue.set(0);
+      },
+    });
   }
 
   /**
-   * Calcula el porcentaje que representa el descuento sobre el subtotal del carrito
+   * Mapea los códigos de error del backend a mensajes amigables.
+   * Lista canónica en api.magrolabs.com/src/api/v1/services/coupon.service.ts.
    */
-  get discountPercentage(): number {
-    if (!this.isDiscountApplied() || this.discountAmount() <= 0) return 0;
-    const baseTotal = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-    if (baseTotal <= 0) return 0;
-    return (this.discountAmount() / baseTotal) * 100;
-  }
-
-  get discountPercentageDisplay(): number {
-    return Math.round(this.discountPercentage);
+  private mapCouponErrorToMessage(errorCode: string | undefined): string {
+    switch (errorCode) {
+      case 'COUPON_NOT_FOUND':
+        return 'Código de descuento inválido o no disponible.';
+      case 'COUPON_NOT_STARTED':
+        return 'Este código de descuento aún no está activo.';
+      case 'COUPON_EXPIRED':
+        return 'Este código de descuento ya expiró.';
+      case 'COUPON_USAGE_EXCEEDED':
+        return 'Este código de descuento alcanzó su límite de usos.';
+      case 'COUPON_MIN_SUBTOTAL_NOT_MET':
+        return 'Tu carrito no alcanza el monto mínimo para este código.';
+      case 'COUPON_PRODUCT_NOT_ELIGIBLE':
+        return 'Este código no aplica a los productos en tu carrito.';
+      case 'COUPON_QTY_NOT_MET':
+        return 'No alcanzas la cantidad mínima de producto requerida por este código.';
+      case 'INVALID_COUPON_VALIDATE_PAYLOAD':
+        return 'Datos inválidos para validar el cupón.';
+      default:
+        return 'No pudimos validar el código. Intenta nuevamente.';
+    }
   }
 
   get isAuthUser(): boolean {
@@ -616,6 +629,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   removeDiscountCode(): void {
     this.discountCode.set('');
     this.discountAmount.set(0);
+    this.discountType.set(null);
+    this.discountValue.set(0);
     this.isDiscountApplied.set(false);
     this.discountError.set('');
     this.form.get('discountCodeInput')?.setValue('');
@@ -1182,7 +1197,9 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       },
       order: {
         items: orderRequest.orderItems,
-        discount: orderRequest.discount,
+        // Solo enviamos `code_discount`; el backend valida el cupón y
+        // resuelve el monto. El campo legacy `discount` (porcentaje)
+        // ya no se envía — el backend lo loggea como warning si llega.
         code_discount: orderRequest.code_discount,
         shipping_cost: orderRequest.shipping_cost,
       },
@@ -1381,7 +1398,10 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],
-      discount: this.isDiscountApplied() ? this.discountPercentage : 0,
+      // Enviamos solo el código de cupón. El backend re-valida y resuelve
+      // el monto del descuento server-side (paso 3 del refactor de
+      // descuentos). El campo legacy `discount` ya no se envía.
+      code_discount: this.isDiscountApplied() ? this.discountCode() : undefined,
       shipping_cost: this.isOutsideLimaMetropolitana() ? this.precioEnvioFueraLimaMetropolitana() : 0
     };
   }

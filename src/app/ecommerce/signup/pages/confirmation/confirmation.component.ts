@@ -337,22 +337,64 @@ export class ConfirmationComponent {
     return img ?? null;
   }
 
-  /** Subtotal calculado a partir de los orderItems (sin envío, sin descuento). */
+  /**
+   * Subtotal del pedido (sin envío ni descuento). Prioriza el campo
+   * persistido `subtotal_amount` (escrito en checkout). Si no existe
+   * (órdenes legacy pre-refactor), lo reconstruye sumando orderItems.
+   */
   subtotal(): number {
-    const items = this.order()?.orderItems ?? [];
+    const o = this.order();
+    if (o?.subtotal_amount != null) {
+      return Number(o.subtotal_amount);
+    }
+    const items = o?.orderItems ?? [];
     return items.reduce((sum, it) => {
       const unit = (it as any).unit_price ?? (it as any).price ?? 0;
       return sum + Number(unit) * Number(it.quantity);
     }, 0);
   }
 
-  /** Cálculo del descuento absoluto a partir del % almacenado en la orden. */
+  /**
+   * Monto en soles efectivamente descontado en este pedido.
+   *
+   * - Modo NUEVO: lee `discount_amount` directo (lo persistió checkout
+   *   tras validar el cupón).
+   * - Modo LEGACY: para órdenes anteriores al refactor, reconstruye desde
+   *   el viejo `discount` (porcentaje) aplicado al subtotal.
+   */
   discountAmount(): number {
     const o = this.order();
     if (!o) return 0;
-    const discountPct = Number((o as any).discount ?? 0);
-    if (!discountPct) return 0;
-    return Math.round((this.subtotal() * discountPct) / 100);
+    if (o.discount_amount != null) {
+      return Number(o.discount_amount);
+    }
+    const legacyPct = Number((o as any).discount ?? 0);
+    if (!legacyPct) return 0;
+    return Math.round((this.subtotal() * legacyPct) / 100);
+  }
+
+  /**
+   * Etiqueta para mostrar junto al descuento, ej. "Cupón MAGRO9".
+   * Vacío si la orden no tiene cupón.
+   */
+  discountLabel(): string {
+    const o = this.order();
+    if (!o?.code_discount) return 'Descuento';
+    return `Cupón ${o.code_discount}`;
+  }
+
+  /**
+   * Sub-etiqueta del descuento (badge): "10%" o "S/.9.10" según el tipo.
+   * Vacío si el tipo no está disponible (orden legacy o sin cupón).
+   */
+  discountBadge(): string {
+    const o = this.order();
+    if (!o || !o.discount_type || o.discount_value == null) return '';
+    const value = Number(o.discount_value);
+    if (o.discount_type === 'PERCENTAGE') {
+      return `${value}%`;
+    }
+    return `S/.${value.toFixed(2)}`;
   }
 
   /**

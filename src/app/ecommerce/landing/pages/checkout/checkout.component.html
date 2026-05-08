@@ -27,7 +27,7 @@
                                         [errors]="discountError() ? [discountError()] : []">
                                         <div class="flex space-x-2">
                                             <input type="text" id="discount-code-mobile" name="discount-code-mobile"
-                                                [formControl]="form.controls.discountCodeInput"
+                                                [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9" autocomplete="off"
                                                 class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
                                             @if (!isDiscountApplied()) {
                                             <button type="button" (click)="applyDiscountCode()"
@@ -102,11 +102,11 @@
 
                         <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
                             <form class="mb-6">
-                                <ml-form-field label="Código de descuento" inputId="discount-code"
+                                <ml-form-field label="Código de descuento" inputId="discount-code" 
                                     [errors]="discountError() ? [discountError()] : []">
                                     <div class="flex space-x-2">
                                         <input type="text" id="discount-code" name="discount-code"
-                                            [formControl]="form.controls.discountCodeInput"
+                                            [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9" autocomplete="off"
                                             class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
                                         @if (!isDiscountApplied()) {
                                         <button type="button" (click)="applyDiscountCode()"
@@ -192,13 +192,13 @@
                                             <div class="sm:col-span-3 col-span-6">
                                                 <ml-input label="Nombres" inputId="first-name" inputType="text"
                                                     autocomplete="given-name" [required]="true"
-                                                    [errors]="firtNameErrors" formControlName="firtName" />
+                                                    [errors]="firtNameErrors" formControlName="firtName" placeholder="Juan"/>
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
                                                 <ml-input label="Apellidos" inputId="last-name" inputType="text"
                                                     autocomplete="family-name" [required]="true"
-                                                    [errors]="lastNameErrors" formControlName="lastName" />
+                                                    [errors]="lastNameErrors" formControlName="lastName" placeholder="Pérez Rodríguez"/>
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
@@ -241,7 +241,7 @@
 
                                             <div class="sm:col-span-3 col-span-6">
                                                 <ml-input #emailInput label="Correo" inputId="email" inputType="email"
-                                                    autocomplete="email" placeholder="tu@example.com" [required]="true"
+                                                    autocomplete="email" placeholder="juan.perez@example.com" [required]="true"
                                                     [errors]="emailErrors" formControlName="email" />
                                             </div>
                                             @if(!isAuthUser) {
@@ -249,7 +249,7 @@
                                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
                                                 <ml-password-input label="Contraseña" inputId="password"
                                                     [required]="true" [errors]="passwordErrors"
-                                                    formControlName="password" [showStrength]="true"/>
+                                                    formControlName="password" [showStrength]="true" placeholder="Crea una contraseña segura"/>
                                             </div>}
                                             @if (!isAuthUser) {
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
@@ -361,7 +361,7 @@
                                                     <ml-input label="Avenida / Calle / Jirón" inputId="street-address"
                                                         inputType="text" autocomplete="street-address" [required]="true"
                                                         [maxLength]="70" [errors]="streetAddressErrors"
-                                                        formControlName="streetAddress" />
+                                                        formControlName="streetAddress" placeholder="Av.Javier Prado"/>
                                                 </div>
 
                                                 <div class="sm:col-span-3 sm:col-start-1">
@@ -412,7 +412,7 @@
 
                                                 <div class="sm:col-span-3">
                                                     <ml-input label="N° / Mz. / Lt." inputId="number" inputType="text"
-                                                        placeholder="Ej: 123, Mz A Lt 5" [required]="true"
+                                                        placeholder="403" [required]="true"
                                                         [maxLength]="20" [errors]="numberErrors"
                                                         formControlName="number" />
                                                 </div>

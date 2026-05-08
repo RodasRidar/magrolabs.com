@@ -23,6 +23,7 @@ export class PasswordInputComponent implements ControlValueAccessor {
   required = input(false);
   errors = input<string[]>([]);
   showStrength = input(false);
+  placeholder = input<string>('');
 
   protected readonly uid = `ml-password-input-${++nextPasswordId}`;
   protected readonly _id = computed(() => this.inputId() || this.uid);

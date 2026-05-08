@@ -700,7 +700,7 @@ export class CreatinasComponent implements AfterViewInit {
     else if (this.isSelectOnePurchase()) {
       this._shoppingCartService.addProductToCart({
         product: {
-          id: '2',
+          id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c',
           name: this.productName,
           price: this.productPriceOnePurchase,
           imageUrl: this.principalImgFront,

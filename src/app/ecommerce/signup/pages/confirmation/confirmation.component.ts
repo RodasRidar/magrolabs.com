@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, signal, PLATFORM_ID } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
@@ -40,6 +40,7 @@ export class ConfirmationComponent {
   private _metaAnalytics = inject(MetaAnalyticsService)
   private _orderService = inject(OrderService)
   private _authService = inject(AuthService)
+  private readonly platformId = inject(PLATFORM_ID)
 
   ENV = environment
   confirmationStatusEnum = ConfirmationStatus
@@ -113,7 +114,7 @@ export class ConfirmationComponent {
     this._seo.setIndexFollow(false);
 
     this._route.queryParams.subscribe(params => {
-      const status = params['status'] ?? localStorage.getItem('status');
+      const status = params['status'] ?? (isPlatformBrowser(this.platformId) ? localStorage.getItem('status') : null);
       const orderIdParam: string | null = params['orderId'] ?? null;
       const isAuthenticated = this._authService.isAuthenticated();
 
@@ -242,6 +243,8 @@ export class ConfirmationComponent {
   private cleanupAfterConfirmation(): void {
     this._summaryService.clearSummaryOnly();
     this._shoppingCartService.clearCart();
+
+    if (!isPlatformBrowser(this.platformId)) return;
 
     const unitsAvailable = localStorage.getItem('unitsAvailable');
     const isLastChance = localStorage.getItem('isLastChance');

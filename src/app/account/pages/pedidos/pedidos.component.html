@@ -146,11 +146,6 @@
       <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div class="mb-4 sm:mb-0">
           <div class="flex flex-col gap-1">
-            <div class="flex items-center gap-2">
-              <span class="font-semibold text-gray-700">Total:</span>
-              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2'
-                }}</span>
-            </div>
             @if (pedido.shipping_cost !== undefined && pedido.shipping_cost !== null) {
             <div class="flex items-center gap-2">
               <span class="text-sm text-gray-600">Costo de envío:</span>
@@ -159,6 +154,12 @@
               </span>
             </div>
             }
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-gray-700">Total:</span>
+              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2'
+                }}</span>
+            </div>
+
           </div>
         </div>
 
@@ -243,9 +244,7 @@
     <div class="p-2 sm:p-6">
       <!-- Timeline de seguimiento -->
       <div class="relative">
-        <app-step
-          type="order-tracking"
-          [orderStatus]="pedidoSeleccionado()?.status ?? ''"
+        <app-step type="order-tracking" [orderStatus]="pedidoSeleccionado()?.status ?? ''"
           [orderCreatedAt]="pedidoSeleccionado()?.created_at ?? ''"
           [orderUpdatedAt]="pedidoSeleccionado()?.updated_at ?? ''"
           [deliveryHoursMin]="ENV.plazoDeEntregaHorasCreatinaFree.min"

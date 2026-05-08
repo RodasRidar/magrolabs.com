@@ -249,7 +249,7 @@
                                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
                                                 <ml-password-input label="Contraseña" inputId="password"
                                                     [required]="true" [errors]="passwordErrors"
-                                                    formControlName="password" />
+                                                    formControlName="password" [showStrength]="true"/>
                                             </div>}
                                             @if (!isAuthUser) {
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">

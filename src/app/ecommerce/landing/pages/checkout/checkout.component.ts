@@ -198,7 +198,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
     this.hydrateEnrolledCard();
 
-    this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
+    const cartSubscription = this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
       if (shoppingCart && shoppingCart.items.length > 0) {
         this.shoppingCart = shoppingCart;
         this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
@@ -210,10 +210,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         }
         this.recalculateTotal();
       }
-      else {
+      else if (!this.allowNavigation()) {
         this._router.navigate(['/bolsa']);
       }
-    })
+    });
+    this.subscriptions.push(cartSubscription);
 
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),

@@ -12,6 +12,8 @@ export interface ChosePlanSummary {
     descrptionThree?: string
     descrptionFour?: string
     quantity: number
+    discountCode?: string
+    discountAmount?: number
 }
 
 export interface UserDataSummary {

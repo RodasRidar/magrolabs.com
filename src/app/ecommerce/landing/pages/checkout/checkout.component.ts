@@ -134,9 +134,9 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
     streetAddress: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,70}$/)]),
-    department: this._formBuilder.nonNullable.control('', [Validators.required]),
-    province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
-    district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required]),
+    department: this._formBuilder.nonNullable.control('', [Validators.required, Validators.min(1)] ),
+    province: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required, Validators.min(1)]),
+    district: this._formBuilder.nonNullable.control({ value: '', disabled: true }, [Validators.required, Validators.min(1)]),
     number: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(1), Validators.maxLength(20), Validators.pattern(/^[0-9A-Za-zÑñ\/\.,\-\s]{1,20}$/)]),
     reference: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(250), Validators.pattern(/^[0-9A-Za-zÑñÁáÉéÍíÓóÚú \.\-\(\)#, ]{3,250}$/)]),
     postalCode: this._formBuilder.nonNullable.control('', [Validators.minLength(5), Validators.maxLength(5), Validators.pattern(/^[0-9]{5}$/)]),
@@ -285,6 +285,13 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       }
     });
 
+    // Re-preparar tarjeta cuando el email cambia (flag registro activo + ADD_CARD)
+    const emailCardRefreshSub = this.form.get('email')?.valueChanges.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      filter(email => !!email && this.isValidEmail(email))
+    ).subscribe(() => this.refreshPrepareCardIfActive());
+
     // Escuchar cambios en el teléfono
     this.form.get('cellphone')?.valueChanges.subscribe(val => {
       if (val) {
@@ -298,6 +305,15 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         this.documentSubject.next(val);
       }
     });
+
+    // Re-preparar tarjeta cuando el documento cambia (flag registro activo + ADD_CARD)
+    const docCardRefreshSub = this.form.get('nroDocument')?.valueChanges.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      filter(doc => !!doc && doc.length >= 8)
+    ).subscribe(() => this.refreshPrepareCardIfActive());
+
+    this.subscriptions.push(emailCardRefreshSub!, docCardRefreshSub!);
 
     if (this._authService.isAuthenticated()) {
       this.setValuesInFormFromAuthUser();
@@ -392,16 +408,18 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
   // Validar email con el servidor
   private validateEmailWithServer(email: string): void {
-    this.isProcessing.set(true);
     const control = this.form.get('email');
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
-        catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        catchError(() => EMPTY)
       ).subscribe(response => {
         if (response.data.exists) {
-          control.setErrors({ emailExists: true });
+          control.setErrors({ ...control.errors, emailExists: true });
+          control.markAsTouched();
         } else {
+          const errors = { ...control.errors };
+          delete errors['emailExists'];
+          control.setErrors(Object.keys(errors).length ? errors : null);
           localStorage.setItem('isEmailInvalid', 'false');
         }
       });
@@ -409,33 +427,38 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   }
 
   private validatePhoneWithServer(phone: string): void {
-    this.isProcessing.set(true);
     const control = this.form.get('cellphone');
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
-        catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        catchError(() => EMPTY)
       ).subscribe(response => {
         if (response.data.exists) {
-          control.setErrors({ cellphoneExists: true });
+          control.setErrors({ ...control.errors, cellphoneExists: true });
+          control.markAsTouched();
+        } else {
+          const errors = { ...control.errors };
+          delete errors['cellphoneExists'];
+          control.setErrors(Object.keys(errors).length ? errors : null);
         }
       });
     }
   }
 
   private validateDocumentWithServer(document: string): void {
-    this.isProcessing.set(true);
     const control = this.form.get('nroDocument');
     const typeDoc = this.form.get('typeDocument')?.value;
 
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
-        catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        catchError(() => EMPTY)
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
-          control.setErrors({ nroDocumentExists: true });
+          control.setErrors({ ...control.errors, nroDocumentExists: true });
+          control.markAsTouched();
         } else {
+          const errors = { ...control.errors };
+          delete errors['nroDocumentExists'];
+          control.setErrors(Object.keys(errors).length ? errors : null);
           localStorage.setItem('isExternalIdExists', 'false');
         }
       });
@@ -537,6 +560,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         this.discountError.set('');
         this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
         this.recalculateTotal();
+        this.saveUserDataForOnePurchase();
       } else {
         this.discountError.set('Este código aplica solo para 1 unidad de Creatina Monohidratada 250 gr');
         this.isDiscountApplied.set(false);
@@ -551,6 +575,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
         this.discountError.set('');
         this._toastService.success('¡Éxito!', 'Código de descuento aplicado');
         this.recalculateTotal();
+        this.saveUserDataForOnePurchase();
       } else {
         this.discountError.set('Este código aplica solo para 2 unidades de Creatina Monohidratada 250 gr');
         this.isDiscountApplied.set(false);
@@ -594,6 +619,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.discountError.set('');
     this.form.get('discountCodeInput')?.setValue('');
     this.recalculateTotal();
+    this.saveUserDataForOnePurchase();
     this._toastService.info('Información', 'Código de descuento eliminado');
   }
 
@@ -846,6 +872,9 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       this.flowToken.set(null);
       this.cardEnrolledOk.set(false);
     }
+
+    // Persistir los datos del formulario en el summary para que sobrevivan un refresh.
+    this.saveUserDataForOnePurchase();
   }
 
   /**
@@ -906,8 +935,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           this.focusAndErrorInput(this.emailInput, 'email');
           return;
         }
-        console.error('prepare-card falló', err);
-        this._toastService.error('Ups!', 'No pudimos preparar el formulario de tarjeta. Intenta nuevamente.');
+        this._toastService.error('Ups!',err?.error?.error?.message || 'No pudimos preparar el formulario de tarjeta. Intenta nuevamente.');
       }
     });
   }
@@ -958,6 +986,26 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   canPayCardViaPortal(): boolean {
     if (this._authService.isAuthenticated()) return false;
     return !this.form.get('isSignUpAcepted')?.value;
+  }
+
+  /**
+   * Si el flag de registro está activo y el cliente está en modo ADD_CARD,
+   * invalida el token actual y re-solicita prepare-card con los datos actualizados.
+   * Llamado cuando el email o el documento cambian mientras el widget está activo.
+   */
+  private refreshPrepareCardIfActive(): void {
+    if (!this.form.get('isSignUpAcepted')?.value) return;
+    if (this.paymentSelection() !== 'ADD_CARD') return;
+    if (this.preparingCard()) return;
+
+    const email = this.form.get('email')?.value?.trim();
+    const firstName = this.form.get('firtName')?.value?.trim();
+    const lastName = this.form.get('lastName')?.value?.trim();
+    if (!email || !firstName || !lastName) return;
+
+    this.flowToken.set(null);
+    this.cardEnrolledOk.set(false);
+    this.onEnrollmentRequested();
   }
 
   /**
@@ -1492,6 +1540,14 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
     this.form.get('termsAccepted')?.setValue(summary?.userData?.isTermsAccepted ?? true);
 
+    if (summary?.chosePlan?.discountCode && summary.chosePlan.discountAmount) {
+      this.discountCode.set(summary.chosePlan.discountCode);
+      this.discountAmount.set(summary.chosePlan.discountAmount);
+      this.isDiscountApplied.set(true);
+      this.form.get('discountCodeInput')?.setValue(summary.chosePlan.discountCode);
+      this.recalculateTotal();
+    }
+
     if (summary && summary?.address?.nombreVia) {
       this.hideSearching = true;
       this.isSearched = true;
@@ -1729,7 +1785,9 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       selection: SummaryEnum.CREATINA_250G_ONE_PURCHASE,
       descriptionOne: 'Monohidratada 100%',
       descriptionTwo: 'Compra única de S/' + this.shoppingCart.total + '.',
-      quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
+      quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart),
+      discountCode: this.isDiscountApplied() ? this.discountCode() : undefined,
+      discountAmount: this.isDiscountApplied() ? this.discountAmount() : undefined,
     });
 
     this._summaryService.setAddress({

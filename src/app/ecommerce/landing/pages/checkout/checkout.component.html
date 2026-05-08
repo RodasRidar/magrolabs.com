@@ -139,7 +139,7 @@
                                     <dt>Subtotal</dt>
                                     <dd class="text-gray-900">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
                                 </div>
-                                <!-- @if (isDiscountApplied()) {
+                                @if (isDiscountApplied()) {
                                 <div class="flex justify-between text-primary">
                                     <dt class="flex items-center">
                                         Descuento
@@ -147,7 +147,7 @@
                                     </dt>
                                     <dd class="text-primary">-{{discountAmount() | currency : 'S/'}}</dd>
                                 </div>
-                                } -->
+                                }
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
                                     <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+
@@ -383,6 +383,7 @@
                                                         [errors]="provinceErrors" formControlName="province"
                                                         (selectionChange)="selectProvince($event)">
                                                         @if (provinces$ | async; as provincesList) {
+                                                        <option value="0">Seleccione una provincia</option>
                                                         @for (item of provincesList; track $index) {
                                                         <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
                                                         }
@@ -395,6 +396,7 @@
                                                         [errors]="districtErrors" formControlName="district"
                                                         (selectionChange)="selectDistrict($event)">
                                                         @if (districts$ | async; as districtsList) {
+                                                        <option value="0">Seleccione un distrito</option>
                                                         @for (item of districtsList; track $index) {
                                                         <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
                                                         }

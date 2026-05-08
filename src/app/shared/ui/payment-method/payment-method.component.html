@@ -111,19 +111,17 @@
                         [class.ring-2]="currentSelection() === 'ADD_CARD'"
                         [class.ring-[#D7816A]]="currentSelection() === 'ADD_CARD'">
                         <div class="flex-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#434343">
-                                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                            </svg>
+ <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#434343"><path d="M168-192q-29 0-50.5-21.16T96-264.04v-432.24Q96-726 117.5-747t50.5-21h624q29 0 50.5 21.15T864-696v216H168v216h408v72H168Zm0-432h624v-72H168v72ZM768-96v-120H648v-72h120v-120h72v120h120v72H840v120h-72ZM168-264v-432 432Z"/></svg>
                         </div>
                         <div class="flex-1">
                             <h3 class="leading-none text-gray-800 font-medium">
                                 @if (enrolledCard()) {
                                     Agregar otra tarjeta
                                 } @else {
-                                    Paga con tu tarjeta de débito o crédito
+                                    Tarjeta
                                 }
                             </h3>
-                            <p class="mt-1 text-sm text-gray-600">Tu tarjeta queda guardada para tu próxima compra.</p>
+                            <p class="mt-1 text-sm text-gray-600">Guardaremos esta tarjeta para tu próxima compra.</p>
                         </div>
                         <div
                             class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"

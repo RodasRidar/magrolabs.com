@@ -6,8 +6,6 @@ import { StepEnum } from '../../models/step.model';
 import { Information, InformationComponent } from '../../components/information/information.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalData, ModalTypeEnum, ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { ConfirmationStatus, SummaryEnum } from '../../../../shared/models/summary.model';
@@ -32,7 +30,6 @@ export class ConfirmationComponent {
   private _summaryService = inject(SummaryService)
   private _router = inject(Router)
   private _route = inject(ActivatedRoute)
-  private _dialog = inject(MatDialog)
   private _seo = inject(SeoService)
   private _shoppingCartService = inject(ShoppingCartService)
   private _emailService = inject(EmailService)
@@ -48,6 +45,7 @@ export class ConfirmationComponent {
   clientName = '';
   status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
   creditos = '{{ENV.creditoRegaloPorCompraMes}} Magropuntos';
+  urlShared = '';
   shoppingCart = this._shoppingCartService.getShoppingCart();
 
   /**
@@ -197,9 +195,10 @@ export class ConfirmationComponent {
   private runStatusSideEffects(status: any, orderIdParam?: string | null): void {
     if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS) {
       this.trackCompleteSuscription();
-      this.openWelcomeModal();
       this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS;
       this.sendWelcomeEmail();
+      const _s = this._summaryService.getSummary();
+      this.urlShared = ('https://magrolabs.com/referido-por-amigo?codigo=' + (_s?.userData?.referralCode ?? '') + '&nombre=' + (_s?.userData?.nombre || this.clientName)).replace(/ /g, '%20');
       UrgencyBarComponent.decrementUnits();
     } else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
       this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
@@ -257,22 +256,11 @@ export class ConfirmationComponent {
     if (offerEndTime) localStorage.setItem('offerEndTime', offerEndTime);
   }
 
-  openWelcomeModal() {
-    const modalData: ModalData = {
-      type: ModalTypeEnum.WELCOME,
-      title: 'titulo',
-      message: 'mensaje',
-      referralCode: this._summaryService.getSummary()?.userData?.referralCode ?? '',
-      friendName: this.clientName
-    }
-
-    const dialogRef = this._dialog.open(ModalComponent, {
-      width: '500px',
-      disableClose: true,
-      data: modalData
-    });
-
-    dialogRef.componentInstance.activate();
+  copyShareUrl(): void {
+    navigator.clipboard.writeText(this.urlShared).then(
+      () => alert('¡Enlace copiado al portapapeles!'),
+      () => {}
+    );
   }
 
   //get the date in string plus a number through the parameter int

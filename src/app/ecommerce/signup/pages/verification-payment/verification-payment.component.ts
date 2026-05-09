@@ -15,6 +15,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowWidgetAddCardComponent } from '../../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
 import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordion-group.component';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -34,7 +35,7 @@ import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics
 @Component({
   selector: 'app-verification-payment',
   standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent],
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
   templateUrl: './verification-payment.component.html',
 })
 export class VerificationPaymentComponent {
@@ -76,6 +77,7 @@ export class VerificationPaymentComponent {
   stepEnum = StepEnum;
   isCreatinaSuscription = signal(false);
   isOutsideLimaMetropolitana = signal(false);
+  isDiscountApplied = signal(false);
 
   // Computed signal para obtener el precio de la primera creatina según el código promocional
   firstCreatinePrice = () => {
@@ -135,6 +137,7 @@ export class VerificationPaymentComponent {
       this.promotionIsShow.set(true);
       this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
       this.form.get('promoCode')?.disable();
+      this.isDiscountApplied.set(true);
     }
 
     if (isPlatformBrowser(this.platformId)) {
@@ -155,11 +158,20 @@ export class VerificationPaymentComponent {
         this._toastService.success('¡Genial!', 'Código promocional aplicado. Pagarás solo S/ 2 por tu primera creatina.');
         this._cookieService.set('promoCode', promoCode);
         this.form.get('promoCode')?.disable();
+        this.isDiscountApplied.set(true);
       }
       else {
         this._toastService.warning('Código inválido', 'El código de promoción no existe o a caducado.');
       }
     }
+  }
+
+  removePromoCode() {
+    this.form.get('promoCode')?.setValue('');
+    this.form.get('promoCode')?.enable();
+    this._cookieService.delete('promoCode');
+    localStorage.removeItem('TEST-PROD-TWO-SOLES');
+    this.isDiscountApplied.set(false);
   }
 
   nextStep() {

@@ -69,9 +69,10 @@
                 <span class="flex items-center gap-x-2">
                     {{ discountLabel() }}
                     @if (discountBadge()) {
-                        <span class="rounded-full bg-green-100 text-green-800 text-xs py-0.5 px-2 font-medium tracking-wide">
-                            {{ discountBadge() }}
-                        </span>
+                    <span
+                        class="rounded-full bg-green-100 text-green-800 text-xs py-0.5 px-2 font-medium tracking-wide">
+                        {{ discountBadge() }}
+                    </span>
                     }
                 </span>
                 <span>− S/ {{ discountAmount() | number: '1.2-2' }}</span>
@@ -185,20 +186,132 @@
 </div>
 @if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
 <app-information [information]="informationExitoList" class="mt-5" />
+
+<!-- Programa de Lealtad: centralizado desde el modal -->
+<div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
+    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Bienvenido al Programa de Lealtad!</h2>
+    <div class="border-b border-gray-300 mb-4"></div>
+    <p class="text-sm text-gray-600 mb-5 text-pretty">
+        ¡Genial, ahora eres miembro de Magrolabs! A partir de ahora, recibes {{ENV.creditoRegaloPorCompraMes}}
+        Magropuntos
+        con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
+        No tienes que hacer nada más. ¡Mientras sigas siendo miembro, ahorras para tus artículos favoritos!
+    </p>
+    <p class="text-sm font-extrabold text-gray-900 mb-3">Así es como funciona:</p>
+    <div class="space-y-3 mb-5">
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path
+                    d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path
+                    d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} Magropuntos.</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-10">
+        <div class="col-span-8">
+            <input type="text" [value]="urlShared" readonly disabled
+                class="text-sm block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" />
+        </div>
+        <div class="col-span-2">
+            <button type="button" (click)="copyShareUrl()"
+                class="text-sm rounded-s-none rounded-md h-full w-full inline-flex items-center justify-center px-4 py-2 text-white bg-primary hover:bg-primary-hover">
+                <span class="max-sm:hidden">Copiar</span>
+                <svg class="sm:hidden" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                    width="22px" fill="#e8eaed">
+                    <path
+                        d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+    <ml-button type='primary' name="Ver mis pedidos" [routerLink]="['/cuenta/pedidos']" />
 </div>
 }
+
 @else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
 <app-information [information]="informationErrorList" class="mt-5" />
-<div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+<!-- Programa de Lealtad: centralizado desde el modal -->
+<div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
+    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Bienvenido al Programa de Lealtad!</h2>
+    <div class="border-b border-gray-300 mb-4"></div>
+    <p class="text-sm text-gray-600 mb-5 text-pretty">
+        ¡Genial, ahora eres miembro de Magrolabs! A partir de ahora, recibes {{ENV.creditoRegaloPorCompraMes}}
+        Magropuntos
+        con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
+        No tienes que hacer nada más. ¡Mientras sigas siendo miembro, ahorras para tus artículos favoritos!
+    </p>
+    <p class="text-sm font-extrabold text-gray-900 mb-3">Así es como funciona:</p>
+    <div class="space-y-3 mb-5">
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path
+                    d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
+                class="shrink-0">
+                <path
+                    d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
+            </svg>
+            <p class="text-xs text-gray-600">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} Magropuntos.</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-10">
+        <div class="col-span-8">
+            <input type="text" [value]="urlShared" readonly disabled
+                class="text-sm block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" />
+        </div>
+        <div class="col-span-2">
+            <button type="button" (click)="copyShareUrl()"
+                class="text-sm rounded-s-none rounded-md h-full w-full inline-flex items-center justify-center px-4 py-2 text-white bg-primary hover:bg-primary-hover">
+                <span class="max-sm:hidden">Copiar</span>
+                <svg class="sm:hidden" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                    width="22px" fill="#e8eaed">
+                    <path
+                        d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
 </div>
+
+<div class="mt-7 w-fit ml-5 max-sm:mb-14">
+    <ml-button type='primary' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
+</div>
+
 }
 @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
 <app-information [information]="informationCompraExitoRegistroList" class="mt-5" />
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Inicia sesión" [routerLink]="['/login']" />
+    <ml-button type='primary' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
 </div>
 }
 @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {

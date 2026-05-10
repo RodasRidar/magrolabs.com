@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
@@ -91,6 +91,41 @@ export class SuscripcionComponent implements OnInit {
   isLoadingCharges = signal<boolean>(false);
   showChargesHistory = signal<boolean>(false);
   chargeStatusEnum = FlowChargeStatus;
+
+  // Paginación y ordenamiento del historial de pagos
+  chargesPage = signal<number>(1);
+  readonly chargesPageSize = 5;
+  chargesSortCol = signal<string>('requestDate');
+  chargesSortDir = signal<'asc' | 'desc'>('desc');
+  sortedCharges = computed(() => {
+    const col = this.chargesSortCol();
+    const dir = this.chargesSortDir();
+    return [...this.charges()].sort((a, b) => {
+      let aVal: any, bVal: any;
+      switch (col) {
+        case 'subject': aVal = a.subject; bVal = b.subject; break;
+        case 'amount': aVal = parseFloat(a.amount); bVal = parseFloat(b.amount); break;
+        case 'status': aVal = a.status; bVal = b.status; break;
+        default: aVal = a.requestDate; bVal = b.requestDate;
+      }
+      if (aVal < bVal) return dir === 'asc' ? -1 : 1;
+      if (aVal > bVal) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  });
+  pagedCharges = computed(() => {
+    const page = this.chargesPage();
+    const size = this.chargesPageSize;
+    return this.sortedCharges().slice((page - 1) * size, page * size);
+  });
+  chargesTotalPages = computed(() => Math.ceil(this.sortedCharges().length / this.chargesPageSize));
+  chargePages = computed(() => Array.from({ length: this.chargesTotalPages() }, (_, i) => i + 1));
+  chargesPageInfo = computed(() => {
+    const start = (this.chargesPage() - 1) * this.chargesPageSize + 1;
+    const end = Math.min(this.chargesPage() * this.chargesPageSize, this.sortedCharges().length);
+    return `${start}–${end} de ${this.sortedCharges().length}`;
+  });
+
   isCardAdded = false;
   labelCardRegisted = '**** **** **** ';
 
@@ -452,6 +487,16 @@ export class SuscripcionComponent implements OnInit {
       });
   }
 
+  sortChargesBy(col: string): void {
+    if (this.chargesSortCol() === col) {
+      this.chargesSortDir.update(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.chargesSortCol.set(col);
+      this.chargesSortDir.set('asc');
+    }
+    this.chargesPage.set(1);
+  }
+
   toggleChargesHistory(): void {
     if (!this.showChargesHistory() && this.charges().length === 0) {
       this.loadCharges();
@@ -546,12 +591,18 @@ export class SuscripcionComponent implements OnInit {
     if (!dateString) return 'No disponible';
 
     const parts = dateString.split(' ');
-    if (parts.length !== 2) return dateString;
+    if (parts.length < 2) return dateString;
 
     const dateParts = parts[0].split('-');
     if (dateParts.length !== 3) return dateString;
 
-    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]} ${parts[1]}`;
+    const day = parseInt(dateParts[2], 10);
+    const month = parseInt(dateParts[1], 10);
+    const year = dateParts[0];
+    const timeParts = parts[1].split(':');
+    const time = `${timeParts[0]}:${timeParts[1]}h`;
+
+    return `${day}/${month}/${year} ${time}`;
   }
 
   cancelSubscription(): void {

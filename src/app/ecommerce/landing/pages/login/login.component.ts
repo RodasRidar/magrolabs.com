@@ -153,7 +153,7 @@ export class LoginComponent implements OnInit {
     const keywords = [
       'login magrolabs', 'acceso cuenta creatina', 'iniciar sesión suplementos',
       'cuenta usuario magrolabs', 'acceso suscripción creatina', 'login Peru',
-      'mi cuenta magrolabs', 'acceso productos deportivos'
+      'Inicio magrolabs', 'acceso productos deportivos'
     ];
 
     // SEO básico optimizado

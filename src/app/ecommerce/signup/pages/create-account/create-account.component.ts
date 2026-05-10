@@ -296,8 +296,8 @@ export class CreateAccountComponent implements OnDestroy {
 
   get cellphoneErrors(): string[] {
     if (this.hasRequiredError('cellphone')) return ['*El número de celular es obligatorio'];
-    if (this.hasValidatorError('cellphone')) return ['*Número inválido, solo se permite 9 dígitos'];
     if (this.hasExistCellphone()) return ['*El número de celular ya está registrado'];
+    if (this.hasValidatorError('cellphone')) return ['*Número inválido, solo se permite 9 dígitos'];
     return [];
   }
 

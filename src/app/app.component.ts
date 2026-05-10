@@ -185,7 +185,7 @@ export class AppComponent {
       '/referido-por-amigo': 'Referido por Amigo',
       '/atencion-cliente': 'Atención al Cliente',
       '/politicas': 'Políticas',
-      '/cuenta/mi-cuenta': 'Mi Cuenta',
+      '/cuenta/mi-cuenta': 'Inicio',
       '/cuenta/pedidos': 'Mis Pedidos',
       '/cuenta/credito': 'Mi Crédito',
       '/cuenta/suscripcion': 'Mi Suscripción',

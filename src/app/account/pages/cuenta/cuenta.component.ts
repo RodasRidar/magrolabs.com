@@ -253,7 +253,7 @@ export class CuentaComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mi Cuenta | Magrolabs');
+    this._seoService.setTitle('Inicio | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);

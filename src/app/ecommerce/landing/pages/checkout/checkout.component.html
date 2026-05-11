@@ -10,9 +10,9 @@
                     <!-- Mobile order summary -->
                     <section aria-labelledby="order-heading" class="px-4 py-4 sm:px-6 lg:hidden">
                         <div class="max-w-lg mx-auto">
-                            <div class="flex items-center justify-between mb-2">
-                                <h2 id="order-heading" class="text-lg font-medium text-gray-900">Tu Orden.</h2>
-                            </div>
+                            <!-- <div class="flex items-center justify-between mb-2">
+                                <h2 id="order-heading" class="text-4xl font-extrabold tracking-tight text-gray-900">Tu Orden.</h2>
+                            </div> -->
 
                             <div id="disclosure-1">
                                 <ul role="list" class="divide-y divide-gray-200">
@@ -61,7 +61,7 @@
                     </section>
 
                     <dl
-                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-gray-500 mt-4 space-y-3 sticky top-0 bg-white shadow-md ">
+                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-gray-500 space-y-3 sticky top-0 bg-white shadow-md ">
                         <div class="flex justify-between">
                             <dt>Subtotal</dt>
                             <dd class="text-gray-900">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>

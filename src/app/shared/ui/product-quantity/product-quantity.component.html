@@ -27,23 +27,23 @@
     </button>
   </div> -->
 
-<div class="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden h-11">
+<div class="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden h-9 sm:h-11">
   <button type="button" (click)="decrementQuantity()"
-    class="flex items-center justify-center w-10 h-full text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+    class="flex items-center justify-center w-8 sm:w-10 h-full text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
     [disabled]="currentQuantity === MIN_QUANTITY"
     aria-label="Disminuir cantidad">
-    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 18 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 18 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
     </svg>
   </button>
-  <span class="w-10 border-x border-gray-200 text-center text-sm font-medium text-gray-900 select-none leading-none flex items-center justify-center h-full">
+  <span class="w-8 sm:w-10 border-x border-gray-200 text-center text-sm font-medium text-gray-900 select-none leading-none flex items-center justify-center h-full">
     {{ currentQuantity }}
   </span>
   <button type="button" (click)="incrementQuantity()"
-    class="flex items-center justify-center w-10 h-full text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+    class="flex items-center justify-center w-8 sm:w-10 h-full text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
     [disabled]="currentQuantity === MAX_QUANTITY"
     aria-label="Aumentar cantidad">
-    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
     </svg>
   </button>

@@ -1,6 +1,6 @@
-<ml-page-header title="Inicio.">
-    @if (greetingMessage() && !isLoadingDashboard()) {
-    <p class="mt-2 text-lg text-gray-600 font-medium">{{ greetingMessage() }}</p>
+<ml-page-header [title]="greetingMessage().title">
+    @if (greetingMessage().title && !isLoadingDashboard()) {
+    <p class="mt-2 text-lg text-gray-600 font-medium">{{ greetingMessage().description }}</p>
     }
 </ml-page-header>
 
@@ -133,7 +133,7 @@
                     </span>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">💳 Mi Suscripción.</h3>
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">💳 Suscripción.</h3>
                             @if (hasDiscount()) {
                             <span
                                 class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-hover text-white">
@@ -221,7 +221,7 @@
                         Acción requerida
                     </span>
                     <h3 class="text-lg font-medium leading-6 text-gray-900 flex items-center">
-                        👤 Mi Perfil.
+                        👤 Perfil.
                         @if (needsBasicInfo()) {
                         <span
                             class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">

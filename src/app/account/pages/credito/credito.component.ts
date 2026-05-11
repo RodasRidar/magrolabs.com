@@ -97,7 +97,7 @@ export class CreditoComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mis Magropuntos | Magrolabs');
+    this._seoService.setTitle('Recompensas | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);

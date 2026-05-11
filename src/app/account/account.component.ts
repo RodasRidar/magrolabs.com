@@ -22,7 +22,6 @@ export class AccountComponent implements OnInit {
   private _loyaltyService = inject(LoyaltyService);
 
   user: UserDetailResponse | null = null;
-  isUserMenuOpen = false;
   isMobileMenuOpen = false;
   subscription: any = null;
   lastOrder: any = null;
@@ -48,10 +47,6 @@ export class AccountComponent implements OnInit {
 
   calculateProgressPercentage(): number {
     return (this.loyaltyPoints / this.maxLoyaltyPoints) * 100;
-  }
-
-  toggleUserMenu() {
-    this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
   toggleMobileMenu() {

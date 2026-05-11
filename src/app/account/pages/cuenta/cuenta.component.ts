@@ -26,6 +26,8 @@ import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.compo
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 import { ActionCardComponent } from '../../../shared/ui/action-card/action-card.component';
 import { LoyaltyMeterComponent } from '../../../shared/ui/loyalty-meter/loyalty-meter.component';
+import { describe } from 'node:test';
+import { title } from 'process';
 
 @Component({
   selector: 'app-cuenta',
@@ -74,7 +76,7 @@ export class CuentaComponent implements OnInit {
   // Saludo dinámico
   greetingMessage = computed(() => {
     const user = this.user();
-    if (!user) return '';
+    if (!user) return { title: '', description: '' };
     
     const hour = new Date().getHours();
     let greeting = '';
@@ -94,7 +96,10 @@ export class CuentaComponent implements OnInit {
     // Usar solo el primer nombre si tiene varios nombres separados por espacios
     const firstName = user.first_name.split(' ')[0];
     
-    return `¡${greeting} ${firstName}!, qué gusto tenerte de vuelta ${emoji}`;
+    return {
+      title: `¡${greeting} ${firstName}!`,
+      description: `Un gusto tenerte de vuelta ${emoji}`
+    };
   });
 
   // Computed signals

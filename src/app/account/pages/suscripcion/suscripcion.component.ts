@@ -248,7 +248,7 @@ export class SuscripcionComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mi Suscripción | Magrolabs');
+    this._seoService.setTitle('Suscripción | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);

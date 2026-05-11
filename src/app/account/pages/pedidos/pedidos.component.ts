@@ -68,7 +68,7 @@ export class PedidosComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mis Pedidos | Magrolabs');
+    this._seoService.setTitle('Pedidos | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);

@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StepEnum } from '../../models/step.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -19,18 +19,19 @@ import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.
 import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateCustomerRequest, CreateSubscriptionResponse, EditCustomerRequest, FlowChargeCustomerRequest, FlowChargeStatus, FlowCreateSubscriptionRequest, FlowPaymentMethod, FlowPaymentRequest, RegisterCardResponse } from '../../../../shared/models/flow.model';
-import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, of } from 'rxjs';
-import { OrderService } from '../../../../shared/services/order.service';
-import { CreateOrderRequest, OrderStatus, PaymentMethod, UpdateOrderDetailsRequest } from '../../../../shared/interfaces/order.interfaces';
-import { AtPeriodEnd, SubscriptionService } from '../../../../shared/services/subscription.service';
-import { CreateSubscriptionRequest, SubscriptionStatusEnum } from '../../../../shared/interfaces/subscription.interface';
-import { SubscriptionOrderService } from '../../../../shared/services/subscription-order.service';
-import { CreateSubscriptionOrderRequest } from '../../../../shared/interfaces/subscription-order.interface';
+import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, RegisterCardResponse } from '../../../../shared/models/flow.model';
+import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable } from 'rxjs';
+import { PaymentMethod } from '../../../../shared/interfaces/order.interfaces';
 import { UserService } from '../../../../shared/services/user.service';
-import { CreditTransactionService, TransactionType } from '../../../../shared/services/credit-transactions.service';
 import { VerificationPaymentModalService } from '../../../../shared/services/verification-payment-modal.service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { CheckoutSubscriptionService } from '../../../../shared/services/checkout-subscription.service';
+import { CheckoutSubscriptionRequest, ChargeReference } from '../../../../shared/interfaces/checkout-subscription.interfaces';
+import { SubscriptionCouponService } from '../../../../shared/services/subscription-coupon.service';
+import { SubscriptionCouponAppliesTo, SubscriptionDiscountType } from '../../../../shared/interfaces/subscription-coupon.interfaces';
+import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
 @Component({
   selector: 'app-verification-payment',
@@ -65,28 +66,58 @@ export class VerificationPaymentComponent {
   private _toastService = inject(ToastService)
   private _cookieService = inject(CookieService)
   private _flowService = inject(FlowService)
-  private _orderService = inject(OrderService)
-  private _subscriptionService = inject(SubscriptionService)
-  private _subscriptionOrderService = inject(SubscriptionOrderService)
   private _userService = inject(UserService)
-  private _creditTransactionService = inject(CreditTransactionService)
   private _verificationPaymentModalService = inject(VerificationPaymentModalService)
   private _metaAnalyticsService = inject(MetaAnalyticsService);
+  private _authService = inject(AuthService);
+  private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
+  private _subscriptionCouponService = inject(SubscriptionCouponService);
+  private _shoppingCartService = inject(ShoppingCartService)
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
+
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = signal('**** **** **** ');
   stepEnum = StepEnum;
   isCreatinaSuscription = signal(false);
   isOutsideLimaMetropolitana = signal(false);
-  isDiscountApplied = signal(false);
 
-  // Computed signal para obtener el precio de la primera creatina según el código promocional
-  firstCreatinePrice = () => {
-    const promoCode = this.form.get('promoCode')?.value;
-    return promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
+  // ─────────────────────────────────────────────────────────────────────
+  // Cupón de creador (SubscriptionCoupons). El backend valida el code y
+  // devuelve descuentos resueltos para primer cargo y/o recurrente.
+  // ─────────────────────────────────────────────────────────────────────
+  subDiscountCode = signal('');
+  subDiscountApplied = signal(false);
+  /** Soles a descontar del primer cargo (0 si no aplica al primero). */
+  subDiscountFirstCharge = signal(0);
+  /** Soles a descontar de la cuota mensual (0 si no aplica a recurrente). */
+  subDiscountRecurring = signal(0);
+  subDiscountType = signal<SubscriptionDiscountType | null>(null);
+  subDiscountValue = signal(0);
+  subDiscountAppliesTo = signal<SubscriptionCouponAppliesTo | null>(null);
+  subDiscountCreatorName = signal<string | null>(null);
+  subDiscountError = signal('');
+  isApplyingSubDiscount = signal(false);
+
+  /**
+   * Precio base de la primera creatina (antes de aplicar cupón de creador).
+   * Lee el mismo flag que `getFirstChargeAmount()` para que UI y backend
+   * vean el mismo subtotal de partida.
+   */
+  firstCreatinePrice = (): number => {
+    return this.getFirstChargeAmount();
   };
 
+  /**
+   * Total a pagar HOY por la primera creatina, descontado el cupón
+   * (si el cupón aplica al primer cargo). Es lo que va al `chargeCustomer`
+   * de Flow y al `Order.total_amount` en BD.
+   */
+  firstChargeTotalToPay = computed((): number => {
+    return Math.max(0, this.firstCreatinePrice() - this.subDiscountFirstCharge());
+  });
+
   form = this._formBuilder.group({
-    promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)]),
+    promoCode: this._formBuilder.control('', [Validators.minLength(3), Validators.pattern(/^[A-Z0-9]{3,10}$/)],),
     cardNumber: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{15,16}|(([0-9]{4}\s){3}[0-9]{3,4})$/)]),
     cardName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[A-Z\s]{3,}$/)]),
     cardExpiration: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{4}$/)]),
@@ -97,13 +128,48 @@ export class VerificationPaymentComponent {
     this._seo.title.setTitle('Magrolabs | Verificación de pago');
     this._seo.setCanonicalURL('magrolabs.com/registro/verificacion');
     this._seo.setIndexFollow(false);
-
-    let summary = this._summaryService.getSummary()
+    let summary = this._summaryService.getSummary();
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);
     }
     if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
       this.isCreatinaSuscription.set(true);
+    } else {
+      this.isLoading.set(false);
+      this._router.navigate(['/checkout']);
+      this._shoppingCartService.addProductToCart({
+        product: {
+          id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c',
+          name: 'Creatina Monohidratada 250 gr',
+          price: this.ENV.precioCreatinaOnePurchase,
+          imageUrl: '250gr_front_mockup_2000x2000.webp',
+          slug: 'creatina-monohidratada-250-gr'
+        },
+        quantity: 1
+      });
+      this._tiktokAnalytics.trackAddToCart({
+        contents: [{
+          content_id: 'creatina-monohidratada-250-gr',
+          content_name: 'Creatina Monohidratada 250 gr',
+          content_type: 'product',
+        }],
+        value: this.ENV.precioCreatinaOnePurchase,
+        currency: 'PEN'
+      });
+
+      // Tracking Meta Analytics
+      this._metaAnalyticsService.trackAddToCart({
+        value: this.ENV.precioCreatinaOnePurchase,
+        currency: 'PEN',
+        content_name: 'Creatina Monohidratada 250 gr',
+        content_ids: ['creatina-monohidratada-250-gr'],
+        content_type: 'product',
+        contents: [{
+          id: 'creatina-monohidratada-250-gr',
+          quantity: 1,
+          item_price: this.ENV.precioCreatinaOnePurchase
+        }]
+      });
     }
 
     // Validar si la dirección está fuera de Lima Metropolitana
@@ -117,6 +183,7 @@ export class VerificationPaymentComponent {
       currency: 'PEN',
       content_category: 'suscripcion_mensual'
     });
+
   }
 
   /**
@@ -132,13 +199,9 @@ export class VerificationPaymentComponent {
         this.isOutsideLimaMetropolitana.set(false);
       }
     }
-    if (this._cookieService.get('promoCode')) {
-      this.isPaymentVerified.set(true);
-      this.promotionIsShow.set(true);
-      this.form.get('promoCode')?.setValue(this._cookieService.get('promoCode'));
-      this.form.get('promoCode')?.disable();
-      this.isDiscountApplied.set(true);
-    }
+    // Nota: el cookie `promoCode` legacy (P252SOLESX) ya no se persiste.
+    // Los cupones de creador no se rehidratan al refrescar la página; el
+    // usuario debe re-aplicar el código si ocurre un refresh.
 
     if (isPlatformBrowser(this.platformId)) {
       this.registerUserFlowAndRegisterCard();
@@ -149,31 +212,6 @@ export class VerificationPaymentComponent {
     }
   }
 
-  applyPromoCode() {
-    if (this.form.get('promoCode')?.valid || !this.isPaymentVerified()) {
-      const promoCode = this.form.get('promoCode')?.value;
-      if (promoCode === 'P252SOLESX') {
-        // Mensaje específico para el código P252SOLESX
-        localStorage.setItem('TEST-PROD-TWO-SOLES', 'TEST-PROD-TWO-SOLES');
-        this._toastService.success('¡Genial!', 'Código promocional aplicado. Pagarás solo S/ 2 por tu primera creatina.');
-        this._cookieService.set('promoCode', promoCode);
-        this.form.get('promoCode')?.disable();
-        this.isDiscountApplied.set(true);
-      }
-      else {
-        this._toastService.warning('Código inválido', 'El código de promoción no existe o a caducado.');
-      }
-    }
-  }
-
-  removePromoCode() {
-    this.form.get('promoCode')?.setValue('');
-    this.form.get('promoCode')?.enable();
-    this._cookieService.delete('promoCode');
-    localStorage.removeItem('TEST-PROD-TWO-SOLES');
-    this.isDiscountApplied.set(false);
-  }
-
   nextStep() {
     this.isLoading.set(true);
 
@@ -182,19 +220,16 @@ export class VerificationPaymentComponent {
       return;
     }
 
-    const promoCode = this.form.get('promoCode')?.value;
-    if (promoCode === 'FREE') {
-      this._router.navigate(['registro/confirmacion'], {
-        queryParams: { status: ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA }
-      });
-      this.isLoading.set(false);
-      return;
-    }
-
     if (this.isCreatinaSuscription()) {
-      this.handleSubscriptionFlow();
+      this.processSubscriptionViaEndpoint();
     } else {
-      this.handleOnePurchaseFlow();
+      // Flujo One Purchase: este componente ya no maneja ese caso.
+      // El CheckoutComponent moderno (/checkout) lo cubre por completo
+      // con el endpoint consolidado /api/v1/checkout. Redirigimos al
+      // carrito para que el usuario continúe por ese camino.
+      this.isLoading.set(false);
+      // this._toastService.info('Redirigiendo...', 'Te llevamos al carrito para completar tu compra.');
+      this._router.navigate(['/checkout']);
     }
   }
 
@@ -226,571 +261,340 @@ export class VerificationPaymentComponent {
     this.isLoading.set(false);
   }
 
-  private handleOnePurchaseFlow(): void {
-    if (this.isPaymentVerified()) {
-      this.handleVerifiedPayment();
+  /**
+   * Punto único de procesamiento de suscripción.
+   *
+   * Reemplaza la orquestación HTTP que antes hacían 3 métodos
+   * (`processNewOrderSubscription`, `processExistingOrderSubscription`,
+   * `processCancelAndCreateNewOrderSubscription`) por una sola llamada
+   * al endpoint consolidado `/api/v1/checkout/subscription`. El backend
+   * ejecuta el patrón saga completo: cleanup intento previo + cargo Flow
+   * + tx con reintentos + sanity check + createSubscription Flow con
+   * reintentos + auto-login con tokens.
+   *
+   * Decisión: si hay orderId previo, va en mode='update' (el backend
+   * sobre-escribe la orden previa; en el caso "cancel-and-new" antiguo
+   * el frontend hacía cancel previo, pero ahora confiamos en que el
+   * backend reuse la orden).
+   */
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Cupón de creador — apply / remove / mapping de errores.
+  // ─────────────────────────────────────────────────────────────────────
+
+  /**
+   * Aplica un código de cupón de creador llamando al backend.
+   * El backend valida estado/fechas/usos/configuración y devuelve los
+   * descuentos resueltos (firstCharge + recurring).
+   */
+  applySubDiscount(): void {
+    const rawCode: string = this.form.get('promoCode')?.value ?? '';
+    const code = rawCode.trim();
+    if (!code) {
+      this.subDiscountError.set('Por favor ingresa un código de descuento.');
       return;
     }
 
-    const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-    const status = this._summaryService.getSummary()?.userData?.isSignUpAcepted ?? false
-      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
-      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
+    this.isApplyingSubDiscount.set(true);
+    this.subDiscountError.set('');
 
-    const paymentRequest = this.createPaymentRequest();
-    localStorage.setItem('status', status.toString());
-    const wasSubscription = this._summaryService.getSummary()?.userData?.isSubscription ?? false;
-
-    if (orderId) {
-      if (wasSubscription) {
-        this.processCancelAndCreateNewOrder(orderId, paymentRequest);
-      }
-      else {
-        this.processExistingOrderPayment(orderId, paymentRequest);
-      }
-    } else {
-      this.processNewOrderPayment(paymentRequest);
-    }
-  }
-  //TODO: Cancelar la suscripción en flow tambien?
-  processCancelAndCreateNewOrder(orderId: string, paymentRequest: FlowPaymentRequest) {
-    const orderRequest = this.createOrderRequest(false);
-    const subscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId ?? '';
-
-    this._orderService.cancelOrder(orderId).pipe(
-      switchMap(response => {
-        console.log('Order canceled: ', response);
-        return this._subscriptionService.cancelSubscription(subscriptionId, 'Cancelación desde verificación de pago');
-      }),
-      switchMap(response => {
-        console.log('Subscription canceled: ', response);
-        return this._flowService.cancelSubscription(subscriptionId, AtPeriodEnd.IMMEDIATE);
-      }),
-      switchMap(response => {
-        console.log('flowService cancelSubscription: ', response);
-        return this._orderService.createOrder(orderRequest);
-      }),
-      switchMap(response => {
-        paymentRequest.commerceOrder = response.data.order.id;
-        this.updateUserDataWithOrderId(response.data.order.id);
-        return this._flowService.createPayment(paymentRequest);
-      }),
-      catchError(error => {
-        console.error('Error creating payment: ', error);
-        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-        return throwError(() => error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: false
-        });
-        this.isLoading.set(false);
-      })
+    this._subscriptionCouponService.validateCoupon({
+      code,
+      firstChargeAmount: this.getFirstChargeAmount(),
+      recurringAmount: this.ENV.precioCreatinaSubscription,
+    }).pipe(
+      finalize(() => this.isApplyingSubDiscount.set(false)),
     ).subscribe({
-      next: (response) => {
-        window.location.href = response.url + '?token=' + response.token;
-      }
+      next: response => {
+        const data = response.data;
+        this.subDiscountCode.set(data.code);
+        this.subDiscountType.set(data.discount_type);
+        this.subDiscountValue.set(data.discount_value);
+        this.subDiscountAppliesTo.set(data.applies_to);
+        this.subDiscountFirstCharge.set(data.first_charge_discount_amount);
+        this.subDiscountRecurring.set(data.recurring_discount_amount);
+        this.subDiscountCreatorName.set(data.creator_name);
+        this.subDiscountApplied.set(true);
+        this.form.get('promoCode')?.disable();
+        this.subDiscountError.set('');
+        const label = data.code;
+        this._toastService.success('¡Éxito!', `Cupón aplicado: ${label}`);
+      },
+      error: err => {
+        this.subDiscountError.set(this.mapSubCouponError(err?.error?.error?.code));
+        this.subDiscountApplied.set(false);
+        this.subDiscountCode.set('');
+        this.subDiscountFirstCharge.set(0);
+        this.subDiscountRecurring.set(0);
+        this.subDiscountType.set(null);
+        this.subDiscountValue.set(0);
+        this.subDiscountAppliesTo.set(null);
+        this.subDiscountCreatorName.set(null);
+      },
     });
   }
 
-  private handleVerifiedPayment(): void {
-    this._toastService.success('¡Genial!', 'Verificación exitosa.');
-    setTimeout(() => {
-      this._router.navigate(['registro/confirmacion'], {
-        queryParams: { status: this.isOutsideLimaMetropolitana() ? ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA : ConfirmationStatus.SUBSCRIPTION_SUCCESS }
-      });
-    }, 2000);
-    this.isLoading.set(false);
-  }
-
-  private createPaymentRequest(): FlowPaymentRequest {
-
-    const status = this.form.get('isSignUpAcepted')?.value ?? false
-      ? ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION
-      : ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION;
-
-    return {
-      amount: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? 2 : this.ENV.precioCreatinaOnePurchase,
-      currency: 'PEN',
-      commerceOrder: '',
-      subject: 'Creatina Monohidratada Magrolabs de 250 gr.',
-      email: this._summaryService.getSummary()?.userData?.email ?? '',
-      paymentMethod: this.paymentMethod(),
-      urlReturn: this.ENV.flowUrlReturn + '?status=' + Number(status).toString(),
-      urlConfirmation: this.ENV.flowUrlConfirmation
-    };
-  }
-
-  private processExistingOrderPayment(orderId: string, paymentRequest: FlowPaymentRequest): void {
-    const orderDetails = this.createOrderDetailsWithPaymentMethod();
-
-    this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
-      switchMap(response => {
-        paymentRequest.commerceOrder = response.data.order.id;
-        return this._flowService.createPayment(paymentRequest);
-      }),
-      catchError(error => {
-        console.error('Error creating payment: ', error);
-        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-        return throwError(() => error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: false
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        window.location.href = response.url + '?token=' + response.token;
-      }
-    });
-  }
-
-  private processNewOrderPayment(paymentRequest: FlowPaymentRequest): void {
-    const orderRequest = this.createOrderRequest(false);
-
-    this._orderService.createOrder(orderRequest).pipe(
-      switchMap(response => {
-        paymentRequest.commerceOrder = response.data.order.id;
-        this.updateUserDataWithOrderId(response.data.order.id);
-        return this._flowService.createPayment(paymentRequest);
-      }),
-      catchError(error => {
-        console.error('Error creating payment: ', error);
-        this._toastService.error('Ups!', 'Error al redirigir al pago. Por favor, intenta nuevamente.');
-        return throwError(() => error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: false
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        window.location.href = response.url + '?token=' + response.token;
-      }
-    });
-  }
-
-  private handleSubscriptionFlow(): void {
-    const subscription = this.createFlowSubscriptionRequest();
-    const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-    const wasSubscription = this._summaryService.getSummary()?.userData?.isSubscription ?? false;
-
-    if (orderId) {
-      if (!wasSubscription) {
-        this.processCancelAndCreateNewOrderSubscription(orderId, subscription);
-      }
-      else {
-        this.processExistingOrderSubscription(orderId, subscription);
-      }
-    }
-    else {
-      this.processNewOrderSubscription(subscription);
-    }
-  }
-
-  private processCancelAndCreateNewOrderSubscription(orderId: string, subscription: FlowCreateSubscriptionRequest) {
-    const orderRequest = this.createOrderRequest(true);
-
-    this._orderService.cancelOrder(orderId).pipe(
-      switchMap(response => {
-        console.log('Order canceled: ', response);
-        return this._orderService.createOrder(orderRequest);
-      }),
-      switchMap(response => {
-        this.updateUserDataWithOrderId(response.data.order.id);
-
-        // 1. Realizar el cargo de la primera creatina (9.90 soles)
-        const chargeRequest = this.createChargeRequest(response.data.order.id);
-        return this._flowService.chargeCustomer(chargeRequest);
-      }),
-      switchMap(chargeResponse => {
-        console.log('Charge completed: ', chargeResponse);
-
-        // Validar el estado del cargo antes de continuar
-        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
-          // Si el cargo no fue exitoso, lanzar error
-          throw new Error('CHARGE_FAILED');
-        }
-
-        // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
-        return this._flowService.createSubscription(subscription);
-      }),
-      switchMap(flowResponse => {
-        console.log('Flow Subscription created: ', flowResponse);
-        return this.createBackendSubscription();
-      }),
-      switchMap(subscriptionResponse => {
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
-        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-      }),
-      switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created: ', subscriptionOrderResponse);
-        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-        return this._orderService.updateOrderDetails(orderId, {
-          status: OrderStatus.PROCESSING
-        });
-      }),
-      switchMap(orderUpdateResponse => {
-        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-        if (!userId) {
-          return of(null);
-        }
-
-        // Agregar 10 créditos al usuario por la suscripción
-        return this._creditTransactionService.createTransaction({
-          user_id: userId,
-          type: TransactionType.EARNED,
-          amount: this.ENV.creditoRegaloPorCompraMes,
-          description: '¡Bienvenido a Magrolabs!',
-          source: PaymentMethod.CREDIT_CARD
-        });
-      }),
-      catchError(error => {
-        // Manejo especial para error de cargo fallido
-        if (error.message === 'CHARGE_FAILED') {
-          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
-          this.resetPaymentVerification();
-          return throwError(() => error);
-        }
-        return this.handleSubscriptionError(error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: true
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        console.log('Order updated and credits added: ', response);
-        this.navigateToConfirmation();
-      }
-    });
+  /** Quita el cupón aplicado y limpia signals. */
+  removeSubDiscount(): void {
+    this.subDiscountCode.set('');
+    this.subDiscountApplied.set(false);
+    this.subDiscountFirstCharge.set(0);
+    this.subDiscountRecurring.set(0);
+    this.subDiscountType.set(null);
+    this.subDiscountValue.set(0);
+    this.subDiscountAppliesTo.set(null);
+    this.subDiscountCreatorName.set(null);
+    this.subDiscountError.set('');
+    this.form.get('promoCode')?.setValue('');
+    this.form.get('promoCode')?.enable();
+    this._toastService.info('Información', 'Código de descuento eliminado');
   }
 
   /**
-   * Crea la solicitud de suscripción en Flow
-   * Nota: El cargo de la primera creatina se realiza antes de crear la suscripción
+   * Mapea los códigos de error del backend a mensajes amigables.
+   * Lista canónica en api.magrolabs.com/.../subscription-coupon.service.ts.
    */
-  private createFlowSubscriptionRequest(): FlowCreateSubscriptionRequest {
-    if (localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES') {
-      return {
-        planId: this.ENV.flowPlanIdTest,
-        customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
-        trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
-      };
+  private mapSubCouponError(errorCode: string | undefined): string {
+    switch (errorCode) {
+      case 'SUBSCRIPTION_COUPON_NOT_FOUND':
+        return 'Código de descuento inválido o no disponible.';
+      case 'SUBSCRIPTION_COUPON_NOT_STARTED':
+        return 'Este código aún no está activo.';
+      case 'SUBSCRIPTION_COUPON_EXPIRED':
+        return 'Este código ya expiró.';
+      case 'SUBSCRIPTION_COUPON_USAGE_EXCEEDED':
+        return 'Este código alcanzó su límite de usos.';
+      case 'SUBSCRIPTION_COUPON_MIN_SUBTOTAL_NOT_MET':
+        return 'No alcanzas el monto mínimo para usar este código.';
+      case 'SUBSCRIPTION_COUPON_MISCONFIGURED':
+        return 'Este código no está configurado correctamente. Contacta a soporte.';
+      case 'INVALID_SUBSCRIPTION_COUPON_VALIDATE_PAYLOAD':
+        return 'Datos inválidos para validar el código.';
+      default:
+        return 'No pudimos validar el código. Intenta nuevamente.';
     }
-    return {
-      planId: this.ENV.flowCreatina250Gr2025_55_PlanId,
-      customerId: this._summaryService.getSummary()?.userData?.customerId ?? '',
-      trial_period_days: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion
-    };
   }
 
-  /**
-   * Crea la solicitud de cargo para la primera creatina
-   * @param orderId ID de la orden creada
-   * @returns Solicitud de cargo al cliente
-   */
-  private createChargeRequest(orderId: string): FlowChargeCustomerRequest {
-    // Verificar si se aplicó el código promocional P252SOLESX
-    const promoCode = this.form.get('promoCode')?.value;
-    const amount = promoCode === 'P252SOLESX' ? 2 : this.ENV.campanaPrimeraCreatina.precio;
-    const customerId = this._summaryService.getSummary()?.userData?.customerId ?? '';
+  /** Etiqueta visible del cupón aplicado (badge). */
+  subDiscountBadge(): string {
+    const type = this.subDiscountType();
+    const value = this.subDiscountValue();
+    if (!type || value <= 0) return '';
+    return type === 'PERCENTAGE' ? `${value}%` : `S/.${value.toFixed(2)}`;
+  }
 
-    return {
-      customerId: customerId,
-      amount: amount,
-      subject: `Creatina de prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
-      commerceOrder: orderId,
-      currency: 'PEN',
-      optionals: JSON.stringify({
+  private processSubscriptionViaEndpoint(): void {
+    const summary = this._summaryService.getSummary();
+    const userData = summary?.userData;
+    const customerId = userData?.customerId;
+
+    if (!customerId) {
+      this._toastService.error('Ups!', 'Falta información de pago. Por favor, registra tu tarjeta.');
+      this.isLoading.set(false);
+      return;
+    }
+
+    const mode: 'new' | 'update' = userData?.orderId ? 'update' : 'new';
+
+    // Si hay un chargeReference pendiente en localStorage (de un intento
+    // anterior que falló tras cobrar), lo incluimos en el payload para
+    // que el backend lo reuse via `validateChargeReference` en lugar de
+    // re-cobrar al cliente.
+    const pendingChargeRef = this.getPendingChargeReference();
+
+    const request: CheckoutSubscriptionRequest = {
+      customerId,
+      flowPlanId: this.getFlowPlanId(),
+      backendSubscriptionPlanId: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
+      trialPeriodDays: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max
+        + this.ENV.diasNormalesDePruebaOperiodoDeReflexion,
+      firstChargeAmount: this.getFirstChargeAmount(),
+      firstChargeSubject: `Creatina de prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
+      firstChargeOptionals: {
         campaign_type: this.ENV.campanaPrimeraCreatina.tipo,
         product_weight: this.ENV.campanaPrimeraCreatina.gramos,
-        is_first_creatine: true
-      })
-    };
-  }
-
-  private createOrderRequest(isSubscription: boolean): CreateOrderRequest {
-    let paymentMethod = PaymentMethod.CREDIT_CARD;
-    switch (this.paymentMethod()) {
-      case FlowPaymentMethod.BANK_TRANSFER:
-        paymentMethod = PaymentMethod.BANK_TRANSFER;
-        break;
-      case FlowPaymentMethod.PAGO_EFECTIVO:
-        paymentMethod = PaymentMethod.PAGO_EFECTIVO;
-        break;
-      case FlowPaymentMethod.YAPE:
-        paymentMethod = PaymentMethod.YAPE;
-        break;
-      default:
-        paymentMethod = PaymentMethod.CREDIT_CARD;
-    }
-    if (isSubscription) {
-      return {
-        shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-        payment_method: paymentMethod,
-        isLoyaltyWebShow: false,
+        is_first_creatine: true,
+      },
+      order: {
+        mode,
+        orderId: mode === 'update' ? userData?.orderId : undefined,
+        shipping_address: summary?.address?.id ?? '',
+        payment_method: this.mapPaymentMethod(),
         orderItems: [
           {
-            product_id: '00000008-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 100gr
-            quantity: 1
+            product_id: '00000008-50eb-4ac3-aa94-1b64fbf32b9c', // Creatina 100gr (campaña primera creatina)
+            quantity: 1,
           },
-          /*{
-            product_id: '00000001-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
-            quantity: 1
-          },
-          discount: 20
-          */
         ],
-
-      };
-    }
-    return {
-      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-      payment_method: paymentMethod,
-      isLoyaltyWebShow: false,
-      orderItems: [
-        {
-          product_id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
-          quantity: 1
-        }
-      ],
-      discount: 0
+        // Cupón de creador (si el usuario lo aplicó vía applySubDiscount).
+        // El backend re-valida server-side via SubscriptionCouponService.
+        ...(this.subDiscountApplied()
+          ? { code_discount: this.subDiscountCode() }
+          : {}),
+        isLoyaltyWebShow: false,
+      },
+      creditAmount: this.ENV.creditoRegaloPorCompraMes,
+      ...(pendingChargeRef ? { chargeReference: pendingChargeRef } : {}),
     };
+
+    if (pendingChargeRef) {
+      console.info('Reusando chargeReference pendiente del intento anterior', pendingChargeRef);
+    }
+
+    this._checkoutSubscriptionService.processSubscription(request).pipe(
+      catchError(err => {
+        const code: string | undefined = err?.error?.error?.code;
+
+        // Cargo Flow rechazado (tarjeta inválida, fondos insuficientes, etc.)
+        // Borramos cualquier chargeReference previo: el cargo nuevo falló
+        // de plano, no hay nada que reusar.
+        if (code === 'FLOW_CHARGE_NOT_COMPLETED') {
+          this.clearPendingChargeReference();
+          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
+          this.resetPaymentVerification();
+          return EMPTY;
+        }
+        // Dirección de envío inválida (no debería ocurrir en este flujo).
+        if (code === 'ADDRESS_NOT_FOUND') {
+          this._toastService.error('Ups!', 'La dirección de envío no es válida.');
+          return EMPTY;
+        }
+        // Cargo completado pero tx falló las 3 veces — admin notificado.
+        // Guardamos el chargeReference para que el próximo intento del
+        // cliente reuse el cargo sin re-cobrar.
+        if (code === 'TX_FAILED_AFTER_CHARGE') {
+          const ref: ChargeReference | undefined = err?.error?.error?.details?.chargeReference;
+          if (ref) {
+            this.savePendingChargeReference(ref);
+            console.warn('chargeReference guardado para retry idempotente', ref);
+          }
+          this._toastService.error(
+            'Ups!',
+            'Tu pago se procesó pero hubo un problema al registrar la suscripción. Si vuelves a intentar, no se te cobrará de nuevo.',
+          );
+          return EMPTY;
+        }
+        return this.handleSubscriptionError(err);
+      }),
+      finalize(() => {
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          isSubscription: true,
+        });
+        this.isLoading.set(false);
+      }),
+    ).subscribe({
+      next: response => {
+        const data = response.data;
+
+        // Éxito: limpiamos el chargeReference pendiente (ya se aplicó).
+        this.clearPendingChargeReference();
+
+        // Auto-login refresh: el backend devuelve tokens nuevos para que
+        // la sesión post-suscripción quede con JWT vigente.
+        if (data.tokens && userData) {
+          this._authService.setSessionFromCheckout(data.tokens, {
+            id: userData.id ?? '',
+            email: userData.email ?? '',
+            first_name: userData.nombre ?? '',
+            last_name: userData.apellido ?? '',
+            isSignUpAcepted: true,
+          });
+        }
+
+        // Persistir orderId + subscriptionId del response para futuros
+        // reentries (re-pago, modificación de plan, etc).
+        this._summaryService.setUserData({
+          ...this._summaryService.getSummary()?.userData as UserDataSummary,
+          orderId: data.order.id,
+          subscriptionId: data.subscription.id,
+        });
+
+        if (data.subscription.pendingFlowSync) {
+          // El backend ya marcó la subscription para reconciliación; el
+          // cliente NO ve fallo (la BD está consistente). Solo logueamos.
+          console.warn(
+            'Subscription marcada pendingFlowSync — job externo reconciliará en Flow',
+            data.subscription.id,
+          );
+        }
+
+        this.navigateToConfirmation();
+      },
+    });
   }
 
-  private createOrderDetailsWithPaymentMethod(): UpdateOrderDetailsRequest {
-    let orderDetails: UpdateOrderDetailsRequest = {
-      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-    };
+  // ─────────────────────────────────────────────────────────────────────
+  // Persistencia local del chargeReference para retry idempotente.
+  //
+  // Si el backend devuelve TX_FAILED_AFTER_CHARGE, guardamos el
+  // chargeReference (flowOrder + commerceOrder) en localStorage con TTL
+  // de 1 hora. En el próximo intento del cliente, lo incluimos en el
+  // payload para que el backend lo reuse via validateChargeReference
+  // (sin re-cobrar). Si pasa el TTL o el cliente cierra el browser, el
+  // chargeReference se pierde y el retry vuelve a cobrar (riesgo
+  // asumido; el correo de alerta admin cubre ese borde).
+  // ─────────────────────────────────────────────────────────────────────
 
+  private readonly PENDING_CHARGE_REF_KEY = 'pendingSubscriptionChargeRef';
+  private readonly PENDING_CHARGE_REF_TTL_MS = 60 * 60 * 1000; // 1 hora
+
+  private getPendingChargeReference(): ChargeReference | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    try {
+      const raw = localStorage.getItem(this.PENDING_CHARGE_REF_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as { ref: ChargeReference; ts: number };
+      if (Date.now() - parsed.ts > this.PENDING_CHARGE_REF_TTL_MS) {
+        localStorage.removeItem(this.PENDING_CHARGE_REF_KEY);
+        return null;
+      }
+      return parsed.ref;
+    } catch {
+      return null;
+    }
+  }
+
+  private savePendingChargeReference(ref: ChargeReference): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    localStorage.setItem(
+      this.PENDING_CHARGE_REF_KEY,
+      JSON.stringify({ ref, ts: Date.now() }),
+    );
+  }
+
+  private clearPendingChargeReference(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    localStorage.removeItem(this.PENDING_CHARGE_REF_KEY);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Helpers factorizados del payload del endpoint consolidado.
+  // ─────────────────────────────────────────────────────────────────────
+
+  private getFirstChargeAmount(): number {
+    const isTwoSoles = isPlatformBrowser(this.platformId)
+      && localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
+    return isTwoSoles ? 2 : this.ENV.campanaPrimeraCreatina.precio;
+  }
+
+  private getFlowPlanId(): string {
+    const isTwoSoles = isPlatformBrowser(this.platformId)
+      && localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
+    return isTwoSoles ? this.ENV.flowPlanIdTest : this.ENV.flowCreatina250Gr2025_55_PlanId;
+  }
+
+  private mapPaymentMethod(): PaymentMethod {
     switch (this.paymentMethod()) {
       case FlowPaymentMethod.BANK_TRANSFER:
-        orderDetails.payment_method = PaymentMethod.BANK_TRANSFER;
-        break;
+        return PaymentMethod.BANK_TRANSFER;
       case FlowPaymentMethod.PAGO_EFECTIVO:
-        orderDetails.payment_method = PaymentMethod.PAGO_EFECTIVO;
-        break;
+        return PaymentMethod.PAGO_EFECTIVO;
       case FlowPaymentMethod.YAPE:
-        orderDetails.payment_method = PaymentMethod.YAPE;
-        break;
+        return PaymentMethod.YAPE;
       default:
-        orderDetails.payment_method = PaymentMethod.CREDIT_CARD;
+        return PaymentMethod.CREDIT_CARD;
     }
-
-    return orderDetails;
-  }
-
-  private updateUserDataWithOrderId(orderId: string): void {
-    const userData = this._summaryService.getSummary()?.userData;
-    if (userData) {
-      this._summaryService.setUserData({
-        ...userData,
-        orderId: orderId,
-      });
-    }
-  }
-
-  private processExistingOrderSubscription(orderId: string, subscription: FlowCreateSubscriptionRequest): void {
-    const orderDetails: UpdateOrderDetailsRequest = {
-      payment_method: PaymentMethod.CREDIT_CARD,
-      shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
-      discount: 21,
-    };
-
-    this._orderService.updateOrderDetails(orderId, orderDetails).pipe(
-      switchMap(response => {
-        this.updateUserDataWithOrderId(response.data.order.id);
-
-        // 1. Realizar el cargo de la primera creatina (9.90 soles)
-        const chargeRequest = this.createChargeRequest(response.data.order.id);
-        return this._flowService.chargeCustomer(chargeRequest);
-      }),
-      switchMap(chargeResponse => {
-        console.log('Charge completed: ', chargeResponse);
-
-        // Validar el estado del cargo antes de continuar
-        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
-          // Si el cargo no fue exitoso, lanzar error
-          throw new Error('CHARGE_FAILED');
-        }
-
-        const existingSubscriptionId = this._summaryService.getSummary()?.userData?.subscriptionId;
-
-        if (existingSubscriptionId) {
-          this._summaryService.setUserData({
-            ...this._summaryService.getSummary()?.userData as UserDataSummary,
-            subscriptionId: existingSubscriptionId
-          });
-          return of(<CreateSubscriptionResponse>{ subscriptionId: existingSubscriptionId });
-        } else {
-          // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
-          return this._flowService.createSubscription(subscription);
-        }
-      }),
-      switchMap(flowResponse => {
-        return this.createBackendSubscription();
-      }),
-      switchMap(subscriptionResponse => {
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
-        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-      }),
-      switchMap(subscriptionOrderResponse => {
-        return this._orderService.updateOrderDetails(orderId, {
-          status: OrderStatus.PROCESSING
-        });
-      }),
-      switchMap(orderUpdateResponse => {
-        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-        if (!userId) {
-          return of(null);
-        }
-
-        // Agregar 10 créditos al usuario por la suscripción
-        return this._creditTransactionService.createTransaction({
-          user_id: userId,
-          type: TransactionType.EARNED,
-          amount: this.ENV.creditoRegaloPorCompraMes,
-          description: '¡Bienvenido a Magrolabs!',
-          source: PaymentMethod.CREDIT_CARD
-        });
-      }),
-      catchError(error => {
-        // Manejo especial para error de cargo fallido
-        if (error.message === 'CHARGE_FAILED') {
-          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
-          this.resetPaymentVerification();
-          return throwError(() => error);
-        }
-        return this.handleSubscriptionError(error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: true
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        console.log('Order updated and credits added: ', response);
-        this.navigateToConfirmation();
-      }
-    });
-  }
-
-  private processNewOrderSubscription(subscription: FlowCreateSubscriptionRequest): void {
-    const orderRequest = this.createOrderRequest(true);
-
-    this._orderService.createOrder(orderRequest).pipe(
-      switchMap(response => {
-        this.updateUserDataWithOrderId(response.data.order.id);
-
-        // 1. Realizar el cargo de la primera creatina (9.90 soles)
-        const chargeRequest = this.createChargeRequest(response.data.order.id);
-        return this._flowService.chargeCustomer(chargeRequest);
-      }),
-      switchMap(chargeResponse => {
-        console.log('Charge completed: ', chargeResponse);
-
-        // Validar el estado del cargo antes de continuar
-        if (chargeResponse.status !== FlowChargeStatus.COMPLETED) {
-          // Si el cargo no fue exitoso, lanzar error
-          throw new Error('CHARGE_FAILED');
-        }
-
-        // 2. Crear la suscripción en Flow solo si el cargo fue exitoso
-        return this._flowService.createSubscription(subscription);
-      }),
-      switchMap(flowResponse => {
-        console.log('Flow Subscription created: ', flowResponse);
-        return this.createBackendSubscription();
-      }),
-      switchMap(subscriptionResponse => {
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id);
-        return this._subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-      }),
-      switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created: ', subscriptionOrderResponse);
-        const orderId = this._summaryService.getSummary()?.userData?.orderId ?? '';
-        return this._orderService.updateOrderDetails(orderId, {
-          status: OrderStatus.PROCESSING
-        });
-      }),
-      switchMap(orderUpdateResponse => {
-        const userId = this._summaryService.getSummary()?.userData?.id ?? '';
-        if (!userId) {
-          return of(null);
-        }
-
-        // Agregar 10 créditos al usuario por la suscripción
-        return this._creditTransactionService.createTransaction({
-          user_id: userId,
-          type: TransactionType.EARNED,
-          amount: this.ENV.creditoRegaloPorCompraMes,
-          description: '¡Bienvenido a Magrolabs!',
-          source: PaymentMethod.CREDIT_CARD
-        });
-      }),
-      catchError(error => {
-        // Manejo especial para error de cargo fallido
-        if (error.message === 'CHARGE_FAILED') {
-          this._toastService.error('Error de pago', 'No se pudo realizar el pago, intente con otra tarjeta');
-          this.resetPaymentVerification();
-          return throwError(() => error);
-        }
-        return this.handleSubscriptionError(error);
-      }),
-      finalize(() => {
-        this._summaryService.setUserData({
-          ...this._summaryService.getSummary()?.userData as UserDataSummary,
-          isSubscription: true
-        });
-        this.isLoading.set(false);
-      })
-    ).subscribe({
-      next: (response) => {
-        console.log('Order updated and credits added: ', response);
-        this.navigateToConfirmation();
-      }
-    });
-  } private createBackendSubscription() {
-    const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
-      start_date: new Date(
-        Date.now() +
-        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) *
-        24 * 60 * 60 * 1000 -
-        5 * 60 * 60 * 1000
-      ).toISOString(),
-      status: SubscriptionStatusEnum.TRIAL
-    };
-
-    return this._subscriptionService.createSubscription(subscriptionRequestAPI)
-  }
-
-  private createSubscriptionOrderRequest(subscriptionId: string): CreateSubscriptionOrderRequest {
-    const order_id = this._summaryService.getSummary()?.userData?.orderId ?? '';
-    return {
-      subscription_id: subscriptionId,
-      order_id,
-      shipment_date: new Date(
-        Date.now() +
-        (this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max + this.ENV.diasNormalesDePruebaOperiodoDeReflexion) *
-        24 * 60 * 60 * 1000 -
-        5 * 60 * 60 * 1000
-      ).toISOString()
-    };
   }
 
   private handleSubscriptionError(error: any): Observable<never> {

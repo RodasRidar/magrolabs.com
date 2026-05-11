@@ -186,10 +186,10 @@ export class AppComponent {
       '/atencion-cliente': 'Atención al Cliente',
       '/politicas': 'Políticas',
       '/cuenta/mi-cuenta': 'Inicio',
-      '/cuenta/pedidos': 'Mis Pedidos',
+      '/cuenta/pedidos': 'Pedidos',
       '/cuenta/credito': 'Mi Crédito',
-      '/cuenta/suscripcion': 'Mi Suscripción',
-      '/cuenta/perfil': 'Mi Perfil'
+      '/cuenta/suscripcion': 'Suscripción',
+      '/cuenta/perfil': 'Perfil'
     };
 
     // Buscar coincidencia exacta o por patrón

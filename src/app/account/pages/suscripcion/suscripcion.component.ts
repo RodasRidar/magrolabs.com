@@ -849,7 +849,7 @@ export class SuscripcionComponent implements OnInit {
         if (this.flowSubscriptionId()) {
           return this.flowService.addCouponToSubscription({
             subscriptionId: this.flowSubscriptionId(),
-            couponId: this.ENV.flowCouponId30PercentDiscount
+            couponId: this.ENV.flowCouponId20PercentDiscount
           }).pipe(
             map((flowResponse) => ({ backendResponse: response, flowResponse })),
             catchError((flowError) => {

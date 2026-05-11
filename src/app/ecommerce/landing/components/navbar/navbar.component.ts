@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, input, InputSignal, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -53,6 +53,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private readonly _shoppingCartService = inject(ShoppingCartService);
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
+  private readonly _elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
   private _subscriptions: Subscription[] = [];
   
@@ -95,6 +96,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this._elementRef.nativeElement.contains(event.target)) {
+      this.isUserMenuOpen = false;
+    }
   }
 
   toggleNavbar(): void {

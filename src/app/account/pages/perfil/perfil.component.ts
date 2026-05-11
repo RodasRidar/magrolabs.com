@@ -86,8 +86,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
   // Dirección
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
-  isSearched = signal(false);
-  hideSearching = signal(false);
+  isSearched = signal(true);
+  hideSearching = signal(true);
   departmentUbigeo = '';
   provinceUbigeo = '';
   districtUbigeo = '';

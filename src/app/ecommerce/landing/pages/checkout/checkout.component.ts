@@ -54,6 +54,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       if (summary?.address) {
         this.validateAddressLocation(summary.address);
       }
+      this.trackInitiateCheckout();
     }
   }
   navbarTypeEnum = NavbarTypeEnum;
@@ -199,8 +200,6 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       value: this._shoppingCartService.getTotalByShoppingCart(this._shoppingCartService.getShoppingCart()),
       currency: 'PEN'
     });
-
-    this.trackInitiateCheckout();
 
     // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
     this.hydrateEnrolledCard();

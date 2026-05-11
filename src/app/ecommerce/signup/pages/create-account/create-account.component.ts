@@ -561,6 +561,8 @@ export class CreateAccountComponent implements OnDestroy {
       userData.customerId = customerId;
     }
 
+    this._summaryService.setUserData(userData);
+
     this._tiktokAnalytics.trackCompleteRegistration({
       contents: [{
         content_id: 'registration',
@@ -577,7 +579,6 @@ export class CreateAccountComponent implements OnDestroy {
       currency: 'PEN'
     });
     this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
-    this._summaryService.setUserData(userData);
     this.isProcessing = false;
 
     if (this.nextUrl !== '') {

@@ -128,6 +128,16 @@ export class MetaAnalyticsService {
       return;
     }
     this.trackEvent('InitiateCheckout', parameters);
+
+    const userData = this._summary.getSummary()?.userData;
+    this._metaApi.trackInitiateCheckout({
+      email: userData?.email,
+      contentIds: parameters.content_ids ?? [],
+      contentType: parameters.content_type,
+      value: String(parameters.value),
+      currency: parameters.currency,
+      numItems: parameters.num_items,
+    }).pipe(catchError(() => EMPTY)).subscribe();
   }
 
   /**

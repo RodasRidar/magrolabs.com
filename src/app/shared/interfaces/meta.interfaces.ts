@@ -45,6 +45,16 @@ export interface TrackPurchaseRequest {
   contents?: MetaContent[];
 }
 
+export interface TrackInitiateCheckoutRequest {
+  email?: string;
+  contentIds: string[];
+  contentType?: string;
+  value?: string;
+  currency?: string;
+  numItems?: number;
+  contents?: MetaContent[];
+}
+
 // ─── Response ─────────────────────────────────────────────────────────────────
 
 export interface MetaTrackResponse {

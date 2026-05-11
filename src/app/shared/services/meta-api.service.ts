@@ -8,6 +8,7 @@ import {
   TrackAddPaymentInfoRequest,
   TrackAddToCartRequest,
   TrackCompleteRegistrationRequest,
+  TrackInitiateCheckoutRequest,
   TrackLoginRequest,
   TrackPurchaseRequest,
 } from '../interfaces/meta.interfaces';
@@ -29,6 +30,13 @@ export class MetaApiService {
 
   trackCompleteRegistration(body: TrackCompleteRegistrationRequest): Observable<MetaTrackResponse> {
     return this.http.post<MetaTrackResponse>(`${this.API_URL}/complete-registration`, body)
+      .pipe(
+        catchError(error => throwError(() => error))
+      );
+  }
+
+  trackInitiateCheckout(body: TrackInitiateCheckoutRequest): Observable<MetaTrackResponse> {
+    return this.http.post<MetaTrackResponse>(`${this.API_URL}/initiate-checkout`, body)
       .pipe(
         catchError(error => throwError(() => error))
       );

@@ -177,7 +177,7 @@ export class AppComponent {
       '/registro/verificacion': 'Registro - Verificación de Pago',
       '/registro/confirmacion': 'Registro - Confirmación',
       '/login': 'Iniciar Sesión',
-      '/productos': 'Productos',
+      '/productos': 'Tienda',
       '/loyalty-webshop': 'Loyalty WebShop',
       '/checkout': 'Checkout',
       '/bolsa': 'Carrito de Compras',

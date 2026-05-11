@@ -19,27 +19,10 @@
 
 <main class="max-w-7xl mx-auto sm:pb-16 sm:pt-4 sm:px-6 lg:px-8">
     <div class="max-w-2xl mx-auto lg:max-w-none">
-        <div class="sm:flex block mb-4 p-2 gap-1 leading-tight">
-            <div class="flex items-center">
-                <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900"
-                    routerLink="/" routerLinkActive="active">Inicio</a>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-                <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900"
-                    routerLink="/loyalty-webshop" routerLinkActive="active">Webshop</a>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-                <span class="text-gray-700 text-sm font-extralight">Articulos</span>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-            </div>
-            <span class="text-gray-700 text-sm font-extralight">{{productName()}}</span>
+
+        <div class="ml-1 my-4">
+            <ml-breadcrumb [items]="breadcrumbItems()" />
+
         </div>
         <!-- Product -->
         <div class="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
@@ -255,7 +238,7 @@
                         <ml-accordion-item title="Características">
                             <ul role="list" class="list-disc list-inside space-y-1">
                                 @for (feature of productFeatures(); track feature) {
-                                    <li>{{feature}}</li>
+                                <li>{{feature}}</li>
                                 }
                             </ul>
                         </ml-accordion-item>

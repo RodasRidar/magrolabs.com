@@ -26,11 +26,12 @@ import { MetaAnalyticsService } from '../../../../../../shared/services/meta-ana
 import { StepComponent } from '../../../../../signup/components/step/step.component';
 import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
 import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent],
+  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
@@ -56,6 +57,15 @@ export class CreatinasComponent implements AfterViewInit {
 
   ENV = environment
   productName = '';
+
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'Inicio', link: '/' },
+      { label: 'Tienda', link: '/productos' },
+      { label: 'Creatina' },
+      { label: this.productName },
+    ];
+  }
   productPriceOnePurchase = 0;
   productPriceSubscription = 0;
   productServicesAndWeight = '';
@@ -949,7 +959,7 @@ export class CreatinasComponent implements AfterViewInit {
         {
           '@type': 'ListItem',
           position: 2,
-          name: 'Productos',
+          name: 'Tienda',
           item: 'https://magrolabs.com/productos'
         },
         {

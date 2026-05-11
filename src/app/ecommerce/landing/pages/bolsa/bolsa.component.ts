@@ -4,19 +4,25 @@ import { ItemShoppingCart, ShoppingCart } from '../../../../shared/models/item-c
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from './order-summary-item/order-summary-item.component';
 import { CardComponent } from '../../../../shared/ui/card/card.component';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-bolsa',
   standalone: true,
-  imports: [RouterLink, FooterComponent, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe, CardComponent],
+  imports: [RouterLink, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe, CardComponent, BreadcrumbComponent],
   templateUrl: './bolsa.component.html'
 })
 export class BolsaComponent {
   navbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Tienda', link: '/productos' },
+    { label: 'Carrito' },
+  ];
   state = 'active';
   private _shoppingCartService = inject(ShoppingCartService);
 

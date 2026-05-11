@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
@@ -8,11 +9,16 @@ import { Meta, Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-calculadora-agua',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, FooterComponent, BreadcrumbComponent],
   templateUrl: './calculadora-agua.component.html',
 })
 export class CalculadoraAguaComponent {
   NavbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Calculadora de Hidratación' },
+  ];
   
   peso = signal<number | null>(null);
   aguaRecomendada = signal<number>(0);

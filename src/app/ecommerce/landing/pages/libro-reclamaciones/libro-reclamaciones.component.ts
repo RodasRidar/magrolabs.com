@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,7 +39,7 @@ interface ReclamacionFormData {
 @Component({
     selector: 'app-libro-reclamaciones',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
+    imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent, BreadcrumbComponent],
     templateUrl: './libro-reclamaciones.component.html',
     styleUrls: ['./libro-reclamaciones.component.css']
 })
@@ -47,6 +48,11 @@ export class LibroReclamacionesComponent {
     private readonly router = inject(Router);
     type = NavbarTypeEnum
     readonly isSubmitting = signal(false);
+
+    readonly breadcrumbItems: BreadcrumbItem[] = [
+        { label: 'Inicio', link: '/' },
+        { label: 'Libro de Reclamaciones' },
+    ];
     readonly reclamacionForm: FormGroup;
 
     constructor() {

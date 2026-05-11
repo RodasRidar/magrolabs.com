@@ -5,11 +5,12 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-atencion-cliente',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive],
+  imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive, BreadcrumbComponent],
   templateUrl: './atencion-cliente.component.html',
   styleUrl: './atencion-cliente.component.css'
 })
@@ -20,6 +21,11 @@ export class AtencionClienteComponent {
   selectedOption = 'preguntas-frecuentes';
   ENV = environment;
   navbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Atención al cliente' },
+  ];
 
   ngOnInit() {
     let currentUrl = this.router.url;

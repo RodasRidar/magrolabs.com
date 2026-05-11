@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { FooterComponent } from "../../components/footer/footer.component";
 import { environment } from '../../../../../environments/env';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-politicas',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive],
+  imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive, BreadcrumbComponent],
   templateUrl: './politicas.component.html',
   styleUrl: './politicas.component.css'
 })
@@ -20,6 +21,11 @@ export class PoliticasComponent {
   selectedOption = 'preguntas-frecuentes';
   ENV = environment;
   navbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Políticas' },
+  ];
 
   ngOnInit() {
     let currentUrl = this.router.url;

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
 import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { CreditTransactionService } from '../../../../../../shared/services/credit-transactions.service';
 import { catchError, finalize, of } from 'rxjs';
@@ -115,7 +116,7 @@ const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
 @Component({
   selector: 'app-clothing',
   standalone: true,
-  imports: [ButtonComponent, NgOptimizedImage, RouterLink, AccordionGroupComponent, AccordionItemComponent],
+  imports: [ButtonComponent, NgOptimizedImage, RouterLink, AccordionGroupComponent, AccordionItemComponent, BreadcrumbComponent],
   templateUrl: './clothing.component.html',
   styleUrl: './clothing.component.css'
 })
@@ -141,6 +142,12 @@ export class ClothingComponent implements OnInit {
 
   // Computed signals para valores derivados
   readonly productName = computed(() => this.currentProduct()?.name || '');
+
+  readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => [
+    { label: 'Inicio', link: '/' },
+    { label: 'Tienda de Lealtad', link: '/loyalty-webshop' },
+    { label: this.productName() || 'Artículo' },
+  ]);
   readonly productPrice = computed(() => this.currentProduct()?.price || 0);
   readonly productDescription = computed(() => this.currentProduct()?.description || '');
   readonly productImage = computed(() => this.currentProduct()?.image || '');

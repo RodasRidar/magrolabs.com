@@ -12,16 +12,23 @@ interface Product {
   color: string;
 }
 
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
+
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, BreadcrumbComponent],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })
 export class IndexComponent {
 
   ENV = environment;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Canjear Magropuntos' },
+  ];
 
   // Lista de productos disponibles
   products = signal<Product[]>([

@@ -83,7 +83,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
             }
             setTimeout(() => {
               (this.el.nativeElement.querySelector('#formSubscribe') as HTMLFormElement).submit();
-            }, 3000);
+            }, 1000);
           });
         })
         .catch((error: any) => {

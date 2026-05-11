@@ -77,6 +77,7 @@ export class VerificationPaymentComponent {
 
   private readonly destroy$ = takeUntilDestroyed();
   labelCardRegisted = signal('**** **** **** ');
+  enrolledCard = signal<{ last4: string; brand: string } | null>(null);
   stepEnum = StepEnum;
   isCreatinaSuscription = signal(false);
   isOutsideLimaMetropolitana = signal(false);
@@ -114,6 +115,13 @@ export class VerificationPaymentComponent {
    */
   firstChargeTotalToPay = computed((): number => {
     return Math.max(0, this.firstCreatinePrice() - this.subDiscountFirstCharge());
+  });
+
+  /**
+   * Total a pagar en cada cuota mensual, descontado el cupón recurrente.
+   */
+  recurringTotalToPay = computed((): number => {
+    return Math.max(0, this.ENV.precioCreatinaSubscription - this.subDiscountRecurring());
   });
 
   form = this._formBuilder.group({
@@ -666,7 +674,20 @@ export class VerificationPaymentComponent {
 
     if (userData?.id) {
       if (userData.customerId && this.isCreatinaSuscription()) {
-        this.updateExistingCustomerWithFlow(userData.customerId, userData);
+        // Primero verificar si ya tiene tarjeta enrolada en Flow
+        this._flowService.getCustomer(userData.customerId).pipe(
+          catchError(() => EMPTY)
+        ).subscribe(customer => {
+          if (customer.last4CardDigits && customer.creditCardType) {
+            // Ya tiene tarjeta — no mostrar widget
+            this.enrolledCard.set({ last4: customer.last4CardDigits, brand: customer.creditCardType });
+            this.labelCardRegisted.set(`**** **** **** ${customer.last4CardDigits} (${customer.creditCardType})`);
+            this.isPaymentVerified.set(true);
+          } else {
+            // Sin tarjeta enrolada — flujo normal
+            this.updateExistingCustomerWithFlow(userData.customerId!, userData);
+          }
+        });
       }
       else if (!userData.customerId && this.isCreatinaSuscription()) {
         this.createNewCustomerWithFlow(userData);

@@ -322,7 +322,7 @@
                                 </ml-select>
                             </div>
 
-                            <!-- Código Postal -->
+                            <!-- Código Postal 
                             <div class="form-group">
                                 <ml-input
                                     label="Código Postal"
@@ -332,7 +332,7 @@
                                     [errors]="addrPostalCodeErrors"
                                     formControlName="postalCode"
                                 />
-                            </div>
+                            </div>-->
 
                             <!-- Referencia -->
                             <div class="form-group md:col-span-2">
@@ -387,9 +387,9 @@
                                     <span *ngIf="addressForm.get('department')?.value">, {{ getUbigeoName('department')
                                         }}</span>
                                 </div>
-                                <div *ngIf="addressForm.get('postalCode')?.value">
+                                <!-- <div *ngIf="addressForm.get('postalCode')?.value">
                                     Código postal: {{ addressForm.get('postalCode')?.value }}
-                                </div>
+                                </div> -->
                                 <div *ngIf="addressForm.get('reference')?.value" class="mt-2">
                                     <span class="font-medium">Referencia:</span> {{ addressForm.get('reference')?.value
                                     }}

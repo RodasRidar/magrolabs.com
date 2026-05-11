@@ -59,7 +59,7 @@
     <div class="relative text-gray-600 px-5">
         @if (isCreatinaSuscription()) {
         <!-- Resumen de Pago -->
-        <div class="bg-[#e9e9e9] rounded-xl p-4 sm:p-5 mb-4 max-w-md">
+        <div class="bg-[#e9e9e9] rounded-xl p-4 sm:p-5 mb-4 max-w-3xl">
             <h2 class="text-base font-bold text-gray-900 mb-3">Resumen de Pago</h2>
             <!-- PASO 1: Pago HOY -->
             <div class="bg-white rounded-xl p-3 sm:p-4 mb-4 border-1 border-gray-900">
@@ -157,7 +157,7 @@
                 }
             </div>
         </div>
-        <form [formGroup]="form" class="mb-4 max-w-md">
+        <form [formGroup]="form" class="mb-4 max-w-3xl">
             <ml-form-field label="Código de descuento" inputId="promo-code">
                 <div class="flex space-x-2">
                     <input type="text" id="promo-code" formControlName="promoCode" autocomplete="off"
@@ -195,7 +195,7 @@
             }
         </div>
         <!-- DATOS DE TARJETA -->
-        <div class="border border-gray-300 rounded-xl mb-4 max-w-md">
+        <div class="border border-gray-300 rounded-xl mb-4 max-w-3xl">
             <div class=" bg-[#e9e9e9] rounded-xl p-4">
                 <div class="flex items-center"><span class="font-semibold mr-3">Tarjeta</span>
                     <svg width="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"

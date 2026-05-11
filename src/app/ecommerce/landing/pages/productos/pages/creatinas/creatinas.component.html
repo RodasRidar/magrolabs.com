@@ -326,7 +326,7 @@
                                 @if(!isFreeCreatine){
                                 <h2 id="options-heading" class="sr-only">Product options</h2>
 
-                                <div class="mx-auto pt-6 pb-2 max-sm:mb-4">
+                                <div class="mx-auto pt-6 sm:pb-2 ">
                                     <div class="space-y-4">
 
                                         <ml-purchase-option #onePurchaseOption label="Compra única"
@@ -344,10 +344,6 @@
                                     </div>
                                 </div>
                                 }
-                                <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto">
-                                    <app-step type="delivery-preview" [preparandoDate]="preparandoDate"
-                                        [enviadoDate]="enviadoDate" [entregadoDate]="entregadoDate" />
-                                </div>
                                 @if(!isFreeCreatine){
                                 @if (isSelectSubscription()) {
                                 <div class="block my-2">
@@ -363,9 +359,13 @@
                                 </div>
                                 }
                                 @if(isSelectOnePurchase()) {
-                                <div class="block my-2">
-                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
-                                        (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                <div class="flex items-stretch gap-2 my-2">
+                                    <app-product-quantity [predeterminedQuantity]="quantity()"
+                                        (quantityValue)="onQuantityChange($event)" />
+                                    <div class="flex-1">
+                                        <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
+                                            (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
+                                    </div>
                                 </div>
                                 <div
                                     class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
@@ -378,7 +378,7 @@
 
                                 }
                                 @else {
-                                <div class="block my-2">
+                                <div class="block mt-6">
                                     <ml-button name="Lo quiero →" routerLink="/registro"
                                         [isDisabled]="isButtonDisabled()"></ml-button>
                                 </div>
@@ -391,6 +391,12 @@
                                 </div>
 
                                 }
+
+                                <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto pt-6">
+                                    <app-step type="delivery-preview" [preparandoDate]="preparandoDate"
+                                        [enviadoDate]="enviadoDate" [entregadoDate]="entregadoDate" />
+                                </div>
+
                                 <!-- Sección de pago seguro -->
                                 <div class="mt-6 sm:pt-4 border-t border-gray-200">
                                     <p class="flex justify-center text-sm font-medium text-gray-500 my-4">

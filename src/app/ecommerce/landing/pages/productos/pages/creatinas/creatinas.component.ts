@@ -27,11 +27,12 @@ import { StepComponent } from '../../../../../signup/components/step/step.compon
 import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
 import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
+import { ProductQuantityComponent } from '../../../../../../shared/ui/product-quantity/product-quantity.component';
 
 @Component({
   selector: 'app-creatinas',
   standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent],
+  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent, ProductQuantityComponent],
   templateUrl: './creatinas.component.html',
   styleUrl: './creatinas.component.css'
 })
@@ -87,6 +88,11 @@ export class CreatinasComponent implements AfterViewInit {
   slug = '';
   isSelectSubscription = signal<boolean>(false);
   isSelectOnePurchase = signal<boolean>(false);
+  quantity = signal<number>(1);
+
+  onQuantityChange(value: number) {
+    this.quantity.set(value);
+  }
 
   readonly onePurchaseBenefits: PurchaseBenefit[] = [
     {
@@ -716,7 +722,7 @@ export class CreatinasComponent implements AfterViewInit {
           imageUrl: this.principalImgFront,
           slug: this.slug
         },
-        quantity: 1
+        quantity: this.quantity()
       });
       this._tiktokAnalytics.trackAddToCart({
         contents: [{
@@ -737,11 +743,12 @@ export class CreatinasComponent implements AfterViewInit {
         content_type: 'product',
         contents: [{
           id: this.slug,
-          quantity: 1,
+          quantity: this.quantity(),
           item_price: this.productPriceOnePurchase
         }]
       });
 
+      this.quantity.set(1);
       setTimeout(() => {
         this._shoppingCartService.openCart();
       }, 500);

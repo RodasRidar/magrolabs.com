@@ -271,26 +271,14 @@ export class PedidosComponent implements OnInit {
     return '/product-img-not-found';
   }
 
-  escribirResena(productId: string): void {
-    const slug = this.getSlug(productId);
+  /**
+   * Abre la pantalla de review del producto. El slug viene directo del
+   * orderItem.product.slug (lo incluye el backend en su Prisma select).
+   * Antes existía un mapping hardcoded ID → slug; ya no es necesario.
+   */
+  escribirResena(slug: string | undefined): void {
+    if (!slug) return;
     window.open(`/productos/creatinas/${slug}?review=true`, '_blank');
-  }
-
-  private getSlug(productId: string): string {
-    const auxSlug: { [key: string]: string } = {
-      '00000001-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-      '00000003-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-      '00000002-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-100-gr',
-      '00000004-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg',
-      '00000005-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-3-kg',
-      '00000006-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-      '00000007-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-      '00000008-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-100-gr',
-      '00000009-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-      '000000010-50eb-4ac3-aa94-1b64fbf32b9c': 'creatina-monohidratada-250-gr',
-    };
-    
-    return auxSlug[productId] || productId;
   }
 
   seguirCompra(orderId: string): void {

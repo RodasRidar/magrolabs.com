@@ -24,6 +24,88 @@
             <ml-breadcrumb [items]="breadcrumbItems()" />
 
         </div>
+        <!-- Skeleton: visible mientras llega el producto desde el backend.
+             Misma estructura 2-col que el contenido real, con bloques
+             grises animados (`animate-pulse`) para que la transición a la
+             vista hidratada sea suave. -->
+        @if (isLoadingProduct()) {
+        <div class="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start animate-pulse">
+            <!-- Skeleton: galería de imagen -->
+            <div class="flex flex-col-reverse">
+                <div class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none">
+                    <div class="grid grid-cols-4 gap-6">
+                        <div class="h-24 bg-gray-200 rounded-md"></div>
+                        <div class="h-24 bg-gray-100 rounded-md"></div>
+                        <div class="h-24 bg-gray-100 rounded-md"></div>
+                        <div class="h-24 bg-gray-100 rounded-md"></div>
+                    </div>
+                </div>
+                <div class="w-full aspect-w-1 aspect-h-1">
+                    <div class="w-full h-80 sm:h-96 bg-gray-200 sm:rounded-lg"></div>
+                </div>
+            </div>
+
+            <!-- Skeleton: info del producto -->
+            <div class="max-sm:mt-10 px-4 sm:px-0">
+                <!-- Title -->
+                <div class="h-9 bg-gray-200 rounded w-3/4"></div>
+
+                <!-- Price + tier icon -->
+                <div class="mt-4 flex items-center gap-2">
+                    <div class="h-9 bg-gray-200 rounded w-24"></div>
+                    <div class="h-8 w-8 bg-gray-200 rounded-full"></div>
+                </div>
+
+                <!-- Magropoints info / login link -->
+                <div class="mt-3 space-y-2">
+                    <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+
+                <!-- Description -->
+                <div class="mt-6 space-y-2">
+                    <div class="h-3 bg-gray-200 rounded w-full"></div>
+                    <div class="h-3 bg-gray-200 rounded w-full"></div>
+                    <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                    <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-10">
+                    <div class="h-11 bg-gray-200 rounded-md w-40"></div>
+                </div>
+
+                <!-- Accordion -->
+                <div class="mt-12">
+                    <div class="h-12 bg-gray-200 rounded w-full"></div>
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Estado "no encontrado": carga terminó pero no hay producto. -->
+        @else if (!currentProduct()) {
+        <div class="text-center py-16 px-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="mt-4 text-base font-semibold text-gray-900">Artículo no disponible</h3>
+            <p class="mt-2 text-sm text-gray-600">
+                No pudimos encontrar este producto en la tienda. Es posible que ya no esté disponible.
+            </p>
+            <div class="mt-6">
+                <a routerLink="/loyalty-webshop"
+                    class="inline-block text-sm font-medium text-primary hover:underline">
+                    ← Volver a la tienda
+                </a>
+            </div>
+        </div>
+        }
+
+        <!-- Producto cargado: render normal -->
+        @else {
         <!-- Product -->
         <div class="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
             <!-- Image gallery -->
@@ -246,5 +328,6 @@
                 </section>
             </div>
         </div>
+        }
     </div>
 </main>

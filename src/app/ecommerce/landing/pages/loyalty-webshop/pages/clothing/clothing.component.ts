@@ -15,103 +15,12 @@ import { LoyaltyTierImageRoutes } from '../../../../../../shared/interfaces/loya
 import { LoyaltyService } from '../../../../../../shared/services/loyalty.service';
 import { UserDetailResponse } from '../../../../../../shared/interfaces/user.interfaces';
 import { UserService } from '../../../../../../shared/services/user.service';
+import { LoyaltyProductService } from '../../../../../../shared/services/loyalty-product.service';
+import { LoyaltyProduct } from '../../../../../../shared/interfaces/loyalty-product.interfaces';
 
-// Interfaz para el producto
-interface LoyaltyProduct {
-  slug: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  color: string;
-  category: string;
-  features: string[];
-  isOutOfStock: boolean;
-  tier: string;
-  magropointImg: string;
-}
-
-// Configuración estática de productos
-const PRODUCTS_CONFIG: Record<string, LoyaltyProduct> = {
-  'guantes-gimnasio-negro': {
-    slug: 'guantes-gimnasio-negro',
-    name: 'Guantes para gimnasio',
-    price: 100,
-    description: 'Nuestros guantes deportivos de alta calidad los puedes utilizar para levantar pesas, hacer crossfit, montar bicicleta e ir al gimnasio. Estos guantes tienen una correa de soporte para la muñeca que ayuda a prevenir lesiones mientras te ejercitas.',
-    image: 'LoyaltyWebShop/gloves_black.webp',
-    color: 'Negro',
-    category: 'Accesorios',
-    features: ['Resistente', 'Transpirable', 'Material: Cuero sintético', 'Color: Negro', 'Talla: S, M, L, XL', 'Correa de soporte para muñeca'],
-    isOutOfStock: true,
-    tier: 'PLATA',
-    magropointImg: '/Magropoints/PLATA/magropoints_plata_cc_254x254.png'
-  },
-  'polera-negra-magrolabs': {
-    slug: 'polera-negra-magrolabs',
-    name: 'Polera Negra Magrolabs',
-    price: 190,
-    description: 'Nuestra polera minimalista y exclusiva hecha de algodón 100% orgánico con materiales de alta calidad y prelavado.',
-    image: 'LoyaltyWebShop/hoodie_black.webp',
-    color: 'Negro',
-    category: 'Ropa',
-    features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Negro', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: true,
-    tier: 'DIAMANTE',
-    magropointImg: '/Magropoints/DIAMANTE/magropoints_diamante_cc_254x254.png'
-  },
-  'shaker-negro-magrolabs': {
-    slug: 'shaker-negro-magrolabs',
-    name: 'Shaker Negro Magrolabs',
-    price: 80,
-    description: 'Nuestro botella es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.',
-    image: 'LoyaltyWebShop/shaker_black.webp',
-    color: 'Negro',
-    category: 'Accesorios',
-    features: ['Resistente', 'Libre de BPA', 'Material: Plástico de alta calidad', 'Color: Negro', 'Capacidad: 600ml', 'Tapa hermética'],
-    isOutOfStock: true,
-    tier: 'BRONCE',
-    magropointImg: '/Magropoints/BRONCE/magropuntos_bronce_cc_254x254.png'
-  },
-  'bolsa-negra-magrolabs': {
-    slug: 'bolsa-negra-magrolabs',
-    name: 'Bolsa Negra Magrolabs',
-    price: 150,
-    description: 'Nuestra bolsa negra deportiva es ideal para llevar tus cosas al gimnasio o al trabajo, con un diseño único y exclusivo.',
-    image: 'LoyaltyWebShop/bag_black.webp',
-    color: 'Negro',
-    category: 'Accesorios',
-    features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Negro', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: true,
-    tier: 'ORO',
-    magropointImg: '/Magropoints/ORO/magropoints_oro_cc_254x254.png'
-  },
-  'polera-desert-magrolabs': {
-    slug: 'polera-desert-magrolabs',
-    name: 'Polera Desert Magrolabs',
-    price: 200,
-    description: 'Nuestra polera minimalista y exclusiva hecha de algodón 100% orgánico con materiales de alta calidad y prelavado.',
-    image: 'LoyaltyWebShop/hoodie_desert.png',
-    color: 'Desert',
-    category: 'Ropa',
-    features: ['Resistente', 'Transpirable', 'Material: Algodón 100% orgánico', 'Color: Desert', 'Talla: S, M, L, XL', 'Prelavado'],
-    isOutOfStock: true,
-    tier: 'DIAMANTE',
-    magropointImg: '/Magropoints/DIAMANTE/magropoints_diamante_cc_254x254.png'
-  },
-  'bolsa-desert-magrolabs': {
-    slug: 'bolsa-desert-magrolabs',
-    name: 'Bolsa Desert Magrolabs',
-    price: 160,
-    description: 'Nuestra bolsa crema con logo es ideal para llevar tus cosas al gimnasio o al trabajo, con un diseño único y exclusivo.',
-    image: 'LoyaltyWebShop/bag_desert.png',
-    color: 'Desert',
-    category: 'Accesorios',
-    features: ['Resistente', 'Impermeable', 'Material: Lona sintética', 'Color: Desert', 'Múltiples compartimentos', 'Correa ajustable'],
-    isOutOfStock: true,
-    tier: 'PLATINO',
-    magropointImg: '/Magropoints/PLATINO/magropoints_platinos_cc_254x254.svg'
-  }
-};
+// Nota: la interfaz `LoyaltyProduct` y el catálogo antes hardcodeados
+// (`PRODUCTS_CONFIG`) ahora vienen del backend vía
+// `LoyaltyProductService.getBySlug()`. Ver shared/interfaces/loyalty-product.interfaces.ts.
 
 @Component({
   selector: 'app-clothing',
@@ -129,10 +38,17 @@ export class ClothingComponent implements OnInit {
   private _toastService = inject(ToastService);
   private _loyaltyService = inject(LoyaltyService);
   private _userService = inject(UserService);
+  private _loyaltyProductService = inject(LoyaltyProductService);
 
   // Signals para el estado del componente
   readonly slug = signal<string>('');
   readonly currentProduct = signal<LoyaltyProduct | null>(null);
+  /**
+   * True mientras el GET /loyalty-products/by-slug/:slug está en vuelo.
+   * Inicializa en `true` para que el primer render (SSR + hidratación) ya
+   * pinte el skeleton sin parpadeo. Se desactiva en next/error.
+   */
+  readonly isLoadingProduct = signal<boolean>(true);
   readonly isAuthenticated = signal<boolean>(false);
   readonly currentUser = signal<UserResponse | null>(null);
   readonly userCredits = signal<number>(0);
@@ -153,9 +69,9 @@ export class ClothingComponent implements OnInit {
   readonly productImage = computed(() => this.currentProduct()?.image || '');
   readonly productColor = computed(() => this.currentProduct()?.color || '');
   readonly productFeatures = computed(() => this.currentProduct()?.features || []);
-  readonly isOutOfStock = computed(() => this.currentProduct()?.isOutOfStock || false);
+  readonly isOutOfStock = computed(() => this.currentProduct()?.is_out_of_stock || false);
   readonly isLogged = computed(() => this.isAuthenticated());
-  readonly magropointImg = computed(() => this.currentProduct()?.magropointImg || '');
+  readonly magropointImg = computed(() => this.currentProduct()?.magropoint_img || '');
   readonly tier = computed(() => this.currentProduct()?.tier || '');
   readonly isTierValid = computed(() => {
     switch (this.currentProduct()?.tier.toLocaleLowerCase()) {
@@ -241,18 +157,30 @@ export class ClothingComponent implements OnInit {
    }
 
   /**
-   * Cargar datos de la ruta y producto
+   * Cargar datos de la ruta y producto desde el backend.
+   * Reemplaza el lookup en `PRODUCTS_CONFIG` hardcodeado por una
+   * consulta al endpoint `GET /api/v1/loyalty-products/by-slug/:slug`.
+   *
+   * El template muestra un skeleton mientras `isLoadingProduct() === true`
+   * y un estado "no encontrado" si termina la carga pero `currentProduct`
+   * sigue en null.
    */
   private loadRouteData(): void {
     const slugFromRoute = this.route.snapshot.params['slug'];
     this.slug.set(slugFromRoute);
-    
-    const product = PRODUCTS_CONFIG[slugFromRoute];
-    if (product) {
-      this.currentProduct.set(product);
-    } else {
-      console.error(`Product not found for slug: ${slugFromRoute}`);
-    }
+    this.isLoadingProduct.set(true);
+
+    this._loyaltyProductService.getBySlug(slugFromRoute).subscribe({
+      next: r => {
+        this.currentProduct.set(r.data.loyaltyProduct);
+        this.isLoadingProduct.set(false);
+      },
+      error: err => {
+        console.error(`Product not found for slug: ${slugFromRoute}`, err);
+        this.currentProduct.set(null);
+        this.isLoadingProduct.set(false);
+      },
+    });
   }
 
   /**
@@ -297,10 +225,14 @@ export class ClothingComponent implements OnInit {
   }
 
   /**
-   * Obtener el producto actual por slug
+   * Helper síncrono que retorna el producto cargado solo si su slug
+   * matchea el solicitado. Si lo solicitas por un slug distinto al
+   * actualmente cargado, devuelve null (el caller debería navegar a la
+   * ruta nueva, que dispara loadRouteData).
    */
   getProductBySlug(slug: string): LoyaltyProduct | null {
-    return PRODUCTS_CONFIG[slug] || null;
+    const current = this.currentProduct();
+    return current && current.slug === slug ? current : null;
   }
 
   /**

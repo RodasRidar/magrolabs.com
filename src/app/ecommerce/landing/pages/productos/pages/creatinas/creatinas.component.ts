@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { ProductService } from '../../../../../../shared/services/product.service';
 import { PurchaseBenefit, PurchaseOptionComponent } from '../../../../../../shared/ui/purchase-option/purchase-option.component';
 import { environment } from '../../../../../../../environments/env';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -51,6 +52,7 @@ export class CreatinasComponent implements AfterViewInit {
   private _authService = inject(AuthService);
   private _reviewService = inject(ReviewService);
   private _toastService = inject(ToastService);
+  private _productService = inject(ProductService);
   private _orderService = inject(OrderService);
   private _subscriptionService = inject(SubscriptionService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
@@ -86,6 +88,12 @@ export class CreatinasComponent implements AfterViewInit {
   isFreeCreatine = false;
   isLogged = false;
   slug = '';
+  /**
+   * Producto resuelto desde backend (id real) por slug. Sincrónico para
+   * que el template y `app-reviews-list` puedan bindear sin Promises.
+   * Cargado en `ngOnInit` apenas Angular conoce el slug del URL.
+   */
+  resolvedProductId = signal<string | null>(null);
   isSelectSubscription = signal<boolean>(false);
   isSelectOnePurchase = signal<boolean>(false);
   quantity = signal<number>(1);
@@ -222,7 +230,12 @@ export class CreatinasComponent implements AfterViewInit {
     });
     
     this.slug = this.route.snapshot.params['slug'];
-    
+
+    // Resolver productId desde backend vía slug. Se ejecuta también en
+    // SSR (TransferState cachea el response al cliente) para que la
+    // hidratación tenga el id ya disponible y los reviews pre-renderizen.
+    this.resolveProductIdFromBackend();
+
     // Verificar si viene el parámetro review=true
     const reviewParam = this.route.snapshot.queryParams['review'];
     if (reviewParam === 'true' && this.isLogged) {
@@ -354,7 +367,7 @@ export class CreatinasComponent implements AfterViewInit {
   private checkUserCanReview() {
     const productId = this.getProductId();
     this.isCheckingReviewPermission = true;
-    
+
     this._reviewService.canUserReviewProduct(productId).subscribe({
       next: (response) => {
         if (response.can_review) {
@@ -392,7 +405,7 @@ export class CreatinasComponent implements AfterViewInit {
 
   private checkUserCanReviewAlternative() {
     const productId = this.getProductId();
-    
+
     // Verificar tanto órdenes como suscripciones en paralelo
     forkJoin({
       orders: this._orderService.getMyOrders(1, 100), // Obtener todas las órdenes
@@ -520,15 +533,32 @@ export class CreatinasComponent implements AfterViewInit {
     }));
   }
 
+  /**
+   * Resuelve el productId desde BD vía slug. Lo carga UNA VEZ en
+   * `ngOnInit` y lo guarda en el signal `resolvedProductId`. El template
+   * y los callers leen el valor sincrónicamente — esto es importante
+   * para SSR (server-side render produce el HTML con el id ya resuelto)
+   * y para evitar el error de tipo `Promise<string>` en bindings.
+   *
+   * Si todavía no se ha resuelto (request en vuelo) devuelve `this.slug`
+   * como fallback temporal — el `<app-reviews-list>` aceptará un id
+   * inválido y mostrará lista vacía, y al resolverse el backend se
+   * actualizará reactivamente.
+   */
   public getProductId(): string {
-    // Mapear el slug a un product_id (en un caso real esto vendría de una API o base de datos)
-    const productIdMap: { [key: string]: string } = {
-      'creatina-monohidratada-250-gr': '00000006-50eb-4ac3-aa94-1b64fbf32b9c',
-      'creatina-monohidratada-100-gr': '00000008-50eb-4ac3-aa94-1b64fbf32b9c',
-      'creatina-monohidratada-3-kg': '00000004-50eb-4ac3-aa94-1b64fbf32b9c'
-    };
-    
-    return productIdMap[this.slug] || this.slug;
+    return this.resolvedProductId() ?? this.slug;
+  }
+
+  /** Resuelve el productId desde backend y lo guarda en el signal. */
+  private resolveProductIdFromBackend(): void {
+    if (!this.slug) return;
+    this._productService.getBySlug(this.slug).subscribe({
+      next: r => this.resolvedProductId.set(r.data.product.id),
+      error: err => {
+        console.warn(`No se pudo resolver productId para slug "${this.slug}"`, err);
+        // Mantiene null; getProductId() devuelve slug como fallback.
+      },
+    });
   }
 
   submitReview() {

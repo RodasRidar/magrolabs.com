@@ -29,6 +29,9 @@ import { CheckoutRequest } from '../../../../shared/interfaces/checkout.interfac
 import { CheckoutService } from '../../../../shared/services/checkout.service';
 import { CouponService } from '../../../../shared/services/coupon.service';
 import { DiscountType } from '../../../../shared/interfaces/coupon.interfaces';
+import { ProductService } from '../../../../shared/services/product.service';
+import { ProductResponse } from '../../../../shared/interfaces/product.interfaces';
+import { CREATINA_PRODUCT_SLUGS } from '../../../../shared/constants/product-slugs.constants';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
@@ -91,6 +94,14 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private _addressApiService = inject(AddressApiService)
   private _checkoutService = inject(CheckoutService)
   private _couponService = inject(CouponService)
+  private _productService = inject(ProductService)
+
+  /**
+   * Producto canónico de compra única (Creatina 250gr) resuelto desde
+   * BD vía slug. Reemplaza el UUID hardcodeado anterior
+   * (`00000009-50eb-4ac3-aa94-1b64fbf32b9c`).
+   */
+  onePurchaseProduct = signal<ProductResponse | null>(null);
   //
   private _addressService = inject(AddressService)
   addressList: PlaceAPI[] = [];
@@ -200,6 +211,19 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       value: this._shoppingCartService.getTotalByShoppingCart(this._shoppingCartService.getShoppingCart()),
       currency: 'PEN'
     });
+
+    // Resolver el producto canónico de compra única desde BD vía slug.
+    // Reemplaza el UUID hardcodeado anterior. Si falla, log + toast pero
+    // no bloquea el flujo: el `createOrderRequest` validará que el
+    // producto esté cargado antes de enviar el checkout.
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE)
+      .subscribe({
+        next: r => this.onePurchaseProduct.set(r.data.product),
+        error: err => {
+          console.error('No se pudo cargar el producto de compra única', err);
+          this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
+        },
+      });
 
     // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
     this.hydrateEnrolledCard();
@@ -1386,14 +1410,20 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       default:
         paymentMethod = PaymentMethod.CREDIT_CARD;
     }
-    //TODO: Cambiar el id del producto de creatina 250gr algo dinamico
+    // ID del producto canónico resuelto desde BD vía slug (sin hardcode).
+    // Si por alguna razón no se cargó (network error), fallback al ID
+    // viejo para no romper el flujo — el backend de todos modos validará
+    // el precio contra `product.price`.
+    const productId = this.onePurchaseProduct()?.id
+      ?? '00000009-50eb-4ac3-aa94-1b64fbf32b9c';
+
     return {
       shipping_address: this._summaryService.getSummary()?.address?.id ?? '',
       payment_method: paymentMethod,
       isLoyaltyWebShow: false,
       orderItems: [
         {
-          product_id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr
+          product_id: productId,
           quantity: this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart)
         }
       ],

@@ -30,6 +30,9 @@ import { CheckoutSubscriptionService } from '../../../../shared/services/checkou
 import { CheckoutSubscriptionRequest, ChargeReference } from '../../../../shared/interfaces/checkout-subscription.interfaces';
 import { SubscriptionCouponService } from '../../../../shared/services/subscription-coupon.service';
 import { SubscriptionCouponAppliesTo, SubscriptionDiscountType } from '../../../../shared/interfaces/subscription-coupon.interfaces';
+import { ProductService } from '../../../../shared/services/product.service';
+import { ProductResponse } from '../../../../shared/interfaces/product.interfaces';
+import { CREATINA_PRODUCT_SLUGS } from '../../../../shared/constants/product-slugs.constants';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
@@ -72,6 +75,7 @@ export class VerificationPaymentComponent {
   private _authService = inject(AuthService);
   private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
   private _subscriptionCouponService = inject(SubscriptionCouponService);
+  private _productService = inject(ProductService);
   private _shoppingCartService = inject(ShoppingCartService)
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
 
@@ -100,12 +104,28 @@ export class VerificationPaymentComponent {
   isApplyingSubDiscount = signal(false);
 
   /**
+   * Productos canónicos resueltos desde el backend vía slug. La UI espera
+   * a que estén cargados antes de habilitar el botón "Pagar". Reemplaza
+   * los UUIDs y precios hardcodeados que antes vivían en `env.ts`.
+   */
+  campaignProduct = signal<ProductResponse | null>(null);
+  subscriptionProduct = signal<ProductResponse | null>(null);
+
+  /**
    * Precio base de la primera creatina (antes de aplicar cupón de creador).
-   * Lee el mismo flag que `getFirstChargeAmount()` para que UI y backend
-   * vean el mismo subtotal de partida.
+   * Lo trae el backend desde la tabla `Product` por slug. Si todavía no
+   * cargó, devuelve 0 (la UI muestra spinner / botón deshabilitado).
    */
   firstCreatinePrice = (): number => {
-    return this.getFirstChargeAmount();
+    return Number(this.campaignProduct()?.price ?? 0);
+  };
+
+  /**
+   * Precio de la cuota recurrente (mensualidad) desde el backend.
+   * Antes era `ENV.precioCreatinaSubscription`.
+   */
+  monthlySubscriptionPrice = (): number => {
+    return Number(this.subscriptionProduct()?.price ?? 0);
   };
 
   /**
@@ -121,7 +141,7 @@ export class VerificationPaymentComponent {
    * Total a pagar en cada cuota mensual, descontado el cupón recurrente.
    */
   recurringTotalToPay = computed((): number => {
-    return Math.max(0, this.ENV.precioCreatinaSubscription - this.subDiscountRecurring());
+    return Math.max(0, this.monthlySubscriptionPrice() - this.subDiscountRecurring());
   });
 
   form = this._formBuilder.group({
@@ -136,6 +156,23 @@ export class VerificationPaymentComponent {
     this._seo.title.setTitle('Magrolabs | Verificación de pago');
     this._seo.setCanonicalURL('magrolabs.com/registro/verificacion');
     this._seo.setIndexFollow(false);
+
+    // Cargar productos canónicos desde el backend (id + price reales).
+    // Bloquea el botón "Pagar" hasta que ambos estén cargados.
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.FIRST_CREATINE_CAMPAIGN)
+      .subscribe({
+        next: r => this.campaignProduct.set(r.data.product),
+        error: err => {
+          console.error('No se pudo cargar el producto de campaña', err);
+          this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
+        },
+      });
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_MONTHLY_SUBSCRIPTION)
+      .subscribe({
+        next: r => this.subscriptionProduct.set(r.data.product),
+        error: err => console.error('No se pudo cargar el producto de suscripción', err),
+      });
+
     let summary = this._summaryService.getSummary();
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);
@@ -309,7 +346,7 @@ export class VerificationPaymentComponent {
     this._subscriptionCouponService.validateCoupon({
       code,
       firstChargeAmount: this.getFirstChargeAmount(),
-      recurringAmount: this.ENV.precioCreatinaSubscription,
+      recurringAmount: this.monthlySubscriptionPrice(),
     }).pipe(
       finalize(() => this.isApplyingSubDiscount.set(false)),
     ).subscribe({
@@ -402,6 +439,14 @@ export class VerificationPaymentComponent {
       return;
     }
 
+    // Esperamos a que el producto canónico esté cargado desde BD.
+    const campaign = this.campaignProduct();
+    if (!campaign) {
+      this._toastService.error('Ups!', 'Catálogo aún no disponible. Recarga la página.');
+      this.isLoading.set(false);
+      return;
+    }
+
     const mode: 'new' | 'update' = userData?.orderId ? 'update' : 'new';
 
     // Si hay un chargeReference pendiente en localStorage (de un intento
@@ -416,8 +461,11 @@ export class VerificationPaymentComponent {
       backendSubscriptionPlanId: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
       trialPeriodDays: this.ENV.plazoDeEntregaDiasHabilesCreatinaFree.max
         + this.ENV.diasNormalesDePruebaOperiodoDeReflexion,
-      firstChargeAmount: this.getFirstChargeAmount(),
-      firstChargeSubject: `Creatina de prueba ${this.ENV.campanaPrimeraCreatina.gramos}gr - Magrolabs`,
+      // El monto a cobrar HOY: precio del producto canónico − descuento
+      // del cupón. El backend re-valida con tolerancia ±0.01 y, si
+      // detecta divergencia, usa su propio cálculo (defense-in-depth).
+      firstChargeAmount: this.firstChargeTotalToPay(),
+      firstChargeSubject: `${campaign.name} - Magrolabs`,
       firstChargeOptionals: {
         campaign_type: this.ENV.campanaPrimeraCreatina.tipo,
         product_weight: this.ENV.campanaPrimeraCreatina.gramos,
@@ -430,7 +478,8 @@ export class VerificationPaymentComponent {
         payment_method: this.mapPaymentMethod(),
         orderItems: [
           {
-            product_id: '00000008-50eb-4ac3-aa94-1b64fbf32b9c', // Creatina 100gr (campaña primera creatina)
+            // ID del producto canónico resuelto desde BD vía slug (sin hardcode).
+            product_id: campaign.id,
             quantity: 1,
           },
         ],

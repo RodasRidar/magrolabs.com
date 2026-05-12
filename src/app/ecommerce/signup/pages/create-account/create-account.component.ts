@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
 import { StepEnum } from '../../models/step.model';
 import { StepComponent } from '../../components/step/step.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -24,7 +24,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserService } from '../../../../shared/services/user.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
-import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map, finalize } from 'rxjs';
+import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, of, map, finalize } from 'rxjs';
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
@@ -49,7 +49,7 @@ export interface SignUp {
     imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule, FormFieldComponent, InputComponent, PasswordInputComponent],
     templateUrl: './create-account.component.html'
 })
-export class CreateAccountComponent implements OnDestroy {
+export class CreateAccountComponent {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -57,7 +57,7 @@ export class CreateAccountComponent implements OnDestroy {
   private _route = inject(ActivatedRoute)
   private _seo = inject(SeoService)
   private _flowService = inject(FlowService)
-  private readonly destroy$ = takeUntilDestroyed();
+  private readonly destroyRef = inject(DestroyRef);
   private _toastService = inject(ToastService)
   private _authService = inject(AuthService)
   private _userService = inject(UserService)
@@ -86,7 +86,6 @@ export class CreateAccountComponent implements OnDestroy {
   private emailSubject = new Subject<string>();
   private phoneSubject = new Subject<string>();
   private documentSubject = new Subject<string>();
-  private subscriptions: Subscription[] = [];
 
   ngOnInit() {
     this._seo.title.setTitle('Registro | Datos de registro');
@@ -102,9 +101,11 @@ export class CreateAccountComponent implements OnDestroy {
       this.isCreatinaGratis = true;
     }
 
-    this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || '';
-    });
+    this._route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        this.nextUrl = params['next'] || '';
+      });
 
     this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
     this.form.get('lastName')?.setValue(summary?.userData?.apellido ?? '');
@@ -116,10 +117,11 @@ export class CreateAccountComponent implements OnDestroy {
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
 
     // Configurar debounce para email
-    const emailSubscription = this.emailSubject.pipe(
+    this.emailSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(email => !!email && email.length > 5 && this.isValidEmail(email))
+      filter(email => !!email && email.length > 5 && this.isValidEmail(email)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(email => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateEmailWithServer(email);
@@ -127,10 +129,11 @@ export class CreateAccountComponent implements OnDestroy {
     });
 
     // Configurar validación en tiempo real para teléfono
-    const phoneSubscription = this.phoneSubject.pipe(
+    this.phoneSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(phone => !!phone && phone.length === 9)
+      filter(phone => !!phone && phone.length === 9),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(phone => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validatePhoneWithServer(phone);
@@ -138,56 +141,63 @@ export class CreateAccountComponent implements OnDestroy {
     });
 
     // Configurar validación en tiempo real para documento
-    const documentSubscription = this.documentSubject.pipe(
+    this.documentSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       filter(document => {
         const typeDoc = this.form.get('typeDocument')?.value;
         if (typeDoc === 'DNI') return !!document && document.length === 8;
         return !!document && document.length >= 8 && document.length <= 12;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(document => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateDocumentWithServer(document);
       }
     });
 
-    this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
-
     // Escuchar cambios en el email
-    this.form.get('email')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.emailSubject.next(val);
-      }
-    });
+    this.form.get('email')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.emailSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el teléfono
-    this.form.get('cellphone')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.phoneSubject.next(val);
-      }
-    });
+    this.form.get('cellphone')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.phoneSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el documento
-    this.form.get('nroDocument')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.documentSubject.next(val);
-      }
-    });
+    this.form.get('nroDocument')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.documentSubject.next(val);
+        }
+      });
 
     if (this.form.get('isSignUpAcepted')) {
-      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
-        const passwordControl = this.form.get('password');
+      this.form.get('isSignUpAcepted')!.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(signUp => {
+          const passwordControl = this.form.get('password');
 
-        if (signUp) {
-          passwordControl?.addValidators(Validators.required);
-        } else {
-          passwordControl?.clearValidators();
-          passwordControl?.addValidators(Validators.minLength(8));
-        }
+          if (signUp) {
+            passwordControl?.addValidators(Validators.required);
+          } else {
+            passwordControl?.clearValidators();
+            passwordControl?.addValidators(Validators.minLength(8));
+          }
 
-        passwordControl?.updateValueAndValidity();
-      });
+          passwordControl?.updateValueAndValidity();
+        });
     }
 
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('passwordSignal') == 'true') {
@@ -206,11 +216,6 @@ export class CreateAccountComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    // Limpiar todas las suscripciones
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
   // Verificar si el email tiene un formato válido
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -224,7 +229,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
@@ -241,7 +247,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ cellphoneExists: true });
@@ -258,7 +265,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
@@ -453,7 +461,8 @@ export class CreateAccountComponent implements OnDestroy {
         this._toastService.error('Ups!', 'Error al actualizar los datos del usuario.');
         this.isProcessing = false;
         return EMPTY;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
         const customerId = this._summaryService.getSummary()?.userData?.customerId;
@@ -524,7 +533,8 @@ export class CreateAccountComponent implements OnDestroy {
           console.error(err);
           this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(response => {
         userData.id = response.data.user.id;
@@ -616,7 +626,8 @@ export class CreateAccountComponent implements OnDestroy {
         catchError(err => {
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {
@@ -663,7 +674,8 @@ export class CreateAccountComponent implements OnDestroy {
         catchError(err => {
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {

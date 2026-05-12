@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { StepEnum } from '../../models/step.model';
 import { StepComponent } from '../../components/step/step.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -11,14 +11,14 @@ import {
 } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
-import { CreateCustomerRequest, CreateCustomerResponse, EditCustomerRequest } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, EditCustomerRequest } from '../../../../shared/models/flow.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { AuthService } from '../../../../shared/services/auth.service';
@@ -45,11 +45,11 @@ export interface SignUp {
 }
 
 @Component({
-    selector: 'app-create-account',
-    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule, FormFieldComponent, InputComponent, PasswordInputComponent],
-    templateUrl: './create-account.component.html'
+  selector: 'app-create-account',
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule, FormFieldComponent, InputComponent, PasswordInputComponent],
+  templateUrl: './create-account.component.html'
 })
-export class CreateAccountComponent {
+export class CreateAccountComponent implements OnInit {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -76,7 +76,7 @@ export class CreateAccountComponent {
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern(/^9[0-9]{8}$/)]),
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
+    typeDocument: this._formBuilder.nonNullable.control(('DNI' as TypeDocument), [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
@@ -92,7 +92,7 @@ export class CreateAccountComponent {
     this._seo.setCanonicalURL('magrolabs.com/registro/crear-cuenta');
     this._seo.setIndexFollow(false);
 
-    let summary = this._summaryService.getSummary()
+    const summary = this._summaryService.getSummary()
     if (!summary?.chosePlan) {
       this._router.navigate(['registro/']);
     }
@@ -391,7 +391,7 @@ export class CreateAccountComponent {
     this.isProcessing = true;
     //const customerId = this._summaryService.getSummary()?.userData?.customerId;
     const userId = this._summaryService.getSummary()?.userData?.id;
-    let userData = this.getUserDataFromForm();
+    const userData = this.getUserDataFromForm();
     if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0) || this.isCreatinaGratis) {
       userData.isSignUpAcepted = true;
     }
@@ -485,18 +485,18 @@ export class CreateAccountComponent {
       // Validar documento
       this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
     } else {
-      let emailControl = this.form.get('email');
-      let cellphoneControl = this.form.get('cellphone');
-      let nroDocumentControl = this.form.get('nroDocument');
+      const emailControl = this.form.get('email');
+      const cellphoneControl = this.form.get('cellphone');
+      const nroDocumentControl = this.form.get('nroDocument');
 
       emailControl?.setErrors({ emailExists: false });
       cellphoneControl?.setErrors({ cellphoneExists: false });
       nroDocumentControl?.setErrors({ nroDocumentExists: false });
 
 
-      let emailValue = emailControl?.value;
-      let cellphoneValue = cellphoneControl?.value;
-      let nroDocumentValue = nroDocumentControl?.value;
+      const emailValue = emailControl?.value;
+      const cellphoneValue = cellphoneControl?.value;
+      const nroDocumentValue = nroDocumentControl?.value;
 
       if (emailControl) {
         emailControl.setValue(emailValue ?? '');
@@ -691,14 +691,14 @@ export class CreateAccountComponent {
   }
 
   // Manejar errores de cliente
-  private handleCustomerError(err: any) {
+  private handleCustomerError(err: { error?: { code?: number; message?: string };[key: string]: unknown }) {
     this.isProcessing = false;
 
     if (err.error?.code === 501) {
-      if (err.error.message.includes('externalId')) {
+      if (err.error.message?.includes('externalId')) {
         this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
         this.form.get('nroDocument')?.setErrors({ nroDocumentExists: true });
-      } else if (err.error.message.includes('email')) {
+      } else if (err.error.message?.includes('email')) {
         this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
         this.form.get('email')?.setErrors({ emailInvalid: true });
       }

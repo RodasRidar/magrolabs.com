@@ -134,14 +134,22 @@ export class SubscriptionService {
   }
 
   /**
-   * Pausar una suscripción
+   * Pausar una suscripción. El backend calcula paused_until y next_billing_date
+   * a partir de duration_months (1-3) respetando la ventana de gracia y se
+   * encarga de cancelar la suscripción recurrente en Flow dentro de una
+   * transacción atómica.
+   *
    * @param id ID de la suscripción
+   * @param durationMonths Duración de la pausa en meses (1 a 3)
+   * @param reason Razón de la pausa
    */
-  pauseSubscription(id: string, reason: string, paused_until: Date, next_billing_date: Date): Observable<SubscriptionResponse> {
-    return this.http.patch<SubscriptionResponse>(`${this.API_URL}/${id}/pause`, { reason, paused_until, next_billing_date })
-      .pipe(
-        catchError(error => throwError(() => error))
-      );
+  pauseSubscription(id: string, durationMonths: number, reason: string): Observable<SubscriptionResponse> {
+    return this.http.patch<SubscriptionResponse>(
+      `${this.API_URL}/${id}/pause`,
+      { duration_months: durationMonths, reason }
+    ).pipe(
+      catchError(error => throwError(() => error))
+    );
   }
 
   /**

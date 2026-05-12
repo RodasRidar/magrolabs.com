@@ -623,14 +623,9 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    //TODO: Corregir logica de reactivacion tras pausa, de momento no se podra pausar
-     this.calculateCancellationDates();
-      this.showFinalCancelModal.set(true);
-      return;
-
     // Para suscripciones activas, mostrar el modal de pausa
-    //this.calculatePauseDates();
-    //this.showPauseModal.set(true);
+    this.calculatePauseDates();
+    this.showPauseModal.set(true);
   }
 
   calculatePauseDates(): void {
@@ -713,79 +708,28 @@ export class SuscripcionComponent implements OnInit {
     this.isLoading.set(true);
     this.showPauseModal.set(false);
 
-    // Añadir información adicional a la solicitud de pausa
-    const pauseInfo = {
-      reason: this.cancellationReason(),
-      durationMonths: this.pauseDurationMonths(),
-      startDate: this.pauseStartDate(),
-      endDate: this.pauseEndDate()
-    };
-
-    // Determinar si la pausa es inmediata o al final del período
-    const now = new Date();
-    const gracePeriodDays = environment.diasAntesDeSiguienteCobroSubscripcion;
-    const subscriptionStartDate = new Date(this.subscription()!.start_date);
-    const userBillingDay = subscriptionStartDate.getDate();
-
-    let nextBillingMonth = now.getMonth();
-    let nextBillingYear = now.getFullYear();
-
-    if (now.getDate() > userBillingDay) {
-      nextBillingMonth++;
-      if (nextBillingMonth > 11) {
-        nextBillingMonth = 0;
-        nextBillingYear++;
-      }
-    }
-
-    const nextBillingDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
-    const cancelDeadline = new Date(nextBillingDate);
-    cancelDeadline.setDate(cancelDeadline.getDate() - gracePeriodDays);
-
-    // 0 = inmediato, 1 = al final del período
-    const atPeriodEnd = now <= cancelDeadline ? AtPeriodEnd.IMMEDIATE : AtPeriodEnd.END_OF_PERIOD;
-
-    // Llamar al servicio existente para pausar la suscripción
+    // El backend calcula paused_until, next_billing_date, atPeriodEnd y
+    // cancela la suscripción recurrente en Flow de forma atómica. Sólo
+    // enviamos la duración y la razón.
     this.subscriptionService.pauseSubscription(
       this.subscription()!.id,
-      this.cancellationReason(),
-      this.pauseEndDate(),
-      this.nextPaymentDate()
-    )
-      .pipe(
-        switchMap((response) => {
-          // Si tenemos el Flow subscription ID, cancelar también en Flow
-          if (this.flowSubscriptionId()) {
-            return this.flowService.cancelSubscription(this.flowSubscriptionId(), atPeriodEnd)
-              .pipe(
-                map(() => response),
-                catchError((flowError) => {
-                  console.error('Error cancelando suscripción en Flow:', flowError);
-                  // Continuar con la respuesta original aunque falle en Flow
-                  return of(response);
-                })
-              );
-          }
-          return of(response);
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          response.data.subscription.credits = 10;
-          this.subscription.set(response.data.subscription);
-          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
-          this.isLoading.set(false);
-
-          // Registrar la información de pausa para análisis
-          console.log('Información de pausa:', pauseInfo);
-          this._toastService.success('Éxito', 'Suscripción pausada correctamente');
-        },
-        error: (err) => {
-          this._toastService.error('Ups!', 'Ocurrio un error al pausar la suscripción');
-          this.isLoading.set(false);
-          console.error('Error pausando suscripción:', err);
+      this.pauseDurationMonths(),
+      this.cancellationReason()
+    ).subscribe({
+      next: (response) => {
+        this.subscription.set(response.data.subscription);
+        if (response.data.subscription.next_billing_date) {
+          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date));
         }
-      });
+        this.isLoading.set(false);
+        this._toastService.success('Éxito', 'Suscripción pausada correctamente');
+      },
+      error: (err) => {
+        this._toastService.error('Ups!', 'Ocurrio un error al pausar la suscripción');
+        this.isLoading.set(false);
+        console.error('Error pausando suscripción:', err);
+      }
+    });
   }
 
   pausarSuscripcionWtsp(): void {

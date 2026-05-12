@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, effect, ElementRef, HostListener, inject, OnDestroy, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, effect, ElementRef, HostListener, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
 import { ShoppingCart, ItemShoppingCart } from '../../../../shared/models/item-cart.model';
@@ -7,7 +8,7 @@ import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analy
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, Subscription, switchMap, take, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, switchMap, take, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent, PaymentMethodSelection, EnrolledCardInfo, PaymentSelection } from '../../../../shared/ui/payment-method/payment-method.component';
@@ -43,7 +44,7 @@ import { PasswordInputComponent } from '../../../../shared/ui/password-input/pas
     templateUrl: './checkout.component.html',
     styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent implements OnDestroy, AfterViewInit {
+export class CheckoutComponent implements AfterViewInit {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
   @ViewChild('emailInput') emailInput!: ElementRef;
   @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
@@ -139,7 +140,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
   private emailSubject = new Subject<string>();
   private phoneSubject = new Subject<string>();
   private documentSubject = new Subject<string>();
-  private subscriptions: Subscription[] = [];
+  private destroyRef = inject(DestroyRef);
 
   shoppingCart: ShoppingCart = <ShoppingCart>{};
   form = this._formBuilder.group({
@@ -216,6 +217,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     // no bloquea el flujo: el `createOrderRequest` validará que el
     // producto esté cargado antes de enviar el checkout.
     this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: r => this.onePurchaseProduct.set(r.data.product),
         error: err => {
@@ -227,53 +229,58 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
     this.hydrateEnrolledCard();
 
-    const cartSubscription = this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
-      if (shoppingCart && shoppingCart.items.length > 0) {
-        this.shoppingCart = shoppingCart;
-        this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
-        this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
-        if (shoppingCart.items.find(item => item.product.name === 'Creatina Monohidratada 250 gr')) {
-          this.cartHas250Creatine.set(true);
+    this._shoppingCartService.shoppingCart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(shoppingCart => {
+        if (shoppingCart && shoppingCart.items.length > 0) {
+          this.shoppingCart = shoppingCart;
+          this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
+          if (shoppingCart.items.find(item => item.product.name === 'Creatina Monohidratada 250 gr')) {
+            this.cartHas250Creatine.set(true);
+          }
+          this.recalculateTotal();
         }
-        this.recalculateTotal();
-      }
-      else if (!this.allowNavigation()) {
-        this._router.navigate(['/bolsa']);
-      }
-    });
-    this.subscriptions.push(cartSubscription);
+        else if (!this.allowNavigation()) {
+          this._router.navigate(['/bolsa']);
+        }
+      });
 
     this.form.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
       filter(value => !!value && value.trim().length >= 3), // Solo buscar si hay al menos 3 caracteres
       tap(() => this.isSearchingAddress = true),
-      switchMap(value => this._addressService.searchAddress(value))
+      switchMap(value => this._addressService.searchAddress(value)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
       this.isSearchingAddress = false;
     });
 
     if (this.form.get('isSignUpAcepted')) {
-      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
-        const passwordControl = this.form.get('password');
+      this.form.get('isSignUpAcepted')!.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(signUp => {
+          const passwordControl = this.form.get('password');
 
-        if (signUp) {
-          passwordControl?.addValidators(Validators.required);
-        } else {
-          passwordControl?.clearValidators();
-          passwordControl?.addValidators(Validators.minLength(8));
-        }
+          if (signUp) {
+            passwordControl?.addValidators(Validators.required);
+          } else {
+            passwordControl?.clearValidators();
+            passwordControl?.addValidators(Validators.minLength(8));
+          }
 
-        passwordControl?.updateValueAndValidity();
-      });
+          passwordControl?.updateValueAndValidity();
+        });
     }
     // Configurar validación en tiempo real para email
-    const emailSubscription = this.emailSubject.pipe(
+    this.emailSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(email => !!email && email.length > 5 && this.isValidEmail(email))
+      filter(email => !!email && email.length > 5 && this.isValidEmail(email)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(email => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateEmailWithServer(email);
@@ -281,10 +288,11 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     });
 
     // Configurar validación en tiempo real para teléfono
-    const phoneSubscription = this.phoneSubject.pipe(
+    this.phoneSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(phone => !!phone && phone.length === 9)
+      filter(phone => !!phone && phone.length === 9),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(phone => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validatePhoneWithServer(phone);
@@ -292,58 +300,63 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     });
 
     // Configurar validación en tiempo real para documento
-    const documentSubscription = this.documentSubject.pipe(
+    this.documentSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       filter(document => {
         const typeDoc = this.form.get('typeDocument')?.value;
         if (typeDoc === 'DNI') return !!document && document.length === 8;
         return !!document && document.length >= 8 && document.length <= 12;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(document => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateDocumentWithServer(document);
       }
     });
 
-    this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
-
     // Escuchar cambios en el email
-    this.form.get('email')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.emailSubject.next(val);
-      }
-    });
+    this.form.get('email')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.emailSubject.next(val);
+        }
+      });
 
     // Re-preparar tarjeta cuando el email cambia (flag registro activo + ADD_CARD)
-    const emailCardRefreshSub = this.form.get('email')?.valueChanges.pipe(
+    this.form.get('email')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      filter(email => !!email && this.isValidEmail(email))
+      filter(email => !!email && this.isValidEmail(email)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.refreshPrepareCardIfActive());
 
     // Escuchar cambios en el teléfono
-    this.form.get('cellphone')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.phoneSubject.next(val);
-      }
-    });
+    this.form.get('cellphone')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.phoneSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el documento
-    this.form.get('nroDocument')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.documentSubject.next(val);
-      }
-    });
+    this.form.get('nroDocument')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.documentSubject.next(val);
+        }
+      });
 
     // Re-preparar tarjeta cuando el documento cambia (flag registro activo + ADD_CARD)
-    const docCardRefreshSub = this.form.get('nroDocument')?.valueChanges.pipe(
+    this.form.get('nroDocument')?.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      filter(doc => !!doc && doc.length >= 8)
+      filter(doc => !!doc && doc.length >= 8),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.refreshPrepareCardIfActive());
-
-    this.subscriptions.push(emailCardRefreshSub!, docCardRefreshSub!);
 
     if (this._authService.isAuthenticated()) {
       this.setValuesInFormFromAuthUser();
@@ -351,33 +364,33 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       this.setValuesInFormFromSummary();
     }
 
-    this.form.get('district')?.valueChanges.subscribe(() => {
-      this.validateAddressLocation({
-        tipoVia: this.form.get('tipoVia')?.value ?? '',
-        nombreVia: this.form.get('nombreVia')?.value ?? '',
-        codigoPostal: this.form.get('codigoPostal')?.value ?? '',
-        department: this.form.get('department')?.value ?? '',
-        distrito: this.form.get('district')?.value ?? '',
-        provincia: this.form.get('province')?.value ?? ''
-      } as AddressSummary);
-    });
+    this.form.get('district')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateAddressLocation({
+          tipoVia: this.form.get('tipoVia')?.value ?? '',
+          nombreVia: this.form.get('nombreVia')?.value ?? '',
+          codigoPostal: this.form.get('codigoPostal')?.value ?? '',
+          department: this.form.get('department')?.value ?? '',
+          distrito: this.form.get('district')?.value ?? '',
+          provincia: this.form.get('province')?.value ?? ''
+        } as AddressSummary);
+      });
 
-    this.form.get('department')?.valueChanges.subscribe(() => {
-      this.validateAddressLocation({
-        tipoVia: this.form.get('tipoVia')?.value ?? '',
-        nombreVia: this.form.get('nombreVia')?.value ?? '',
-        codigoPostal: this.form.get('codigoPostal')?.value ?? '',
-        department: this.form.get('department')?.value ?? '',
-        distrito: this.form.get('district')?.value ?? '',
-        provincia: this.form.get('province')?.value ?? ''
-      } as AddressSummary);
-    });
+    this.form.get('department')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.validateAddressLocation({
+          tipoVia: this.form.get('tipoVia')?.value ?? '',
+          nombreVia: this.form.get('nombreVia')?.value ?? '',
+          codigoPostal: this.form.get('codigoPostal')?.value ?? '',
+          department: this.form.get('department')?.value ?? '',
+          distrito: this.form.get('district')?.value ?? '',
+          provincia: this.form.get('province')?.value ?? ''
+        } as AddressSummary);
+      });
   }
 
-  ngOnDestroy(): void {
-    // Limpiar todas las suscripciones
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any): void {
@@ -441,7 +454,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     const control = this.form.get('email');
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ ...control.errors, emailExists: true });
@@ -460,7 +474,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     const control = this.form.get('cellphone');
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ ...control.errors, cellphoneExists: true });
@@ -480,7 +495,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
-        catchError(() => EMPTY)
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ ...control.errors, nroDocumentExists: true });
@@ -589,6 +605,7 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
 
     this._couponService.validateCoupon({ code, items, subtotal }).pipe(
       finalize(() => this.isApplyingDiscount.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: response => {
         const data = response.data;
@@ -824,7 +841,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
             return this.districtUbigeo ?? '3949';
           })
         )
-      )
+      ),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       this.form.get('streetAddress')?.setValue(address.address.road ?? '');
       this.form.get('postalCode')?.setValue(address.address.postcode ?? '');
@@ -943,7 +961,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       // createCustomer otra vez. Evita el 502 de "externalId duplicado".
       customerId: this.flowCustomerId() || undefined,
     }).pipe(
-      finalize(() => this.preparingCard.set(false))
+      finalize(() => this.preparingCard.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (resp) => {
         this.flowCustomerId.set(resp.data.customerId);
@@ -986,10 +1005,12 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
       // como "tarjeta enrolada" y permitir cargo directo.
       const customerId = this.flowCustomerId();
       if (customerId) {
-        this._flowService.getCustomer(customerId).subscribe({
-          next: (customer) => {
-            if (customer.last4CardDigits && customer.creditCardType) {
-              this.enrolledCard.set({
+        this._flowService.getCustomer(customerId)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (customer) => {
+              if (customer.last4CardDigits && customer.creditCardType) {
+                this.enrolledCard.set({
                 last4: customer.last4CardDigits,
                 brand: customer.creditCardType,
               });
@@ -1061,17 +1082,19 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     // Caso 1: el customerId ya está en el summary (guest o autenticado)
     if (summaryCustomerId) {
       this.flowCustomerId.set(summaryCustomerId);
-      this._flowService.getCustomer(summaryCustomerId).subscribe({
-        next: (customer) => {
-          if (customer.last4CardDigits && customer.creditCardType) {
-            this.enrolledCard.set({
-              last4: customer.last4CardDigits,
-              brand: customer.creditCardType,
-            });
-          }
-        },
-        error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
-      });
+      this._flowService.getCustomer(summaryCustomerId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (customer) => {
+            if (customer.last4CardDigits && customer.creditCardType) {
+              this.enrolledCard.set({
+                last4: customer.last4CardDigits,
+                brand: customer.creditCardType,
+              });
+            }
+          },
+          error: () => { /* sin tarjeta o error de Flow — la UI cae al acordeón */ }
+        });
       return;
     }
 
@@ -1082,13 +1105,16 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._authService.currentUser$.pipe(
       filter((user): user is NonNullable<typeof user> => !!user),
       take(1),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(user => {
       const customerId = user.flowCustomerId;
       if (!customerId) return;
 
       this.flowCustomerId.set(customerId);
-      this._flowService.getCustomer(customerId).subscribe({
-        next: (customer) => {
+      this._flowService.getCustomer(customerId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (customer) => {
           if (customer.last4CardDigits && customer.creditCardType) {
             this.enrolledCard.set({
               last4: customer.last4CardDigits,
@@ -1231,7 +1257,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this._checkoutService.processCheckout(checkoutRequest).pipe(
       finalize(() => {
         this.isProcessing.set(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
         // Persistir sesión si el backend nos devuelve tokens (cliente nuevo o auto-login).
@@ -1519,7 +1546,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
     this.isProcessing.set(true);
     this._userService.getCurrentUser().pipe(
       catchError(() => EMPTY),
-      finalize(() => this.isProcessing.set(false))
+      finalize(() => this.isProcessing.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(user => {
       this.form.get('firtName')?.setValue(user.first_name, { emitEvent: false });
       this.form.get('lastName')?.setValue(user.last_name, { emitEvent: false });
@@ -1561,7 +1589,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
                 return this.districtUbigeo;
               })
             )
-          )
+          ),
+          takeUntilDestroyed(this.destroyRef),
         ).subscribe(() => {
           this.form.get('streetAddress')?.setValue(user.address!.avenue ?? '');
           this.form.get('number')?.setValue(user.address!.number ?? '');
@@ -1624,7 +1653,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
               return this.districtUbigeo ?? '3949';
             })
           )
-        )
+        ),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(() => {
         this.form.get('streetAddress')?.setValue(summary.address?.nombreVia ?? '');
         this.form.get('number')?.setValue(summary.address?.numero ?? '');
@@ -1721,7 +1751,8 @@ export class CheckoutComponent implements OnDestroy, AfterViewInit {
           }),
           finalize(() => {
             this.isProcessing.set(false);
-          })
+          }),
+          takeUntilDestroyed(this.destroyRef),
         ).subscribe({
           next: () => {
             this.allowNavigation.set(true); // Permitir navegación al guardar los datos exitosamente

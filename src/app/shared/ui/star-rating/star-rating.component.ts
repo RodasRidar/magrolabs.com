@@ -1,11 +1,11 @@
-import { Component, input, Input } from "@angular/core";
+import { Component, computed, input } from "@angular/core";
 
 @Component({
   selector: "app-star-rating",
   imports: [],
   template: `
     <div class="flex items-center">
-      @for (star of starsArray; track star) {
+      @for (star of starsArray(); track star.index) {
         <svg
           class="h-5 w-5 flex-shrink-0"
           [class.text-black]="star.filled"
@@ -27,25 +27,21 @@ export class StarRatingComponent {
   rating = input.required<number>();
   size = input<"sm" | "md" | "lg">("md");
 
-  get starsArray(): { filled: boolean; index: number }[] {
-    // Lógica de redondeo conservadora:
-    // Si el decimal es exactamente .5, redondear hacia abajo
-    // Si es mayor a .5, redondear hacia arriba
-    // Si es menor a .5, redondear hacia abajo
+  starsArray = computed(() => {
     const decimal = this.rating() % 1;
     let roundedRating: number;
 
     if (decimal === 0.5) {
-      roundedRating = Math.floor(this.rating()); // 4.5 -> 4
+      roundedRating = Math.floor(this.rating());
     } else {
-      roundedRating = Math.round(this.rating()); // 4.6 -> 5, 4.4 -> 4
+      roundedRating = Math.round(this.rating());
     }
 
     return Array.from({ length: 5 }, (_, index) => ({
       filled: index < roundedRating,
       index: index + 1,
     }));
-  }
+  });
 
   get sizeClass(): string {
     switch (this.size()) {

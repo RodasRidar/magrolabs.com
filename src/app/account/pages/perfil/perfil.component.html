@@ -1,493 +1,694 @@
 <ml-page-header title="Perfil." />
 <main>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="px-4 pb-8 sm:px-0">
+  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="px-4 pb-8 sm:px-0">
+      <div class="py-9">
+        <!-- Mensajes de éxito/error -->
+        @if (successMessage()) {
+          <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
+            {{ successMessage() }}
+          </div>
+        }
+        @if (errorMessage()) {
+          <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-md">
+            {{ errorMessage() }}
+          </div>
+        }
+        <!-- <h1 class="text-2xl font-bold mb-2">Datos Personales</h1>
+        <p class="text-gray-600 mb-6">Aquí encontrarás tus datos personales</p> -->
 
-            <div class="py-9">
-                <!-- Mensajes de éxito/error -->
-                <div *ngIf="successMessage()" class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ successMessage() }}
-                </div>
-                <div *ngIf="errorMessage()" class="mb-4 p-4 bg-red-100 text-red-800 rounded-md">
-                    {{ errorMessage() }}
-                </div>
-                <!-- <h1 class="text-2xl font-bold mb-2">Datos Personales</h1>
-                <p class="text-gray-600 mb-6">Aquí encontrarás tus datos personales</p> -->
-
-                <!-- Error en carga de perfil -->
-                <ml-card *ngIf="isProfileError()" padding="md" class="mb-8">
-                    <div class="text-center py-8">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-red-500 mb-4" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">No pudimos cargar tus datos</h2>
-                        <p class="text-gray-600 mb-4">Ha ocurrido un error al obtener tu información personal.</p>
-                        <button (click)="retryLoad()"
-                            class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
-                            Intentar nuevamente
-                        </button>
-                    </div>
-                </ml-card>
-
-                <!-- Skeleton para carga de perfil -->
-                <ml-card *ngIf="loadingProfile() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Skeleton campos -->
-                        <div class="form-group" *ngFor="let item of [1,2,3,4,5,6]">
-                            <div class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"></div>
-                            <div class="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
-                        </div>
-                    </div>
-                </ml-card>
-
-                <!-- Formulario de perfil -->
-                <ml-card *ngIf="!loadingProfile() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold">Modificar datos personales</h2>
-                        <button (click)="toggleProfileEdit()" class="text-primary hover:text-primary-hover"
-                            [attr.aria-label]="isEditingProfile() ? 'Cancelar edición' : 'Editar perfil'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Nombre -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="Nombre"
-                                    inputId="first_name"
-                                    inputType="text"
-                                    [required]="true"
-                                    [errors]="firstNameErrors"
-                                    formControlName="first_name"
-                                />
-                            </div>
-
-                            <!-- Apellido -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="Apellido"
-                                    inputId="last_name"
-                                    inputType="text"
-                                    [required]="true"
-                                    [errors]="lastNameErrors"
-                                    formControlName="last_name"
-                                />
-                            </div>
-
-                            <!-- DNI -->
-                            <div class="form-group">
-                                <ml-select
-                                    label="Tipo de documento"
-                                    inputId="documentType"
-                                    [required]="true"
-                                    [errors]="documentTypeErrors"
-                                    formControlName="documentType"
-                                >
-                                    <option *ngFor="let type of typeDocuments" [value]="type.value">{{ type.label }}</option>
-                                </ml-select>
-                            </div>
-
-                            <div class="form-group">
-                                <ml-input
-                                    [label]="getDocumentLabel()"
-                                    inputId="documentNumber"
-                                    inputType="text"
-                                    [required]="true"
-                                    [maxLength]="getDocumentMaxLength()"
-                                    [errors]="documentNumberErrors"
-                                    formControlName="documentNumber"
-                                />
-                            </div>
-
-                            <!-- Fecha de nacimiento -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="Fecha de nacimiento"
-                                    inputId="birth_date"
-                                    inputType="date"
-                                    [required]="true"
-                                    [errors]="birthDateErrors"
-                                    formControlName="birth_date"
-                                />
-                            </div>
-
-                            <!-- Teléfono -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="Teléfono"
-                                    inputId="phone"
-                                    inputType="tel"
-                                    [required]="true"
-                                    [maxLength]="9"
-                                    [errors]="phoneErrors"
-                                    formControlName="phone"
-                                />
-                            </div>
-                            <div class="form-group">
-                                <ml-input
-                                    label="Email"
-                                    inputId="email"
-                                    inputType="email"
-                                    [required]="true"
-                                    [maxLength]="9"
-                                    formControlName="email"
-                                    [disabled]="true"
-                                />
-                            </div>
-                        </div>
-
-                        <!-- Botones de acción -->
-                        <div class="flex justify-end space-x-4 mt-6" *ngIf="isEditingProfile()">
-                            <button type="button" (click)="toggleProfileEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
-                                Cancelar
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
-                                [disabled]="isLoading() || profileForm.invalid || formSubmitted()">
-                                <span *ngIf="isLoading()">
-                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    Guardando...
-                                </span>
-                                <span *ngIf="!isLoading()">Guardar</span>
-                            </button>
-                        </div>
-                    </form>
-                </ml-card>
-
-                <!-- Sección de Dirección -->
-                <!-- <h1 class="text-2xl font-bold mb-2">Dirección</h1>
-                <p class="text-gray-600 mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p> -->
-
-                <!-- Skeleton para sección de dirección mientras se carga -->
-                <ml-card *ngIf="loadingAddress() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
-                    </div>
-                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="form-group" *ngFor="let item of [1,2,3,4,5,6]">
-                            <div class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"></div>
-                            <div class="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
-                        </div>
-                    </div>
-                </ml-card>
-
-                <!-- Formulario de dirección -->
-                <ml-card *ngIf="!loadingAddress() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold">Modificar dirección</h2>
-                        <button (click)="toggleAddressEdit()" class="text-primary hover:text-primary-hover"
-                            [attr.aria-label]="isEditingAddress() ? 'Cancelar edición' : 'Editar dirección'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" *ngIf="isEditingAddress()">
-                        <!-- Búsqueda de dirección -->
-                        <div class="form-group mb-6" *ngIf="!hideSearching()">
-                            <label for="searchAddress" class="block text-sm font-medium text-gray-700 mb-1">
-                                Buscar dirección
-                            </label>
-                            <div class="relative">
-                                <input type="text" id="searchAddress" formControlName="searchAddress"
-                                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                    placeholder="Escribe tu dirección para buscarla">
-                                <div *ngIf="isSearchingAddress()"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <svg class="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <!-- Resultados de búsqueda -->
-                            <div *ngIf="addressList.length > 0"
-                                class="mt-2 bg-surface border rounded-md shadow-md max-h-60 overflow-y-auto">
-                                <ul>
-                                    <li *ngFor="let address of addressList"
-                                        class="p-3 border-b hover:bg-gray-50 cursor-pointer"
-                                        (click)="selectAddress(address)">
-                                        {{ address.display_name }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Campos de la dirección -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Calle/Avenida/Jiron -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="Calle/Avenida/Jiron"
-                                    inputId="streetAddress"
-                                    inputType="text"
-                                    [required]="true"
-                                    [errors]="addrStreetAddressErrors"
-                                    formControlName="streetAddress"
-                                />
-                            </div>
-
-                            <!-- Número -->
-                            <div class="form-group">
-                                <ml-input
-                                    label="N°/Mz/Lt"
-                                    inputId="number"
-                                    inputType="text"
-                                    [required]="true"
-                                    [maxLength]="20"
-                                    [errors]="addrNumberErrors"
-                                    formControlName="number"
-                                />
-                            </div>
-
-                            <!-- Departamento -->
-                            <div class="form-group">
-                                <ml-select
-                                    label="Departamento"
-                                    inputId="department"
-                                    [required]="true"
-                                    [errors]="addrDepartmentErrors"
-                                    formControlName="department"
-                                    (selectionChange)="selectDepartment($event)"
-                                >
-                                    <option value="">Seleccione un departamento</option>
-                                    <option *ngFor="let department of departments$ | async" [value]="department.id_ubigeo">
-                                        {{ department.nombre_ubigeo }}
-                                    </option>
-                                </ml-select>
-                            </div>
-
-                            <!-- Provincia -->
-                            <div class="form-group">
-                                <ml-select
-                                    label="Provincia"
-                                    inputId="province"
-                                    [required]="true"
-                                    [errors]="addrProvinceErrors"
-                                    formControlName="province"
-                                    (selectionChange)="selectProvince($event)"
-                                >
-                                    <option value="">Seleccione una provincia</option>
-                                    <option *ngFor="let province of provinces$ | async" [value]="province.id_ubigeo">
-                                        {{ province.nombre_ubigeo }}
-                                    </option>
-                                </ml-select>
-                            </div>
-
-                            <!-- Distrito -->
-                            <div class="form-group">
-                                <ml-select
-                                    label="Distrito"
-                                    inputId="district"
-                                    [required]="true"
-                                    [errors]="addrDistrictErrors"
-                                    formControlName="district"
-                                    (selectionChange)="selectDistrict($event)"
-                                >
-                                    <option value="">Seleccione un distrito</option>
-                                    <option *ngFor="let district of districts$ | async" [value]="district.id_ubigeo">
-                                        {{ district.nombre_ubigeo }}
-                                    </option>
-                                </ml-select>
-                            </div>
-
-                            <!-- Código Postal 
-                            <div class="form-group">
-                                <ml-input
-                                    label="Código Postal"
-                                    inputId="postalCode"
-                                    inputType="text"
-                                    [maxLength]="5"
-                                    [errors]="addrPostalCodeErrors"
-                                    formControlName="postalCode"
-                                />
-                            </div>-->
-
-                            <!-- Referencia -->
-                            <div class="form-group md:col-span-2">
-                                <ml-form-field label="Referencia" inputId="reference" [required]="true" [errors]="addrReferenceErrors">
-                                    <textarea id="reference" formControlName="reference" rows="3"
-                                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
-                                        [class.border-red-500]="hasError(addressForm, 'reference')"></textarea>
-                                </ml-form-field>
-                            </div>
-                        </div>
-
-                        <!-- Botones de acción -->
-                        <div class="flex justify-end space-x-4 mt-6">
-                            <button type="button" (click)="toggleAddressEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
-                                Cancelar
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
-                                [disabled]="isSavingAddress() || addressForm.invalid">
-                                <span *ngIf="isSavingAddress()">
-                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    Guardando...
-                                </span>
-                                <span *ngIf="!isSavingAddress()">Guardar dirección</span>
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Vista de dirección (cuando no está en edición) -->
-                    <div *ngIf="!isEditingAddress()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Dirección completa -->
-                        <div class="form-group md:col-span-2">
-                            <div class="p-3 bg-gray-50 rounded-md">
-                                <div *ngIf="addressForm.get('streetAddress')?.value">
-                                    {{ addressForm.get('streetAddress')?.value }}
-                                    <span *ngIf="addressForm.get('number')?.value">, {{ addressForm.get('number')?.value
-                                        }}</span>
-                                </div>
-                                <div>
-                                    <span *ngIf="addressForm.get('district')?.value">{{ getUbigeoName('district')
-                                        }}</span>
-                                    <span *ngIf="addressForm.get('province')?.value">, {{ getUbigeoName('province')
-                                        }}</span>
-                                    <span *ngIf="addressForm.get('department')?.value">, {{ getUbigeoName('department')
-                                        }}</span>
-                                </div>
-                                <!-- <div *ngIf="addressForm.get('postalCode')?.value">
-                                    Código postal: {{ addressForm.get('postalCode')?.value }}
-                                </div> -->
-                                <div *ngIf="addressForm.get('reference')?.value" class="mt-2">
-                                    <span class="font-medium">Referencia:</span> {{ addressForm.get('reference')?.value
-                                    }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ml-card>
-
-                <!-- Sección de Contraseña -->
-                <!-- <h1 class="text-2xl font-bold mb-2">Contraseña</h1>
-                <p class="text-gray-600 mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p> -->
-
-                <!-- Skeleton para sección de contraseña mientras se carga el perfil -->
-                <ml-card *ngIf="loadingProfile() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
-                    </div>
-                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
-                </ml-card>
-
-                <!-- Formulario de contraseña -->
-                <ml-card *ngIf="!loadingProfile() && !isProfileError()" padding="md" class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold">Modificar contraseña</h2>
-                        <button (click)="togglePasswordEdit()" class="text-primary hover:text-primary-hover"
-                            [attr.aria-label]="isEditingPassword() ? 'Cancelar edición' : 'Editar contraseña'">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-                        <!-- Contraseña actual -->
-                        <div class="form-group mb-4">
-                            <ml-password-input
-                                label="Contraseña actual"
-                                inputId="current_password"
-                                [required]="true"
-                                [errors]="currentPasswordErrors"
-                                formControlName="current_password"
-                            />
-                        </div>
-
-                        <!-- Nueva contraseña -->
-                        <div class="form-group mb-4">
-                            <ml-password-input
-                                label="Nueva contraseña"
-                                inputId="new_password"
-                                [required]="true"
-                                [errors]="newPasswordErrors"
-                                formControlName="new_password"
-                                [showStrength]="true"
-                            />
-                        </div>
-
-                        <!-- Confirmar contraseña -->
-                        <div class="form-group mb-4">
-                            <ml-password-input
-                                label="Confirmar contraseña"
-                                inputId="confirm_password"
-                                [required]="true"
-                                [errors]="confirmPasswordErrors"
-                                formControlName="confirm_password"
-                                [showStrength]="true"
-                            />
-                        </div>
-
-                        <!-- Botones de acción -->
-                        <div class="flex justify-end space-x-4 mt-6" *ngIf="isEditingPassword()">
-                            <button type="button" (click)="togglePasswordEdit()"
-                                class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted">
-                                Cancelar
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
-                                [disabled]="loadingPassword() || passwordForm.invalid || formSubmitted() || getPasswordMatchError()">
-                                <span *ngIf="loadingPassword()">
-                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    Cambiando...
-                                </span>
-                                <span *ngIf="!loadingPassword()">Cambiar contraseña</span>
-                            </button>
-                        </div>
-                    </form>
-                </ml-card>
+        <!-- Error en carga de perfil -->
+        @if (isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="text-center py-8">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="mx-auto h-16 w-16 text-red-500 mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                No pudimos cargar tus datos
+              </h2>
+              <p class="text-gray-600 mb-4">
+                Ha ocurrido un error al obtener tu información personal.
+              </p>
+              <button
+                (click)="retryLoad()"
+                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+              >
+                Intentar nuevamente
+              </button>
             </div>
-        </div>
+          </ml-card>
+        }
+
+        <!-- Skeleton para carga de perfil -->
+        @if (loadingProfile() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Skeleton campos -->
+              @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+                <div class="form-group">
+                  <div
+                    class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"
+                  ></div>
+                  <div
+                    class="h-10 bg-gray-200 rounded w-full animate-pulse"
+                  ></div>
+                </div>
+              }
+            </div>
+          </ml-card>
+        }
+
+        <!-- Formulario de perfil -->
+        @if (!loadingProfile() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-semibold">Modificar datos personales</h2>
+              <button
+                (click)="toggleProfileEdit()"
+                class="text-primary hover:text-primary-hover"
+                [attr.aria-label]="
+                  isEditingProfile() ? 'Cancelar edición' : 'Editar perfil'
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Nombre -->
+                <div class="form-group">
+                  <ml-input
+                    label="Nombre"
+                    inputId="first_name"
+                    inputType="text"
+                    [required]="true"
+                    [errors]="firstNameErrors"
+                    formControlName="first_name"
+                  />
+                </div>
+                <!-- Apellido -->
+                <div class="form-group">
+                  <ml-input
+                    label="Apellido"
+                    inputId="last_name"
+                    inputType="text"
+                    [required]="true"
+                    [errors]="lastNameErrors"
+                    formControlName="last_name"
+                  />
+                </div>
+                <!-- DNI -->
+                <div class="form-group">
+                  <ml-select
+                    label="Tipo de documento"
+                    inputId="documentType"
+                    [required]="true"
+                    [errors]="documentTypeErrors"
+                    formControlName="documentType"
+                  >
+                    @for (type of typeDocuments; track type) {
+                      <option [value]="type.value">{{ type.label }}</option>
+                    }
+                  </ml-select>
+                </div>
+                <div class="form-group">
+                  <ml-input
+                    [label]="getDocumentLabel()"
+                    inputId="documentNumber"
+                    inputType="text"
+                    [required]="true"
+                    [maxLength]="getDocumentMaxLength()"
+                    [errors]="documentNumberErrors"
+                    formControlName="documentNumber"
+                  />
+                </div>
+                <!-- Fecha de nacimiento -->
+                <div class="form-group">
+                  <ml-input
+                    label="Fecha de nacimiento"
+                    inputId="birth_date"
+                    inputType="date"
+                    [required]="true"
+                    [errors]="birthDateErrors"
+                    formControlName="birth_date"
+                  />
+                </div>
+                <!-- Teléfono -->
+                <div class="form-group">
+                  <ml-input
+                    label="Teléfono"
+                    inputId="phone"
+                    inputType="tel"
+                    [required]="true"
+                    [maxLength]="9"
+                    [errors]="phoneErrors"
+                    formControlName="phone"
+                  />
+                </div>
+                <div class="form-group">
+                  <ml-input
+                    label="Email"
+                    inputId="email"
+                    inputType="email"
+                    [required]="true"
+                    [maxLength]="9"
+                    formControlName="email"
+                    [disabled]="true"
+                  />
+                </div>
+              </div>
+              <!-- Botones de acción -->
+              @if (isEditingProfile()) {
+                <div class="flex justify-end space-x-4 mt-6">
+                  <button
+                    type="button"
+                    (click)="toggleProfileEdit()"
+                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    [disabled]="
+                      isLoading() || profileForm.invalid || formSubmitted()
+                    "
+                  >
+                    @if (isLoading()) {
+                      <span>
+                        <svg
+                          class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Guardando...
+                      </span>
+                    }
+                    @if (!isLoading()) {
+                      <span>Guardar</span>
+                    }
+                  </button>
+                </div>
+              }
+            </form>
+          </ml-card>
+        }
+
+        <!-- Sección de Dirección -->
+        <!-- <h1 class="text-2xl font-bold mb-2">Dirección</h1>
+        <p class="text-gray-600 mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p> -->
+
+        <!-- Skeleton para sección de dirección mientras se carga -->
+        @if (loadingAddress() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+            </div>
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+                <div class="form-group">
+                  <div
+                    class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"
+                  ></div>
+                  <div
+                    class="h-10 bg-gray-200 rounded w-full animate-pulse"
+                  ></div>
+                </div>
+              }
+            </div>
+          </ml-card>
+        }
+
+        <!-- Formulario de dirección -->
+        @if (!loadingAddress() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-semibold">Modificar dirección</h2>
+              <button
+                (click)="toggleAddressEdit()"
+                class="text-primary hover:text-primary-hover"
+                [attr.aria-label]="
+                  isEditingAddress() ? 'Cancelar edición' : 'Editar dirección'
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </button>
+            </div>
+            @if (isEditingAddress()) {
+              <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+                <!-- Búsqueda de dirección -->
+                @if (!hideSearching()) {
+                  <div class="form-group mb-6">
+                    <label
+                      for="searchAddress"
+                      class="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Buscar dirección
+                    </label>
+                    <div class="relative">
+                      <input
+                        type="text"
+                        id="searchAddress"
+                        formControlName="searchAddress"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
+                        placeholder="Escribe tu dirección para buscarla"
+                      />
+                      @if (isSearchingAddress()) {
+                        <div
+                          class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        >
+                          <svg
+                            class="animate-spin h-5 w-5 text-gray-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              class="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path
+                              class="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                      }
+                    </div>
+                    <!-- Resultados de búsqueda -->
+                    @if (addressList.length > 0) {
+                      <div
+                        class="mt-2 bg-surface border rounded-md shadow-md max-h-60 overflow-y-auto"
+                      >
+                        <ul>
+                          @for (address of addressList; track address) {
+                            <li
+                              class="p-3 border-b hover:bg-gray-50 cursor-pointer"
+                              (click)="selectAddress(address)"
+                            >
+                              {{ address.display_name }}
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+                  </div>
+                }
+                <!-- Campos de la dirección -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Calle/Avenida/Jiron -->
+                  <div class="form-group">
+                    <ml-input
+                      label="Calle/Avenida/Jiron"
+                      inputId="streetAddress"
+                      inputType="text"
+                      [required]="true"
+                      [errors]="addrStreetAddressErrors"
+                      formControlName="streetAddress"
+                    />
+                  </div>
+                  <!-- Número -->
+                  <div class="form-group">
+                    <ml-input
+                      label="N°/Mz/Lt"
+                      inputId="number"
+                      inputType="text"
+                      [required]="true"
+                      [maxLength]="20"
+                      [errors]="addrNumberErrors"
+                      formControlName="number"
+                    />
+                  </div>
+                  <!-- Departamento -->
+                  <div class="form-group">
+                    <ml-select
+                      label="Departamento"
+                      inputId="department"
+                      [required]="true"
+                      [errors]="addrDepartmentErrors"
+                      formControlName="department"
+                      (selectionChange)="selectDepartment($event)"
+                    >
+                      <option value="">Seleccione un departamento</option>
+                      @for (
+                        department of departments$ | async;
+                        track department
+                      ) {
+                        <option [value]="department.id_ubigeo">
+                          {{ department.nombre_ubigeo }}
+                        </option>
+                      }
+                    </ml-select>
+                  </div>
+                  <!-- Provincia -->
+                  <div class="form-group">
+                    <ml-select
+                      label="Provincia"
+                      inputId="province"
+                      [required]="true"
+                      [errors]="addrProvinceErrors"
+                      formControlName="province"
+                      (selectionChange)="selectProvince($event)"
+                    >
+                      <option value="">Seleccione una provincia</option>
+                      @for (province of provinces$ | async; track province) {
+                        <option [value]="province.id_ubigeo">
+                          {{ province.nombre_ubigeo }}
+                        </option>
+                      }
+                    </ml-select>
+                  </div>
+                  <!-- Distrito -->
+                  <div class="form-group">
+                    <ml-select
+                      label="Distrito"
+                      inputId="district"
+                      [required]="true"
+                      [errors]="addrDistrictErrors"
+                      formControlName="district"
+                      (selectionChange)="selectDistrict($event)"
+                    >
+                      <option value="">Seleccione un distrito</option>
+                      @for (district of districts$ | async; track district) {
+                        <option [value]="district.id_ubigeo">
+                          {{ district.nombre_ubigeo }}
+                        </option>
+                      }
+                    </ml-select>
+                  </div>
+                  <!-- Código Postal
+                  <div class="form-group">
+                    <ml-input
+                      label="Código Postal"
+                      inputId="postalCode"
+                      inputType="text"
+                      [maxLength]="5"
+                      [errors]="addrPostalCodeErrors"
+                      formControlName="postalCode"
+                      />
+                  </div>-->
+                  <!-- Referencia -->
+                  <div class="form-group md:col-span-2">
+                    <ml-form-field
+                      label="Referencia"
+                      inputId="reference"
+                      [required]="true"
+                      [errors]="addrReferenceErrors"
+                    >
+                      <textarea
+                        id="reference"
+                        formControlName="reference"
+                        rows="3"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-muted"
+                        [class.border-red-500]="
+                          hasError(addressForm, 'reference')
+                        "
+                      ></textarea>
+                    </ml-form-field>
+                  </div>
+                </div>
+                <!-- Botones de acción -->
+                <div class="flex justify-end space-x-4 mt-6">
+                  <button
+                    type="button"
+                    (click)="toggleAddressEdit()"
+                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    [disabled]="isSavingAddress() || addressForm.invalid"
+                  >
+                    @if (isSavingAddress()) {
+                      <span>
+                        <svg
+                          class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Guardando...
+                      </span>
+                    }
+                    @if (!isSavingAddress()) {
+                      <span>Guardar dirección</span>
+                    }
+                  </button>
+                </div>
+              </form>
+            }
+            <!-- Vista de dirección (cuando no está en edición) -->
+            @if (!isEditingAddress()) {
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dirección completa -->
+                <div class="form-group md:col-span-2">
+                  <div class="p-3 bg-gray-50 rounded-md">
+                    @if (addressForm.get("streetAddress")?.value) {
+                      <div>
+                        {{ addressForm.get("streetAddress")?.value }}
+                        @if (addressForm.get("number")?.value) {
+                          <span>, {{ addressForm.get("number")?.value }}</span>
+                        }
+                      </div>
+                    }
+                    <div>
+                      @if (addressForm.get("district")?.value) {
+                        <span>{{ getUbigeoName("district") }}</span>
+                      }
+                      @if (addressForm.get("province")?.value) {
+                        <span>, {{ getUbigeoName("province") }}</span>
+                      }
+                      @if (addressForm.get("department")?.value) {
+                        <span>, {{ getUbigeoName("department") }}</span>
+                      }
+                    </div>
+                    <!-- <div *ngIf="addressForm.get('postalCode')?.value">
+                    Código postal: {{ addressForm.get('postalCode')?.value }}
+                  </div> -->
+                    @if (addressForm.get("reference")?.value) {
+                      <div class="mt-2">
+                        <span class="font-medium">Referencia:</span>
+                        {{ addressForm.get("reference")?.value }}
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </ml-card>
+        }
+
+        <!-- Sección de Contraseña -->
+        <!-- <h1 class="text-2xl font-bold mb-2">Contraseña</h1>
+      <p class="text-gray-600 mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p> -->
+
+        <!-- Skeleton para sección de contraseña mientras se carga el perfil -->
+        @if (loadingProfile() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+            </div>
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
+          </ml-card>
+        }
+
+        <!-- Formulario de contraseña -->
+        @if (!loadingProfile() && !isProfileError()) {
+          <ml-card padding="md" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-xl font-semibold">Modificar contraseña</h2>
+              <button
+                (click)="togglePasswordEdit()"
+                class="text-primary hover:text-primary-hover"
+                [attr.aria-label]="
+                  isEditingPassword() ? 'Cancelar edición' : 'Editar contraseña'
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+              <!-- Contraseña actual -->
+              <div class="form-group mb-4">
+                <ml-password-input
+                  label="Contraseña actual"
+                  inputId="current_password"
+                  [required]="true"
+                  [errors]="currentPasswordErrors"
+                  formControlName="current_password"
+                />
+              </div>
+              <!-- Nueva contraseña -->
+              <div class="form-group mb-4">
+                <ml-password-input
+                  label="Nueva contraseña"
+                  inputId="new_password"
+                  [required]="true"
+                  [errors]="newPasswordErrors"
+                  formControlName="new_password"
+                  [showStrength]="true"
+                />
+              </div>
+              <!-- Confirmar contraseña -->
+              <div class="form-group mb-4">
+                <ml-password-input
+                  label="Confirmar contraseña"
+                  inputId="confirm_password"
+                  [required]="true"
+                  [errors]="confirmPasswordErrors"
+                  formControlName="confirm_password"
+                  [showStrength]="true"
+                />
+              </div>
+              <!-- Botones de acción -->
+              @if (isEditingPassword()) {
+                <div class="flex justify-end space-x-4 mt-6">
+                  <button
+                    type="button"
+                    (click)="togglePasswordEdit()"
+                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    [disabled]="
+                      loadingPassword() ||
+                      passwordForm.invalid ||
+                      formSubmitted() ||
+                      getPasswordMatchError()
+                    "
+                  >
+                    @if (loadingPassword()) {
+                      <span>
+                        <svg
+                          class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Cambiando...
+                      </span>
+                    }
+                    @if (!loadingPassword()) {
+                      <span>Cambiar contraseña</span>
+                    }
+                  </button>
+                </div>
+              }
+            </form>
+          </ml-card>
+        }
+      </div>
     </div>
+  </div>
 </main>

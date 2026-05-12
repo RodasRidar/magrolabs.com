@@ -1,15 +1,15 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { MonthlyRewardModalService } from '../../services/monthly-reward-modal.service';
-import { environment } from '../../../../environments/env';
-import { InlineModalComponent } from '../inline-modal/inline-modal.component';
-import { ButtonComponent } from '../button/button.component';
+import { Component, inject } from "@angular/core";
+
+import { Router } from "@angular/router";
+import { MonthlyRewardModalService } from "../../services/monthly-reward-modal.service";
+import { environment } from "../../../../environments/env";
+import { InlineModalComponent } from "../inline-modal/inline-modal.component";
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
-    selector: 'app-monthly-reward-modal',
-    imports: [CommonModule, InlineModalComponent, ButtonComponent],
-    templateUrl: './monthly-reward-modal.component.html'
+  selector: "app-monthly-reward-modal",
+  imports: [InlineModalComponent, ButtonComponent],
+  templateUrl: "./monthly-reward-modal.component.html",
 })
 export class MonthlyRewardModalComponent {
   modalService = inject(MonthlyRewardModalService);
@@ -31,12 +31,11 @@ export class MonthlyRewardModalComponent {
 
   navigateToWebshop(): void {
     this.closeModal();
-    this.router.navigate(['/loyalty-webshop']);
-
+    this.router.navigate(["/loyalty-webshop"]);
   }
 
   navigateToCredits(): void {
     this.closeModal();
-    this.router.navigate(['/cuenta/credito']);
+    this.router.navigate(["/cuenta/credito"]);
   }
 }

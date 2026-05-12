@@ -1,9 +1,17 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SummaryService } from '../../services/summary-service.service';
-import { FlowPaymentMethod } from '../../models/flow.model';
-import { environment } from '../../../../environments/env';
-import { FlowWidgetAddCardComponent } from '../flow-widget-add-card/flow-widget-add-card.component';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from "@angular/core";
+
+import { SummaryService } from "../../services/summary-service.service";
+import { FlowPaymentMethod } from "../../models/flow.model";
+import { environment } from "../../../../environments/env";
+import { FlowWidgetAddCardComponent } from "../flow-widget-add-card/flow-widget-add-card.component";
 
 /**
  * Identificadores de selección visibles en el componente.
@@ -16,7 +24,11 @@ import { FlowWidgetAddCardComponent } from '../flow-widget-add-card/flow-widget-
  *   registro (no queremos guardarle la tarjeta).
  * - YAPE: redirect al portal Flow con paymentMethod=152.
  */
-export type PaymentSelection = 'CARD_ENROLLED' | 'ADD_CARD' | 'CARD_PORTAL' | 'YAPE';
+export type PaymentSelection =
+  | "CARD_ENROLLED"
+  | "ADD_CARD"
+  | "CARD_PORTAL"
+  | "YAPE";
 
 export interface PaymentMethodSelection {
   selection: PaymentSelection;
@@ -33,10 +45,10 @@ export interface EnrolledCardInfo {
 }
 
 @Component({
-    selector: 'app-payment-method',
-    imports: [CommonModule, FlowWidgetAddCardComponent],
-    templateUrl: './payment-method.component.html',
-    styleUrl: './payment-method.component.css'
+  selector: "app-payment-method",
+  imports: [FlowWidgetAddCardComponent],
+  templateUrl: "./payment-method.component.html",
+  styleUrl: "./payment-method.component.css",
 })
 export class PaymentMethodComponent {
   private _summaryService = inject(SummaryService);
@@ -84,7 +96,9 @@ export class PaymentMethodComponent {
   currentSelection = signal<PaymentSelection | null>(null);
 
   /** El widget de Flow se renderiza solo cuando ADD_CARD está activo y hay token. */
-  showWidget = computed(() => this.currentSelection() === 'ADD_CARD' && !!this.flowToken());
+  showWidget = computed(
+    () => this.currentSelection() === "ADD_CARD" && !!this.flowToken(),
+  );
 
   /**
    * Flag interno que sube a true cuando el widget emite cardAddedSuccessfully(true).
@@ -94,28 +108,31 @@ export class PaymentMethodComponent {
   private justEnrolled = signal(false);
 
   constructor() {
-    effect(() => {
-      const card = this.enrolledCard();
-      const selection = this.currentSelection();
+    effect(
+      () => {
+        const card = this.enrolledCard();
+        const selection = this.currentSelection();
 
-      // Caso 1: aún no hay nada seleccionado y llegó una tarjeta enrolada
-      // (cliente autenticado al iniciar) → autoseleccionar.
-      if (card && selection === null) {
-        this.currentSelection.set('CARD_ENROLLED');
-        this.emitSelection('CARD_ENROLLED');
-        return;
-      }
+        // Caso 1: aún no hay nada seleccionado y llegó una tarjeta enrolada
+        // (cliente autenticado al iniciar) → autoseleccionar.
+        if (card && selection === null) {
+          this.currentSelection.set("CARD_ENROLLED");
+          this.emitSelection("CARD_ENROLLED");
+          return;
+        }
 
-      // Caso 2: el cliente acaba de enrolar una tarjeta vía widget. La selección
-      // está en ADD_CARD pero ya hay enrolledCard poblado por el padre tras el
-      // getCustomer post-enrolamiento → cambiar a CARD_ENROLLED para que la
-      // tarjeta recién agregada quede seleccionada.
-      if (card && this.justEnrolled() && selection === 'ADD_CARD') {
-        this.currentSelection.set('CARD_ENROLLED');
-        this.emitSelection('CARD_ENROLLED');
-        this.justEnrolled.set(false);
-      }
-    }, { allowSignalWrites: true });
+        // Caso 2: el cliente acaba de enrolar una tarjeta vía widget. La selección
+        // está en ADD_CARD pero ya hay enrolledCard poblado por el padre tras el
+        // getCustomer post-enrolamiento → cambiar a CARD_ENROLLED para que la
+        // tarjeta recién agregada quede seleccionada.
+        if (card && this.justEnrolled() && selection === "ADD_CARD") {
+          this.currentSelection.set("CARD_ENROLLED");
+          this.emitSelection("CARD_ENROLLED");
+          this.justEnrolled.set(false);
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit(): void {
@@ -123,8 +140,8 @@ export class PaymentMethodComponent {
     // En el caso normal, enrolledCard está null al init y el effect() se encarga
     // cuando llegue la respuesta async de getCustomer.
     if (this.enrolledCard()) {
-      this.currentSelection.set('CARD_ENROLLED');
-      this.emitSelection('CARD_ENROLLED');
+      this.currentSelection.set("CARD_ENROLLED");
+      this.emitSelection("CARD_ENROLLED");
     }
     // Sin enrolledCard: dejamos currentSelection en null. El cliente elige.
   }
@@ -134,7 +151,7 @@ export class PaymentMethodComponent {
     this.currentSelection.set(selection);
     this.emitSelection(selection);
 
-    if (selection === 'ADD_CARD' && !this.flowToken()) {
+    if (selection === "ADD_CARD" && !this.flowToken()) {
       this.enrollmentRequested.emit();
     }
   }
@@ -142,17 +159,17 @@ export class PaymentMethodComponent {
   private emitSelection(selection: PaymentSelection): void {
     let flowMethod: FlowPaymentMethod;
     switch (selection) {
-      case 'CARD_ENROLLED':
+      case "CARD_ENROLLED":
         flowMethod = FlowPaymentMethod.CARD_ENROLLED;
         break;
-      case 'ADD_CARD':
-      case 'CARD_PORTAL':
+      case "ADD_CARD":
+      case "CARD_PORTAL":
         // Ambos son tarjeta de crédito/débito desde la perspectiva de Flow.
         // La diferencia (charge síncrono vs portal) la decide el parent
         // según `selection` al construir el body del checkout.
         flowMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
         break;
-      case 'YAPE':
+      case "YAPE":
         flowMethod = FlowPaymentMethod.YAPE;
         break;
     }

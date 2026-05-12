@@ -1,16 +1,15 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MetaAnalyticsService } from '../../services/meta-analytics.service';
-import { PixelInitializationService } from '../../services/pixel-initialization.service';
-import { TiktokAnalyticsService } from '../../services/tiktok-analytics.service';
+import { Component, inject } from "@angular/core";
 
+import { FormsModule } from "@angular/forms";
+import { MetaAnalyticsService } from "../../services/meta-analytics.service";
+import { PixelInitializationService } from "../../services/pixel-initialization.service";
+import { TiktokAnalyticsService } from "../../services/tiktok-analytics.service";
 
 @Component({
-    selector: 'app-pixel-testing',
-    imports: [CommonModule, FormsModule],
-    templateUrl: './pixel-testing.component.html',
-    styleUrls: ['./pixel-testing.component.css']
+  selector: "app-pixel-testing",
+  imports: [FormsModule],
+  templateUrl: "./pixel-testing.component.html",
+  styleUrls: ["./pixel-testing.component.css"],
 })
 export class PixelTestingComponent {
   private tiktokService = inject(TiktokAnalyticsService);
@@ -20,24 +19,24 @@ export class PixelTestingComponent {
   // Estado de los pixels
   pixelsStatus = {
     tiktok: false,
-    meta: false
+    meta: false,
   };
 
   metaStatus = {
     initialized: false,
     enabled: false,
-    pixelId: ''
+    pixelId: "",
   };
 
   // Datos de prueba para formularios
   testData = {
-    email: 'test@example.com',
-    phone: '+51987654321',
-    externalId: 'user123',
-    productId: 'creatina-250gr',
-    productName: 'Creatina 250gr',
+    email: "test@example.com",
+    phone: "+51987654321",
+    externalId: "user123",
+    productId: "creatina-250gr",
+    productName: "Creatina 250gr",
     value: 55,
-    currency: 'PEN'
+    currency: "PEN",
   };
 
   // Logs de eventos
@@ -58,104 +57,122 @@ export class PixelTestingComponent {
     this.tiktokService.identify({
       email: this.testData.email,
       phone_number: this.testData.phone,
-      external_id: this.testData.externalId
+      external_id: this.testData.externalId,
     });
-    this.addLog('TikTok - Identify enviado con datos hasheados');
+    this.addLog("TikTok - Identify enviado con datos hasheados");
   }
 
   testTikTokViewContent() {
     this.tiktokService.trackViewContent({
-      contents: [{
-        content_id: this.testData.productId,
-        content_type: 'product',
-        content_name: this.testData.productName
-      }],
+      contents: [
+        {
+          content_id: this.testData.productId,
+          content_type: "product",
+          content_name: this.testData.productName,
+        },
+      ],
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
     this.addLog(`TikTok - ViewContent: ${this.testData.productName}`);
   }
 
   testTikTokAddToCart() {
     this.tiktokService.trackAddToCart({
-      contents: [{
-        content_id: this.testData.productId,
-        content_type: 'product',
-        content_name: this.testData.productName
-      }],
+      contents: [
+        {
+          content_id: this.testData.productId,
+          content_type: "product",
+          content_name: this.testData.productName,
+        },
+      ],
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog(`TikTok - AddToCart: ${this.testData.productName} - ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `TikTok - AddToCart: ${this.testData.productName} - ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testTikTokInitiateCheckout() {
     this.tiktokService.trackInitiateCheckout({
-      contents: [{
-        content_id: this.testData.productId,
-        content_type: 'product',
-        content_name: this.testData.productName
-      }],
+      contents: [
+        {
+          content_id: this.testData.productId,
+          content_type: "product",
+          content_name: this.testData.productName,
+        },
+      ],
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog(`TikTok - InitiateCheckout: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `TikTok - InitiateCheckout: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testTikTokCompleteRegistration() {
     this.tiktokService.trackCompleteRegistration({
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog('TikTok - CompleteRegistration');
+    this.addLog("TikTok - CompleteRegistration");
   }
 
   testTikTokPurchase() {
     this.tiktokService.trackPurchase({
-      contents: [{
-        content_id: this.testData.productId,
-        content_type: 'product',
-        content_name: this.testData.productName
-      }],
+      contents: [
+        {
+          content_id: this.testData.productId,
+          content_type: "product",
+          content_name: this.testData.productName,
+        },
+      ],
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog(`TikTok - Purchase: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `TikTok - Purchase: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testTikTokStartTrial() {
-    this.tiktokService.trackCustomEvent('StartTrial', {
+    this.tiktokService.trackCustomEvent("StartTrial", {
       value: 0,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog('TikTok - StartTrial: Free trial iniciado');
+    this.addLog("TikTok - StartTrial: Free trial iniciado");
   }
 
   testTikTokSubscribe() {
-    this.tiktokService.trackCustomEvent('Subscribe', {
+    this.tiktokService.trackCustomEvent("Subscribe", {
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog(`TikTok - Subscribe: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `TikTok - Subscribe: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testTikTokAddPaymentInfo() {
-    this.tiktokService.trackCustomEvent('AddPaymentInfo', {
+    this.tiktokService.trackCustomEvent("AddPaymentInfo", {
       currency: this.testData.currency,
-      value: this.testData.value
+      value: this.testData.value,
     });
-    this.addLog(`TikTok - AddPaymentInfo: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `TikTok - AddPaymentInfo: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   // ==================== Meta Events ====================
 
   testMetaViewContent() {
-    this.metaService.trackCustomEvent('ViewContent', {
+    this.metaService.trackCustomEvent("ViewContent", {
       content_name: this.testData.productName,
       content_ids: [this.testData.productId],
-      content_type: 'product',
+      content_type: "product",
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
     this.addLog(`Meta - ViewContent: ${this.testData.productName}`);
   }
@@ -164,11 +181,13 @@ export class PixelTestingComponent {
     this.metaService.trackAddToCart({
       content_name: this.testData.productName,
       content_ids: [this.testData.productId],
-      content_type: 'product',
+      content_type: "product",
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog(`Meta - AddToCart: ${this.testData.productName} - ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `Meta - AddToCart: ${this.testData.productName} - ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testMetaInitiateCheckout() {
@@ -177,28 +196,30 @@ export class PixelTestingComponent {
       contents: [{ id: this.testData.productId, quantity: 1 }],
       value: this.testData.value,
       currency: this.testData.currency,
-      num_items: 1
+      num_items: 1,
     });
-    this.addLog(`Meta - InitiateCheckout: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `Meta - InitiateCheckout: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testMetaAddPaymentInfo() {
     this.metaService.trackAddPaymentInfo({
       content_ids: [this.testData.productId],
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog('Meta - AddPaymentInfo');
+    this.addLog("Meta - AddPaymentInfo");
   }
 
   testMetaCompleteRegistration() {
     this.metaService.trackCompleteRegistration({
-      content_name: 'Registro completado',
+      content_name: "Registro completado",
       status: true,
       value: this.testData.value,
-      currency: this.testData.currency
+      currency: this.testData.currency,
     });
-    this.addLog('Meta - CompleteRegistration');
+    this.addLog("Meta - CompleteRegistration");
   }
 
   testMetaPurchase() {
@@ -207,29 +228,35 @@ export class PixelTestingComponent {
       contents: [{ id: this.testData.productId, quantity: 1 }],
       value: this.testData.value,
       currency: this.testData.currency,
-      num_items: 1
+      num_items: 1,
     });
-    this.addLog(`Meta - Purchase: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `Meta - Purchase: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testMetaStartTrial() {
     this.metaService.trackStartTrial({
-      content_name: 'Trial de Creatina',
+      content_name: "Trial de Creatina",
       value: this.testData.value,
       currency: this.testData.currency,
-      predicted_ltv: 300
+      predicted_ltv: 300,
     });
-    this.addLog(`Meta - StartTrial: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `Meta - StartTrial: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   testMetaSubscribe() {
     this.metaService.trackSubscribe({
-      content_name: 'Suscripción Creatina Mensual',
+      content_name: "Suscripción Creatina Mensual",
       value: this.testData.value,
       currency: this.testData.currency,
-      predicted_ltv: 660
+      predicted_ltv: 660,
     });
-    this.addLog(`Meta - Subscribe: ${this.testData.currency} ${this.testData.value}`);
+    this.addLog(
+      `Meta - Subscribe: ${this.testData.currency} ${this.testData.value}`,
+    );
   }
 
   // ==================== Utilidades ====================
@@ -256,7 +283,7 @@ export class PixelTestingComponent {
     setTimeout(() => this.testTikTokStartTrial(), 3000);
     setTimeout(() => this.testTikTokSubscribe(), 3500);
     setTimeout(() => this.testTikTokPurchase(), 4000);
-    this.addLog('🚀 Ejecutando todos los eventos de TikTok en secuencia...');
+    this.addLog("🚀 Ejecutando todos los eventos de TikTok en secuencia...");
   }
 
   testAllMetaEvents() {
@@ -268,6 +295,6 @@ export class PixelTestingComponent {
     setTimeout(() => this.testMetaStartTrial(), 2500);
     setTimeout(() => this.testMetaSubscribe(), 3000);
     setTimeout(() => this.testMetaPurchase(), 3500);
-    this.addLog('🚀 Ejecutando todos los eventos de Meta en secuencia...');
+    this.addLog("🚀 Ejecutando todos los eventos de Meta en secuencia...");
   }
 }

@@ -27,7 +27,7 @@ import { VerificationPaymentModalService } from '../../../../shared/services/ver
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { CheckoutSubscriptionService } from '../../../../shared/services/checkout-subscription.service';
-import { CheckoutSubscriptionRequest, ChargeReference } from '../../../../shared/interfaces/checkout-subscription.interfaces';
+import { CheckoutSubscriptionRequest, ChargeReference, ValidateCardReason } from '../../../../shared/interfaces/checkout-subscription.interfaces';
 import { SubscriptionCouponService } from '../../../../shared/services/subscription-coupon.service';
 import { SubscriptionCouponAppliesTo, SubscriptionDiscountType } from '../../../../shared/interfaces/subscription-coupon.interfaces';
 import { ProductService } from '../../../../shared/services/product.service';
@@ -704,18 +704,81 @@ export class VerificationPaymentComponent {
   }
 
   cardAddedSuccessfully($event: boolean) {
-    if ($event) {
-      this.trackAddPaymentInfo();
-      setTimeout(() => {
-        this.isPaymentVerified.set(true);
-      }, 2000);
-      const card = this._summaryService.getSummary()?.userData?.last4CardDigits + ' (' + this._summaryService.getSummary()?.userData?.creditCardType + ')';
-      this.labelCardRegisted.update(label => label + card);
-      this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted());
-    }
-    else {
+    if (!$event) {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
+      return;
     }
+
+    this.trackAddPaymentInfo();
+    const userData = this._summaryService.getSummary()?.userData;
+    const card = userData?.last4CardDigits + ' (' + userData?.creditCardType + ')';
+    this.labelCardRegisted.update(label => label + card);
+
+    // Validar que la tarjeta sea de CRÉDITO antes de habilitar pago.
+    // Flow no soporta cobro recurrente confiable de débito → si dejamos
+    // pasar, el primer cargo funcionaría pero el cobro mensual fallaría.
+    // El service hace 3 reintentos con backoff antes de fallar.
+    const customerId = userData?.customerId;
+    if (!customerId) {
+      // Edge case: tarjeta registrada sin customerId — best-effort.
+      console.warn('Tarjeta registrada sin customerId — saltando validación de pay_mode');
+      this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted());
+      setTimeout(() => this.isPaymentVerified.set(true), 2000);
+      return;
+    }
+
+    this._checkoutSubscriptionService.validateCard(customerId).subscribe({
+      next: response => {
+        const data = response.data;
+        if (data.allowed) {
+          this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted());
+          setTimeout(() => this.isPaymentVerified.set(true), 2000);
+          return;
+        }
+        // No permitida: mostrar mensaje según razón y bloquear pago.
+        this.handleCardNotAllowed(data.reason);
+      },
+      error: err => {
+        // Tras 3 reintentos fallidos del service, dejamos pasar
+        // (best-effort) para no bloquear al cliente por un error
+        // transitorio del backend. Si la tarjeta era débito, el cobro
+        // mensual fallará después y soporte intervendrá.
+        console.warn('validateCard falló tras 3 reintentos — permitiendo continuar (best-effort)', err);
+        this._toastService.success('Tarjeta registrada correctamente!', this.labelCardRegisted());
+        setTimeout(() => this.isPaymentVerified.set(true), 2000);
+      },
+    });
+  }
+
+  /**
+   * Maneja el caso en que `validateCard` retorna `allowed: false`.
+   * Resetea el widget Flow para que el cliente pueda registrar otra
+   * tarjeta (de crédito) sin recargar la página.
+   */
+  private handleCardNotAllowed(reason: ValidateCardReason | undefined): void {
+    switch (reason) {
+      case 'DEBIT_NOT_ALLOWED':
+        this._toastService.error(
+          'Tarjeta de débito no aceptada',
+          'Solo aceptamos tarjetas de crédito para suscripciones. Por favor, registra una tarjeta de crédito.',
+        );
+        break;
+      case 'NO_CARD':
+        this._toastService.error(
+          'No detectamos tu tarjeta',
+          'Hubo un problema al registrar tu tarjeta. Intenta nuevamente.',
+        );
+        break;
+      case 'UNKNOWN_PAY_MODE':
+      default:
+        this._toastService.error(
+          'Tarjeta no soportada',
+          'Tu tarjeta no es compatible con suscripciones. Intenta con una tarjeta de crédito.',
+        );
+        break;
+    }
+    // Resetear el widget para que el cliente registre otra tarjeta.
+    this.resetPaymentVerification();
   }
 
   registerUserFlowAndRegisterCard() {

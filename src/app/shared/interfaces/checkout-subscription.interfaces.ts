@@ -87,3 +87,31 @@ export interface CheckoutSubscriptionResponse {
   status: string;
   data: CheckoutSubscriptionResponseData;
 }
+
+/**
+ * Resultado de la validación de la tarjeta enrolada del customer.
+ * El backend (`GET /api/v1/checkout/subscription/validate-card`) consulta
+ * el `pay_mode` que Flow asigna a la tarjeta y decide si el customer
+ * puede usarla para una suscripción recurrente.
+ *
+ * Solo permitimos tarjetas de CRÉDITO porque Flow no cobra recurrente
+ * de débito de forma confiable. El frontend usa `allowed` + `reason`
+ * para bloquear el flujo si la tarjeta no califica.
+ */
+export type ValidateCardReason =
+  | 'DEBIT_NOT_ALLOWED'
+  | 'NO_CARD'
+  | 'UNKNOWN_PAY_MODE';
+
+export interface ValidateCardResponseData {
+  allowed: boolean;
+  pay_mode: string;
+  brand?: string;
+  last4?: string;
+  reason?: ValidateCardReason;
+}
+
+export interface ValidateCardResponse {
+  status: string;
+  data: ValidateCardResponseData;
+}

@@ -1,4 +1,5 @@
-import { Component, inject, input, InputSignal, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -7,7 +8,6 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { CartComponent } from '../../../../shared/ui/cart/cart.component';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
-import { Subscription } from 'rxjs';
 import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 import { BlackFridayBarComponent } from '../../../../shared/ui/black-friday-bar/black-friday-bar.component';
 import { environment } from '../../../../../environments/env';
@@ -46,15 +46,15 @@ import { environment } from '../../../../../environments/env';
         ])
     ]
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   isCheckout = input.required<boolean>();
-  
+
   private readonly _shoppingCartService = inject(ShoppingCartService);
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
   private readonly _elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
-  private _subscriptions: Subscription[] = [];
+  private readonly destroyRef = inject(DestroyRef);
   
   isLoading = false;
   showCart = 'inactivate';
@@ -71,30 +71,30 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ENV = environment
 
   ngOnInit(): void {
-    this._subscriptions.push(
-      this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
+    this._shoppingCartService.shoppingCart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(shoppingCart => {
         this.numItemsCart = this._shoppingCartService.getTotalItemsByShoppingCart(shoppingCart);
         this.cartState = this.cartState === 'start' ? 'end' : 'start';
         setTimeout(() => {
           this.cartState = 'start';
           this._cdr.detectChanges();
         }, 500);
-      }),
+      });
 
-      this._authService.currentUser$.subscribe(user => {
+    this._authService.currentUser$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
         this.user = user;
         this._cdr.detectChanges();
-      }),
+      });
 
-      this._authService.isAuthenticated$.subscribe(isAuth => {
+    this._authService.isAuthenticated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isAuth => {
         this.isAuthenticated = isAuth;
         this._cdr.detectChanges();
-      })
-    );
-  }
-
-  ngOnDestroy(): void {
-    this._subscriptions.forEach(sub => sub.unsubscribe());
+      });
   }
 
   @HostListener('document:click', ['$event'])
@@ -117,12 +117,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this._authService.logout().subscribe({
-      next: () => {
-        this.isUserMenuOpen = false;
-        this._router.navigate(['/']);
-      }
-    });
+    this._authService.logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isUserMenuOpen = false;
+          this._router.navigate(['/']);
+        }
+      });
   }
 }
 

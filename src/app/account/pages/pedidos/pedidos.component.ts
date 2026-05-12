@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { OrderService } from '../../../shared/services/order.service';
@@ -13,18 +14,18 @@ import { environment } from '../../../../environments/env';
 import { SeoService } from '../../../shared/services/seo.service';
 import { CardComponent } from '../../../shared/ui/card/card.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
-import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { StepComponent } from '../../../ecommerce/signup/components/step/step.component';
 
 @Component({
     selector: 'app-pedidos',
-    imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, SpinnerComponent, StepComponent],
+    imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, StepComponent],
     templateUrl: './pedidos.component.html'
 })
 export class PedidosComponent implements OnInit {
   private _flowService = inject(FlowService);
   private _authService = inject(AuthService);
   private _seoService = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
   ENV = environment;
   pedidos = signal<OrderResponse[]>([]);
   isLoading = signal<boolean>(true);
@@ -111,7 +112,8 @@ export class PedidosComponent implements OnInit {
             }
           } as OrderListResponse);
         }),
-        finalize(() => this.isLoading.set(false))
+        finalize(() => this.isLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         console.log(response);
         this.pedidos.set(response.data.orders);
@@ -139,7 +141,8 @@ export class PedidosComponent implements OnInit {
             }
           } as OrderListResponse);
         }),
-        finalize(() => this.isLoading.set(false))
+        finalize(() => this.isLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         this.pedidos.set(response.data.orders);
         this.totalPages.set(response.data.pagination.totalPages);
@@ -162,7 +165,9 @@ export class PedidosComponent implements OnInit {
 
   cancelarPedido(orderId: string): void {
     if (confirm('¿Estás seguro que deseas cancelar este pedido?')) {
-      this.orderService.cancelOrder(orderId).subscribe({
+      this.orderService.cancelOrder(orderId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
         next: () => {
           this.cargarPedidos();
         },
@@ -341,7 +346,9 @@ export class PedidosComponent implements OnInit {
     let createPaymentRequest = this.createPaymentRequest(totalAmount, orderNumber);
     createPaymentRequest.commerceOrder = orderId;
 
-    this._flowService.createPayment(createPaymentRequest).subscribe({
+    this._flowService.createPayment(createPaymentRequest)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (paymentResponse) => {
         window.location.href = paymentResponse.url + '?token=' + paymentResponse.token;
       },

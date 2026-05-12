@@ -5,11 +5,10 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { Router } from '@angular/router';
-import { Information, InformationComponent } from '../../components/information/information.component';
+import { Information } from '../../components/information/information.component';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
-import { PaymentMethodComponent } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
@@ -38,7 +37,7 @@ import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analy
 
 @Component({
     selector: 'app-verification-payment',
-    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
+    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
     templateUrl: './verification-payment.component.html'
 })
 export class VerificationPaymentComponent {

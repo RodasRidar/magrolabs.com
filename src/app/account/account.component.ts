@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, HostListener } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject, HostListener } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   Router,
   RouterLinkActive,
@@ -24,6 +25,7 @@ export class AccountComponent implements OnInit {
   private _userService = inject(UserService);
   private _creditTransactionService = inject(CreditTransactionService);
   private _loyaltyService = inject(LoyaltyService);
+  private destroyRef = inject(DestroyRef);
 
   user: UserDetailResponse | null = null;
   isMobileMenuOpen = false;
@@ -89,29 +91,33 @@ export class AccountComponent implements OnInit {
   }
 
   logout() {
-    this._authService.logout().subscribe({
-      next: () => {
-        this._router.navigate(["/login"]);
-      },
-      error: (error) => {
-        console.error("Error al cerrar sesión:", error);
-      },
-    });
+    this._authService.logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this._router.navigate(["/login"]);
+        },
+        error: (error) => {
+          console.error("Error al cerrar sesión:", error);
+        },
+      });
   }
 
   private loadUserData() {
-    this._userService.getCurrentUser().subscribe({
-      next: (user) => {
-        console.log("user", user);
-        this.user = user;
-        // Cargar créditos y tier después de obtener el usuario
-        this.loadUserCredits();
-        this.loadUserTier();
-      },
-      error: (error) => {
-        console.error("Error al cargar datos del usuario:", error);
-      },
-    });
+    this._userService.getCurrentUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          console.log("user", user);
+          this.user = user;
+          // Cargar créditos y tier después de obtener el usuario
+          this.loadUserCredits();
+          this.loadUserTier();
+        },
+        error: (error) => {
+          console.error("Error al cargar datos del usuario:", error);
+        },
+      });
   }
 
   private loadUserCredits() {
@@ -119,18 +125,20 @@ export class AccountComponent implements OnInit {
     const userId = this.user?.id;
 
     if (userId) {
-      this._creditTransactionService.getTotalCredits(userId).subscribe({
-        next: (response) => {
-          if (response?.data?.totalCredits) {
-            this.totalCredits = response.data.totalCredits;
-          }
-          this.isLoadingCredits = false;
-        },
-        error: (error) => {
-          console.error("Error al obtener créditos del usuario:", error);
-          this.isLoadingCredits = false;
-        },
-      });
+      this._creditTransactionService.getTotalCredits(userId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (response) => {
+            if (response?.data?.totalCredits) {
+              this.totalCredits = response.data.totalCredits;
+            }
+            this.isLoadingCredits = false;
+          },
+          error: (error) => {
+            console.error("Error al obtener créditos del usuario:", error);
+            this.isLoadingCredits = false;
+          },
+        });
     } else {
       this.isLoadingCredits = false;
     }
@@ -141,20 +149,22 @@ export class AccountComponent implements OnInit {
     const userId = this.user?.id;
 
     if (userId) {
-      this._loyaltyService.getUserTierInfo(userId).subscribe({
-        next: (tierInfo) => {
-          this.tierImageRoutes = tierInfo.imageRoutes;
-          this.tierDisplayName = tierInfo.displayName;
-          this.isLoadingTier = false;
-        },
-        error: (error) => {
-          console.error("Error al obtener tier del usuario:", error);
-          // Mantener valores por defecto en caso de error
-          this.tierImageRoutes = null;
-          this.tierDisplayName = "MagroPoints";
-          this.isLoadingTier = false;
-        },
-      });
+      this._loyaltyService.getUserTierInfo(userId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (tierInfo) => {
+            this.tierImageRoutes = tierInfo.imageRoutes;
+            this.tierDisplayName = tierInfo.displayName;
+            this.isLoadingTier = false;
+          },
+          error: (error) => {
+            console.error("Error al obtener tier del usuario:", error);
+            // Mantener valores por defecto en caso de error
+            this.tierImageRoutes = null;
+            this.tierDisplayName = "MagroPoints";
+            this.isLoadingTier = false;
+          },
+        });
     } else {
       this.isLoadingTier = false;
     }

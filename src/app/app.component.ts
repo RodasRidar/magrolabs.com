@@ -1,5 +1,6 @@
-import { afterNextRender, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { afterNextRender, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
@@ -23,6 +24,7 @@ export class AppComponent {
   private _hotjar = inject(HotjarService);
   private _pixelInitialization = inject(PixelInitializationService);
   private moduleRetryService = inject(ModuleRetryService);
+  private destroyRef = inject(DestroyRef);
   title = 'Magrolabs';
   ENV = environment;
   isButtonVisible = false;
@@ -47,7 +49,10 @@ export class AppComponent {
 
   ngOnInit() {
     this._router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe((e) => {
         const url = e.urlAfterRedirects ?? e.url;
 

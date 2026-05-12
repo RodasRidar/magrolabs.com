@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "../../../../../environments/env";
@@ -18,6 +19,7 @@ import { SeoService } from "../../../../shared/services/seo.service";
 export class MiPrimeraCreatinaComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private seoService = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
 
   lote = signal<string>("");
   ENV = environment;
@@ -25,9 +27,11 @@ export class MiPrimeraCreatinaComponent implements OnInit {
 
   ngOnInit(): void {
     // Obtener el parámetro de query 'lote'
-    this.route.queryParams.subscribe((params) => {
-      this.lote.set(params["lote"] || "");
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        this.lote.set(params["lote"] || "");
+      });
 
     this.configureSeo();
   }

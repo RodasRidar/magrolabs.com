@@ -8,12 +8,11 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/env';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
-import { LoyaltyTier, LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
+import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
 import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
 import { CardComponent } from '../../../shared/ui/card/card.component';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
-import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 interface TransactionHistoryItem {
   date: Date;
@@ -24,7 +23,7 @@ interface TransactionHistoryItem {
 
 @Component({
     selector: 'app-credito',
-    imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent, SpinnerComponent],
+    imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent],
     templateUrl: './credito.component.html',
     styleUrl: './credito.component.css'
 })

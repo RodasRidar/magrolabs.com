@@ -1,4 +1,5 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StepItemComponent } from './step-item/step-item.component';
 import { StepEnum } from '../../models/step.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
@@ -15,6 +16,7 @@ export type StepState = 'past' | 'current' | 'future';
 })
 export class StepComponent {
   private _summaryService = inject(SummaryService);
+  private destroyRef = inject(DestroyRef);
 
   stepEnum = StepEnum;
 
@@ -44,7 +46,9 @@ export class StepComponent {
 
   // ── lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit(): void {
-    this._summaryService.summaryState$.subscribe((summary) => {
+    this._summaryService.summaryState$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((summary) => {
       const summarySelection = summary?.chosePlan?.selection;
       if (
         environment.campanaPrimeraCreatina.tipo === 'gratis' &&

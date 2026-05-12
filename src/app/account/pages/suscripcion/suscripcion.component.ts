@@ -31,11 +31,10 @@ import { SeoService } from '../../../shared/services/seo.service';
 import { AlertComponent } from '../../../shared/ui/alert/alert.component';
 import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
-import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 @Component({
     selector: 'app-suscripcion',
-    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, SpinnerComponent, CardComponent, InlineModalComponent],
+    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, CardComponent, InlineModalComponent],
     templateUrl: './suscripcion.component.html',
     styleUrl: './suscripcion.component.css'
 })

@@ -1,51 +1,59 @@
-import { Injectable, ApplicationRef, ComponentFactoryResolver, Injector } from '@angular/core';
-import { ToastComponent } from '../ui/toast/toast.component';
+import {
+  ApplicationRef,
+  ComponentRef,
+  EnvironmentInjector,
+  Injectable,
+  createComponent,
+  inject,
+} from '@angular/core';
 import { Subject } from 'rxjs';
+import { ToastComponent } from '../ui/toast/toast.component';
+
+const AUTO_DISMISS_MS = 5000;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private toastClosed$ = new Subject<void>();
-
-  constructor(
-    private appRef: ApplicationRef,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private injector: Injector
-  ) {}
+  private readonly appRef = inject(ApplicationRef);
+  private readonly environmentInjector = inject(EnvironmentInjector);
+  private readonly toastClosed$ = new Subject<void>();
 
   showToast(
     type: 'success' | 'error' | 'warning' | 'info',
     message: string,
-    title: string
+    title: string,
   ): void {
-    // Crear dinámicamente el componente ToastComponent
-    const factory = this.componentFactoryResolver.resolveComponentFactory(ToastComponent);
-    const componentRef = factory.create(this.injector);
+    // API moderna (Angular 14+): createComponent reemplaza ComponentFactoryResolver.
+    const componentRef: ComponentRef<ToastComponent> = createComponent(ToastComponent, {
+      environmentInjector: this.environmentInjector,
+    });
 
-    // Configurar las propiedades del componente
     componentRef.instance.type = type;
     componentRef.instance.message = message;
     componentRef.instance.title = title;
 
-    // Manejar el cierre del toast
-    componentRef.instance.onClose.subscribe(() => {
+    // Cleanup centralizado: corre una sola vez por toast, sin importar el origen
+    // (click del usuario, timeout o navegación que destruye el host).
+    let disposed = false;
+    const dispose = () => {
+      if (disposed) return;
+      disposed = true;
+      clearTimeout(autoTimer);
+      closeSub.unsubscribe();
       this.appRef.detachView(componentRef.hostView);
       componentRef.destroy();
-      this.toastClosed$.next(); // Emitir evento de cierre
-    });
+      this.toastClosed$.next();
+    };
 
-    // Añadir el componente al DOM
+    const closeSub = componentRef.instance.onClose.subscribe(() => dispose());
+    const autoTimer = setTimeout(dispose, AUTO_DISMISS_MS);
+
     this.appRef.attachView(componentRef.hostView);
-    const domElement = (componentRef.hostView as any).rootNodes[0];
-    document.body.appendChild(domElement);
-
-    // Opcional: Auto-destruir el toast después de un tiempo
-    setTimeout(() => {
-      this.appRef.detachView(componentRef.hostView);
-      componentRef.destroy();
-      this.toastClosed$.next(); // Emitir evento de cierre
-    }, 5000); // 5 segundos
+    const domElement = (componentRef.hostView as unknown as { rootNodes: Node[] }).rootNodes[0];
+    if (domElement) {
+      document.body.appendChild(domElement);
+    }
   }
 
   success(title: string, message: string): void {
@@ -64,7 +72,7 @@ export class ToastService {
     this.showToast('info', message, title);
   }
 
-  // Método para suscribirse al evento de cierre del toast
+  /** Observable que emite cada vez que se cierra un toast. */
   onToastClosed() {
     return this.toastClosed$.asObservable();
   }

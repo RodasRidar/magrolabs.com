@@ -1,5 +1,6 @@
 import { NgOptimizedImage, CurrencyPipe, CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ItemShoppingCart, ShoppingCart } from '../../../../../shared/models/item-cart.model';
 import { DiscountPipe } from '../../../../../shared/pipes/discount.pipe';
@@ -19,23 +20,28 @@ export class OrderSummaryItemComponent {
 
   shoppingCart: ShoppingCart = <ShoppingCart>{};
   private readonly _shoppingCartService = inject(ShoppingCartService);
+  private destroyRef = inject(DestroyRef);
 
   state = 'active';
 
 
   ngOnInit() {
-    this._shoppingCartService.cartState$.subscribe(state => {
-      state ? this.state = 'active' : this.state = 'inactive';
-    });
-    this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
-      if (shoppingCart && shoppingCart.items.length > 0) {
-        this.shoppingCart = shoppingCart;
-        this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
-        this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
-      }
-    })
+    this._shoppingCartService.cartState$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(state => {
+        state ? this.state = 'active' : this.state = 'inactive';
+      });
+    this._shoppingCartService.shoppingCart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(shoppingCart => {
+        if (shoppingCart && shoppingCart.items.length > 0) {
+          this.shoppingCart = shoppingCart;
+          this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
+        }
+      })
   }
 
   quantityValue(value: number) {

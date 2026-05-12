@@ -1,11 +1,13 @@
 import {
   Component,
+  DestroyRef,
   Input,
   OnInit,
   inject,
   output,
   signal,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { ReviewService } from "../../services/review.service";
 import { SinceDatePipe } from "../../pipes/since-date.pipe";
@@ -109,6 +111,7 @@ export class ReviewsListComponent implements OnInit {
 
   private _reviewService = inject(ReviewService);
   private _toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
   allReviews: Review[] = [];
   isLoading = false;
@@ -182,7 +185,9 @@ export class ReviewsListComponent implements OnInit {
     this.isLoading = true;
 
     // Obtener reviews de la API
-    this._reviewService.getReviewsByProduct(this.productId, true).subscribe({
+    this._reviewService.getReviewsByProduct(this.productId, true)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (response) => {
         // Combinar reviews de la API con las estáticas
         const apiReviews = response.data.reviews || [];

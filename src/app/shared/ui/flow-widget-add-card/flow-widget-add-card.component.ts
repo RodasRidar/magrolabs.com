@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, Inject, input, OnDestroy, output, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, Inject, input, OnDestroy, output, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../../environments/env';
 import { FlowService } from '../../services/flow.service';
 import { SummaryService } from '../../services/summary-service.service';
@@ -19,6 +20,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
   private _flowService = inject(FlowService);
   private _summaryService = inject(SummaryService);
   private _authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private el: ElementRef,
@@ -64,7 +66,9 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
           // console.log('Suscripción procesada correctamente:', data);
           const customerId = this._summaryService.getSummary()?.userData?.customerId 
           ?? this._authService.getCurrentUser()?.flowCustomerId ?? '';
-          this._flowService.getCustomer(customerId).subscribe((customer) => {
+          this._flowService.getCustomer(customerId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((customer) => {
             if (customer.last4CardDigits !== '') {
               const usrData = this._summaryService.getSummary()?.userData;
               if(usrData){

@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, signal, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
@@ -37,6 +38,7 @@ export class ConfirmationComponent {
   private _orderService = inject(OrderService)
   private _authService = inject(AuthService)
   private readonly platformId = inject(PLATFORM_ID)
+  private destroyRef = inject(DestroyRef)
 
   ENV = environment
   confirmationStatusEnum = ConfirmationStatus
@@ -110,7 +112,7 @@ export class ConfirmationComponent {
     this._seo.setCanonicalURL('magrolabs.com/registro/confirmacion');
     this._seo.setIndexFollow(false);
 
-    this._route.queryParams.subscribe(params => {
+    this._route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const status = params['status'] ?? (isPlatformBrowser(this.platformId) ? localStorage.getItem('status') : null);
       const orderIdParam: string | null = params['orderId'] ?? null;
       const isAuthenticated = this._authService.isAuthenticated();
@@ -165,7 +167,8 @@ export class ConfirmationComponent {
       catchError(err => {
         console.warn('No se pudo hidratar detalles de la orden — se usa UI minimalista', err);
         return of(null);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(detail => {
       this.loadingOrder.set(false);
       const orderResp = (detail as any)?.data?.order ?? null;
@@ -397,6 +400,7 @@ export class ConfirmationComponent {
     }
 
     this._emailService.sendWelcomeEmailWithValidation(userEmail)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           console.log('Email de bienvenida enviado exitosamente:', response);
@@ -420,6 +424,7 @@ export class ConfirmationComponent {
     }
 
     this._emailService.sendOrderConfirmationEmailWithValidation(userEmail)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           console.log('Email de confirmación de orden enviado exitosamente:', response);

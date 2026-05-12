@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../../../environments/env';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -16,6 +17,7 @@ import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordio
 })
 export class ReferidoPorAmigoComponent {
   private _route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   ENV = environment;
   navbarTypeEnum = NavbarTypeEnum
@@ -24,7 +26,7 @@ export class ReferidoPorAmigoComponent {
   isRefered = false;
 
   ngOnInit(){
-    this._route.queryParams.subscribe(param => {
+    this._route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(param => {
       this.ref = param['codigo'] || '';
       this.name = param['nombre'] || '';
       if(this.isReferedValid()){

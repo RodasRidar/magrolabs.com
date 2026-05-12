@@ -1,5 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, computed, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/accordion-group.component';
@@ -38,6 +39,7 @@ export class ClothingComponent implements OnInit {
   private _loyaltyService = inject(LoyaltyService);
   private _userService = inject(UserService);
   private _loyaltyProductService = inject(LoyaltyProductService);
+  private destroyRef = inject(DestroyRef);
 
   // Signals para el estado del componente
   readonly slug = signal<string>('');
@@ -169,17 +171,20 @@ export class ClothingComponent implements OnInit {
     this.slug.set(slugFromRoute);
     this.isLoadingProduct.set(true);
 
-    this._loyaltyProductService.getBySlug(slugFromRoute).subscribe({
-      next: r => {
-        this.currentProduct.set(r.data.loyaltyProduct);
-        this.isLoadingProduct.set(false);
-      },
-      error: err => {
-        console.error(`Product not found for slug: ${slugFromRoute}`, err);
-        this.currentProduct.set(null);
-        this.isLoadingProduct.set(false);
-      },
-    });
+    this._loyaltyProductService
+      .getBySlug(slugFromRoute)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: r => {
+          this.currentProduct.set(r.data.loyaltyProduct);
+          this.isLoadingProduct.set(false);
+        },
+        error: err => {
+          console.error(`Product not found for slug: ${slugFromRoute}`, err);
+          this.currentProduct.set(null);
+          this.isLoadingProduct.set(false);
+        },
+      });
   }
 
   /**
@@ -191,14 +196,18 @@ export class ClothingComponent implements OnInit {
     this.currentUser.set(this.authService.getCurrentUser());
 
     // Suscribirse a cambios en el estado de autenticación
-    this.authService.isAuthenticated$.subscribe(isAuth => {
-      this.isAuthenticated.set(isAuth);
-    });
+    this.authService.isAuthenticated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isAuth => {
+        this.isAuthenticated.set(isAuth);
+      });
 
     // Suscribirse a cambios en el usuario actual
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser.set(user);
-    });
+    this.authService.currentUser$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        this.currentUser.set(user);
+      });
   }
 
   /**
@@ -214,7 +223,8 @@ export class ClothingComponent implements OnInit {
         this.creditsError.set('Error al cargar los créditos');
         return of(null);
       }),
-      finalize(() => this.isLoadingCredits.set(false))
+      finalize(() => this.isLoadingCredits.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(response => {
       if (response && response.status === 'success') {
         const credits = parseFloat(response.data.totalCredits) || 0;
@@ -245,38 +255,42 @@ export class ClothingComponent implements OnInit {
   }
 
     private loadUserData() {
-    this._userService.getCurrentUser().subscribe({
-      next: (user) => {
-        console.log('user', user);
-        this.user = user;
-        // Cargar créditos y tier después de obtener el usuario
-        this.loadUserTier();
-      },
-      error: (error) => {
-        console.error('Error al cargar datos del usuario:', error);
-      }
-    });
+    this._userService.getCurrentUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          console.log('user', user);
+          this.user = user;
+          // Cargar créditos y tier después de obtener el usuario
+          this.loadUserTier();
+        },
+        error: (error) => {
+          console.error('Error al cargar datos del usuario:', error);
+        }
+      });
   }
 
     private loadUserTier() {
     this.isLoadingTier = true;
     const userId = this.user?.id;
-    
+
     if (userId) {
-      this._loyaltyService.getUserTierInfo(userId).subscribe({
-        next: (tierInfo) => {
-          this.tierImageRoutes = tierInfo.imageRoutes;
-          this.tierDisplayName.set(tierInfo.displayName.toLocaleLowerCase());
-          this.isLoadingTier = false;
-        },
-        error: (error) => {
-          console.error('Error al obtener tier del usuario:', error);
-          // Mantener valores por defecto en caso de error
-          this.tierImageRoutes = null;
-          this.tierDisplayName.set('MagroPoints');
-          this.isLoadingTier = false;
-        }
-      });
+      this._loyaltyService.getUserTierInfo(userId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (tierInfo) => {
+            this.tierImageRoutes = tierInfo.imageRoutes;
+            this.tierDisplayName.set(tierInfo.displayName.toLocaleLowerCase());
+            this.isLoadingTier = false;
+          },
+          error: (error) => {
+            console.error('Error al obtener tier del usuario:', error);
+            // Mantener valores por defecto en caso de error
+            this.tierImageRoutes = null;
+            this.tierDisplayName.set('MagroPoints');
+            this.isLoadingTier = false;
+          }
+        });
     } else {
       this.isLoadingTier = false;
     }

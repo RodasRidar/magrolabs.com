@@ -5,9 +5,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from './input.component';
 
 @Component({
-  standalone: true,
-  imports: [InputComponent, ReactiveFormsModule],
-  template: `
+    imports: [InputComponent, ReactiveFormsModule],
+    template: `
     <ml-input
       [label]="label"
       [type]="type"
@@ -17,7 +16,7 @@ import { InputComponent } from './input.component';
       [errors]="errors"
       [formControl]="control"
     />
-  `,
+  `
 })
 class TestHostComponent {
   label = 'Correo';

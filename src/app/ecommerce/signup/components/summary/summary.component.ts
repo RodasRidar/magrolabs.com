@@ -7,10 +7,9 @@ import e from 'express';
 import { AddressService, Ubigeo } from '../../../../shared/services/address-service.service';
 
 @Component({
-  selector: 'app-summary',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './summary.component.html'
+    selector: 'app-summary',
+    imports: [CommonModule],
+    templateUrl: './summary.component.html'
 })
 export class SummaryComponent {
 

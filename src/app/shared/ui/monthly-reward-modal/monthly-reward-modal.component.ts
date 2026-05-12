@@ -7,10 +7,9 @@ import { InlineModalComponent } from '../inline-modal/inline-modal.component';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({
-  selector: 'app-monthly-reward-modal',
-  standalone: true,
-  imports: [CommonModule, InlineModalComponent, ButtonComponent],
-  templateUrl: './monthly-reward-modal.component.html',
+    selector: 'app-monthly-reward-modal',
+    imports: [CommonModule, InlineModalComponent, ButtonComponent],
+    templateUrl: './monthly-reward-modal.component.html'
 })
 export class MonthlyRewardModalComponent {
   modalService = inject(MonthlyRewardModalService);

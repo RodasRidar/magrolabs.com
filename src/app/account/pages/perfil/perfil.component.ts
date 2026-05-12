@@ -26,11 +26,10 @@ declare module '../../../shared/interfaces/user.interfaces' {
 }
 
 @Component({
-  selector: 'app-perfil',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, CardComponent, PageHeaderComponent],
-  templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+    selector: 'app-perfil',
+    imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, CardComponent, PageHeaderComponent],
+    templateUrl: './perfil.component.html',
+    styleUrl: './perfil.component.css'
 })
 export class PerfilComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);

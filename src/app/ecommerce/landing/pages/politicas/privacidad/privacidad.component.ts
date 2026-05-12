@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-privacidad',
-  standalone: true,
-  imports: [],
-  templateUrl: './privacidad.component.html',
-  styleUrl: './privacidad.component.css'
+    selector: 'app-privacidad',
+    imports: [],
+    templateUrl: './privacidad.component.html',
+    styleUrl: './privacidad.component.css'
 })
 export class PrivacidadComponent {
   ENV = environment

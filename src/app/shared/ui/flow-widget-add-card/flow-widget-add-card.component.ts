@@ -6,11 +6,10 @@ import { SummaryService } from '../../services/summary-service.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-flow-widget-add-card',
-  standalone: true,
-  imports: [],
-  templateUrl: './flow-widget-add-card.component.html',
-  styleUrl: './flow-widget-add-card.component.css'
+    selector: 'app-flow-widget-add-card',
+    imports: [],
+    templateUrl: './flow-widget-add-card.component.html',
+    styleUrl: './flow-widget-add-card.component.css'
 })
 export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
   cardAddedSuccessfully = output<boolean>();

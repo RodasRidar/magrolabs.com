@@ -5,9 +5,8 @@ import { Component } from '@angular/core';
 import { LinkButtonComponent } from './link-button.component';
 
 @Component({
-  standalone: true,
-  imports: [LinkButtonComponent],
-  template: `<ml-link-button [routerLink]="link" [target]="target" [type]="type" [size]="size">Ir</ml-link-button>`,
+    imports: [LinkButtonComponent],
+    template: `<ml-link-button [routerLink]="link" [target]="target" [type]="type" [size]="size">Ir</ml-link-button>`
 })
 class TestHostComponent {
   link: string | undefined = '/test';

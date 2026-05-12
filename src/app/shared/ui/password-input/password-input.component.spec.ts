@@ -5,16 +5,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PasswordInputComponent } from './password-input.component';
 
 @Component({
-  standalone: true,
-  imports: [PasswordInputComponent, ReactiveFormsModule],
-  template: `
+    imports: [PasswordInputComponent, ReactiveFormsModule],
+    template: `
     <ml-password-input
       [label]="label"
       [required]="required"
       [errors]="errors"
       [formControl]="control"
     />
-  `,
+  `
 })
 class TestHostComponent {
   label = 'Contraseña';

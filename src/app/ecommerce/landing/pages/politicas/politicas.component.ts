@@ -8,11 +8,10 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-politicas',
-  standalone: true,
-  imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive, BreadcrumbComponent],
-  templateUrl: './politicas.component.html',
-  styleUrl: './politicas.component.css'
+    selector: 'app-politicas',
+    imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive, BreadcrumbComponent],
+    templateUrl: './politicas.component.html',
+    styleUrl: './politicas.component.css'
 })
 export class PoliticasComponent {
   private router = inject(Router);

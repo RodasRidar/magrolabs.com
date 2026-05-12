@@ -37,10 +37,9 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
 @Component({
-  selector: 'app-verification-payment',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
-  templateUrl: './verification-payment.component.html',
+    selector: 'app-verification-payment',
+    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, PaymentMethodComponent, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
+    templateUrl: './verification-payment.component.html'
 })
 export class VerificationPaymentComponent {
   paymentMethod = signal<FlowPaymentMethod>(FlowPaymentMethod.DEBIT_CREDIT_CARD);

@@ -2,10 +2,9 @@ import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'ml-link-button',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: './link-button.component.html',
+    selector: 'ml-link-button',
+    imports: [RouterLink],
+    templateUrl: './link-button.component.html'
 })
 export class LinkButtonComponent {
   routerLink = input<string | any[]>();

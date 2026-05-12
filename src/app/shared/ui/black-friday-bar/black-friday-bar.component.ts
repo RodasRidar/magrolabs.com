@@ -2,11 +2,10 @@ import { Component, OnDestroy, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } 
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-black-friday-bar',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './black-friday-bar.component.html',
-  styles: [`
+    selector: 'app-black-friday-bar',
+    imports: [CommonModule],
+    templateUrl: './black-friday-bar.component.html',
+    styles: [`
     @media (max-width: 800px) {
       .bf-marquee-wrapper {
         overflow: hidden;

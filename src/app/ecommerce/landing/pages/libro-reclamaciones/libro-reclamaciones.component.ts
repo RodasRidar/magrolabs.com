@@ -38,7 +38,6 @@ interface ReclamacionFormData {
 
 @Component({
     selector: 'app-libro-reclamaciones',
-    standalone: true,
     imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent, BreadcrumbComponent],
     templateUrl: './libro-reclamaciones.component.html',
     styleUrls: ['./libro-reclamaciones.component.css']

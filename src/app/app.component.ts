@@ -11,11 +11,10 @@ import { PixelInitializationService } from './shared/services/pixel-initializati
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent {
   private _router = inject(Router);

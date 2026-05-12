@@ -7,10 +7,9 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-calculadora-agua',
-  standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, FooterComponent, BreadcrumbComponent],
-  templateUrl: './calculadora-agua.component.html',
+    selector: 'app-calculadora-agua',
+    imports: [CommonModule, FormsModule, NavbarComponent, FooterComponent, BreadcrumbComponent],
+    templateUrl: './calculadora-agua.component.html'
 })
 export class CalculadoraAguaComponent {
   NavbarTypeEnum = NavbarTypeEnum;

@@ -19,11 +19,10 @@ interface Product {
 }
 
 @Component({
-  selector: 'app-index',
-  standalone: true,
-  imports: [RouterLink, CurrencyPipe, NgOptimizedImage, BreadcrumbComponent],
-  templateUrl: './index.component.html',
-  styleUrl: './index.component.css'
+    selector: 'app-index',
+    imports: [RouterLink, CurrencyPipe, NgOptimizedImage, BreadcrumbComponent],
+    templateUrl: './index.component.html',
+    styleUrl: './index.component.css'
 })
 export class IndexComponent implements OnInit {
   private readonly _seo = inject(SeoService);

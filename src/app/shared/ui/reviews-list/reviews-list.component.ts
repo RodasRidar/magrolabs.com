@@ -27,7 +27,6 @@ interface ReviewStats {
 
 @Component({
     selector: 'app-reviews-list',
-    standalone: true,
     imports: [CommonModule, SinceDatePipe, ReviewSkeletonComponent],
     template: `
     <div class="divide-y divide-gray-200 max-h-[34.5rem] overflow-y-scroll bg-white rounded-lg">

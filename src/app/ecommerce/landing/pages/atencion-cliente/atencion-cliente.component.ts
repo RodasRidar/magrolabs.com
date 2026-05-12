@@ -8,11 +8,10 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-atencion-cliente',
-  standalone: true,
-  imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive, BreadcrumbComponent],
-  templateUrl: './atencion-cliente.component.html',
-  styleUrl: './atencion-cliente.component.css'
+    selector: 'app-atencion-cliente',
+    imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive, BreadcrumbComponent],
+    templateUrl: './atencion-cliente.component.html',
+    styleUrl: './atencion-cliente.component.css'
 })
 export class AtencionClienteComponent {
   private router = inject(Router);

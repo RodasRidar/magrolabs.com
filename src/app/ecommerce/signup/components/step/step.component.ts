@@ -9,10 +9,9 @@ export type StepType = 'signup' | 'order-tracking' | 'delivery-preview';
 export type StepState = 'past' | 'current' | 'future';
 
 @Component({
-  selector: 'app-step',
-  standalone: true,
-  imports: [StepItemComponent],
-  templateUrl: './step.component.html',
+    selector: 'app-step',
+    imports: [StepItemComponent],
+    templateUrl: './step.component.html'
 })
 export class StepComponent {
   private _summaryService = inject(SummaryService);

@@ -18,11 +18,10 @@ import { PasswordInputComponent } from '../../../../shared/ui/password-input/pas
 import { CardComponent } from '../../../../shared/ui/card/card.component';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule, InputComponent, PasswordInputComponent, CardComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [ReactiveFormsModule, RouterLink, ButtonComponent, CommonModule, InputComponent, PasswordInputComponent, CardComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
 

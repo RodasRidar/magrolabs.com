@@ -3,11 +3,10 @@ import { environment } from '../../../../../../environments/env';
 import { title } from 'process';
 
 @Component({
-  selector: 'app-cambio',
-  standalone: true,
-  imports: [],
-  templateUrl: './cambio.component.html',
-  styleUrl: './cambio.component.css'
+    selector: 'app-cambio',
+    imports: [],
+    templateUrl: './cambio.component.html',
+    styleUrl: './cambio.component.css'
 })
 export class CambioComponent {
 

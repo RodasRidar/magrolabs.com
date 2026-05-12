@@ -1,11 +1,10 @@
 import { Component, signal } from '@angular/core';
 
 @Component({
-  selector: 'ml-accordion-group',
-  standalone: true,
-  imports: [],
-  host: { class: 'block space-y-4' },
-  template: `<ng-content />`,
+    selector: 'ml-accordion-group',
+    imports: [],
+    host: { class: 'block space-y-4' },
+    template: `<ng-content />`
 })
 export class AccordionGroupComponent {
   private readonly openIndex = signal<number | null>(null);

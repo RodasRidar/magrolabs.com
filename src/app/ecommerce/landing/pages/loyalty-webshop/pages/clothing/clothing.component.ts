@@ -23,11 +23,10 @@ import { LoyaltyProduct } from '../../../../../../shared/interfaces/loyalty-prod
 // `LoyaltyProductService.getBySlug()`. Ver shared/interfaces/loyalty-product.interfaces.ts.
 
 @Component({
-  selector: 'app-clothing',
-  standalone: true,
-  imports: [ButtonComponent, NgOptimizedImage, RouterLink, AccordionGroupComponent, AccordionItemComponent, BreadcrumbComponent],
-  templateUrl: './clothing.component.html',
-  styleUrl: './clothing.component.css'
+    selector: 'app-clothing',
+    imports: [ButtonComponent, NgOptimizedImage, RouterLink, AccordionGroupComponent, AccordionItemComponent, BreadcrumbComponent],
+    templateUrl: './clothing.component.html',
+    styleUrl: './clothing.component.css'
 })
 export class ClothingComponent implements OnInit {
 

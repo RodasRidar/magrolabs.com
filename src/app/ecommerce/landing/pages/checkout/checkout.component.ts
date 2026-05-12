@@ -38,11 +38,10 @@ import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
 
 @Component({
-  selector: 'app-checkout',
-  standalone: true,
-  imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
+    selector: 'app-checkout',
+    imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent],
+    templateUrl: './checkout.component.html',
+    styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent implements OnDestroy, AfterViewInit {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;

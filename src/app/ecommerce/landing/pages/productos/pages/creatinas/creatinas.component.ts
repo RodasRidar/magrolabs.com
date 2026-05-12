@@ -31,11 +31,10 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui
 import { ProductQuantityComponent } from '../../../../../../shared/ui/product-quantity/product-quantity.component';
 
 @Component({
-  selector: 'app-creatinas',
-  standalone: true,
-  imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent, ProductQuantityComponent],
-  templateUrl: './creatinas.component.html',
-  styleUrl: './creatinas.component.css'
+    selector: 'app-creatinas',
+    imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent, ProductQuantityComponent],
+    templateUrl: './creatinas.component.html',
+    styleUrl: './creatinas.component.css'
 })
 export class CreatinasComponent implements AfterViewInit {
   @ViewChild('subscriptionOption') subscriptionOption!: PurchaseOptionComponent;

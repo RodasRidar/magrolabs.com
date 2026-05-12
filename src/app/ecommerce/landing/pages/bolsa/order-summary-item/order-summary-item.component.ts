@@ -7,10 +7,9 @@ import { ShoppingCartService } from '../../../../../shared/services/cart-service
 import { ProductQuantityComponent } from '../../../../../shared/ui/product-quantity/product-quantity.component';
 
 @Component({
-  selector: 'app-order-summary-item',
-  standalone: true,
-  imports: [NgOptimizedImage, RouterLink, DiscountPipe, CurrencyPipe, ProductQuantityComponent, CommonModule],
-  templateUrl: './order-summary-item.component.html'
+    selector: 'app-order-summary-item',
+    imports: [NgOptimizedImage, RouterLink, DiscountPipe, CurrencyPipe, ProductQuantityComponent, CommonModule],
+    templateUrl: './order-summary-item.component.html'
 })
 export class OrderSummaryItemComponent {
 

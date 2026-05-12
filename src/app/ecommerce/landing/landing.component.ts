@@ -11,10 +11,9 @@ import { AccordionGroupComponent } from '../../shared/ui/accordion/accordion-gro
 import { AccordionItemComponent } from '../../shared/ui/accordion/accordion-item.component';
 
 @Component({
-  selector: 'app-landing',
-  standalone: true,
-  imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, ButtonComponent, AccordionGroupComponent, AccordionItemComponent],
-  templateUrl: './landing.component.html'
+    selector: 'app-landing',
+    imports: [NavbarComponent, HeroComponent, RouterLink, FooterComponent, CommonModule, ButtonComponent, AccordionGroupComponent, AccordionItemComponent],
+    templateUrl: './landing.component.html'
 })
 export class LandingComponent {
   private _seo = inject(SeoService)

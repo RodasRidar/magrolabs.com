@@ -5,9 +5,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from './select.component';
 
 @Component({
-  standalone: true,
-  imports: [SelectComponent, ReactiveFormsModule],
-  template: `
+    imports: [SelectComponent, ReactiveFormsModule],
+    template: `
     <ml-select
       [label]="label"
       [required]="required"
@@ -19,7 +18,7 @@ import { SelectComponent } from './select.component';
       <option value="a">Opción A</option>
       <option value="b">Opción B</option>
     </ml-select>
-  `,
+  `
 })
 class TestHostComponent {
   label = 'Departamento';

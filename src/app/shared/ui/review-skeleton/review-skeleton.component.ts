@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-review-skeleton',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-review-skeleton',
+    imports: [CommonModule],
+    template: `
     <div class="animate-pulse space-y-6">
       <div *ngFor="let item of skeletonItems" class="py-6 px-4 border-b border-gray-100 last:border-b-0">
         <div class="flex items-center space-x-4">
@@ -32,7 +31,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [`
+    styles: [`
     .animate-pulse {
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }

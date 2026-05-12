@@ -31,11 +31,10 @@ export interface Address {
 }
 
 @Component({
-  selector: 'app-address',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InputComponent, SelectComponent],
-  templateUrl: './address.component.html',
-  styleUrl: './address.component.css'
+    selector: 'app-address',
+    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InputComponent, SelectComponent],
+    templateUrl: './address.component.html',
+    styleUrl: './address.component.css'
 })
 export class AddressComponent {
 

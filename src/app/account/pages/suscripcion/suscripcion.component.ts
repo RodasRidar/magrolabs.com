@@ -34,11 +34,10 @@ import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.
 import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 
 @Component({
-  selector: 'app-suscripcion',
-  standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, SpinnerComponent, CardComponent, InlineModalComponent],
-  templateUrl: './suscripcion.component.html',
-  styleUrl: './suscripcion.component.css'
+    selector: 'app-suscripcion',
+    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, SpinnerComponent, CardComponent, InlineModalComponent],
+    templateUrl: './suscripcion.component.html',
+    styleUrl: './suscripcion.component.css'
 })
 export class SuscripcionComponent implements OnInit {
   // Signals para controlar el flujo de suscripción

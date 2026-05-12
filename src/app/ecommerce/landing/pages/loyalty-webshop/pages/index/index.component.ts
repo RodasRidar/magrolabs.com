@@ -15,11 +15,10 @@ interface Product {
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-index',
-  standalone: true,
-  imports: [RouterLink, BreadcrumbComponent],
-  templateUrl: './index.component.html',
-  styleUrl: './index.component.css'
+    selector: 'app-index',
+    imports: [RouterLink, BreadcrumbComponent],
+    templateUrl: './index.component.html',
+    styleUrl: './index.component.css'
 })
 export class IndexComponent {
 

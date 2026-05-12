@@ -4,18 +4,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 let nextPasswordId = 0;
 
 @Component({
-  selector: 'ml-password-input',
-  standalone: true,
-  imports: [],
-  host: { class: 'block' },
-  templateUrl: './password-input.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => PasswordInputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'ml-password-input',
+    imports: [],
+    host: { class: 'block' },
+    templateUrl: './password-input.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => PasswordInputComponent),
+            multi: true,
+        },
+    ]
 })
 export class PasswordInputComponent implements ControlValueAccessor {
   label = input.required<string>();

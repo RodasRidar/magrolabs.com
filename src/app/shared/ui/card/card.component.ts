@@ -4,15 +4,14 @@ export type CardSurface = 'default' | 'alt';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
 @Component({
-  selector: 'ml-card',
-  standalone: true,
-  imports: [],
-  host: { class: 'block' },
-  template: `
+    selector: 'ml-card',
+    imports: [],
+    host: { class: 'block' },
+    template: `
     <div [class]="cardClass()">
       <ng-content />
     </div>
-  `,
+  `
 })
 export class CardComponent {
   surface   = input<CardSurface>('default');

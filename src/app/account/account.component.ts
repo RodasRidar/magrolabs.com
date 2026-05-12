@@ -9,10 +9,9 @@ import { LoyaltyService } from '../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../shared/interfaces/loyalty.interfaces';
 
 @Component({
-  selector: 'app-account',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
-  templateUrl: './account.component.html',
+    selector: 'app-account',
+    imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
+    templateUrl: './account.component.html'
 })
 export class AccountComponent implements OnInit {
   private _router = inject(Router);

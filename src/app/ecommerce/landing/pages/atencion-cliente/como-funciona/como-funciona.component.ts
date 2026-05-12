@@ -3,11 +3,10 @@ import { environment } from '../../../../../../environments/env';
 import { SeoService } from '../../../../../shared/services/seo.service';
 
 @Component({
-  selector: 'app-como-funciona',
-  standalone: true,
-  imports: [],
-  templateUrl: './como-funciona.component.html',
-  styleUrl: './como-funciona.component.css'
+    selector: 'app-como-funciona',
+    imports: [],
+    templateUrl: './como-funciona.component.html',
+    styleUrl: './como-funciona.component.css'
 })
 export class ComoFuncionaComponent implements OnInit {
   private readonly _seo = inject(SeoService);

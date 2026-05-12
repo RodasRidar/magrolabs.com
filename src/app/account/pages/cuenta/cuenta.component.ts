@@ -30,11 +30,10 @@ import { describe } from 'node:test';
 import { title } from 'process';
 
 @Component({
-  selector: 'app-cuenta',
-  standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent],
-  templateUrl: './cuenta.component.html',
-  styleUrl: './cuenta.component.css'
+    selector: 'app-cuenta',
+    imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent],
+    templateUrl: './cuenta.component.html',
+    styleUrl: './cuenta.component.css'
 })
 export class CuentaComponent implements OnInit {
   private authService = inject(AuthService);

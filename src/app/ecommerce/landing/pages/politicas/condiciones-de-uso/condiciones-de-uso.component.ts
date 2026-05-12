@@ -3,11 +3,10 @@ import { environment } from '../../../../../../environments/env';
 import { title } from 'process';
 
 @Component({
-  selector: 'app-condiciones-de-uso',
-  standalone: true,
-  imports: [],
-  templateUrl: './condiciones-de-uso.component.html',
-  styleUrl: './condiciones-de-uso.component.css'
+    selector: 'app-condiciones-de-uso',
+    imports: [],
+    templateUrl: './condiciones-de-uso.component.html',
+    styleUrl: './condiciones-de-uso.component.css'
 })
 export class CondicionesDeUsoComponent {
   ENV = environment

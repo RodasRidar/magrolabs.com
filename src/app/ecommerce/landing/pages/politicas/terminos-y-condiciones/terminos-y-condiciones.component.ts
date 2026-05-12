@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-terminos-y-condiciones',
-  standalone: true,
-  imports: [],
-  templateUrl: './terminos-y-condiciones.component.html',
-  styleUrl: './terminos-y-condiciones.component.css'
+    selector: 'app-terminos-y-condiciones',
+    imports: [],
+    templateUrl: './terminos-y-condiciones.component.html',
+    styleUrl: './terminos-y-condiciones.component.css'
 })
 export class TerminosYCondicionesComponent {
   ENV = environment

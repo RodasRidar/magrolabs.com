@@ -13,39 +13,38 @@ import { BlackFridayBarComponent } from '../../../../shared/ui/black-friday-bar/
 import { environment } from '../../../../../environments/env';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
-  animations: [
-    trigger('fadeInOut', [
-      state('inactive', style({
-        opacity: 0,
-        transform: 'translateY(-100%)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'translateY(0)'
-      })),
-      transition('inactive => active', [
-        animate('200ms ease-in-out')
-      ]),
-      transition('active => inactive', [
-        animate('200ms ease-in-out')
-      ])
-    ]),
-    trigger('cartAnimation', [
-      state('start', style({ transform: 'scale(1)' })),
-      state('end', style({ transform: 'scale(1.2)' })),
-      transition('start => end', [
-        animate('0.5s ease')
-      ]),
-      transition('end => start', [
-        animate('0.5s ease')
-      ])
-    ])
-  ]
+    selector: 'app-navbar',
+    imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    animations: [
+        trigger('fadeInOut', [
+            state('inactive', style({
+                opacity: 0,
+                transform: 'translateY(-100%)'
+            })),
+            state('active', style({
+                opacity: 1,
+                transform: 'translateY(0)'
+            })),
+            transition('inactive => active', [
+                animate('200ms ease-in-out')
+            ]),
+            transition('active => inactive', [
+                animate('200ms ease-in-out')
+            ])
+        ]),
+        trigger('cartAnimation', [
+            state('start', style({ transform: 'scale(1)' })),
+            state('end', style({ transform: 'scale(1.2)' })),
+            transition('start => end', [
+                animate('0.5s ease')
+            ]),
+            transition('end => start', [
+                animate('0.5s ease')
+            ])
+        ])
+    ]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   isCheckout = input.required<boolean>();

@@ -9,11 +9,10 @@ import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordi
 import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 
 @Component({
-  selector: 'app-referido-por-amigo',
-  standalone: true,
-  imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent, AccordionGroupComponent, AccordionItemComponent],
-  templateUrl: './referido-por-amigo.component.html',
-  styleUrl: './referido-por-amigo.component.css'
+    selector: 'app-referido-por-amigo',
+    imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent, AccordionGroupComponent, AccordionItemComponent],
+    templateUrl: './referido-por-amigo.component.html',
+    styleUrl: './referido-por-amigo.component.css'
 })
 export class ReferidoPorAmigoComponent {
   private _route = inject(ActivatedRoute);

@@ -2,10 +2,9 @@ import { Component, inject, input, OnInit } from '@angular/core';
 import { AccordionGroupComponent } from './accordion-group.component';
 
 @Component({
-  selector: 'ml-accordion-item',
-  standalone: true,
-  imports: [],
-  styles: [`
+    selector: 'ml-accordion-item',
+    imports: [],
+    styles: [`
     .accordion-body {
       display: grid;
       grid-template-rows: 0fr;
@@ -18,7 +17,7 @@ import { AccordionGroupComponent } from './accordion-group.component';
       overflow: hidden;
     }
   `],
-  template: `
+    template: `
     <div class="rounded-lg bg-gray-50 p-6 mb-4">
       <button
         type="button"
@@ -54,7 +53,7 @@ import { AccordionGroupComponent } from './accordion-group.component';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class AccordionItemComponent implements OnInit {
   title = input.required<string>();

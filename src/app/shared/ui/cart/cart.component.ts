@@ -10,28 +10,27 @@ import { ShoppingCart, ItemShoppingCart } from '../../models/item-cart.model';
 import { ShoppingCartService } from '../../services/cart-service.service';
 
 @Component({
-  selector: 'app-cart',
-  standalone: true,
-  templateUrl: './cart.component.html',
-  imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
-  animations: [
-    trigger('fadeInOut', [
-      state('inactive', style({
-        opacity: 0,
-        transform: 'translateX(100%)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'translateX(0)'
-      })),
-      transition('inactive => active', [
-        animate('200ms ease-in-out')
-      ]),
-      transition('active => inactive', [
-        animate('300ms ease-in-out')
-      ])
-    ])
-  ]
+    selector: 'app-cart',
+    templateUrl: './cart.component.html',
+    imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
+    animations: [
+        trigger('fadeInOut', [
+            state('inactive', style({
+                opacity: 0,
+                transform: 'translateX(100%)'
+            })),
+            state('active', style({
+                opacity: 1,
+                transform: 'translateX(0)'
+            })),
+            transition('inactive => active', [
+                animate('200ms ease-in-out')
+            ]),
+            transition('active => inactive', [
+                animate('300ms ease-in-out')
+            ])
+        ])
+    ]
 })
 export class CartComponent {
   readonly MAX_QUANTITY = 20;

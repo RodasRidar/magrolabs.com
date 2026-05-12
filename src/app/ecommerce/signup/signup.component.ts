@@ -7,10 +7,9 @@ import { environment } from '../../../environments/env';
 import { SeoService } from '../../shared/services/seo.service';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [HeaderComponent, RouterOutlet, SummaryComponent, CommonModule],
-  templateUrl: './signup.component.html',
+    selector: 'app-signup',
+    imports: [HeaderComponent, RouterOutlet, SummaryComponent, CommonModule],
+    templateUrl: './signup.component.html'
 })
 
 export class SignupComponent {

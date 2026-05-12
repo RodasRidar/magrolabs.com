@@ -4,13 +4,12 @@ import { Component } from '@angular/core';
 import { FormFieldComponent } from './form-field.component';
 
 @Component({
-  standalone: true,
-  imports: [FormFieldComponent],
-  template: `
+    imports: [FormFieldComponent],
+    template: `
     <ml-form-field [label]="label" [inputId]="inputId" [required]="required" [errors]="errors">
       <input id="test-input" />
     </ml-form-field>
-  `,
+  `
 })
 class TestHostComponent {
   label = 'Correo';

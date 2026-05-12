@@ -10,10 +10,9 @@ import { CardComponent } from '../../../../shared/ui/card/card.component';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-bolsa',
-  standalone: true,
-  imports: [RouterLink, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe, CardComponent, BreadcrumbComponent],
-  templateUrl: './bolsa.component.html'
+    selector: 'app-bolsa',
+    imports: [RouterLink, NavbarComponent, OrderSummaryItemComponent, CurrencyPipe, ButtonComponent, AsyncPipe, CardComponent, BreadcrumbComponent],
+    templateUrl: './bolsa.component.html'
 })
 export class BolsaComponent {
   navbarTypeEnum = NavbarTypeEnum;

@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-product-quantity',
-  standalone: true,
-  imports: [],
-  templateUrl: './product-quantity.component.html',
+    selector: 'app-product-quantity',
+    imports: [],
+    templateUrl: './product-quantity.component.html'
 })
 export class ProductQuantityComponent {
   readonly MAX_QUANTITY = 20;

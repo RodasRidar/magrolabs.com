@@ -7,11 +7,10 @@ import { TiktokAnalyticsService } from '../../services/tiktok-analytics.service'
 
 
 @Component({
-  selector: 'app-pixel-testing',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './pixel-testing.component.html',
-  styleUrls: ['./pixel-testing.component.css']
+    selector: 'app-pixel-testing',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './pixel-testing.component.html',
+    styleUrls: ['./pixel-testing.component.css']
 })
 export class PixelTestingComponent {
   private tiktokService = inject(TiktokAnalyticsService);

@@ -3,11 +3,10 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { environment } from '../../../../environments/env';
 
 @Component({
-  selector: 'app-urgency-bar',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './urgency-bar.component.html',
-  styles: [`
+    selector: 'app-urgency-bar',
+    imports: [CommonModule],
+    templateUrl: './urgency-bar.component.html',
+    styles: [`
     @media (max-width: 800px) {
       .urgency-wrapper {
         overflow: hidden;

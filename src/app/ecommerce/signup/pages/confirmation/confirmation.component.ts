@@ -20,11 +20,10 @@ import { OrderResponse } from '../../../../shared/interfaces/order.interfaces';
 import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-confirmation',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, CommonModule, InformationComponent, RouterLink],
-  templateUrl: './confirmation.component.html',
-  styleUrl: './confirmation.component.css'
+    selector: 'app-confirmation',
+    imports: [StepComponent, ButtonComponent, CommonModule, InformationComponent, RouterLink],
+    templateUrl: './confirmation.component.html',
+    styleUrl: './confirmation.component.css'
 })
 export class ConfirmationComponent {
   private _summaryService = inject(SummaryService)

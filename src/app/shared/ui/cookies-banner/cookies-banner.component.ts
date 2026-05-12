@@ -1,11 +1,10 @@
 import { afterRender, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 
 @Component({
-  selector: 'app-cookies-banner',
-  standalone: true,
-  imports: [],
-  templateUrl: './cookies-banner.component.html',
-  styleUrl: './cookies-banner.component.css'
+    selector: 'app-cookies-banner',
+    imports: [],
+    templateUrl: './cookies-banner.component.html',
+    styleUrl: './cookies-banner.component.css'
 })
 export class CookiesBannerComponent implements OnDestroy {
   private cdr = inject(ChangeDetectorRef);

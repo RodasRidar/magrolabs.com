@@ -23,11 +23,10 @@ interface TransactionHistoryItem {
 }
 
 @Component({
-  selector: 'app-credito',
-  standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent, SpinnerComponent],
-  templateUrl: './credito.component.html',
-  styleUrl: './credito.component.css'
+    selector: 'app-credito',
+    imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent, SpinnerComponent],
+    templateUrl: './credito.component.html',
+    styleUrl: './credito.component.css'
 })
 export class CreditoComponent implements OnInit {
   private _creditTransactionService = inject(CreditTransactionService);

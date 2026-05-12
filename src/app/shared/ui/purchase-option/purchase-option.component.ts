@@ -14,10 +14,9 @@ export interface PurchaseBenefit {
 }
 
 @Component({
-  selector: 'ml-purchase-option',
-  standalone: true,
-  imports: [CurrencyPipe],
-  styles: [`
+    selector: 'ml-purchase-option',
+    imports: [CurrencyPipe],
+    styles: [`
     @keyframes option-select {
       0%   { transform: scale(1);     box-shadow: 0 0 0 0 rgba(0,0,0,0); }
       35%  { transform: scale(1.018); box-shadow: 0 4px 18px 0 rgba(0,0,0,0.10); }
@@ -38,7 +37,7 @@ export interface PurchaseBenefit {
       overflow: hidden;
     }
   `],
-  template: `
+    template: `
     <div
       class="rounded-lg overflow-hidden border transition-colors duration-150 mb-4 bg-white"
       [class.border-gray-800]="isExpanded()"
@@ -121,7 +120,7 @@ export interface PurchaseBenefit {
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class PurchaseOptionComponent {
   private readonly platformId = inject(PLATFORM_ID);

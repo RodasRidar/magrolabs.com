@@ -1,11 +1,10 @@
 import { Component, input, output } from '@angular/core';
 
 @Component({
-  selector: 'ml-modal',
-  standalone: true,
-  imports: [],
-  host: { class: 'block' },
-  template: `
+    selector: 'ml-modal',
+    imports: [],
+    host: { class: 'block' },
+    template: `
     <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
         <!-- Backdrop -->
@@ -46,7 +45,7 @@ import { Component, input, output } from '@angular/core';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class InlineModalComponent {
   /** Tamaño del panel: 'sm' (default, max-w-lg) | 'md' (max-w-2xl) */

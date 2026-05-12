@@ -4,10 +4,9 @@ import { VerificationPaymentModalService } from '../../services/verification-pay
 import { VerificationPaymentComponent } from '../../../ecommerce/signup/pages/verification-payment/verification-payment.component';
 
 @Component({
-  selector: 'app-verification-payment-modal',
-  standalone: true,
-  imports: [CommonModule, VerificationPaymentComponent],
-  templateUrl: './verification-payment-modal.component.html',
+    selector: 'app-verification-payment-modal',
+    imports: [CommonModule, VerificationPaymentComponent],
+    templateUrl: './verification-payment-modal.component.html'
 })
 
 export class VerificationPaymentModalComponent {

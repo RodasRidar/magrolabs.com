@@ -4,18 +4,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 let nextSelectId = 0;
 
 @Component({
-  selector: 'ml-select',
-  standalone: true,
-  imports: [],
-  host: { class: 'block' },
-  templateUrl: './select.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SelectComponent),
-      multi: true,
-    },
-  ],
+    selector: 'ml-select',
+    imports: [],
+    host: { class: 'block' },
+    templateUrl: './select.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => SelectComponent),
+            multi: true,
+        },
+    ]
 })
 export class SelectComponent implements ControlValueAccessor {
   label = input.required<string>();

@@ -17,10 +17,9 @@ import { SpinnerComponent } from '../../../shared/ui/spinner/spinner.component';
 import { StepComponent } from '../../../ecommerce/signup/components/step/step.component';
 
 @Component({
-  selector: 'app-pedidos',
-  standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, SpinnerComponent, StepComponent],
-  templateUrl: './pedidos.component.html',
+    selector: 'app-pedidos',
+    imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, SpinnerComponent, StepComponent],
+    templateUrl: './pedidos.component.html'
 })
 export class PedidosComponent implements OnInit {
   private _flowService = inject(FlowService);

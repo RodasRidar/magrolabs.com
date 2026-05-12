@@ -2,11 +2,10 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'ml-loyalty-meter',
-  standalone: true,
-  imports: [RouterLink],
-  host: { class: 'block' },
-  template: `
+    selector: 'ml-loyalty-meter',
+    imports: [RouterLink],
+    host: { class: 'block' },
+    template: `
     <div class="overflow-hidden shadow rounded-lg text-white"
         style="background:linear-gradient(90deg, rgba(20, 20, 20, 1) 0%, rgb(40 40 66) 35%, #393737 100%)">
         <div class="px-4 py-5 sm:p-6">
@@ -114,7 +113,7 @@ import { RouterLink } from '@angular/router';
             </div>
         </div>
     </div>
-  `,
+  `
 })
 export class LoyaltyMeterComponent {
   points = input.required<number>();

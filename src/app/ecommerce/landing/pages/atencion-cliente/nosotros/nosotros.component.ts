@@ -3,10 +3,9 @@ import { environment } from '../../../../../../environments/env';
 import { SeoService } from '../../../../../shared/services/seo.service';
 
 @Component({
-  selector: 'app-nosotros',
-  standalone: true,
-  imports: [],
-  templateUrl: './nosotros.component.html'
+    selector: 'app-nosotros',
+    imports: [],
+    templateUrl: './nosotros.component.html'
 })
 export class NosotrosComponent implements OnInit {
   private readonly _seo = inject(SeoService);

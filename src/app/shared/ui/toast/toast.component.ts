@@ -1,11 +1,10 @@
 import { Component, Input, input, output } from '@angular/core';
 
 @Component({
-  selector: 'app-toast',
-  standalone: true,
-  imports: [],
-  templateUrl: './toast.component.html',
-  styleUrl: './toast.component.css'
+    selector: 'app-toast',
+    imports: [],
+    templateUrl: './toast.component.html',
+    styleUrl: './toast.component.css'
 })
 export class ToastComponent {
   // type = input<'success' | 'error' | 'warning' | 'info'>('success')

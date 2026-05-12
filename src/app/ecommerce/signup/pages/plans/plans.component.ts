@@ -16,10 +16,9 @@ import { CommonModule, CurrencyPipe, isPlatformBrowser, isPlatformServer } from 
 import { PurchaseBenefit, PurchaseOptionComponent } from '../../../../shared/ui/purchase-option/purchase-option.component';
 
 @Component({
-  selector: 'app-plans',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, StarRatingComponent, CurrencyPipe, CommonModule, PurchaseOptionComponent],
-  templateUrl: './plans.component.html',
+    selector: 'app-plans',
+    imports: [StepComponent, ButtonComponent, StarRatingComponent, CurrencyPipe, CommonModule, PurchaseOptionComponent],
+    templateUrl: './plans.component.html'
 })
 
 export class PlansComponent {

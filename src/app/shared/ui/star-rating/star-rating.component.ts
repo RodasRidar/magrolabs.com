@@ -2,10 +2,9 @@ import { Component, input, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-star-rating',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-star-rating',
+    imports: [CommonModule],
+    template: `
     <div class="flex items-center">
       <svg *ngFor="let star of starsArray" 
            class="h-5 w-5 flex-shrink-0" 

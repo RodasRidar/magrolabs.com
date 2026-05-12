@@ -7,10 +7,9 @@ export interface BreadcrumbItem {
 }
 
 @Component({
-  selector: 'ml-breadcrumb',
-  standalone: true,
-  imports: [RouterLink],
-  template: `
+    selector: 'ml-breadcrumb',
+    imports: [RouterLink],
+    template: `
     <nav aria-label="Breadcrumb" class="sm:flex block gap-1">
       <div class="flex items-center flex-wrap gap-y-1">
         @for (item of items(); track item.label; let last = $last) {
@@ -31,7 +30,7 @@ export interface BreadcrumbItem {
         }
       </div>
     </nav>
-  `,
+  `
 })
 export class BreadcrumbComponent {
   items = input.required<BreadcrumbItem[]>();

@@ -33,11 +33,10 @@ export interface EnrolledCardInfo {
 }
 
 @Component({
-  selector: 'app-payment-method',
-  standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent],
-  templateUrl: './payment-method.component.html',
-  styleUrl: './payment-method.component.css'
+    selector: 'app-payment-method',
+    imports: [CommonModule, FlowWidgetAddCardComponent],
+    templateUrl: './payment-method.component.html',
+    styleUrl: './payment-method.component.css'
 })
 export class PaymentMethodComponent {
   private _summaryService = inject(SummaryService);

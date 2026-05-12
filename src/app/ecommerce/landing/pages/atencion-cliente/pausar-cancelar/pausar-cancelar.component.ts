@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-pausar-cancelar',
-  standalone: true,
-  imports: [],
-  templateUrl: './pausar-cancelar.component.html',
-  styleUrl: './pausar-cancelar.component.css'
+    selector: 'app-pausar-cancelar',
+    imports: [],
+    templateUrl: './pausar-cancelar.component.html',
+    styleUrl: './pausar-cancelar.component.css'
 })
 export class PausarCancelarComponent {
   ENV = environment

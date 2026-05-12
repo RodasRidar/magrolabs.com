@@ -2,11 +2,10 @@ import { Component, computed, input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 
 @Component({
-  selector: 'ml-action-card',
-  standalone: true,
-  imports: [CardComponent],
-  host: { class: 'block' },
-  template: `
+    selector: 'ml-action-card',
+    imports: [CardComponent],
+    host: { class: 'block' },
+    template: `
     <ml-card class="h-full" [extraClass]="innerClass()">
       @if (accent()) {
         <div class="bg-gradient-to-r from-[#1f1b19] to-primary-hover px-4 py-2 flex items-center justify-between">
@@ -20,7 +19,7 @@ import { CardComponent } from '../card/card.component';
         <ng-content select="[footer]" />
       </div>
     </ml-card>
-  `,
+  `
 })
 export class ActionCardComponent {
   accent = input<boolean>(false);

@@ -6,11 +6,10 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
-  selector: 'app-loyalty-webshop',
-  standalone: true,
-  imports: [NavbarComponent, RouterOutlet, FooterComponent],
-  templateUrl: './loyalty-webshop.component.html',
-  styleUrl: './loyalty-webshop.component.css'
+    selector: 'app-loyalty-webshop',
+    imports: [NavbarComponent, RouterOutlet, FooterComponent],
+    templateUrl: './loyalty-webshop.component.html',
+    styleUrl: './loyalty-webshop.component.css'
 })
 export class LoyaltyWebshopComponent {
 

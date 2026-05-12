@@ -6,29 +6,28 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { environment } from '../../../../environments/env';
 
 @Component({
-  selector: 'app-modal',
-  standalone: true,
-  imports: [CommonModule, ButtonComponent],
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css',
-  animations: [
-    trigger('fadeInOut', [
-      state('inactive', style({
-        opacity: 0,
-        transform: 'translateY(-100%)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'translateY(0)'
-      })),
-      transition('inactive => active', [
-        animate('2000ms ease-in-out')
-      ]),
-      transition('active => inactive', [
-        animate('2000ms ease-in-out')
-      ])
-    ])
-  ],
+    selector: 'app-modal',
+    imports: [CommonModule, ButtonComponent],
+    templateUrl: './modal.component.html',
+    styleUrl: './modal.component.css',
+    animations: [
+        trigger('fadeInOut', [
+            state('inactive', style({
+                opacity: 0,
+                transform: 'translateY(-100%)'
+            })),
+            state('active', style({
+                opacity: 1,
+                transform: 'translateY(0)'
+            })),
+            transition('inactive => active', [
+                animate('2000ms ease-in-out')
+            ]),
+            transition('active => inactive', [
+                animate('2000ms ease-in-out')
+            ])
+        ])
+    ]
 })
 
 export class ModalComponent {

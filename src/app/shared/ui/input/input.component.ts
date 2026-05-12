@@ -6,18 +6,17 @@ export type InputType = 'text' | 'email' | 'password' | 'tel' | 'number' | 'date
 let nextId = 0;
 
 @Component({
-  selector: 'ml-input',
-  standalone: true,
-  imports: [],
-  host: { class: 'block' },
-  templateUrl: './input.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'ml-input',
+    imports: [],
+    host: { class: 'block' },
+    templateUrl: './input.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => InputComponent),
+            multi: true,
+        },
+    ]
 })
 export class InputComponent implements ControlValueAccessor {
   label = input.required<string>();

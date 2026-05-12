@@ -7,11 +7,10 @@ import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.
 import { SeoService } from '../../../../shared/services/seo.service';
 
 @Component({
-  selector: 'app-mi-primera-creatina',
-  standalone: true,
-  imports: [CommonModule, FooterComponent, NavbarComponent],
-  templateUrl: './mi-primera-creatina.component.html',
-  styleUrl: './mi-primera-creatina.component.css'
+    selector: 'app-mi-primera-creatina',
+    imports: [CommonModule, FooterComponent, NavbarComponent],
+    templateUrl: './mi-primera-creatina.component.html',
+    styleUrl: './mi-primera-creatina.component.css'
 })
 export class MiPrimeraCreatinaComponent implements OnInit {
   private route = inject(ActivatedRoute);

@@ -1,4 +1,4 @@
-import { afterNextRender, afterRender, Component, inject, signal } from '@angular/core';
+import { afterNextRender, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';

@@ -1,4 +1,4 @@
-import { afterRender, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { afterEveryRender, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 
 @Component({
     selector: 'app-cookies-banner',
@@ -14,7 +14,7 @@ export class CookiesBannerComponent implements OnDestroy {
   private hasInteracted = false;
   
   constructor() {
-    afterRender(() => {
+    afterEveryRender(() => {
       this.isCookieClose = localStorage.getItem('cookieBannerReaded') === 'true' ? true : false;
       this.cdr.detectChanges();
       

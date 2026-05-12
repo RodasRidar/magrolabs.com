@@ -1,10 +1,11 @@
-import { Component, OnInit, inject, signal, computed, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal, computed, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of, takeUntil, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
+import { switchMap, catchError, of, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse, FlowCreateSubscriptionRequest } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
@@ -12,7 +13,6 @@ import { CardComponent } from '../../../shared/ui/card/card.component';
 import { InlineModalComponent } from '../../../shared/ui/inline-modal/inline-modal.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
-import { Subject } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/env';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
@@ -49,7 +49,7 @@ export class SuscripcionComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private _toastService = inject(ToastService);
   private _creditTransactionService = inject(CreditTransactionService);
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
   private userService = inject(UserService);
   private reviewService = inject(ReviewService);
   private orderService = inject(OrderService);
@@ -204,28 +204,25 @@ export class SuscripcionComponent implements OnInit {
     this.loadReviewsOnServer();
     this.updateSignalsFromLocalStorage();
     
-    this.authService.getCurrentUserObservable()?.subscribe(user => {
-      if (user?.flowCustomerId) {
-        // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
-        this.flowService.registerCard(user.flowCustomerId).subscribe(response => {
-          //console.log(response);
-          this.flowToken = (response as RegisterCardResponse).token;
-          this.showPaymentVerification.set(true);
-          //despues de 2 segundos redirigir a suscription [fragment]="'reviews'" si es que el usuario no tiene suscripcion
-          /*if (!this.subscription()) {
-            setTimeout(() => {
-              this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
-            }, 500);
-          }*/
-        });
-      }
+    this.authService.getCurrentUserObservable()
+      ?.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        if (user?.flowCustomerId) {
+          // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
+          this.flowService.registerCard(user.flowCustomerId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(response => {
+              this.flowToken = (response as RegisterCardResponse).token;
+              this.showPaymentVerification.set(true);
+            });
+        }
 
-      // Guardar nombre del usuario
-      if (user) {
-        const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
-        this.userName.set(nombre);
-      }
-    });
+        // Guardar nombre del usuario
+        if (user) {
+          const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
+          this.userName.set(nombre);
+        }
+      });
 
     this.isPaymentVerified.set(localStorage.getItem('isPaymentVerified') === 'true');
     if (this.isPaymentVerified()) {
@@ -293,10 +290,7 @@ export class SuscripcionComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   nextStep() {
     const user = this.authService.getCurrentUser();
@@ -321,7 +315,7 @@ export class SuscripcionComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user && user.id) {
       this._creditTransactionService.getTotalCredits(user.id)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (response) => {
             if (response && response.data && response.data.totalCredits) {
@@ -345,7 +339,7 @@ export class SuscripcionComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user && user.id) {
       this._loyaltyService.getUserTierInfo(user.id)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (tierInfo) => {
             this.tierImageRoutes = tierInfo.imageRoutes;
@@ -398,7 +392,7 @@ export class SuscripcionComponent implements OnInit {
 
     this.subscriptionService.getMySubscriptions(1, 1)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(response => {
           if (response.data.subscriptions && response.data.subscriptions.length > 0) {
             console.log('response.data.subscriptions[0]', response.data.subscriptions[0]);
@@ -428,7 +422,8 @@ export class SuscripcionComponent implements OnInit {
         }),
         finalize(() => {
           this.isLoading.set(false);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (combinedResponse) => {
@@ -446,6 +441,7 @@ export class SuscripcionComponent implements OnInit {
 
   loadSubscriptionPlan(planId: string): void {
     this.subscriptionService.getSubscriptionPlanById(planId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           //console.log('subscriptionPlan', response);
@@ -473,7 +469,8 @@ export class SuscripcionComponent implements OnInit {
         catchError(error => {
           console.error('Error obteniendo información de pago:', error);
           return of(null);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (customerResponse) => {
@@ -516,7 +513,8 @@ export class SuscripcionComponent implements OnInit {
         catchError(error => {
           console.error('Error obteniendo historial de pagos:', error);
           return of(null);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: FlowChargesResponse | null) => {
@@ -713,7 +711,7 @@ export class SuscripcionComponent implements OnInit {
       this.subscription()!.id,
       this.pauseDurationMonths(),
       this.cancellationReason()
-    ).subscribe({
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response) => {
         this.subscription.set(response.data.subscription);
         if (response.data.subscription.next_billing_date) {
@@ -805,7 +803,8 @@ export class SuscripcionComponent implements OnInit {
       }),
       finalize(() => {
         this.isLoading.set(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (combinedResponse) => {
         // Actualizar la suscripción local con la respuesta del backend
@@ -1011,7 +1010,8 @@ export class SuscripcionComponent implements OnInit {
         finalize(() => {
           this.isLoading.set(false);
           this.showFinalConfirmationModal.set(false);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: (result) => {
           const response = result.subscriptionResponse;
@@ -1160,7 +1160,8 @@ export class SuscripcionComponent implements OnInit {
           }
 
           return of({ backendResponse: response, flowResponse: null });
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (combinedResponse) => {
@@ -1592,7 +1593,8 @@ export class SuscripcionComponent implements OnInit {
           console.error('Error en el registro de Flow:', err);
           this.handleFlowError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: RegisterCardResponse) => {
@@ -1615,7 +1617,8 @@ export class SuscripcionComponent implements OnInit {
           console.error('Error generando token de Flow:', err);
           this.handleFlowError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: RegisterCardResponse) => {
@@ -1709,7 +1712,8 @@ export class SuscripcionComponent implements OnInit {
         localStorage.setItem('isPaymentVerified', '');
         this.userCredits.set(environment.creditoRegaloPorCompraMes.toString());
         this.isLoading.set(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
         console.log('Subscription completed:', response);
@@ -1800,7 +1804,9 @@ export class SuscripcionComponent implements OnInit {
     const productId = '00000001-50eb-4ac3-aa94-1b64fbf32b9c';
     //TODO QUITAR EL MAS5
     return new Promise((resolve, reject) => {
-      this.reviewService.getAllReviews({product_id: productId, is_approved: true}).subscribe({
+      this.reviewService.getAllReviews({product_id: productId, is_approved: true})
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
         next: (response) => {
           console.log('Reviews cargadas desde servidor:', response);
           if (response.data && response.data.reviews && response.data.reviews.length > 0) {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StepEnum } from '../../models/step.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -17,9 +17,9 @@ import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordi
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
 import { FlowService } from '../../../../shared/services/flow.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, RegisterCardResponse } from '../../../../shared/models/flow.model';
-import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable } from 'rxjs';
+import { switchMap, EMPTY, catchError, tap, finalize, throwError, Observable, map, of } from 'rxjs';
 import { PaymentMethod } from '../../../../shared/interfaces/order.interfaces';
 import { UserService } from '../../../../shared/services/user.service';
 import { VerificationPaymentModalService } from '../../../../shared/services/verification-payment-modal.service';
@@ -76,8 +76,7 @@ export class VerificationPaymentComponent {
   private _productService = inject(ProductService);
   private _shoppingCartService = inject(ShoppingCartService)
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
-
-  private readonly destroy$ = takeUntilDestroyed();
+  private readonly destroyRef = inject(DestroyRef);
   labelCardRegisted = signal('**** **** **** ');
   enrolledCard = signal<{ last4: string; brand: string } | null>(null);
   stepEnum = StepEnum;
@@ -103,11 +102,33 @@ export class VerificationPaymentComponent {
 
   /**
    * Productos canónicos resueltos desde el backend vía slug. La UI espera
-   * a que estén cargados antes de habilitar el botón "Pagar". Reemplaza
-   * los UUIDs y precios hardcodeados que antes vivían en `env.ts`.
+   * a que estén cargados antes de habilitar el botón "Pagar".
+   *
+   * `toSignal()` (Angular 17+) hace subscribe + auto-cleanup + set
+   * declarativamente. Reemplaza el `signal()` + `.subscribe()` manual.
    */
-  campaignProduct = signal<ProductResponse | null>(null);
-  subscriptionProduct = signal<ProductResponse | null>(null);
+  readonly campaignProduct = toSignal(
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.FIRST_CREATINE_CAMPAIGN).pipe(
+      map(r => r.data.product),
+      catchError(err => {
+        console.error('No se pudo cargar el producto de campaña', err);
+        this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
+        return of<ProductResponse | null>(null);
+      }),
+    ),
+    { initialValue: null as ProductResponse | null },
+  );
+
+  readonly subscriptionProduct = toSignal(
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_MONTHLY_SUBSCRIPTION).pipe(
+      map(r => r.data.product),
+      catchError(err => {
+        console.error('No se pudo cargar el producto de suscripción', err);
+        return of<ProductResponse | null>(null);
+      }),
+    ),
+    { initialValue: null as ProductResponse | null },
+  );
 
   /**
    * Precio base de la primera creatina (antes de aplicar cupón de creador).
@@ -155,21 +176,8 @@ export class VerificationPaymentComponent {
     this._seo.setCanonicalURL('magrolabs.com/registro/verificacion');
     this._seo.setIndexFollow(false);
 
-    // Cargar productos canónicos desde el backend (id + price reales).
-    // Bloquea el botón "Pagar" hasta que ambos estén cargados.
-    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.FIRST_CREATINE_CAMPAIGN)
-      .subscribe({
-        next: r => this.campaignProduct.set(r.data.product),
-        error: err => {
-          console.error('No se pudo cargar el producto de campaña', err);
-          this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
-        },
-      });
-    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_MONTHLY_SUBSCRIPTION)
-      .subscribe({
-        next: r => this.subscriptionProduct.set(r.data.product),
-        error: err => console.error('No se pudo cargar el producto de suscripción', err),
-      });
+    // Los productos canónicos (campaignProduct, subscriptionProduct) se
+    // cargan vía toSignal() a nivel de field — auto-subscribe, auto-cleanup.
 
     let summary = this._summaryService.getSummary();
     if (!summary?.address) {
@@ -347,6 +355,7 @@ export class VerificationPaymentComponent {
       recurringAmount: this.monthlySubscriptionPrice(),
     }).pipe(
       finalize(() => this.isApplyingSubDiscount.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: response => {
         const data = response.data;
@@ -538,6 +547,7 @@ export class VerificationPaymentComponent {
         });
         this.isLoading.set(false);
       }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: response => {
         const data = response.data;
@@ -725,7 +735,9 @@ export class VerificationPaymentComponent {
       return;
     }
 
-    this._checkoutSubscriptionService.validateCard(customerId).subscribe({
+    this._checkoutSubscriptionService.validateCard(customerId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: response => {
         const data = response.data;
         if (data.allowed) {
@@ -786,7 +798,8 @@ export class VerificationPaymentComponent {
       if (userData.customerId && this.isCreatinaSuscription()) {
         // Primero verificar si ya tiene tarjeta enrolada en Flow
         this._flowService.getCustomer(userData.customerId).pipe(
-          catchError(() => EMPTY)
+          catchError(() => EMPTY),
+          takeUntilDestroyed(this.destroyRef),
         ).subscribe(customer => {
           if (customer.last4CardDigits && customer.creditCardType) {
             // Ya tiene tarjeta — no mostrar widget
@@ -833,7 +846,8 @@ export class VerificationPaymentComponent {
           console.error(err);
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response) => {
@@ -871,7 +885,8 @@ export class VerificationPaymentComponent {
           console.error(err);
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response) => {
@@ -929,7 +944,8 @@ export class VerificationPaymentComponent {
             console.error('Error al generar nuevo token de Flow:', err);
             this._toastService.error('Error', 'No se pudo preparar el formulario. Intenta nuevamente.');
             return EMPTY;
-          })
+          }),
+          takeUntilDestroyed(this.destroyRef),
         )
         .subscribe({
           next: (response) => {

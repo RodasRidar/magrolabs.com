@@ -43,4 +43,16 @@ export interface ReviewsResponse {
 
 export interface ApproveReviewRequest {
   is_approved: boolean;
-} 
+}
+
+export type CanReviewReason =
+  | 'OK'
+  | 'PRODUCT_NOT_FOUND'
+  | 'ALREADY_REVIEWED'
+  | 'ORDER_NOT_DELIVERED';
+
+export interface CanReviewResponse {
+  can_review: boolean;
+  reason: CanReviewReason;
+  message: string;
+}

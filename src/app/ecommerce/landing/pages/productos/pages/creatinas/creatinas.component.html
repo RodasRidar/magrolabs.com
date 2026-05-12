@@ -264,7 +264,7 @@ require('@tailwindcss/aspect-ratio'),
                   </svg>
                 </div>
               </div>
-              @if (model3dUrl == "250g") {
+              @if (model3dUrl === "250g") {
                 <iframe
                   [ngClass]="{ 'opacity-0': isLoading }"
                   (load)="onLoadmodel3dUrl()"
@@ -1017,40 +1017,63 @@ require('@tailwindcss/aspect-ratio'),
           </div>
 
           <div class="mt-1">
-            <button
-              type="button"
-              (click)="writeReview()"
-              [disabled]="isCheckingReviewPermission"
-              class="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              @if (isCheckingReviewPermission) {
+            @if (isLogged && reviewPermission()?.reason === 'ALREADY_REVIEWED') {
+              <div
+                class="mt-6 inline-flex w-full bg-green-50 border border-green-200 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-green-700 sm:w-auto lg:w-full"
+                role="status"
+              >
                 <svg
-                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-900"
+                  class="-ml-1 mr-2 h-4 w-4 text-green-600"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
                 >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
                   <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                    fill-rule="evenodd"
+                    d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1.004 1.004 0 011.42-1.42L8.5 12.08l6.79-6.79a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
                 </svg>
-              }
-              {{
-                isCheckingReviewPermission
-                  ? "Verificando..."
-                  : "Escribir review"
-              }}
-            </button>
+                Ya calificaste este producto
+              </div>
+            } @else {
+              <button
+                type="button"
+                (click)="writeReview()"
+                [disabled]="isCheckingReviewPermission || (isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED')"
+                [title]="isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED' ? reviewPermission()?.message : null"
+                class="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                @if (isCheckingReviewPermission) {
+                  <svg
+                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-900"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Verificando...
+                } @else if (isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED') {
+                  Disponible al recibir el producto
+                } @else {
+                  Escribir reseña
+                }
+              </button>
+            }
           </div>
         </div>
 
@@ -1108,7 +1131,7 @@ require('@tailwindcss/aspect-ratio'),
     <form [formGroup]="reviewForm">
       <!-- Rating selection -->
       <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-3"
+        <label for="calification" class="block text-sm font-medium text-gray-700 mb-3"
           >Calificación *</label
         >
         <div class="flex items-center space-x-1">

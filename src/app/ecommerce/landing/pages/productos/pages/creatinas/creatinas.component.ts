@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, PLATFORM_ID, signal, ViewChild, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../../../../../shared/services/product.service';
 import { PurchaseBenefit, PurchaseOptionComponent } from '../../../../../../shared/ui/purchase-option/purchase-option.component';
 import { environment } from '../../../../../../../environments/env';
@@ -10,18 +11,14 @@ import { ChosePlanSummary, SummaryEnum } from '../../../../../../shared/models/s
 import { ShoppingCartService } from '../../../../../../shared/services/cart-service.service';
 import { SummaryService } from '../../../../../../shared/services/summary-service.service';
 import { SeoService } from '../../../../../../shared/services/seo.service';
-import { SinceDatePipe } from '../../../../../../shared/pipes/since-date.pipe';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { ReviewService } from '../../../../../../shared/services/review.service';
+import { CanReviewResponse } from '../../../../../../shared/interfaces/review.interfaces';
 import { ToastService } from '../../../../../../shared/services/toast.service';
 import { ReviewsListComponent } from '../../../../../../shared/ui/reviews-list/reviews-list.component';
 import { ReviewSkeletonComponent } from '../../../../../../shared/ui/review-skeleton/review-skeleton.component';
 import { StarRatingComponent } from '../../../../../../shared/ui/star-rating/star-rating.component';
-import { OrderService } from '../../../../../../shared/services/order.service';
-import { SubscriptionService } from '../../../../../../shared/services/subscription.service';
-import { forkJoin } from 'rxjs';
-import { OrderStatus } from '../../../../../../shared/interfaces/order.interfaces';
 import { TiktokAnalyticsService } from '../../../../../../shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from '../../../../../../shared/services/meta-analytics.service';
 import { StepComponent } from '../../../../../signup/components/step/step.component';
@@ -36,7 +33,7 @@ import { ProductQuantityComponent } from '../../../../../../shared/ui/product-qu
     templateUrl: './creatinas.component.html',
     styleUrl: './creatinas.component.css'
 })
-export class CreatinasComponent implements AfterViewInit {
+export class CreatinasComponent implements AfterViewInit, OnInit {
   @ViewChild('subscriptionOption') subscriptionOption!: PurchaseOptionComponent;
   @ViewChild('onePurchaseOption') onePurchaseOption!: PurchaseOptionComponent;
   @ViewChild('imageCarousel', { static: false }) imageCarousel!: ElementRef<HTMLDivElement>;
@@ -52,9 +49,8 @@ export class CreatinasComponent implements AfterViewInit {
   private _reviewService = inject(ReviewService);
   private _toastService = inject(ToastService);
   private _productService = inject(ProductService);
-  private _orderService = inject(OrderService);
-  private _subscriptionService = inject(SubscriptionService);
   private _tiktokAnalytics = inject(TiktokAnalyticsService);
+  private destroyRef = inject(DestroyRef);
   private _metaAnalytics = inject(MetaAnalyticsService);
 
   ENV = environment
@@ -93,6 +89,12 @@ export class CreatinasComponent implements AfterViewInit {
    * Cargado en `ngOnInit` apenas Angular conoce el slug del URL.
    */
   resolvedProductId = signal<string | null>(null);
+  /**
+   * Permiso de reseña del usuario actual sobre el producto canónico, resuelto
+   * desde el backend. `null` = aún verificando (o usuario no logueado). El
+   * template renderiza badge "Ya calificaste" / botón / mensaje según `reason`.
+   */
+  reviewPermission = signal<CanReviewResponse | null>(null);
   isSelectSubscription = signal<boolean>(false);
   isSelectOnePurchase = signal<boolean>(false);
   quantity = signal<number>(1);
@@ -224,10 +226,6 @@ export class CreatinasComponent implements AfterViewInit {
 
 
   ngOnInit() {
-    this._authService.isAuthenticated$.subscribe(isAuth => {
-      this.isLogged = isAuth;
-    });
-    
     this.slug = this.route.snapshot.params['slug'];
 
     // Resolver productId desde backend vía slug. Se ejecuta también en
@@ -235,12 +233,12 @@ export class CreatinasComponent implements AfterViewInit {
     // hidratación tenga el id ya disponible y los reviews pre-renderizen.
     this.resolveProductIdFromBackend();
 
-    // Verificar si viene el parámetro review=true
-    const reviewParam = this.route.snapshot.queryParams['review'];
-    if (reviewParam === 'true' && this.isLogged) {
-      // Verificar si el usuario puede escribir una reseña antes de abrir el modal
-      this.checkUserCanReview();
-    }
+    this._authService.isAuthenticated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isAuth => {
+        this.isLogged = isAuth;
+        this.refreshReviewPermission();
+      });
 
     if (this.slug === 'creatina-monohidratada-250-gr') {
       this.isFreeCreatine = false;
@@ -352,6 +350,11 @@ export class CreatinasComponent implements AfterViewInit {
     this.entregadoDate = entregadoText;
   }
 
+  /**
+   * Handler del botón "Escribir reseña". Usa el `reviewPermission` ya
+   * resuelto (sin hacer fetch en cada click). Si no está autenticado,
+   * redirige a login con `returnUrl` para volver y abrir el modal.
+   */
   writeReview() {
     if (!this.isLogged) {
       const returnUrl = `/productos/creatinas/${this.slug}?review=true`;
@@ -359,111 +362,55 @@ export class CreatinasComponent implements AfterViewInit {
       return;
     }
 
-    // Verificar si el usuario puede escribir una reseña para este producto
-    this.checkUserCanReview();
-  }
-
-  private checkUserCanReview() {
-    const productId = this.getProductId();
-    this.isCheckingReviewPermission = true;
-
-    this._reviewService.canUserReviewProduct(productId).subscribe({
-      next: (response) => {
-        if (response.can_review) {
-          this.openReviewModal();
-        } else {
-          const message = response.message || 'Debes haber recibido este producto para poder escribir una reseña.';
-          this._toastService.error(
-            'No puedes escribir una reseña',
-            message
-          );
-        }
-      },
-      error: (error) => {
-        console.error('Error al verificar si puede escribir reseña:', error);
-        
-        // Si el endpoint no existe (404), usar método alternativo
-        if (error.status === 404) {
-          this.checkUserCanReviewAlternative();
-          return;
-        }
-        
-        let errorMessage = 'No se pudo verificar si puedes escribir una reseña. Intenta nuevamente.';
-        
-        if (error.status === 401) {
-          errorMessage = 'Necesitas iniciar sesión para escribir una reseña.';
-        }
-        
-        this._toastService.error('Error', errorMessage);
-      },
-      complete: () => {
-        this.isCheckingReviewPermission = false;
-      }
-    });
-  }
-
-  private checkUserCanReviewAlternative() {
-    const productId = this.getProductId();
-
-    // Verificar tanto órdenes como suscripciones en paralelo
-    forkJoin({
-      orders: this._orderService.getMyOrders(1, 100), // Obtener todas las órdenes
-      subscriptions: this._subscriptionService.getMySubscriptions(1, 100) // Obtener todas las suscripciones
-    }).subscribe({
-      next: (response) => {
-        const hasReceivedProduct = this.checkIfUserReceivedProduct(productId, response.orders, response.subscriptions);
-        
-        if (hasReceivedProduct) {
-          this.openReviewModal();
-        } else {
-          this._toastService.error(
-            'No puedes escribir una reseña',
-            'Debes haber recibido este producto para poder escribir una reseña. Realiza una compra o suscríbete primero.'
-          );
-        }
-      },
-      error: (error) => {
-        console.error('Error al verificar órdenes y suscripciones:', error);
-        this._toastService.error(
-          'Error',
-          'No se pudo verificar tu historial de compras. Intenta nuevamente.'
-        );
-      },
-      complete: () => {
-        this.isCheckingReviewPermission = false;
-      }
-    });
-  }
-
-  private checkIfUserReceivedProduct(productId: string, ordersResponse: any, subscriptionsResponse: any): boolean {
-    // Verificar en órdenes entregadas
-    const deliveredOrders = ordersResponse.data?.orders?.filter((order: any) => 
-      order.status === OrderStatus.DELIVERED
-    ) || [];
-    
-    const hasProductInOrders = deliveredOrders.some((order: any) =>
-      order.orderItems?.some((item: any) => item.product_id === productId)
-    );
-    
-    if (hasProductInOrders) {
-      return true;
+    const perm = this.reviewPermission();
+    if (!perm) {
+      // Aún resolviendo permiso — no debería pasar si el botón está disabled
+      // mientras `isCheckingReviewPermission` es true, pero es safety net.
+      return;
     }
-    
-    // Verificar en suscripciones activas o que hayan tenido al menos un envío
-    const activeOrPastSubscriptions = subscriptionsResponse.data?.subscriptions?.filter((subscription: any) =>
-      subscription.status === 'ACTIVE' || 
-      subscription.status === 'PAUSED' || 
-      subscription.status === 'CANCELLED' ||
-      subscription.status === 'TO_CANCEL'
-    ) || [];
-    
-    // Para suscripciones, asumimos que si tiene una suscripción activa o pasada del producto, ha recibido al menos un envío
-    const hasProductInSubscriptions = activeOrPastSubscriptions.some((subscription: any) =>
-      subscription.subscription_plan?.product_id === productId ||
-      subscription.product_id === productId
-    );
-    
-    return hasProductInSubscriptions;
+
+    if (perm.can_review) {
+      this.openReviewModal();
+    } else {
+      this._toastService.error('No puedes escribir una reseña', perm.message);
+    }
+  }
+
+  /**
+   * Consulta al backend si el usuario puede escribir reseña para el producto
+   * canónico. Se invoca cuando se resuelve `resolvedProductId` o cuando cambia
+   * el estado de autenticación. El resultado se guarda en `reviewPermission`
+   * y el template lo lee directamente.
+   *
+   * Si veníamos de un login con `?review=true` y el permiso es OK, abre el
+   * modal automáticamente.
+   */
+  private refreshReviewPermission(): void {
+    const productId = this.resolvedProductId();
+    if (!productId || !this.isLogged) {
+      this.reviewPermission.set(null);
+      return;
+    }
+
+    this.isCheckingReviewPermission = true;
+    this._reviewService.canUserReviewProduct(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: perm => {
+          this.reviewPermission.set(perm);
+          const reviewParam = this.route.snapshot.queryParams['review'];
+          if (reviewParam === 'true' && perm.can_review) {
+            this.openReviewModal();
+          }
+        },
+        error: err => {
+          console.warn('No se pudo verificar permiso de reseña', err);
+          this.reviewPermission.set(null);
+        },
+        complete: () => {
+          this.isCheckingReviewPermission = false;
+        }
+      });
   }
 
   openReviewModal() {
@@ -551,13 +498,18 @@ export class CreatinasComponent implements AfterViewInit {
   /** Resuelve el productId desde backend y lo guarda en el signal. */
   private resolveProductIdFromBackend(): void {
     if (!this.slug) return;
-    this._productService.getBySlug(this.slug).subscribe({
-      next: r => this.resolvedProductId.set(r.data.product.id),
-      error: err => {
-        console.warn(`No se pudo resolver productId para slug "${this.slug}"`, err);
-        // Mantiene null; getProductId() devuelve slug como fallback.
-      },
-    });
+    this._productService.getBySlug(this.slug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: r => {
+          this.resolvedProductId.set(r.data.product.id);
+          this.refreshReviewPermission();
+        },
+        error: err => {
+          console.warn(`No se pudo resolver productId para slug "${this.slug}"`, err);
+          // Mantiene null; getProductId() devuelve slug como fallback.
+        },
+      });
   }
 
   submitReview() {
@@ -574,34 +526,40 @@ export class CreatinasComponent implements AfterViewInit {
       comment: this.reviewForm.get('comment')?.value || ''
     };
 
-    this._reviewService.createReview(reviewData).subscribe({
-      next: (response) => {
-        console.log('Review creada exitosamente:', response);
-        this._toastService.success(
-          '¡Reseña enviada!', 
-          'Tu reseña ha sido enviada exitosamente y será revisada antes de publicarse.'
-        );
-        this.closeReviewModal();
-      },
-      error: (error) => {
-        console.error('Error al enviar review:', error);
-        let errorMessage = 'Ocurrió un error al enviar tu reseña. Por favor, intenta nuevamente.';
-        
-        // Manejar errores específicos de la API
-        if (error.status === 401) {
-          errorMessage = 'Necesitas iniciar sesión para escribir una reseña.';
-        } else if (error.status === 400) {
-          errorMessage = 'Los datos de la reseña no son válidos. Verifica la información.';
-        } else if (error.status === 404) {
-          errorMessage = 'El producto no fue encontrado.';
+    this._reviewService.createReview(reviewData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this._toastService.success(
+            '¡Reseña enviada!',
+            'Tu reseña ha sido enviada exitosamente y será revisada antes de publicarse.'
+          );
+          this.closeReviewModal();
+          // Refrescar permiso para que el botón cambie a "Ya calificaste"
+          this.refreshReviewPermission();
+        },
+        error: (error) => {
+          console.error('Error al enviar review:', error);
+          let errorMessage = 'Ocurrió un error al enviar tu reseña. Por favor, intenta nuevamente.';
+
+          if (error.status === 401) {
+            errorMessage = 'Necesitas iniciar sesión para escribir una reseña.';
+          } else if (error.status === 409) {
+            errorMessage = 'Ya escribiste una reseña para este producto.';
+            // Sincronizar UI con el estado real
+            this.refreshReviewPermission();
+          } else if (error.status === 400) {
+            errorMessage = 'Los datos de la reseña no son válidos. Verifica la información.';
+          } else if (error.status === 404) {
+            errorMessage = 'El producto no fue encontrado.';
+          }
+
+          this._toastService.error('Error al enviar reseña', errorMessage);
+        },
+        complete: () => {
+          this.isSubmittingReview = false;
         }
-        
-        this._toastService.error('Error al enviar reseña', errorMessage);
-      },
-      complete: () => {
-        this.isSubmittingReview = false;
-      }
-    });
+      });
   }
 
   selectTap(tapNumber: number) {
@@ -1060,7 +1018,7 @@ export class CreatinasComponent implements AfterViewInit {
    * Genera el GTIN13 según el producto
    */
   private getGTIN13(): string {
-    const gtinMap: { [key: string]: string } = {
+    const gtinMap: Record<string, string> = {
       'creatina-monohidratada-250-gr': '7751234567890',
       'creatina-monohidratada-100-gr': '7751234567891',
       'creatina-monohidratada-3-kg': '7751234567892'

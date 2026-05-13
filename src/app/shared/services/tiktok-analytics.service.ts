@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+import { SHA256 } from 'crypto-es';
 import { environment } from '../../../environments/env';
 
 declare global {
@@ -33,7 +33,6 @@ export class TiktokAnalyticsService {
 
   constructor() { 
   }
-
   /**
    * Verifica si TikTok Pixel está disponible
    */
@@ -45,7 +44,7 @@ export class TiktokAnalyticsService {
    * Hash de datos PII con SHA-256
    */
   private hashData(data: string): string {
-    return CryptoJS.SHA256(data.toLowerCase().trim()).toString();
+    return SHA256(data.toLowerCase().trim()).toString();
   }
 
   /**

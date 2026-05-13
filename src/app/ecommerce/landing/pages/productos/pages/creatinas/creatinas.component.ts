@@ -442,7 +442,9 @@ export class CreatinasComponent implements AfterViewInit, OnInit {
     this.selectedRating = 0;
     this.hoveredRating = 0;
     this.reviewForm.reset();
-    document.body.style.overflow = 'hidden';
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   closeReviewModal() {
@@ -450,7 +452,9 @@ export class CreatinasComponent implements AfterViewInit, OnInit {
     this.selectedRating = 0;
     this.hoveredRating = 0;
     this.reviewForm.reset();
-    document.body.style.overflow = 'auto';
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'auto';
+    }
     
     // Limpiar el parámetro review de la URL si existe
     const urlTree = this.router.createUrlTree([], {
@@ -530,7 +534,9 @@ export class CreatinasComponent implements AfterViewInit, OnInit {
           this.refreshReviewPermission();
         },
         error: err => {
-          console.warn(`No se pudo resolver productId para slug "${this.slug}"`, err);
+          if (isPlatformBrowser(this.platformId)) {
+            console.warn(`No se pudo resolver productId para slug "${this.slug}"`, err);
+          }
           // Mantiene null; getProductId() devuelve slug como fallback.
         },
       });

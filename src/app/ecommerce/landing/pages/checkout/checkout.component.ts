@@ -216,15 +216,17 @@ export class CheckoutComponent implements AfterViewInit {
     // Reemplaza el UUID hardcodeado anterior. Si falla, log + toast pero
     // no bloquea el flujo: el `createOrderRequest` validará que el
     // producto esté cargado antes de enviar el checkout.
-    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: r => this.onePurchaseProduct.set(r.data.product),
-        error: err => {
-          console.error('No se pudo cargar el producto de compra única', err);
-          this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
-        },
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: r => this.onePurchaseProduct.set(r.data.product),
+          error: err => {
+            console.error('No se pudo cargar el producto de compra única', err);
+            this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
+          },
+        });
+    }
 
     // Si hay flowCustomerId (en summary o en el perfil autenticado), cargar la tarjeta
     this.hydrateEnrolledCard();

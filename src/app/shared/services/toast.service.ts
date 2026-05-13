@@ -3,9 +3,11 @@ import {
   ComponentRef,
   EnvironmentInjector,
   Injectable,
+  PLATFORM_ID,
   createComponent,
   inject,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Subject } from 'rxjs';
 import { ToastComponent } from '../ui/toast/toast.component';
 
@@ -17,6 +19,7 @@ const AUTO_DISMISS_MS = 5000;
 export class ToastService {
   private readonly appRef = inject(ApplicationRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly toastClosed$ = new Subject<void>();
 
   showToast(
@@ -24,6 +27,8 @@ export class ToastService {
     message: string,
     title: string,
   ): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     // API moderna (Angular 14+): createComponent reemplaza ComponentFactoryResolver.
     const componentRef: ComponentRef<ToastComponent> = createComponent(ToastComponent, {
       environmentInjector: this.environmentInjector,

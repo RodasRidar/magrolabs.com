@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import {
   BreadcrumbComponent,
@@ -16,6 +17,8 @@ import {
   NavbarTypeEnum,
 } from "../../components/navbar/navbar.component";
 import { FooterComponent } from "../../components/footer/footer.component";
+import { CardComponent } from "../../../../shared/ui/card/card.component";
+import { ButtonComponent } from "../../../../shared/ui/button/button.component";
 
 interface ReclamacionFormData {
   // Datos del consumidor
@@ -50,10 +53,13 @@ interface ReclamacionFormData {
 @Component({
   selector: "app-libro-reclamaciones",
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     NavbarComponent,
     FooterComponent,
     BreadcrumbComponent,
+    CardComponent,
+    ButtonComponent,
   ],
   templateUrl: "./libro-reclamaciones.component.html",
   styleUrls: ["./libro-reclamaciones.component.css"],

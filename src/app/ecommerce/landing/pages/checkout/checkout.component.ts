@@ -1889,7 +1889,6 @@ export class CheckoutComponent implements AfterViewInit {
    * Valida si la dirección del usuario está fuera de Lima Metropolitana
    */
   private validateAddressLocation(addressSummary: AddressSummary): void {
-    console.log('Validating address location:', addressSummary);
     if (addressSummary.department && addressSummary.provincia) {
       // Verificar si NO es Lima Metropolitana
       // Lima Metropolitana = departamento "Lima" y provincia "Lima"

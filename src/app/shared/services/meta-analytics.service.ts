@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { EMPTY, catchError } from 'rxjs';
 import {
   MetaEventParameters,
@@ -21,6 +22,7 @@ import { SummaryService } from './summary-service.service';
 export class MetaAnalyticsService {
   private readonly _metaApi = inject(MetaApiService);
   private readonly _summary = inject(SummaryService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   private config: MetaAnalyticsConfig = {
     pixelId: environment.meta?.pixelId || '',
@@ -214,8 +216,11 @@ export class MetaAnalyticsService {
       return;
     }
 
-    if (typeof window === 'undefined' || typeof window.fbq !== 'function') {
-      console.warn('MetaAnalytics: Meta Pixel no está disponible');
+    if (!isPlatformBrowser(this.platformId) || typeof window.fbq !== 'function') {
+      // En SSR/prerender no loggeamos para evitar spam; en browser sí.
+      if (isPlatformBrowser(this.platformId)) {
+        console.warn('MetaAnalytics: Meta Pixel no está disponible');
+      }
       return;
     }
 

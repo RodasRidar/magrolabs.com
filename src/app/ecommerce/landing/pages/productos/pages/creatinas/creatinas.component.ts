@@ -228,6 +228,30 @@ export class CreatinasComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.slug = this.route.snapshot.params['slug'];
 
+    // Slugs `deprecated-<uuid>` provienen del catálogo viejo (ej. clientes
+    // entrando vía "Mis pedidos → Escribir reseña" de órdenes con producto
+    // soft-deleted). El backend resuelve transparente al canónico — pedimos
+    // ese slug actualizado y redirigimos manteniendo `?review=true`.
+    if (this.slug.startsWith('deprecated-')) {
+      this._productService.getBySlug(this.slug)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: r => {
+            const canonicalSlug = r.data.product.slug;
+            if (canonicalSlug && canonicalSlug !== this.slug) {
+              this.router.navigate(['/productos/creatinas', canonicalSlug], {
+                queryParams: this.route.snapshot.queryParams,
+                replaceUrl: true,
+              });
+            } else {
+              this.router.navigate(['./404']);
+            }
+          },
+          error: () => this.router.navigate(['./404']),
+        });
+      return;
+    }
+
     // Resolver productId desde backend vía slug. Se ejecuta también en
     // SSR (TransferState cachea el response al cliente) para que la
     // hidratación tenga el id ya disponible y los reviews pre-renderizen.

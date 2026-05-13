@@ -65,7 +65,7 @@ interface ReviewStats {
                   </span>
                 </h4>
                 <div class="mt-1 flex items-center">
-                  @for (star of getStarsArray(review.stars); track star) {
+                  @for (star of getStarsArray(review.stars); track star.index) {
                     <div class="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -30,7 +30,8 @@ export class ReviewService {
     let httpParams = new HttpParams();
     
     if (params?.product_id) {
-      httpParams = httpParams.set('product_id', params.product_id);
+      // Backend espera `product` (no `product_id`). Ver review.controller.getAllReviews.
+      httpParams = httpParams.set('product', params.product_id);
     }
     if (params?.is_approved !== undefined) {
       httpParams = httpParams.set('is_approved', params.is_approved.toString());

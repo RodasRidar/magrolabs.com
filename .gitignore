@@ -406,3 +406,5 @@ app/.DS_Store
 
 # Agent Tools
 .atl/
+.claude/
+CLAUDE.MD

@@ -138,7 +138,7 @@ export class ClothingComponent implements OnInit {
       if (user) {
         this.loadUserCredits(user.id);
       }
-    }, {allowSignalWrites: true});
+    });
   }
 
   ngOnInit(): void {

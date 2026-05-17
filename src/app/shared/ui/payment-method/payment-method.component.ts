@@ -5,7 +5,7 @@ import {
   inject,
   input,
   output,
-  signal,
+  signal, OnInit,
 } from "@angular/core";
 
 import { SummaryService } from "../../services/summary-service.service";
@@ -50,7 +50,7 @@ export interface EnrolledCardInfo {
   templateUrl: "./payment-method.component.html",
   styleUrl: "./payment-method.component.css",
 })
-export class PaymentMethodComponent {
+export class PaymentMethodComponent implements OnInit {
   private _summaryService = inject(SummaryService);
   env = environment;
 
@@ -131,7 +131,6 @@ export class PaymentMethodComponent {
           this.justEnrolled.set(false);
         }
       },
-      { allowSignalWrites: true },
     );
   }
 

@@ -9,7 +9,7 @@ export type AlertType = 'success' | 'error' | 'warning' | 'info';
   template: `
     <div [class]="containerClass()">
       <div class="flex">
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 mt-1">
           @switch (type()) {
             @case ('success') {
               <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

@@ -1,7 +1,10 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, DestroyRef, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, signal, PLATFORM_ID, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { CardComponent } from '../../../../shared/ui/card/card.component';
+import { BadgeColor } from '../../../../shared/ui/badge/badge.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 import { StepComponent } from '../../components/step/step.component';
 import { StepEnum } from '../../models/step.model';
 import { Information, InformationComponent } from '../../components/information/information.component';
@@ -22,11 +25,11 @@ import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-confirmation',
-    imports: [StepComponent, ButtonComponent, CommonModule, InformationComponent, RouterLink],
+    imports: [StepComponent, ButtonComponent, CardComponent, AlertComponent, CommonModule, InformationComponent, RouterLink],
     templateUrl: './confirmation.component.html',
     styleUrl: './confirmation.component.css'
 })
-export class ConfirmationComponent {
+export class ConfirmationComponent implements OnInit {
   private _summaryService = inject(SummaryService)
   private _router = inject(Router)
   private _route = inject(ActivatedRoute)
@@ -268,7 +271,7 @@ export class ConfirmationComponent {
   //get the date in string plus a number through the parameter int
   getDatePlusDays(days: number): string {
     const today = new Date();
-    let deliveryDate = new Date(today);
+    const deliveryDate = new Date(today);
     let daysAdded = 0;
 
     while (daysAdded < days) {
@@ -303,6 +306,26 @@ export class ConfirmationComponent {
       case 'PAGO_EFECTIVO': return 'PagoEfectivo';
       case 'PAYPAL': return 'PayPal';
       default: return 'Pago en línea';
+    }
+  }
+
+  /** Color del badge según el estado de la orden. */
+  orderStatusBadgeColor(status: string | undefined | null): BadgeColor {
+    switch (status) {
+      case 'DELIVERED':
+      case 'PAID':
+        return 'green';
+      case 'PROCESSING':
+      case 'SHIPPED':
+        return 'blue';
+      case 'PENDING_PAYMENT':
+        return 'yellow';
+      case 'CANCELLED':
+      case 'REJECTED':
+      case 'REFUNDED':
+        return 'red';
+      default:
+        return 'gray';
     }
   }
 
@@ -370,7 +393,7 @@ export class ConfirmationComponent {
   discountLabel(): string {
     const o = this.order();
     if (!o?.code_discount) return 'Descuento';
-    return `Cupón ${o.code_discount}`;
+    return `Cupón (${o.code_discount})`;
   }
 
   /**

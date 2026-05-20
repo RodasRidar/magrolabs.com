@@ -1,4 +1,6 @@
-<app-step [step]="stepEnum.CONFIRMATION" />
+<div class="hidden sm:block">
+    <app-step [step]="stepEnum.CONFIRMATION" />
+</div>
 
 <!--
     Modo "rico": render con detalles del pedido cuando logramos hidratar
@@ -6,40 +8,27 @@
     Si no, cae al fallback minimalista de abajo.
 -->
 @if (order(); as ord) {
-<div class="max-w-3xl mx-auto px-4 pt-6 pb-16 text-gray-800">
+<div class="max-w-3xl sm:mx-auto px-1 sm:px-4 max-sm:-mt-14 sm:pt-6 pb-16 text-gray-800">
     <!-- Hero de confirmación -->
-    <div class="bg-green-50 border border-green-200 rounded-xl p-6 my-6 flex items-start gap-4">
-        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd" />
-            </svg>
-        </div>
-        <div class="flex-1">
+    <ml-alert type="success" class="my-6 sm:mb-6 ">
+        <div class="flex flex-col gap-2">
             <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
                 ¡Pedido confirmado{{ clientName ? ', ' + clientName : '' }}!
             </h1>
-            <p class="text-sm sm:text-base text-gray-700 mt-1">
-                Pedido <span class="font-mono font-semibold">#{{ shortOrderId(ord.id) }}</span>
-            </p>
-            <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                Estado: {{ orderStatusLabel(ord.status) }}
-            </span>
         </div>
-    </div>
+    </ml-alert>
 
     <!-- Resumen de items -->
-    <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
-        <h2 class="text-lg font-bold mb-4">Resumen de tu pedido</h2>
-        <ul class="divide-y divide-gray-100">
+    <ml-card padding="md" extraClass="mb-5">
+        <h2 class="text-lg font-bold mb-4 text-gray-900">Resumen de tu pedido</h2>
+        <ul class="divide-y divide-gray-200">
             @for (item of ord.orderItems; track item.id) {
-            <li class="flex items-center gap-4 py-3">
+            <li class="flex items-center gap-2 sm:gap-4 py-3">
                 @if (productImage(item)) {
                 <img [src]="productImage(item)" [alt]="item.product?.name"
-                    class="w-16 h-16 rounded-lg object-cover bg-gray-50 shrink-0" />
+                    class="w-16 h-16 rounded-lg object-cover bg-white shrink-0" />
                 } @else {
-                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                <div class="w-16 h-16 rounded-lg bg-white flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-400" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -48,11 +37,11 @@
                 </div>
                 }
                 <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-gray-900 truncate">{{ item.product?.name ?? 'Producto' }}</p>
-                    <p class="text-sm text-gray-600">Cantidad: {{ item.quantity }}</p>
+                    <p class="text-sm font-semibold text-gray-900">{{ item.product?.name ?? 'Producto' }}</p>
+                    <p class="text-xs mt-2 text-gray-600">Cantidad: {{ item.quantity }}</p>
                 </div>
                 <div class="text-right">
-                    <p class="font-semibold">S/ {{ ((item.unit_price || item.price || 0) * item.quantity) | number:
+                    <p class="text-sm font-semibold">S/ {{ ((item.unit_price || item.price || 0) * item.quantity) | number:
                         '1.2-2' }}</p>
                 </div>
             </li>
@@ -65,15 +54,9 @@
                 <span class="font-medium">S/ {{ subtotal() | number: '1.2-2' }}</span>
             </div>
             @if (discountAmount() > 0) {
-            <div class="flex justify-between text-green-700">
+            <div class="flex justify-between text-primary">
                 <span class="flex items-center gap-x-2">
                     {{ discountLabel() }}
-                    @if (discountBadge()) {
-                    <span
-                        class="rounded-full bg-green-100 text-green-800 text-xs py-0.5 px-2 font-medium tracking-wide">
-                        {{ discountBadge() }}
-                    </span>
-                    }
                 </span>
                 <span>− S/ {{ discountAmount() | number: '1.2-2' }}</span>
             </div>
@@ -88,16 +71,16 @@
                     }
                 </span>
             </div>
-            <div class="flex justify-between text-base font-bold pt-2 border-t border-gray-100 mt-2">
+            <div class="flex justify-between text-base font-bold pt-2 border-t border-gray-200 mt-2">
                 <span>Total pagado</span>
                 <span>S/ {{ ord.total_amount | number: '1.2-2' }}</span>
             </div>
         </div>
-    </div>
+    </ml-card>
 
     <!-- Dirección + Método de pago -->
     <div class="grid sm:grid-cols-2 gap-4 mb-5">
-        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+        <ml-card padding="md" extraClass="h-full">
             <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dirección de envío</h3>
             @if (ord.address; as addr) {
             <p class="text-sm text-gray-700 mt-1">
@@ -112,22 +95,20 @@
             } @else {
             <p class="text-sm text-gray-500">Te contactaremos para confirmar la dirección.</p>
             }
-        </div>
+        </ml-card>
 
-        <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+        <ml-card padding="md" extraClass="h-full">
             <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Método de pago</h3>
-            <p class="font-semibold text-gray-900">{{ paymentMethodLabel(ord.payment_method) }}</p>
+            <p class="text-sm text-gray-700">{{ paymentMethodLabel(ord.payment_method) }}</p>
             <p class="text-sm text-gray-700 mt-1">
                 Pagado el {{ ord.order_date | date: 'longDate' }}
             </p>
-        </div>
+        </ml-card>
     </div>
 
     <!-- Próximos pasos / información -->
-    <div class="bg-white border border-gray-200 rounded-xl p-5 mb-5 shadow-sm">
-        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximos pasos</h3>
+
         <app-information [information]="informationCompraExitoRegistroList" />
-    </div>
 
     <!-- CTAs -->
     <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
@@ -321,11 +302,12 @@
 <!-- Skeleton mientras hidratamos detalles del pedido (modo rico). -->
 @if (loadingOrder() && !order()) {
 <div class="max-w-3xl mx-auto px-4 pt-6 pb-16 animate-pulse">
-    <div class="bg-gray-100 rounded-xl h-24 mb-6"></div>
-    <div class="bg-gray-100 rounded-xl h-56 mb-5"></div>
+    <div class="bg-surface rounded-lg shadow h-28 mb-6"></div>
+    <div class="bg-surface rounded-lg shadow h-56 mb-5"></div>
     <div class="grid sm:grid-cols-2 gap-4 mb-5">
-        <div class="bg-gray-100 rounded-xl h-32"></div>
-        <div class="bg-gray-100 rounded-xl h-32"></div>
+        <div class="bg-surface rounded-lg shadow h-32"></div>
+        <div class="bg-surface rounded-lg shadow h-32"></div>
     </div>
+    <div class="bg-surface rounded-lg shadow h-32"></div>
 </div>
 }

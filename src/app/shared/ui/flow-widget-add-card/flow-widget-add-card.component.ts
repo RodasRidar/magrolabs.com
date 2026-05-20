@@ -62,8 +62,7 @@ export class FlowWidgetAddCardComponent implements AfterViewInit, OnDestroy {
       subscribe.mount('#subscribe-container', this.token());
 
       this.flowInstance.handleCardSubscribed(subscribe)
-        .then((data: any) => {
-          // console.log('Suscripción procesada correctamente:', data);
+        .then(() => {
           const customerId = this._summaryService.getSummary()?.userData?.customerId 
           ?? this._authService.getCurrentUser()?.flowCustomerId ?? '';
           this._flowService.getCustomer(customerId)

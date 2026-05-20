@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, computed, inject, input, OnInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { StepItemComponent } from './step-item/step-item.component';
 import { StepEnum } from '../../models/step.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
@@ -14,7 +14,7 @@ export type StepState = 'past' | 'current' | 'future';
     imports: [StepItemComponent],
     templateUrl: './step.component.html'
 })
-export class StepComponent {
+export class StepComponent implements OnInit {
   private _summaryService = inject(SummaryService);
   private destroyRef = inject(DestroyRef);
 
@@ -25,12 +25,31 @@ export class StepComponent {
 
   // ── signup inputs (unchanged behavior) ───────────────────────────────────
   step = input<StepEnum | undefined>(undefined);
+  totalToPay = input<number | null>(null);
   stepChosePlan = false;
   stepUserData = false;
   stepAddress = false;
   stepCardValidation = false;
   stepConfirmation = false;
-  flag = '';
+
+  private summaryState = toSignal(this._summaryService.summaryState$);
+
+  flag = computed(() => {
+    const summarySelection = this.summaryState()?.chosePlan?.selection;
+    if (
+      environment.campanaPrimeraCreatina.tipo === 'gratis' &&
+      summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION
+    ) {
+      return 'Gratis';
+    } else if (
+      environment.campanaPrimeraCreatina.tipo !== 'gratis' &&
+      summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION
+    ) {
+      const price = this.totalToPay() ?? environment.campanaPrimeraCreatina.precio;
+      return price.toLocaleString('es-PE', { style: 'currency', currency: 'PEN' });
+    }
+    return '';
+  });
 
   // ── order-tracking inputs ─────────────────────────────────────────────────
   orderStatus      = input<string>('');
@@ -48,26 +67,7 @@ export class StepComponent {
   ngOnInit(): void {
     this._summaryService.summaryState$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((summary) => {
-      const summarySelection = summary?.chosePlan?.selection;
-      if (
-        environment.campanaPrimeraCreatina.tipo === 'gratis' &&
-        summarySelection &&
-        summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION
-      ) {
-        this.flag = 'Gratis';
-      } else if (
-        environment.campanaPrimeraCreatina.tipo !== 'gratis' &&
-        summarySelection === SummaryEnum.CREATINA_250G_SUBSCRIPTION
-      ) {
-        this.flag = environment.campanaPrimeraCreatina.precio.toLocaleString('es-PE', {
-          style: 'currency',
-          currency: 'PEN',
-        });
-      } else {
-        this.flag = '';
-      }
-
+      .subscribe(() => {
       switch (this.step()) {
         case StepEnum.CHOSE_PLAN:
           this.stepChosePlan = true;

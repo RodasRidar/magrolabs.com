@@ -34,7 +34,7 @@
             <li class="relative flex justify-end">
                 <app-step-item [step]="stepEnum.CONFIRMATION"
                     [isCompleted]="stepConfirmation && step() !== stepEnum.CONFIRMATION"
-                    [isCurrent]="step() === stepEnum.CONFIRMATION" [flag]="flag" />
+                    [isCurrent]="step() === stepEnum.CONFIRMATION" [flag]="flag()" />
             </li>
         </ol>
     </div>

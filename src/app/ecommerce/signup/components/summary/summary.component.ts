@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Summary } from '../../../../shared/models/summary.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
@@ -11,7 +11,7 @@ import { AddressService, Ubigeo } from '../../../../shared/services/address-serv
     imports: [CommonModule],
     templateUrl: './summary.component.html'
 })
-export class SummaryComponent {
+export class SummaryComponent implements OnInit {
 
   private _addressService = inject(AddressService);
   private _summaryService = inject(SummaryService);
@@ -21,7 +21,7 @@ export class SummaryComponent {
 
 
   summaryState$ = this._summaryService.summaryState$;
-  summary: Summary = <Summary>{}
+  summary: Summary = {} as Summary
   iframeReady = false
   nextUrl = '';
   currentUrl = '';
@@ -37,7 +37,7 @@ export class SummaryComponent {
 
   ngOnInit(): void {
 
-    this.summary = this._summaryService.getSummary() ?? <Summary>{};
+    this.summary = this._summaryService.getSummary() ?? {} as Summary;
     this.setAddress();
 
     this._route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(param => {

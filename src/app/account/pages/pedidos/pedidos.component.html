@@ -1,7 +1,5 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div
-    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
-  >
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
     <h1 class="text-3xl font-bold leading-tight text-gray-900">Pedidos.</h1>
 
     <div class="flex items-center gap-2">
@@ -19,317 +17,241 @@
 
   <!-- Skeleton de carga -->
   @if (isLoading()) {
-    <div class="space-y-6 animate-pulse">
-      @for (i of [1, 2, 3]; track i) {
-        <ml-card>
-          <div
-            class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center"
-          >
-            <div class="h-5 bg-gray-300 rounded w-40"></div>
-            <div class="h-5 bg-gray-300 rounded w-24"></div>
+  <div class="space-y-6 animate-pulse">
+    @for (i of [1, 2, 3]; track i) {
+    <ml-card>
+      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div class="h-5 bg-gray-300 rounded w-40"></div>
+        <div class="h-5 bg-gray-300 rounded w-24"></div>
+      </div>
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="h-4 bg-gray-300 rounded w-20 mb-3"></div>
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 bg-gray-300 rounded-md flex-shrink-0"></div>
+          <div class="flex-1 space-y-2">
+            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+            <div class="h-3 bg-gray-300 rounded w-1/4"></div>
           </div>
-          <div class="px-6 py-4 border-b border-gray-200">
-            <div class="h-4 bg-gray-300 rounded w-20 mb-3"></div>
-            <div class="flex items-center gap-4">
-              <div class="w-16 h-16 bg-gray-300 rounded-md flex-shrink-0"></div>
-              <div class="flex-1 space-y-2">
-                <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-                <div class="h-3 bg-gray-300 rounded w-1/4"></div>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 py-4 flex justify-between items-center">
-            <div class="space-y-2">
-              <div class="h-4 bg-gray-300 rounded w-24"></div>
-              <div class="h-6 bg-gray-300 rounded w-32"></div>
-            </div>
-            <div class="h-10 bg-gray-300 rounded w-32"></div>
-          </div>
-        </ml-card>
-      }
-    </div>
+        </div>
+      </div>
+      <div class="px-6 py-4 flex justify-between items-center">
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 rounded w-24"></div>
+          <div class="h-6 bg-gray-300 rounded w-32"></div>
+        </div>
+        <div class="h-10 bg-gray-300 rounded w-32"></div>
+      </div>
+    </ml-card>
+    }
+  </div>
   }
 
   <!-- Mensaje de error -->
   @if (error()) {
-    <div
-      class="flex flex-col items-center justify-center p-12 text-center bg-red-50 rounded-lg my-8"
-    >
-      <svg
-        class="w-12 h-12 text-red-500 mb-2"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
-      </svg>
-      <p class="text-red-600 mb-4">{{ error() }}</p>
-      <button
-        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-        (click)="cargarPedidos()"
-      >
-        Reintentar
-      </button>
-    </div>
+  <div class="flex flex-col items-center justify-center p-12 text-center bg-red-50 rounded-lg my-8">
+    <svg class="w-12 h-12 text-red-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <p class="text-red-600 mb-4">{{ error() }}</p>
+    <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
+      (click)="cargarPedidos()">
+      Reintentar
+    </button>
+  </div>
   }
 
   <!-- Sin pedidos -->
   @if (!isLoading() && !error() && pedidos().length === 0) {
-    <div
-      class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8"
-    >
-      <div
-        class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center"
-      >
-        <svg
-          class="w-10 h-10 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-          ></path>
-        </svg>
-      </div>
-      <h2 class="text-xl font-semibold text-gray-700 mb-2">
-        No tienes pedidos
-      </h2>
-      <p class="text-gray-600 max-w-md mb-6">
-        Aún no has realizado ningún pedido. ¡Explora nuestros productos y
-        realiza tu primera compra!
-      </p>
-      <a
-        routerLink="/productos"
-        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-        >Explorar productos</a
-      >
+  <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
+    <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+        </path>
+      </svg>
     </div>
+    <h2 class="text-xl font-semibold text-gray-700 mb-2">
+      No tienes pedidos
+    </h2>
+    <p class="text-gray-600 max-w-md mb-6">
+      Aún no has realizado ningún pedido. ¡Explora nuestros productos y
+      realiza tu primera compra!
+    </p>
+    <a routerLink="/productos"
+      class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
+  </div>
   }
 
   <!-- Lista de pedidos -->
   @if (!isLoading() && !error() && pedidos().length > 0) {
-    <div class="space-y-6">
-      @for (pedido of pedidos(); track pedido.id) {
-        <ml-card class="transform transition hover:-translate-y-1">
-          <!-- Cabecera del pedido -->
-          <div
-            class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between"
-          >
-            <div class="mb-0">
-              <span class="block font-semibold text-gray-800"
-                >📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span
-              >
-            </div>
-            <div class="flex items-center gap-2">
-              <ml-badge
-                size="md"
-                [color]="getOrderStatusColor(pedido.status)"
-                [label]="obtenerTextoEstado(pedido.status)"
-              />
-            </div>
-          </div>
+  <div class="space-y-6">
+    @for (pedido of pedidos(); track pedido.id) {
+    <ml-card class="transform transition hover:-translate-y-1">
+      <!-- Cabecera del pedido -->
+      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
+        <div class="mb-0">
+          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase()
+            }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <ml-badge size="md" [color]="getOrderStatusColor(pedido.status)"
+            [label]="obtenerTextoEstado(pedido.status)" />
+        </div>
+      </div>
 
-          <!-- Productos del pedido -->
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-sm font-semibold text-gray-700 mb-3">Productos</h3>
-            @if (pedido.orderItems.length) {
-              <div class="space-y-4">
-                @for (item of pedido.orderItems; track item.id) {
-                  <!-- Cabecera de producto (siempre visible) -->
-                  <div
-                    class="border border-gray-200 rounded-lg overflow-hidden"
-                  >
-                    <div
-                      class="flex justify-between items-center p-2 bg-gray-50 cursor-pointer"
-                      (click)="toggleProductExpand(item.id)"
-                    >
-                      <div class="flex items-center gap-4">
-                        <div
-                          class="flex-shrink-0 w-16 h-16 overflow-hidden rounded-md"
-                        >
-                          <img
-                            [src]="getImageUrl(item)"
-                            [alt]="item.product?.name || 'Producto'"
-                            class="w-full h-full object-cover"
-                            onerror="this.src = '/product-img-not-found.png'"
-                          />
-                        </div>
-                        <div>
-                          <p class="text-sm font-medium text-gray-800">
-                            {{ item.product?.name || "Producto" }}
-                          </p>
-                          @if (pedido.total_amount > 0) {
-                            <p class="text-sm text-gray-500">
-                              {{
-                                item.unit_price
-                                  | currency: "S/" : "symbol" : "1.2-2"
-                              }}
-                            </p>
-                          } @else {
-                            <p class="text-sm text-gray-500">Gratis</p>
-                          }
-                        </div>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <span
-                          class="items-center flex text-sm font-medium bg-gray-200 text-black px-2 py-1 rounded"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 inline mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          <span class="hidden sm:block">{{
-                            isProductExpanded(item.id) ? "Ocultar" : "Detalles"
-                          }}</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    <!-- Detalles desplegables del producto -->
-                    @if (isProductExpanded(item.id)) {
-                      <div class="p-4 border-t border-gray-200 bg-white">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <p class="text-sm text-gray-600 mb-1">
-                              Nº de compra:
-                            </p>
-                            <p class="font-medium text-gray-800">
-                              {{ item.id.substring(0, 8).toUpperCase() }}
-                            </p>
-
-                            <p class="text-sm text-gray-600 mt-3 mb-1">
-                              Fecha de compra:
-                            </p>
-                            <p class="font-medium text-gray-800">
-                              {{ formatearFecha(pedido.created_at) }}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
-                            <p class="font-medium text-gray-800">
-                              {{ item.quantity }}
-                            </p>
-
-                            <div class="mt-6 flex flex-col gap-2 w-fit">
-                              @if (pedido.status === "DELIVERED") {
-                                <a
-                                  class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
-                                  (click)="
-                                    escribirResena(item.product?.slug);
-                                    $event.stopPropagation()
-                                  "
-                                  >Escribir reseña →</a
-                                >
-                              }
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    }
-                  </div>
-                }
+      <!-- Productos del pedido -->
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Productos</h3>
+        @if (pedido.orderItems.length) {
+        <div class="space-y-4">
+          @for (item of pedido.orderItems; track item.id) {
+          <!-- Cabecera de producto (siempre visible) -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center p-2 bg-gray-50 cursor-pointer"
+              (click)="toggleProductExpand(item.id)" (keypress)="toggleProductExpand(item.id)" tabindex="0">
+              <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-16 h-16 overflow-hidden rounded-md">
+                  <img [src]="getImageUrl(item)" [alt]="item.product?.name || 'Producto'"
+                    class="w-full h-full object-cover" onerror="this.src = '/product-img-not-found.png'" />
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">
+                    {{ item.product?.name || "Producto" }}
+                  </p>
+                  @if (pedido.total_amount > 0) {
+                  <p class="text-sm text-gray-500">
+                    {{
+                    item.unit_price
+                    | currency: "S/" : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                  } @else {
+                  <p class="text-sm text-gray-500">Gratis</p>
+                  }
+                </div>
               </div>
-            } @else {
-              <p class="text-center text-gray-500 italic">
-                No hay información de productos disponible
-              </p>
-            }
-          </div>
+              <div class="flex items-center gap-2">
+                <span class="items-center flex text-sm font-medium bg-gray-200 text-black px-2 py-1 rounded">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span class="hidden sm:block">{{
+                    isProductExpanded(item.id) ? "Ocultar" : "Detalles"
+                    }}</span>
+                </span>
+              </div>
+            </div>
 
-          <!-- Pie del pedido -->
-          <div
-            class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center"
-          >
-            <div class="mb-4 sm:mb-0">
-              <div class="flex flex-col gap-1">
-                @if (
-                  pedido.shipping_cost !== undefined &&
-                  pedido.shipping_cost !== null
-                ) {
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-600">Costo de envío:</span>
-                    <span class="text-sm font-medium text-gray-800">
-                      {{
-                        pedido.shipping_cost === 0
-                          ? "Gratis"
-                          : (pedido.shipping_cost
-                            | currency: "S/" : "symbol" : "1.2-2")
-                      }}
-                    </span>
+            <!-- Detalles desplegables del producto -->
+            @if (isProductExpanded(item.id)) {
+            <div class="p-4 border-t border-gray-200 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">
+                    Nº de compra:
+                  </p>
+                  <p class="font-medium text-gray-800">
+                    {{ item.id.substring(0, 8).toUpperCase() }}
+                  </p>
+
+                  <p class="text-sm text-gray-600 mt-3 mb-1">
+                    Fecha de compra:
+                  </p>
+                  <p class="font-medium text-gray-800">
+                    {{ formatearFecha(pedido.created_at) }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
+                  <p class="font-medium text-gray-800">
+                    {{ item.quantity }}
+                  </p>
+                  @if (pedido.status === "DELIVERED") {
+
+                  <div class="mt-6 flex flex-col gap-2 w-fit">
+                    <a class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
+                      (click)="escribirResena(item.product?.slug);$event.stopPropagation()" 
+                      (keypress)="escribirResena(item.product?.slug);$event.stopPropagation()" tabindex="0">
+                      Escribir reseña →</a>
                   </div>
-                }
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold text-gray-700">Total:</span>
-                  <span class="font-bold text-gray-900 text-lg">{{
-                    pedido.total_amount | currency: "S/" : "symbol" : "1.2-2"
-                  }}</span>
+                  }
                 </div>
               </div>
             </div>
+            }
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="text-center text-gray-500 italic">
+          No hay información de productos disponible
+        </p>
+        }
+      </div>
 
-            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              @if (
-                pedido.status !== "REFUNDED" &&
-                pedido.status !== "REJECTED" &&
-                pedido.status !== "CANCELLED" &&
-                pedido.status !== "PENDING_PAYMENT"
-              ) {
-                <ml-button
-                  (click)="seguirCompra(pedido.id)"
-                  name="Seguir mi compra"
-                  type="primary"
-                >
-                </ml-button>
-              }
+      <!-- Pie del pedido -->
+      <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div class="mb-4 sm:mb-0">
+          <div class="flex flex-col gap-1">
+            @if (
+            pedido.shipping_cost !== undefined &&
+            pedido.shipping_cost !== null
+            ) {
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">Costo de envío:</span>
+              <span class="text-sm font-medium text-gray-800">
+                {{
+                pedido.shipping_cost === 0
+                ? "Gratis"
+                : (pedido.shipping_cost
+                | currency: "S/" : "symbol" : "1.2-2")
+                }}
+              </span>
+            </div>
+            }
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-gray-700">Total:</span>
+              <span class="font-bold text-gray-900 text-lg">{{
+                pedido.total_amount | currency: "S/" : "symbol" : "1.2-2"
+                }}</span>
+            </div>
+          </div>
+        </div>
 
-              @if (
-                (pedido.status === "PAID" ||
-                  pedido.status === "SHIPPED" ||
-                  pedido.status === "DELIVERED") &&
-                pedido.total_amount !== 0
-              ) {
-                <ml-button
-                  (click)="descargarBoleta(pedido.id)"
-                  name="Descargar boleta"
-                  type="secondary-outlined"
-                >
-                </ml-button>
-              }
+        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          @if (
+          pedido.status !== "REFUNDED" &&
+          pedido.status !== "REJECTED" &&
+          pedido.status !== "CANCELLED" &&
+          pedido.status !== "PENDING_PAYMENT"
+          ) {
+          <ml-button (click)="seguirCompra(pedido.id)" name="Seguir mi compra" type="primary">
+          </ml-button>
+          }
 
-              @if (pedido.status === "PENDING_PAYMENT") {
-                <div class="flex gap-2">
-                  <ml-button
-                    (click)="
+          @if (
+          (pedido.status === "PAID" ||
+          pedido.status === "SHIPPED" ||
+          pedido.status === "DELIVERED") &&
+          pedido.total_amount !== 0
+          ) {
+          <ml-button (click)="descargarBoleta(pedido.id)" name="Descargar boleta" type="secondary-outlined">
+          </ml-button>
+          }
+
+          @if (pedido.status === "PENDING_PAYMENT") {
+          <div class="flex gap-2">
+            <ml-button (click)="
                       pagarPedido(pedido.id, pedido.total_amount, pedido.id)
-                    "
-                    name="Pagar"
-                    type="primary"
-                  >
-                  </ml-button>
+                    " name="Pagar" type="primary">
+            </ml-button>
 
-                  <!--
+            <!--
                   TODO: Descomentar cuando se implemente el cancelar pedido(si se cancela un pedido que esta ligado a una subscripcion, se debe cancelar la subscripcion)
                   <ml-button
                     (click)="cancelarPedido(pedido.id)"
@@ -337,169 +259,111 @@
                     type="secondary-outlined">
                   </ml-button>
                   -->
-                </div>
-              }
-            </div>
           </div>
-        </ml-card>
-      }
-    </div>
-
-    <!-- Paginación -->
-    @if (totalPages() > 1) {
-      <div class="flex justify-center mt-8">
-        <nav
-          class="inline-flex rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-        >
-          <button
-            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="currentPage() === 1"
-            (click)="cambiarPagina(currentPage() - 1)"
-          >
-            <span class="sr-only">Anterior</span>
-            &laquo;
-          </button>
-
-          @for (pagina of generarArrayPaginas(); track pagina) {
-            <button
-              class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50"
-              [class.bg-blue-50]="currentPage() === pagina"
-              [class.text-blue-600]="currentPage() === pagina"
-              [class.border-blue-500]="currentPage() === pagina"
-              [class.text-gray-700]="currentPage() !== pagina"
-              (click)="cambiarPagina(pagina)"
-            >
-              {{ pagina }}
-            </button>
           }
-
-          <button
-            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="currentPage() === totalPages()"
-            (click)="cambiarPagina(currentPage() + 1)"
-          >
-            <span class="sr-only">Siguiente</span>
-            &raquo;
-          </button>
-        </nav>
+        </div>
       </div>
+    </ml-card>
     }
+  </div>
+
+  <!-- Paginación -->
+  @if (totalPages() > 1) {
+  <div class="flex justify-center mt-8">
+    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+      <button
+        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === 1" (click)="cambiarPagina(currentPage() - 1)">
+        <span class="sr-only">Anterior</span>
+        &laquo;
+      </button>
+
+      @for (pagina of generarArrayPaginas(); track pagina) {
+      <button
+        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50"
+        [class.bg-blue-50]="currentPage() === pagina" [class.text-blue-600]="currentPage() === pagina"
+        [class.border-blue-500]="currentPage() === pagina" [class.text-gray-700]="currentPage() !== pagina"
+        (click)="cambiarPagina(pagina)">
+        {{ pagina }}
+      </button>
+      }
+
+      <button
+        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="currentPage() === totalPages()" (click)="cambiarPagina(currentPage() + 1)">
+        <span class="sr-only">Siguiente</span>
+        &raquo;
+      </button>
+    </nav>
+  </div>
+  }
   }
 </div>
 
 <!-- Modal de Seguimiento de compra -->
 @if (mostrarSeguimiento()) {
-  <div
-    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50 flex items-center justify-center p-4"
-  >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
-      <div class="flex justify-between items-center p-6 border-b">
-        <h2 class="text-2xl font-bold text-gray-800">Seguimiento de compra</h2>
-        <button
-          (click)="cerrarSeguimiento()"
-          class="text-gray-500 hover:text-gray-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
+<div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
+    <div class="flex justify-between items-center p-6 border-b">
+      <h2 class="text-2xl font-bold text-gray-800">Seguimiento de compra</h2>
+      <button (click)="cerrarSeguimiento()" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
 
-      <div class="p-2 sm:p-6">
-        <!-- Timeline de seguimiento -->
-        <div class="relative">
-          <app-step
-            type="order-tracking"
-            [orderStatus]="pedidoSeleccionado()?.status ?? ''"
-            [orderCreatedAt]="pedidoSeleccionado()?.created_at ?? ''"
-            [orderUpdatedAt]="pedidoSeleccionado()?.updated_at ?? ''"
-            [deliveryHoursMin]="ENV.plazoDeEntregaHorasCreatinaFree.min"
-            [deliveryHoursMax]="ENV.plazoDeEntregaHorasCreatinaFree.max"
-          />
+    <div class="p-2 sm:p-6">
+      <!-- Timeline de seguimiento -->
+      <div class="relative">
+        <app-step type="order-tracking" [orderStatus]="pedidoSeleccionado()?.status ?? ''"
+          [orderCreatedAt]="pedidoSeleccionado()?.created_at ?? ''"
+          [orderUpdatedAt]="pedidoSeleccionado()?.updated_at ?? ''"
+          [deliveryHoursMin]="ENV.plazoDeEntregaHorasCreatinaFree.min"
+          [deliveryHoursMax]="ENV.plazoDeEntregaHorasCreatinaFree.max" />
 
-          <!-- Seguimiento en tiempo real con Olva Courier -->
-          @if (pedidoSeleccionado()?.trackingNumber) {
-            <div class="mt-8 pt-6 border-t border-gray-100">
-              <div
-                class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300"
-              >
-                <div class="flex flex-col gap-4">
-                  <!-- Título y número de tracking -->
-                  <div class="flex items-center gap-3">
-                    <div
-                      class="flex-shrink-0 w-10 h-10 rounded-full bg-[#f9b52f]/10 flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-[#f9b52f]"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    </div>
-                    <div class="flex-1">
-                      <h3 class="text-base font-semibold text-gray-900">
-                        Seguimiento en tiempo real
-                      </h3>
-                      <p class="text-xs text-gray-500 mt-0.5">
-                        <span class="font-mono"
-                          >Nro Tracking:
-                          {{ pedidoSeleccionado()?.trackingNumber }}</span
-                        >
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Botón de rastreo -->
-                  <button
-                    (click)="abrirSeguimientoOlva()"
-                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-gray-900 text-sm font-medium rounded-lg transition-all duration-200"
-                  >
-                    <span>Rastrear con Olva Courier</span>
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
-                  </button>
+        <!-- Seguimiento en tiempo real con Olva Courier -->
+        @if (pedidoSeleccionado()?.trackingNumber) {
+        <div class="mt-8 pt-6 border-t border-gray-100">
+          <div
+            class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
+            <div class="flex flex-col gap-4">
+              <!-- Título y número de tracking -->
+              <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-[#f9b52f]/10 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-[#f9b52f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-base font-semibold text-gray-900">
+                    Seguimiento en tiempo real
+                  </h3>
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    <span class="font-mono">Nro Tracking:
+                      {{ pedidoSeleccionado()?.trackingNumber }}</span>
+                  </p>
                 </div>
               </div>
+
+              <!-- Botón de rastreo -->
+              <button (click)="abrirSeguimientoOlva()"
+                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-gray-900 text-sm font-medium rounded-lg transition-all duration-200">
+                <span>Rastrear con Olva Courier</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </button>
             </div>
-          }
+          </div>
         </div>
+        }
       </div>
     </div>
   </div>
+</div>
 }

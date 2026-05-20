@@ -145,7 +145,7 @@
     <div class="text-gray-700  md:mb-0">
         <div class="relative mt-7 mb-2 lg:mt-9">
 
-            @if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
+            @if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¡Felicidades {{clientName}}!
             </h1>
@@ -154,7 +154,7 @@
 
             <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
             }
-            @else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+            @else if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¡Hola {{clientName}}!
             </h1>
@@ -162,7 +162,7 @@
             <p class="text-base">{{parrafoError.parrafo2}}</p>
 
             <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
-            }@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+            }@else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¡Felicidades {{clientName}}!
             </h1>
@@ -172,7 +172,7 @@
 
             <p class="text-base mt-5">{{parrafoCompraConRegistroExito.parrafo3}}</p>
             }
-            @else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+            @else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
             <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
                 ¡Felicidades {{clientName}}!
             </h1>
@@ -184,18 +184,18 @@
         </div>
     </div>
 </div>
-@if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
+@if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
 <app-information [information]="informationExitoList" class="mt-5" />
 
-<!-- Programa de Lealtad: centralizado desde el modal -->
+<!-- ¡Ahora eres miembro de Magrolabs!: centralizado desde el modal -->
 <div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
-    <h2 class="text-base font-extrabold text-gray-900 mb-1">Programa de Lealtad</h2>
+    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Ahora eres miembro de Magrolabs!</h2>
     <div class="border-b border-gray-300 mb-4"></div>
     <p class="text-sm text-gray-600 mb-5 text-pretty">
-        ¡Genial, ahora eres miembro de Magrolabs! A partir de ahora, recibes {{ENV.creditoRegaloPorCompraMes}} Magropuntos con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
-        No tienes que hacer nada más. ¡Mientras sigas siendo miembro, ahorras para tus artículos favoritos!
+         Desde hoy, recibirás {{ENV.creditoRegaloPorCompraMes}} MP (Magropuntos) con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
+        No tienes que hacer nada más. 
     </p>
-    <p class="text-sm font-extrabold text-gray-900 mb-3">Así es como funciona:</p>
+    <p class="text-sm font-extrabold text-gray-900 mb-3">Refiere y gana MP extra:</p>
     <div class="space-y-3 mb-5">
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -240,21 +240,21 @@
     </div>
 </div>
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Ver Pedidos" [routerLink]="['/cuenta/pedidos']" />
+    <ml-button type='secondary-outlined' name="Ver Pedidos" [routerLink]="['/cuenta/pedidos']" />
 </div>
 }
 
-@else if (status == confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
+@else if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
 <app-information [information]="informationErrorList" class="mt-5" />
-<!-- Programa de Lealtad: centralizado desde el modal -->
+<!-- ¡Ahora eres miembro de Magrolabs!: centralizado desde el modal -->
 <div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
-    <h2 class="text-base font-extrabold text-gray-900 mb-1">Programa de Lealtad</h2>
+    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Ahora eres miembro de Magrolabs!</h2>
     <div class="border-b border-gray-300 mb-4"></div>
     <p class="text-sm text-gray-600 mb-5 text-pretty">
-        ¡Genial, ahora eres miembro de Magrolabs! A partir de ahora, recibes {{ENV.creditoRegaloPorCompraMes}} Magropuntos con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
-        No tienes que hacer nada más. ¡Mientras sigas siendo miembro, ahorras para tus artículos favoritos!
+         Desde hoy, recibirás {{ENV.creditoRegaloPorCompraMes}} MP (Magropuntos) con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
+        No tienes que hacer nada más. 
     </p>
-    <p class="text-sm font-extrabold text-gray-900 mb-3">Así es como funciona:</p>
+    <p class="text-sm font-extrabold text-gray-900 mb-3">Refiere y gana MP extra:</p>
     <div class="space-y-3 mb-5">
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -300,20 +300,20 @@
 </div>
 
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
+    <ml-button type='secondary-outlined' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
 </div>
 
 }
-@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
+@else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
 <app-information [information]="informationCompraExitoRegistroList" class="mt-5" />
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
+    <ml-button type='secondary-outlined' name="Ver mi pedido" [routerLink]="['/cuenta/pedidos']" />
 </div>
 }
-@else if (status == confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
+@else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
 <app-information [information]="informationCompraExitoSinRegistroList" class="mt-5" />
 <div class="mt-7 w-fit ml-5 max-sm:mb-14">
-    <ml-button type='primary' name="Ir a Inicio" [routerLink]="['/']" />
+    <ml-button type='secondary-outlined' name="Ir a Inicio" [routerLink]="['/']" />
 </div>
 }
 }

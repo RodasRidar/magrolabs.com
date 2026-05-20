@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StepEnum } from '../../models/step.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -32,15 +32,13 @@ import { SubscriptionCouponAppliesTo, SubscriptionDiscountType } from '../../../
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/interfaces/product.interfaces';
 import { CREATINA_PRODUCT_SLUGS } from '../../../../shared/constants/product-slugs.constants';
-import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
-import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
 @Component({
     selector: 'app-verification-payment',
     imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
     templateUrl: './verification-payment.component.html'
 })
-export class VerificationPaymentComponent {
+export class VerificationPaymentComponent implements OnInit {
   paymentMethod = signal<FlowPaymentMethod>(FlowPaymentMethod.DEBIT_CREDIT_CARD);
   ENV = environment
   isPaymentVerified = signal(false);
@@ -74,8 +72,6 @@ export class VerificationPaymentComponent {
   private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
   private _subscriptionCouponService = inject(SubscriptionCouponService);
   private _productService = inject(ProductService);
-  private _shoppingCartService = inject(ShoppingCartService)
-  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private readonly destroyRef = inject(DestroyRef);
   labelCardRegisted = signal('**** **** **** ');
   enrolledCard = signal<{ last4: string; brand: string } | null>(null);
@@ -171,60 +167,44 @@ export class VerificationPaymentComponent {
     cardCvv: this._formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]),
   })
 
+  constructor() {
+    effect(() => {
+      const total = this.firstChargeTotalToPay();
+      const chosePlan = this._summaryService.getSummary()?.chosePlan;
+      if (!chosePlan || this.ENV.campanaPrimeraCreatina.tipo === 'gratis') return;
+      this._summaryService.setChoosePlan({
+        ...chosePlan,
+        descrptionThree: `Iniciarás con una creatina de prueba a S/${total.toFixed(2)} (${this.ENV.campanaPrimeraCreatina.gramos}gr)`,
+      });
+    });
+  }
+
   ngOnInit() {
     this._seo.title.setTitle('Magrolabs | Verificación de pago');
     this._seo.setCanonicalURL('magrolabs.com/registro/verificacion');
     this._seo.setIndexFollow(false);
 
-    // Los productos canónicos (campaignProduct, subscriptionProduct) se
-    // cargan vía toSignal() a nivel de field — auto-subscribe, auto-cleanup.
+    // En SSR no leemos cookies (ngx-cookie-service no está configurado para
+    // el request server-side). No tomamos decisiones de routing acá: el
+    // browser re-evaluará en hidratación con el summary real.
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    let summary = this._summaryService.getSummary();
+    const summary = this._summaryService.getSummary();
+
     if (!summary?.address) {
       this._router.navigate(['registro/direccion']);
+      return;
     }
-    if (summary?.chosePlan?.selection === SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      this.isCreatinaSuscription.set(true);
-    } else {
-      this.isLoading.set(false);
+
+    if (summary.chosePlan?.selection !== SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      // One-purchase u otros: este componente ya no maneja ese flujo.
+      // CheckoutComponent moderno (/checkout) lo cubre vía /api/v1/checkout.
       this._router.navigate(['/checkout']);
-      this._shoppingCartService.addProductToCart({
-        product: {
-          id: '00000009-50eb-4ac3-aa94-1b64fbf32b9c',
-          name: 'Creatina Monohidratada 250 gr',
-          price: this.ENV.precioCreatinaOnePurchase,
-          imageUrl: '250gr_front_mockup_2000x2000.webp',
-          slug: 'creatina-monohidratada-250-gr'
-        },
-        quantity: 1
-      });
-      this._tiktokAnalytics.trackAddToCart({
-        contents: [{
-          content_id: 'creatina-monohidratada-250-gr',
-          content_name: 'Creatina Monohidratada 250 gr',
-          content_type: 'product',
-        }],
-        value: this.ENV.precioCreatinaOnePurchase,
-        currency: 'PEN'
-      });
-
-      // Tracking Meta Analytics
-      this._metaAnalyticsService.trackAddToCart({
-        value: this.ENV.precioCreatinaOnePurchase,
-        currency: 'PEN',
-        content_name: 'Creatina Monohidratada 250 gr',
-        content_ids: ['creatina-monohidratada-250-gr'],
-        content_type: 'product',
-        contents: [{
-          id: 'creatina-monohidratada-250-gr',
-          quantity: 1,
-          item_price: this.ENV.precioCreatinaOnePurchase
-        }]
-      });
+      return;
     }
 
-    // Validar si la dirección está fuera de Lima Metropolitana
-    this.validateAddressLocation(summary!);
+    this.isCreatinaSuscription.set(true);
+    this.validateAddressLocation(summary);
 
     this._metaAnalyticsService.trackCustomEvent('ViewContent', {
       content_name: 'Verificacion Pago Suscripción Creatina 250gr',
@@ -234,7 +214,6 @@ export class VerificationPaymentComponent {
       currency: 'PEN',
       content_category: 'suscripcion_mensual'
     });
-
   }
 
   /**
@@ -877,7 +856,7 @@ export class VerificationPaymentComponent {
         switchMap(response => {
           return this._userService.updateUser(userData.id!, { flowCustomerId: response.customerId })
         }),
-        switchMap(response => {
+        switchMap(() => {
           //console.log('Customer updated: ', response);
           return this._flowService.registerCard(this._summaryService.getSummary()?.userData?.customerId ?? '')
         }),

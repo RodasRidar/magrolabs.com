@@ -1,8 +1,8 @@
-import { Component, DestroyRef, OnInit, inject, signal, computed, PLATFORM_ID } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, OnInit, inject, signal, computed, PLATFORM_ID, AfterViewInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
-import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
+import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { switchMap, catchError, of, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
@@ -22,8 +22,12 @@ import { UserService } from '../../../shared/services/user.service';
 import { CreateCustomerRequest } from '../../../shared/models/flow.model';
 import { OrderService } from '../../../shared/services/order.service';
 import { SubscriptionOrderService } from '../../../shared/services/subscription-order.service';
-import { CreateOrderRequest, OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
-import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subscription-order.interface';
+import { OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
+import { CheckoutSubscriptionService } from '../../../shared/services/checkout-subscription.service';
+import { CheckoutSubscriptionRequest, ValidateCardReason } from '../../../shared/interfaces/checkout-subscription.interfaces';
+import { ProductService } from '../../../shared/services/product.service';
+import { ProductResponse } from '../../../shared/interfaces/product.interfaces';
+import { CREATINA_PRODUCT_SLUGS } from '../../../shared/constants/product-slugs.constants';
 import { CookieService } from 'ngx-cookie-service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
@@ -38,7 +42,7 @@ import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.
     templateUrl: './suscripcion.component.html',
     styleUrl: './suscripcion.component.css'
 })
-export class SuscripcionComponent implements OnInit {
+export class SuscripcionComponent implements OnInit, AfterViewInit {
   // Signals para controlar el flujo de suscripción
   showPaymentVerification = signal<boolean>(false);
   isProcessingFlow = signal<boolean>(false);
@@ -54,6 +58,26 @@ export class SuscripcionComponent implements OnInit {
   private reviewService = inject(ReviewService);
   private orderService = inject(OrderService);
   private subscriptionOrderService = inject(SubscriptionOrderService);
+  private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
+  private _productService = inject(ProductService);
+
+  /**
+   * Producto canónico de suscripción mensual (Creatina 250gr) resuelto
+   * desde BD vía slug. Reemplaza el UUID hardcodeado anterior
+   * (`00000010-50eb-4ac3-aa94-1b64fbf32b9c`). `toSignal()` hace
+   * subscribe + auto-cleanup. La UI espera a que esté cargado antes de
+   * habilitar el botón "Suscríbete".
+   */
+  readonly subscriptionProduct = toSignal(
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_MONTHLY_SUBSCRIPTION).pipe(
+      map(r => r.data.product),
+      catchError(err => {
+        console.error('No se pudo cargar el producto de suscripción', err);
+        return of<ProductResponse | null>(null);
+      }),
+    ),
+    { initialValue: null as ProductResponse | null },
+  );
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private cookieService = inject(CookieService);
@@ -125,7 +149,7 @@ export class SuscripcionComponent implements OnInit {
   });
 
   isCardAdded = false;
-  labelCardRegisted = '**** **** **** ';
+  labelCardRegisted = '**** ';
 
   // Variables para el modal de confirmación
   showReactivationModal = signal<boolean>(false);
@@ -197,25 +221,20 @@ export class SuscripcionComponent implements OnInit {
   ngOnInit(): void {
     // Configuración SEO para página de suscripción de usuario
     this.configureSEO();
-    
+
     this.loadSubscription();
     this.loadUserCredits();
     this.loadUserTier();
     this.loadReviewsOnServer();
     this.updateSignalsFromLocalStorage();
+    this.hydrateEnrolledCard();
     
     this.authService.getCurrentUserObservable()
       ?.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(user => {
-        if (user?.flowCustomerId) {
-          // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
-          this.flowService.registerCard(user.flowCustomerId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(response => {
-              this.flowToken = (response as RegisterCardResponse).token;
-              this.showPaymentVerification.set(true);
-            });
-        }
+        // NOTA: ya no pre-abrimos el modal de verificación de tarjeta acá.
+        // El usuario lo abre al hacer click en "Continuar" → nextStep() →
+        // registerUserInFlowAndGenerateToken() pide el token y abre el modal.
 
         // Guardar nombre del usuario
         if (user) {
@@ -292,6 +311,19 @@ export class SuscripcionComponent implements OnInit {
 
 
 
+  /**
+   * Cierra el modal de verificación de pago (botón X o backdrop).
+   * Limpia el token de Flow para que el siguiente "Continuar" pida uno
+   * fresco. NO toca `isPaymentVerified` si la tarjeta ya quedó enrolada
+   * exitosamente — el cliente puede reabrir y seguir.
+   */
+  closeSubscriptionModal(): void {
+    this.showPaymentVerification.set(false);
+    if (!this.isPaymentVerified()) {
+      this.flowToken = '';
+    }
+  }
+
   nextStep() {
     const user = this.authService.getCurrentUser();
 
@@ -300,13 +332,15 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    if (!this.showPaymentVerification()) {
-      // Primera vez - registrar en Flow y mostrar verificación
-      this.registerUserInFlowAndGenerateToken();
-    } else {
-      // Ya se mostró la verificación, proceder con la suscripción
+    // Si ya tiene tarjeta verificada (incluso si cerró el modal antes de
+    // confirmar), saltamos directo a crear la suscripción.
+    if (this.isPaymentVerified()) {
       this.proceedWithSubscription();
+      return;
     }
+
+    // Sin tarjeta verificada aún → abrir modal de registro/validación.
+    this.registerUserInFlowAndGenerateToken();
   }
 
   loadUserCredits(): void {
@@ -360,31 +394,117 @@ export class SuscripcionComponent implements OnInit {
   }
 
   cardAddedSuccessfully($event: boolean) {
-    if ($event) {
-      setTimeout(() => {
-        this.isCardAdded = true;
-        this.showPaymentVerification.set(false);
-        localStorage.removeItem('last4CardDigits');
-        localStorage.removeItem('creditCardType');
-        localStorage.removeItem('isPaymentVerified');
-      }, 2000);
-      this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '')
-      this.cardType.set(localStorage.getItem('creditCardType') || '')
-      localStorage.setItem('isPaymentVerified', 'true');
-
-      const card = this.cardLastFour() + ' (' + this.cardType() + ')';
-      this.labelCardRegisted += card;
-      this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);
-      this.isPaymentVerified.set(true);
-
-      if(this.isPorActivar()) {
-        this.cookieService.set('isCardModifiedToReprocessPayment', 'true', 0.25, '/');
-        this.isCardModifiedToReprocessPayment.set(true);
-      }
-    }
-    else {
+    if (!$event) {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
+      return;
     }
+
+    this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '');
+    this.cardType.set(localStorage.getItem('creditCardType') || '');
+    const card = this.cardLastFour() + ' (' + this.cardType() + ')';
+    this.labelCardRegisted += card;
+
+    // Validar que la tarjeta sea de CRÉDITO (no débito): Flow no soporta
+    // cobro recurrente confiable de débito. Si pasa débito, el primer
+    // cargo podría completarse pero el cobro mensual fallará. El service
+    // hace 3 reintentos con backoff antes de propagar el error.
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if (!customerId) {
+      // Edge case: tarjeta registrada sin customerId — best-effort.
+      this.markCardVerified();
+      return;
+    }
+
+    this._checkoutSubscriptionService.validateCard(customerId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          if (response.data.allowed) {
+            this.markCardVerified();
+            return;
+          }
+          this.handleCardNotAllowed(response.data.reason);
+        },
+        error: err => {
+          // Tras 3 reintentos del service: best-effort, permitimos seguir.
+          console.warn('validateCard falló tras 3 reintentos — permitiendo continuar', err);
+          this.markCardVerified();
+        },
+      });
+  }
+
+  private markCardVerified(): void {
+    this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);
+    this.isPaymentVerified.set(true);
+    this.isCardAdded = true;
+
+    if (this.isPorActivar()) {
+      this.cookieService.set('isCardModifiedToReprocessPayment', 'true', 0.25, '/');
+      this.isCardModifiedToReprocessPayment.set(true);
+    }
+
+    // Limpiamos el localStorage legacy (eran flags del panel inline previo).
+    // El modal queda abierto mostrando el badge "Tarjeta verificada" + el
+    // botón "Suscríbete →" hasta que el usuario confirme.
+    localStorage.removeItem('last4CardDigits');
+    localStorage.removeItem('creditCardType');
+    localStorage.removeItem('isPaymentVerified');
+  }
+
+  /**
+   * Tarjeta no permitida (típicamente débito). Mostramos mensaje según
+   * razón y reseteamos el widget para que el cliente registre otra.
+   */
+  private handleCardNotAllowed(reason: ValidateCardReason | undefined): void {
+    switch (reason) {
+      case 'DEBIT_NOT_ALLOWED':
+        this._toastService.error(
+          'Tarjeta de débito no aceptada',
+          'Solo aceptamos tarjetas de crédito para suscripciones. Por favor, registra una tarjeta de crédito.',
+        );
+        break;
+      case 'NO_CARD':
+        this._toastService.error(
+          'No detectamos tu tarjeta',
+          'Hubo un problema al registrar tu tarjeta. Intenta nuevamente.',
+        );
+        break;
+      default:
+        this._toastService.error(
+          'Tarjeta no soportada',
+          'Tu tarjeta no es compatible con suscripciones. Intenta con una tarjeta de crédito.',
+        );
+        break;
+    }
+    this.resetCardWidget();
+  }
+
+  /**
+   * Vuelve a pedir un token de Flow para registrar otra tarjeta sin
+   * recargar la página.
+   */
+  private resetCardWidget(): void {
+    this.isPaymentVerified.set(false);
+    this.labelCardRegisted = '**** ';
+    this.flowToken = '';
+
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if (!customerId) return;
+
+    this.flowService.registerCard(customerId)
+      .pipe(
+        catchError(err => {
+          console.error('Error generando nuevo token de Flow:', err);
+          this._toastService.error('Error', 'No se pudo preparar el formulario. Intenta nuevamente.');
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (response: RegisterCardResponse) => {
+          this.flowToken = response.token;
+        },
+      });
   }
 
   loadSubscription(): void {
@@ -480,6 +600,39 @@ export class SuscripcionComponent implements OnInit {
           }
         }
       });
+  }
+
+  /**
+   * Hidrata el estado de tarjeta enrolada cuando el usuario llega a la
+   * página sin haber pasado por el widget en esta sesión.
+   *
+   * Caso de uso: el usuario agregó tarjeta antes (en este flujo o en
+   * verification-payment de signup), cerró/abandonó el modal sin
+   * confirmar, y luego volvió. Si Flow tiene tarjeta enrolada para el
+   * customerId, marcamos `isPaymentVerified=true` para que la vista
+   * principal muestre "Suscribirse →" en vez de "Continuar →".
+   *
+   * Idempotente: si no hay customerId o no hay tarjeta, no hace nada.
+   */
+  private hydrateEnrolledCard(): void {
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if (!customerId || this.isPaymentVerified()) return;
+
+    this.flowService.getCustomer(customerId).pipe(
+      catchError(err => {
+        console.warn('No se pudo hidratar tarjeta enrolada — best-effort', err);
+        return of(null);
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(customer => {
+      if (!customer?.last4CardDigits || !customer?.creditCardType) return;
+
+      this.cardLastFour.set(customer.last4CardDigits);
+      this.cardType.set(customer.creditCardType);
+      this.labelCardRegisted = `**** **** **** ${customer.last4CardDigits} (${customer.creditCardType})`;
+      this.isCardAdded = true;
+      this.isPaymentVerified.set(true);
+    });
   }
 
   sortChargesBy(col: string): void {
@@ -1089,7 +1242,7 @@ export class SuscripcionComponent implements OnInit {
     const customerId = this.authService.getCurrentUser()?.flowCustomerId;
     if(!customerId || !this.subscription()) return;
 
-    let flowSubscriptionData: FlowCreateSubscriptionRequest = <FlowCreateSubscriptionRequest>{};
+    let flowSubscriptionData: FlowCreateSubscriptionRequest = {} as FlowCreateSubscriptionRequest;
     const reactivationDate = new Date();
     let monthPaymentDate: Date | undefined = undefined;
 
@@ -1549,8 +1702,11 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    this.isProcessingFlow.set(true);
-    this.isLoading.set(true);
+    // Abrimos el modal de inmediato. El modal muestra un spinner ("Preparando
+    // el formulario seguro…") mientras el token llega. Así el usuario nunca ve
+    // estado de carga en la vista principal.
+    this.flowToken = '';
+    this.showPaymentVerification.set(true);
 
     // Si el usuario ya tiene un customerId de Flow, solo generamos el token
     if (user.flowCustomerId) {
@@ -1588,10 +1744,10 @@ export class SuscripcionComponent implements OnInit {
           return this.flowService.registerCard(customerId);
         }),
         catchError(err => {
-          this.isProcessingFlow.set(false);
-          this.isLoading.set(false);
           console.error('Error en el registro de Flow:', err);
           this.handleFlowError(err);
+          // Cerramos el modal: el usuario no puede continuar sin token.
+          this.showPaymentVerification.set(false);
           return EMPTY;
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -1599,8 +1755,6 @@ export class SuscripcionComponent implements OnInit {
       .subscribe({
         next: (response: RegisterCardResponse) => {
           this.flowToken = response.token;
-          this.showPaymentSection();
-          this._toastService.success('¡Genial!', 'Ahora verifica tu tarjeta de pago');
         }
       });
   }
@@ -1612,10 +1766,9 @@ export class SuscripcionComponent implements OnInit {
     this.flowService.registerCard(customerId)
       .pipe(
         catchError(err => {
-          this.isProcessingFlow.set(false);
-          this.isLoading.set(false);
           console.error('Error generando token de Flow:', err);
           this.handleFlowError(err);
+          this.showPaymentVerification.set(false);
           return EMPTY;
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -1623,163 +1776,134 @@ export class SuscripcionComponent implements OnInit {
       .subscribe({
         next: (response: RegisterCardResponse) => {
           this.flowToken = response.token;
-          this.showPaymentSection();
-          this._toastService.success('¡Genial!', 'Ahora verifica tu tarjeta de pago');
         }
       });
   }
 
   /**
-   * Muestra la sección de verificación de pago
-   */
-  private showPaymentSection(): void {
-    this.isProcessingFlow.set(false);
-    this.isLoading.set(false);
-    this.showPaymentVerification.set(true);
-  }
-
-  /**
-   * Procede con la suscripción después de la verificación de pago
+   * Procede con la suscripción tras verificar la tarjeta.
+   *
+   * Orquestación directa (NO usa el endpoint saga `/checkout/subscription`
+   * porque ese siempre dispara un `chargeCustomer` upfront + el cobro
+   * automático de Flow al crear la suscripción → doble cargo).
+   *
+   * Aquí solo dejamos que Flow cobre automáticamente al crear la sub
+   * (sin trial → cobra de inmediato del plan recurrente). Después
+   * persistimos los registros en backend.
+   *
+   * Convención de este flujo `/cuenta/suscripcion`:
+   * - **Sin trial**: Flow cobra el monto del plan al crear la sub.
+   * - **Un solo cargo**: el de Flow (no hay `chargeCustomer` adicional).
+   * - **Sin cupones**: no se aplican descuentos desde esta vista.
    */
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
-    const subscriptionPlan: FlowCreateSubscriptionRequest = {
-      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
-      customerId: user?.flowCustomerId ?? '',
-    }
 
-    if (!user?.flowCustomerId || !subscriptionPlan) {
+    if (!user?.id || !user.flowCustomerId) {
       this._toastService.error('Error', 'Información incompleta para crear la suscripción');
       return;
     }
 
-    this.isLoading.set(true);
-    this.processNewSubscription(subscriptionPlan);
-  }
-
-  /**
-   * Procesa la creación de una nueva suscripción
-   */
-  private processNewSubscription(flowCreateSubscriptionRequest: FlowCreateSubscriptionRequest): void {
-    const user = this.authService.getCurrentUser();
-
-    if (!user?.id) {
-      this._toastService.error('Error', 'No se encontró información del usuario');
+    // Esperamos a que el producto canónico esté cargado desde BD.
+    const product = this.subscriptionProduct();
+    if (!product) {
+      this._toastService.warning('Catálogo cargando', 'Espera un instante e intenta nuevamente.');
       return;
     }
 
-    // Obtener dirección predeterminada del usuario
+    this.isLoading.set(true);
+
+    const isTwoSoles = localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
+    const flowPlanId = isTwoSoles
+      ? this.ENV.flowPlanIdTest
+      : this.ENV.flowCreatina250Gr2025_55_PlanId;
+
+    // Resolver address_id del perfil. Si falta, mandamos al perfil a
+    // configurar dirección antes de continuar.
     this.userService.getUserById(user.id).pipe(
-      catchError(error => {
-        console.error('Error obteniendo dirección predeterminada:', error);
-        this._toastService.error('Error', 'No se encontró una dirección predeterminada. Por favor, configura una dirección en tu perfil.');
+      switchMap(userResponse => {
+        const addressId = userResponse.address_id;
+        if (!addressId) {
+          this._toastService.warning(
+            'Falta tu dirección',
+            'Configura una dirección de envío en tu perfil antes de suscribirte.',
+          );
+          this.router.navigate(['/cuenta/perfil']);
+          return EMPTY;
+        }
+
+        // 1) Crear orden en BD (registra item + dirección).
+        return this.orderService.createOrder({
+          shipping_address: addressId,
+          payment_method: PaymentMethod.CREDIT_CARD,
+          isLoyaltyWebShow: false,
+          orderItems: [{ product_id: product.id, quantity: 1 }],
+        }).pipe(
+          switchMap(orderResp => {
+            const orderId = orderResp.data.order.id;
+            localStorage.setItem('OrderId', orderId);
+
+            // 2) Crear suscripción en Flow → Flow cobra automáticamente
+            //    el monto del plan al crear (sin trial). Este es el único
+            //    cargo del flujo.
+            return this.flowService.createSubscription({
+              planId: flowPlanId,
+              customerId: user.flowCustomerId!,
+            }).pipe(map(() => orderId));
+          }),
+          switchMap(orderId => {
+            // 3) Registrar suscripción en backend (estado ACTIVE).
+            return this.subscriptionService.createSubscription({
+              subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
+              start_date: new Date().toISOString(),
+              status: SubscriptionStatusEnum.ACTIVE,
+            }).pipe(map(sub => ({ orderId, subscriptionId: sub.id })));
+          }),
+          switchMap(({ orderId, subscriptionId }) => {
+            // 4) Enlazar orden ↔ suscripción.
+            const shipmentDate = new Date(
+              Date.now()
+              + this.ENV.plazoDeEntregaDiasHabiles.max * 24 * 60 * 60 * 1000
+              - 5 * 60 * 60 * 1000,
+            ).toISOString();
+
+            return this.subscriptionOrderService.createSubscriptionOrder({
+              subscription_id: subscriptionId,
+              order_id: orderId,
+              shipment_date: shipmentDate,
+            });
+          }),
+          switchMap(() => {
+            // 5) Acreditar Magropuntos de bienvenida.
+            return this._creditTransactionService.createTransaction({
+              user_id: user.id!,
+              type: TransactionType.EARNED,
+              amount: this.ENV.creditoRegaloPorCompraMes,
+              description: '¡Bienvenido a Magrolabs!',
+              source: PaymentMethod.CREDIT_CARD,
+            });
+          }),
+        );
+      }),
+      catchError(err => {
+        console.error('Error creando suscripción:', err);
+        this._toastService.error('Error', 'No se pudo crear la suscripción. Inténtalo nuevamente.');
         return EMPTY;
       }),
-      switchMap(userResponse => {
-        const orderRequest = this.createOrderRequest(userResponse.address_id ?? '');
-        return this.orderService.createOrder(orderRequest);
-      }),
-      switchMap(response => {
-        localStorage.setItem('OrderId', response.data.order.id);
-        return this.flowService.createSubscription(flowCreateSubscriptionRequest);
-      }),
-      switchMap(flowResponse => {
-        console.log('Flow Subscription created:', flowResponse);
-        return this.createBackendSubscription();
-      }),
-      switchMap(subscriptionResponse => {
-        const orderId = localStorage.getItem('OrderId') || ''
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id, orderId);
-        return this.subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-      }),
-      switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created:', subscriptionOrderResponse)
-        // Agregar créditos al usuario por la suscripción
-        const user = this.authService.getCurrentUser();
-        if (user?.id) {
-          return this._creditTransactionService.createTransaction({
-            user_id: user.id,
-            type: TransactionType.EARNED,
-            amount: environment.creditoRegaloPorCompraMes,
-            description: '¡Bienvenido a Magrolabs!',
-            source: PaymentMethod.CREDIT_CARD
-          });
-        }
-        return of(null);
-      }),
-      catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
-        localStorage.setItem('isPaymentVerified', '');
-        this.userCredits.set(environment.creditoRegaloPorCompraMes.toString());
+        localStorage.removeItem('isPaymentVerified');
+        localStorage.removeItem('OrderId');
         this.isLoading.set(false);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (response) => {
-        console.log('Subscription completed:', response);
-        this._toastService.success('¡Excelente!', 'Suscripción creada exitosamente');
-        // Recargar la información de suscripción
+      next: () => {
+        this._toastService.success('¡Excelente!', 'Suscripción creada exitosamente.');
+        this.showPaymentVerification.set(false);
         this.loadSubscription();
-      }
+        this.loadUserCredits();
+      },
     });
-  }
-
-  /**
-   * Crea la solicitud de orden
-   * @param addressId ID de la dirección de envío
-   */
-  private createOrderRequest(addressId: string): CreateOrderRequest {
-    return {
-      shipping_address: addressId,
-      payment_method: PaymentMethod.CREDIT_CARD,
-      isLoyaltyWebShow: false,
-      orderItems: [
-        {
-          product_id: '00000010-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr - 55 soles
-          quantity: 1
-        }
-      ],
-      discount: 21
-    };
-
-  }
-
-  /**
-   * Crea la suscripción en el backend
-   */
-  private createBackendSubscription(): Observable<Subscription> {
-    const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
-      start_date: new Date().toISOString(),
-      status: SubscriptionStatusEnum.ACTIVE,
-    };
-
-    return this.subscriptionService.createSubscription(subscriptionRequestAPI)
-  }
-
-  /**
-   * Crea la solicitud de orden de suscripción
-   */
-  private createSubscriptionOrderRequest(subscriptionId: string, orderId: string): CreateSubscriptionOrderRequest {
-    return {
-      subscription_id: subscriptionId,
-      order_id: orderId,
-      shipment_date: new Date(
-        Date.now() +
-        (this.ENV.plazoDeEntregaDiasHabiles.max) *
-        24 * 60 * 60 * 1000 -
-        5 * 60 * 60 * 1000
-      ).toISOString()
-    };
-  }
-
-  /**
-   * Maneja errores en la creación de suscripciones
-   */
-  private handleSubscriptionError(error: any): any {
-    console.error('Error creating subscription:', error);
-    this._toastService.error('Error', 'No se pudo crear la suscripción. Inténtalo nuevamente.');
-    return EMPTY;
   }
 
 

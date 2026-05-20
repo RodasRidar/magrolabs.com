@@ -32,6 +32,8 @@ import { SubscriptionCouponAppliesTo, SubscriptionDiscountType } from '../../../
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/interfaces/product.interfaces';
 import { CREATINA_PRODUCT_SLUGS } from '../../../../shared/constants/product-slugs.constants';
+import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
+import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 
 @Component({
     selector: 'app-verification-payment',
@@ -72,6 +74,8 @@ export class VerificationPaymentComponent implements OnInit {
   private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
   private _subscriptionCouponService = inject(SubscriptionCouponService);
   private _productService = inject(ProductService);
+  private _shoppingCartService = inject(ShoppingCartService);
+  private _tiktokAnalytics = inject(TiktokAnalyticsService);
   private readonly destroyRef = inject(DestroyRef);
   labelCardRegisted = signal('**** **** **** ');
   enrolledCard = signal<{ last4: string; brand: string } | null>(null);
@@ -196,10 +200,18 @@ export class VerificationPaymentComponent implements OnInit {
       return;
     }
 
-    if (summary.chosePlan?.selection !== SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
-      // One-purchase u otros: este componente ya no maneja ese flujo.
-      // CheckoutComponent moderno (/checkout) lo cubre vía /api/v1/checkout.
-      this._router.navigate(['/checkout']);
+    const planSelection = summary.chosePlan?.selection;
+
+    if (planSelection === SummaryEnum.CREATINA_250G_ONE_PURCHASE) {
+      // One-purchase: este componente no lo maneja. Lo cubre /checkout vía
+      // /api/v1/checkout. Sembramos el carrito y redirigimos.
+      this.seedOnePurchaseCartAndRedirect();
+      return;
+    }
+
+    if (planSelection !== SummaryEnum.CREATINA_250G_SUBSCRIPTION) {
+      // Plan no seleccionado (cookie perdida / deep-link) → mandar a plans.
+      this._router.navigate(['/registro']);
       return;
     }
 
@@ -213,6 +225,60 @@ export class VerificationPaymentComponent implements OnInit {
       value: this.ENV.precioCreatinaSubscription,
       currency: 'PEN',
       content_category: 'suscripcion_mensual'
+    });
+  }
+
+  private seedOnePurchaseCartAndRedirect(): void {
+    this.isLoading.set(true);
+
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE).pipe(
+      map(r => r.data.product),
+      catchError(err => {
+        console.error('No se pudo cargar el producto one-purchase', err);
+        this._toastService.error('Ups!', 'No pudimos cargar el catálogo. Recarga la página.');
+        return EMPTY;
+      }),
+      finalize(() => this.isLoading.set(false)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(product => {
+      const slug = product.slug ?? CREATINA_PRODUCT_SLUGS.CREATINE_ONE_PURCHASE;
+      const imageUrl = product.images?.[0]?.image_url ?? '';
+
+      this._shoppingCartService.addProductToCart({
+        product: {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          imageUrl,
+          slug,
+        },
+        quantity: 1,
+      });
+
+      this._tiktokAnalytics.trackAddToCart({
+        contents: [{
+          content_id: slug,
+          content_name: product.name,
+          content_type: 'product',
+        }],
+        value: product.price,
+        currency: 'PEN',
+      });
+
+      this._metaAnalyticsService.trackAddToCart({
+        value: product.price,
+        currency: 'PEN',
+        content_name: product.name,
+        content_ids: [slug],
+        content_type: 'product',
+        contents: [{
+          id: slug,
+          quantity: 1,
+          item_price: product.price,
+        }],
+      });
+
+      this._router.navigate(['/checkout']);
     });
   }
 

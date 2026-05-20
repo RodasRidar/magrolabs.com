@@ -5,7 +5,7 @@ import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subsc
 import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
+import { switchMap, catchError, of, map, finalize, EMPTY, tap, Observable, forkJoin, filter, take } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse, FlowCreateSubscriptionRequest } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
@@ -227,7 +227,6 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
     this.loadUserTier();
     this.loadReviewsOnServer();
     this.updateSignalsFromLocalStorage();
-    this.hydrateEnrolledCard();
     
     this.authService.getCurrentUserObservable()
       ?.pipe(takeUntilDestroyed(this.destroyRef))
@@ -240,6 +239,8 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
         if (user) {
           const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
           this.userName.set(nombre);
+          this.hydrateEnrolledCard();
+
         }
       });
 
@@ -612,27 +613,60 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
    * customerId, marcamos `isPaymentVerified=true` para que la vista
    * principal muestre "Suscribirse →" en vez de "Continuar →".
    *
-   * Idempotente: si no hay customerId o no hay tarjeta, no hace nada.
+   * IMPORTANTE: usamos `currentUser$` (BehaviorSubject real) en vez de
+   * `getCurrentUserObservable()` — este último retorna `of(snapshot)`
+   * que emite una sola vez y completa. En navegación con router, el
+   * componente puede instanciarse antes de que `loadUserFromStorage`
+   * (`afterNextRender`) o el GET `users/profile` poblen `flowCustomerId`.
+   * El BehaviorSubject emite cada update; `filter+take(1)` espera al
+   * primer emit con `flowCustomerId` y ahí dispara `getCustomer`.
+   *
+   * Idempotente: si ya está verificado, retorna sin tocar nada.
    */
   private hydrateEnrolledCard(): void {
-    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-    if (!customerId || this.isPaymentVerified()) return;
+    this.authService.currentUser$
+      .pipe(
+        filter(user => !!user),
+        take(1),
+        // Resolver flowCustomerId. Tras auto-login del checkout
+        // (setSessionFromCheckout) el user en cookies/BehaviorSubject
+        // NO incluye `flowCustomerId` — el caller solo pasa campos básicos.
+        // La fuente de verdad es GET /users/profile.
+        switchMap(user => {
+          if (user!.flowCustomerId) return of(user!.flowCustomerId);
+          return this.userService.getCurrentUser().pipe(
+            map(profile => profile?.flowCustomerId ?? null),
+            tap(customerId => {
+              // Cachear el id en auth para próximas lecturas y otros componentes.
+              if (customerId) this.authService.updateFlowCustomerId(customerId);
+            }),
+            catchError(err => {
+              console.warn('No se pudo obtener perfil para resolver flowCustomerId', err);
+              return of(null);
+            }),
+          );
+        }),
+        switchMap(customerId => {
+          if (!customerId) return of(null);
+          return this.flowService.getCustomer(customerId).pipe(
+            catchError(err => {
+              console.warn('No se pudo hidratar tarjeta enrolada — best-effort', err);
+              return of(null);
+            }),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(customer => {
+        if (this.isPaymentVerified()) return; // alguien ya la marcó (ej. flujo activo).
+        if (!customer?.last4CardDigits || !customer?.creditCardType) return;
 
-    this.flowService.getCustomer(customerId).pipe(
-      catchError(err => {
-        console.warn('No se pudo hidratar tarjeta enrolada — best-effort', err);
-        return of(null);
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(customer => {
-      if (!customer?.last4CardDigits || !customer?.creditCardType) return;
-
-      this.cardLastFour.set(customer.last4CardDigits);
-      this.cardType.set(customer.creditCardType);
-      this.labelCardRegisted = `**** **** **** ${customer.last4CardDigits} (${customer.creditCardType})`;
-      this.isCardAdded = true;
-      this.isPaymentVerified.set(true);
-    });
+        this.cardLastFour.set(customer.last4CardDigits);
+        this.cardType.set(customer.creditCardType);
+        this.labelCardRegisted = `**** **** **** ${customer.last4CardDigits} (${customer.creditCardType})`;
+        this.isCardAdded = true;
+        this.isPaymentVerified.set(true);
+      });
   }
 
   sortChargesBy(col: string): void {

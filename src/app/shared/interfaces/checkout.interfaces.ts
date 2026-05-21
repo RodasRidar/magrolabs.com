@@ -115,7 +115,7 @@ export interface PrepareCardRequest {
   email: string;
   first_name: string;
   last_name: string;
-  documentNumber?: string;
+  documentNumber: string;
   urlReturn: string;
   /**
    * Reuso de customer Flow existente. Si el frontend ya hizo prepare-card

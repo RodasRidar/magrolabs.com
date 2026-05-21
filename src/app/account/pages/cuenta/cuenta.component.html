@@ -142,9 +142,9 @@
                             }
                         </div>
                         <ml-badge
-                            [color]="getStatusColor(subscription()?.status)"
-                            [label]="getSubscriptionStatusText(subscription()?.status)"
-                            [pulse]="true" />
+                            [color]="subscriptionBadge(subscription()?.status).color"
+                            [label]="subscriptionBadge(subscription()?.status).label"
+                            [pulse]="subscriptionBadge(subscription()?.status).pulse" />
                     </div>
                     <div class="mt-2 max-w-xl text-sm text-gray-500">
 
@@ -192,7 +192,7 @@
                     <div class="mt-2 max-w-xl text-sm text-gray-500">
                         @if (lastOrder()) {
                         <p><strong>Producto:</strong> {{ lastOrderProductName() }}</p>
-                        <p class="mt-1"><strong>Estado:</strong> {{ getOrderStatusText(lastOrder()!.status) }}</p>
+                        <p class="mt-1"><strong>Estado:</strong> {{ orderBadge(lastOrder()!.status).label }}</p>
                         @if (lastOrder()!.total_amount > 0) {
                         <p class="mt-1"><strong>Total:</strong> S/{{ lastOrder()!.total_amount | number:'1.2-2' }}
                         </p>

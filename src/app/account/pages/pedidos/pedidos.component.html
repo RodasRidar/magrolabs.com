@@ -1,19 +1,229 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+  <div class="mb-6">
     <h1 class="text-3xl font-bold leading-tight text-gray-900">Pedidos.</h1>
-
-    <div class="flex items-center gap-2">
-      <!-- Filtro de estado
-      <label for="filtroEstado" class="text-sm text-gray-600">Filtrar por estado:</label>
-      <select id="filtroEstado"
-        class="border border-gray-300 rounded-md pl-2 pr-7 text-center py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        (change)="filtrarPorEstado($event)">
-        @for (option of statusOptions; track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select> -->
-    </div>
   </div>
+
+  <!-- Filtros desktop (≥ lg) -->
+  @if (!isLoading() && pedidos().length > 0) {
+    <div class="hidden lg:block bg-white border border-gray-200 rounded-lg p-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div>
+          <label for="filtroEstado" class="block text-xs font-medium text-gray-600 mb-1">Estado</label>
+          <select
+            id="filtroEstado"
+            [ngModel]="filterStatus()"
+            (ngModelChange)="filterStatus.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+            @for (option of statusOptions(); track option.value) {
+              <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="filtroFechaDesde" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+          <input
+            id="filtroFechaDesde"
+            type="date"
+            [ngModel]="filterDateFrom()"
+            (ngModelChange)="filterDateFrom.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label for="filtroFechaHasta" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+          <input
+            id="filtroFechaHasta"
+            type="date"
+            [ngModel]="filterDateTo()"
+            (ngModelChange)="filterDateTo.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        @if (showProductFilter()) {
+          <div>
+            <label for="filtroProducto" class="block text-xs font-medium text-gray-600 mb-1">Producto</label>
+            <select
+              id="filtroProducto"
+              [ngModel]="filterProductId()"
+              (ngModelChange)="filterProductId.set($event)"
+              class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="">Todos</option>
+              @for (option of productOptions(); track option.id) {
+                <option [value]="option.id">{{ option.name }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+      @if (hasActiveFilters()) {
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+          <span class="text-xs text-gray-500">
+            {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
+          </span>
+          <button
+            type="button"
+            (click)="limpiarFiltros()"
+            class="text-xs font-medium text-primary hover:text-primary-hover">
+            Limpiar filtros
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Filtros móvil: chips pill (< lg) -->
+    <div class="lg:hidden mb-4">
+      <div class="flex items-center gap-2 pb-2 overflow-x-auto">
+        <!-- Chip Estado -->
+        <button type="button" (click)="openMobileFilter('status')"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+          [class.border-primary]="activeStatusCount() > 0"
+          [class.text-primary]="activeStatusCount() > 0"
+          [class.border-gray-300]="activeStatusCount() === 0"
+          [class.text-gray-600]="activeStatusCount() === 0">
+          Estado
+          @if (activeStatusCount() > 0) {
+            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeStatusCount() }}</span>
+          } @else {
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          }
+        </button>
+
+        <!-- Chip Fecha -->
+        <button type="button" (click)="openMobileFilter('date')"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+          [class.border-primary]="activeDateCount() > 0"
+          [class.text-primary]="activeDateCount() > 0"
+          [class.border-gray-300]="activeDateCount() === 0"
+          [class.text-gray-600]="activeDateCount() === 0">
+          Fecha
+          @if (activeDateCount() > 0) {
+            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeDateCount() }}</span>
+          } @else {
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          }
+        </button>
+
+        <!-- Chip Producto -->
+        @if (showProductFilter()) {
+          <button type="button" (click)="openMobileFilter('product')"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+            [class.border-primary]="activeProductCount() > 0"
+            [class.text-primary]="activeProductCount() > 0"
+            [class.border-gray-300]="activeProductCount() === 0"
+            [class.text-gray-600]="activeProductCount() === 0">
+            Producto
+            @if (activeProductCount() > 0) {
+              <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeProductCount() }}</span>
+            } @else {
+              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            }
+          </button>
+        }
+      </div>
+
+      @if (hasActiveFilters()) {
+        <div class="flex items-center justify-between text-xs px-1">
+          <span class="text-gray-500">
+            {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
+          </span>
+          <button type="button" (click)="limpiarFiltros()"
+            class="font-medium text-primary hover:text-primary-hover">
+            Limpiar filtros
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Bottom Sheet overlay (mobile) -->
+    @if (activeMobileFilter() !== null) {
+      <div class="lg:hidden fixed inset-0 z-[60] flex flex-col justify-end"
+        (click)="closeMobileFilter()">
+        <!-- Backdrop -->
+        <div class="sheet-backdrop absolute inset-0 bg-black/40"></div>
+
+        <!-- Panel -->
+        <div class="sheet-panel relative bg-white rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
+          (click)="$event.stopPropagation()">
+
+          <!-- Handle -->
+          <div class="mx-auto w-10 h-1 rounded-full bg-gray-200 mb-5"></div>
+
+          @if (activeMobileFilter() === 'status') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Estado</h3>
+            <div class="space-y-1 max-h-[60vh] overflow-y-auto">
+              @for (option of statusOptions(); track option.value) {
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
+                  <span class="text-sm text-gray-700">{{ option.label }}</span>
+                  <input type="radio" name="filterStatus" [value]="option.value"
+                    [checked]="filterStatus() === option.value"
+                    (change)="filterStatus.set(option.value)"
+                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                </label>
+              }
+            </div>
+          }
+
+          @if (activeMobileFilter() === 'date') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Fecha</h3>
+            <div class="space-y-4">
+              <div>
+                <label for="filtroFechaDesdeMobile" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+                <input id="filtroFechaDesdeMobile" type="date"
+                  [ngModel]="filterDateFrom()"
+                  (ngModelChange)="filterDateFrom.set($event)"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="filtroFechaHastaMobile" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+                <input id="filtroFechaHastaMobile" type="date"
+                  [ngModel]="filterDateTo()"
+                  (ngModelChange)="filterDateTo.set($event)"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          }
+
+          @if (activeMobileFilter() === 'product') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Producto</h3>
+            <div class="space-y-1 max-h-[60vh] overflow-y-auto">
+              <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100">
+                <span class="text-sm text-gray-700">Todos</span>
+                <input type="radio" name="filterProduct" value=""
+                  [checked]="filterProductId() === ''"
+                  (change)="filterProductId.set('')"
+                  class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+              </label>
+              @for (option of productOptions(); track option.id) {
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
+                  <span class="text-sm text-gray-700">{{ option.name }}</span>
+                  <input type="radio" name="filterProduct" [value]="option.id"
+                    [checked]="filterProductId() === option.id"
+                    (change)="filterProductId.set(option.id)"
+                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                </label>
+              }
+            </div>
+          }
+
+          <!-- Acciones -->
+          <div class="flex items-center justify-between mt-8">
+            <button type="button" (click)="limpiarFiltros()"
+              class="text-sm text-gray-500 hover:text-gray-900 underline underline-offset-2">
+              Limpiar filtros
+            </button>
+            <button type="button" (click)="closeMobileFilter()"
+              class="px-6 py-2.5 rounded-full bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
+              Mostrar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  }
 
   <!-- Skeleton de carga -->
   @if (isLoading()) {
@@ -64,31 +274,40 @@
 
   <!-- Sin pedidos -->
   @if (!isLoading() && !error() && pedidos().length === 0) {
-  <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
-    <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-        </path>
-      </svg>
+    <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
+      <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">No tienes pedidos</h2>
+      <p class="text-gray-600 max-w-md mb-6">
+        Aún no has realizado ningún pedido. ¡Explora nuestros productos y realiza tu primera compra!
+      </p>
+      <a routerLink="/productos"
+        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
     </div>
-    <h2 class="text-xl font-semibold text-gray-700 mb-2">
-      No tienes pedidos
-    </h2>
-    <p class="text-gray-600 max-w-md mb-6">
-      Aún no has realizado ningún pedido. ¡Explora nuestros productos y
-      realiza tu primera compra!
-    </p>
-    <a routerLink="/productos"
-      class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
-  </div>
+  }
+
+  <!-- Filtros activos pero sin resultados -->
+  @if (!isLoading() && !error() && pedidos().length > 0 && pedidosFiltrados().length === 0) {
+    <div class="flex flex-col items-center justify-center p-10 text-center bg-gray-50 rounded-lg my-8">
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">Sin resultados</h2>
+      <p class="text-gray-600 mb-4">Ningún pedido coincide con los filtros aplicados.</p>
+      <button
+        type="button"
+        (click)="limpiarFiltros()"
+        class="text-sm font-medium text-primary hover:text-primary-hover">
+        Limpiar filtros
+      </button>
+    </div>
   }
 
   <!-- Lista de pedidos -->
-  @if (!isLoading() && !error() && pedidos().length > 0) {
+  @if (!isLoading() && !error() && pedidosFiltrados().length > 0) {
   <div class="space-y-6">
-    @for (pedido of pedidos(); track pedido.id) {
+    @for (pedido of pedidosFiltrados(); track pedido.id) {
     <ml-card class="transform transition hover:-translate-y-1">
       <!-- Cabecera del pedido -->
       <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
@@ -97,8 +316,8 @@
             }}</span>
         </div>
         <div class="flex items-center gap-2">
-          <ml-badge size="md" [color]="getOrderStatusColor(pedido.status)"
-            [label]="obtenerTextoEstado(pedido.status)" />
+          <ml-badge size="md" [color]="orderBadge(pedido.status).color"
+            [label]="orderBadge(pedido.status).label" />
         </div>
       </div>
 
@@ -134,56 +353,51 @@
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <span class="items-center flex text-sm font-medium bg-gray-200 text-black px-2 py-1 rounded">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded p-1.5"
+                  [attr.aria-label]="isProductExpanded(item.id) ? 'Ocultar detalles' : 'Mostrar detalles'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200"
+                    [class.rotate-180]="isProductExpanded(item.id)"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                   </svg>
-                  <span class="hidden sm:block">{{
-                    isProductExpanded(item.id) ? "Ocultar" : "Detalles"
-                    }}</span>
                 </span>
               </div>
             </div>
 
-            <!-- Detalles desplegables del producto -->
-            @if (isProductExpanded(item.id)) {
-            <div class="p-4 border-t border-gray-200 bg-white">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p class="text-sm text-gray-600 mb-1">
-                    Nº de compra:
-                  </p>
-                  <p class="font-medium text-gray-800">
-                    {{ item.id.substring(0, 8).toUpperCase() }}
-                  </p>
+            <!-- Detalles desplegables del producto (acordeón animado) -->
+            <div class="grid transition-[grid-template-rows] duration-300 ease-out"
+              [class]="isProductExpanded(item.id) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+              <div class="overflow-hidden">
+                <div class="p-4 border-t border-gray-200 bg-white">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
+                      <p class="font-medium text-gray-800">
+                        {{ item.id.substring(0, 8).toUpperCase() }}
+                      </p>
 
-                  <p class="text-sm text-gray-600 mt-3 mb-1">
-                    Fecha de compra:
-                  </p>
-                  <p class="font-medium text-gray-800">
-                    {{ formatearFecha(pedido.created_at) }}
-                  </p>
-                </div>
+                      <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
+                      <p class="font-medium text-gray-800">
+                        {{ formatearFecha(pedido.created_at) }}
+                      </p>
+                    </div>
 
-                <div>
-                  <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
-                  <p class="font-medium text-gray-800">
-                    {{ item.quantity }}
-                  </p>
-                  @if (pedido.status === "DELIVERED") {
-
-                  <div class="mt-6 flex flex-col gap-2 w-fit">
-                    <a class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
-                      (click)="escribirResena(item.product?.slug);$event.stopPropagation()" 
-                      (keypress)="escribirResena(item.product?.slug);$event.stopPropagation()" tabindex="0">
-                      Escribir reseña →</a>
+                    <div>
+                      <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
+                      <p class="font-medium text-gray-800">{{ item.quantity }}</p>
+                      @if (pedido.status === "DELIVERED") {
+                        <div class="mt-6 flex flex-col gap-2 w-fit">
+                          <a class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
+                            (click)="escribirResena(item.product?.slug);$event.stopPropagation()"
+                            (keypress)="escribirResena(item.product?.slug);$event.stopPropagation()" tabindex="0">
+                            Escribir reseña →</a>
+                        </div>
+                      }
+                    </div>
                   </div>
-                  }
                 </div>
               </div>
             </div>
-            }
           </div>
           }
         </div>

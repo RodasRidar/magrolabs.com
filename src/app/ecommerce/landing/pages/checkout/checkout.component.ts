@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, effect, ElementRef, HostListener, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, effect, ElementRef, HostListener, inject, PLATFORM_ID, signal, ViewChild, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { OrderSummaryItemComponent } from '../bolsa/order-summary-item/order-summary-item.component';
@@ -8,15 +8,15 @@ import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analy
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, of, Subject, switchMap, take, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, finalize, map, Observable, Subject, switchMap, take, tap } from 'rxjs';
 import { AddressService, PlaceAPI, Ubigeo } from '../../../../shared/services/address-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentMethodComponent, PaymentMethodSelection, EnrolledCardInfo, PaymentSelection } from '../../../../shared/ui/payment-method/payment-method.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { environment } from '../../../../../environments/env';
-import { CreateCustomerRequest, EditCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, FlowPaymentMethod, FlowPaymentRequest } from '../../../../shared/models/flow.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
-import { AddressSummary, ConfirmationStatus, Summary, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
+import { AddressSummary, ConfirmationStatus, SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
@@ -44,7 +44,7 @@ import { PasswordInputComponent } from '../../../../shared/ui/password-input/pas
     templateUrl: './checkout.component.html',
     styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent implements AfterViewInit {
+export class CheckoutComponent implements AfterViewInit, OnInit {
   @ViewChild('isSignUpAceptedInput') isSignUpAceptedInput!: ElementRef<HTMLInputElement>;
   @ViewChild('emailInput') emailInput!: ElementRef;
   @ViewChild('nroDocInput') nroDocInput!: ElementRef<HTMLInputElement>;
@@ -142,13 +142,13 @@ export class CheckoutComponent implements AfterViewInit {
   private documentSubject = new Subject<string>();
   private destroyRef = inject(DestroyRef);
 
-  shoppingCart: ShoppingCart = <ShoppingCart>{};
+  shoppingCart: ShoppingCart = {} as ShoppingCart;
   form = this._formBuilder.group({
     firtName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern(/^9[0-9]{8}$/)]),
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
+    typeDocument: this._formBuilder.nonNullable.control(('DNI' as TypeDocument), [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     searchAddress: this._formBuilder.nonNullable.control('', [Validators.minLength(3)]),
@@ -417,18 +417,18 @@ export class CheckoutComponent implements AfterViewInit {
       // Validar documento
       this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
     } else {
-      let emailControl = this.form.get('email');
-      let cellphoneControl = this.form.get('cellphone');
-      let nroDocumentControl = this.form.get('nroDocument');
+      const emailControl = this.form.get('email');
+      const cellphoneControl = this.form.get('cellphone');
+      const nroDocumentControl = this.form.get('nroDocument');
 
       emailControl?.setErrors({ emailExists: false });
       cellphoneControl?.setErrors({ cellphoneExists: false });
       nroDocumentControl?.setErrors({ nroDocumentExists: false });
 
 
-      let emailValue = emailControl?.value;
-      let cellphoneValue = cellphoneControl?.value;
-      let nroDocumentValue = nroDocumentControl?.value;
+      const emailValue = emailControl?.value;
+      const cellphoneValue = cellphoneControl?.value;
+      const nroDocumentValue = nroDocumentControl?.value;
 
       if (emailControl) {
         emailControl.setValue(emailValue ?? '');
@@ -943,11 +943,14 @@ export class CheckoutComponent implements AfterViewInit {
     if (this.flowToken() || this.preparingCard()) return;
 
     // Validar que el form tenga lo mínimo para identificar al cliente.
+    // documentNumber es obligatorio en PrepareCardRequest — el backend lo usa
+    // como externalId del customer en Flow para evitar duplicados.
     const email = this.form.get('email')?.value?.trim();
     const firstName = this.form.get('firtName')?.value?.trim();
     const lastName = this.form.get('lastName')?.value?.trim();
-    if (!email || !firstName || !lastName) {
-      this._toastService.warning('Completa tus datos', 'Necesitamos tu nombre y correo antes de registrar la tarjeta.');
+    const documentNumber = this.form.get('nroDocument')?.value?.trim();
+    if (!email || !firstName || !lastName || !documentNumber) {
+      this._toastService.warning('Completa tus datos', 'Necesitamos tu nombre, correo y número de documento antes de registrar la tarjeta.');
       return;
     }
 
@@ -956,7 +959,7 @@ export class CheckoutComponent implements AfterViewInit {
       email,
       first_name: firstName,
       last_name: lastName,
-      documentNumber: this.form.get('nroDocument')?.value || undefined,
+      documentNumber,
       urlReturn: this.ENV.flowUrlReturn,
       // Si ya tenemos un customerId del prepare-card previo (cliente alternando
       // entre tarjeta/Yape varias veces), reusarlo para que el backend NO haga
@@ -1609,7 +1612,7 @@ export class CheckoutComponent implements AfterViewInit {
   }
 
   private setValuesInFormFromSummary() {
-    let summary = this._summaryService.getSummary()
+    const summary = this._summaryService.getSummary()
     this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
     this.form.get('lastName')?.setValue(summary?.userData?.apellido ?? '');
     this.form.get('cellphone')?.setValue(summary?.userData?.cellphone ?? '');

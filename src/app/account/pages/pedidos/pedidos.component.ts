@@ -1,6 +1,7 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { OrderService } from '../../../shared/services/order.service';
 import { OrderListResponse, OrderResponse, OrderStatus, OrderItemResponse } from '../../../shared/interfaces/order.interfaces';
@@ -13,13 +14,20 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { environment } from '../../../../environments/env';
 import { SeoService } from '../../../shared/services/seo.service';
 import { CardComponent } from '../../../shared/ui/card/card.component';
-import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
+import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+import { getOrderStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
 import { StepComponent } from '../../../ecommerce/signup/components/step/step.component';
+
+interface ProductOption {
+  id: string;
+  name: string;
+}
 
 @Component({
     selector: 'app-pedidos',
-    imports: [CommonModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, StepComponent],
-    templateUrl: './pedidos.component.html'
+    imports: [CommonModule, FormsModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, StepComponent],
+    templateUrl: './pedidos.component.html',
+    styleUrl: './pedidos.component.css'
 })
 export class PedidosComponent implements OnInit {
   private _flowService = inject(FlowService);
@@ -32,25 +40,87 @@ export class PedidosComponent implements OnInit {
   error = signal<string | null>(null);
   currentPage = signal<number>(1);
   totalPages = signal<number>(1);
-  selectedStatus = signal<OrderStatus | undefined | 'undefined'>(undefined);
   expandedProducts = signal<Record<string, boolean>>({});
   private _router = inject(Router);
+
+  // Filtros client-side. Se aplican sobre `pedidos()` ya cargadas.
+  filterStatus = signal<OrderStatus | ''>('');
+  filterDateFrom = signal<string>('');
+  filterDateTo = signal<string>('');
+  filterProductId = signal<string>('');
+
+  // Sheet móvil. `null` = cerrado.
+  activeMobileFilter = signal<'status' | 'date' | 'product' | null>(null);
 
   // Estados para el seguimiento de compra
   mostrarSeguimiento = signal<boolean>(false);
   pedidoSeleccionado = signal<OrderResponse | null>(null);
 
-  statusOptions = [
-    { value: undefined, label: 'Todos' },
-    { value: 'PAID', label: 'Pagado' },
-    { value: 'PENDING_PAYMENT', label: 'Pendiente' },
-    { value: 'PROCESSING', label: 'En proceso' },
-    { value: 'SHIPPED', label: 'Enviado' },
-    { value: 'DELIVERED', label: 'Entregado' },
-    { value: 'CANCELLED', label: 'Cancelado' },
-    { value: 'REFUNDED', label: 'Reembolsado' },
-    { value: 'REJECTED', label: 'Rechazado' }
-  ];
+  // Solo se ofrecen los estados que aparecen en los pedidos cargados. Evita
+  // que el select muestre opciones que nunca van a filtrar nada.
+  statusOptions = computed<{ value: OrderStatus | ''; label: string }[]>(() => {
+    const present = new Set<OrderStatus>();
+    for (const pedido of this.pedidos()) {
+      present.add(pedido.status as OrderStatus);
+    }
+    const options: { value: OrderStatus | ''; label: string }[] = [
+      { value: '', label: 'Todos' },
+    ];
+    for (const status of present) {
+      options.push({ value: status, label: getOrderStatusBadge(status).label });
+    }
+    return options;
+  });
+
+  // Productos únicos derivados de los pedidos cargados. El select se muestra
+  // solo si hay > 2 productos distintos.
+  productOptions = computed<ProductOption[]>(() => {
+    const seen = new Map<string, string>();
+    for (const pedido of this.pedidos()) {
+      for (const item of pedido.orderItems) {
+        const id = item.product?.id;
+        const name = item.product?.name;
+        if (id && name && !seen.has(id)) seen.set(id, name);
+      }
+    }
+    return Array.from(seen, ([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  showProductFilter = computed(() => this.productOptions().length > 2);
+
+  hasActiveFilters = computed(() =>
+    !!this.filterStatus() ||
+    !!this.filterDateFrom() ||
+    !!this.filterDateTo() ||
+    !!this.filterProductId(),
+  );
+
+  // Conteos por chip (para badge numérico en los chips móviles).
+  activeStatusCount = computed(() => this.filterStatus() ? 1 : 0);
+  activeDateCount = computed(() => (this.filterDateFrom() ? 1 : 0) + (this.filterDateTo() ? 1 : 0));
+  activeProductCount = computed(() => this.filterProductId() ? 1 : 0);
+
+  // Pedidos filtrados client-side por estado + rango de fecha + producto.
+  // Rango inclusivo. `dateFrom` compara contra inicio del día,
+  // `dateTo` contra fin del día.
+  pedidosFiltrados = computed<OrderResponse[]>(() => {
+    const status = this.filterStatus();
+    const productId = this.filterProductId();
+    const from = this.filterDateFrom() ? new Date(this.filterDateFrom() + 'T00:00:00') : null;
+    const to = this.filterDateTo() ? new Date(this.filterDateTo() + 'T23:59:59') : null;
+
+    return this.pedidos().filter(pedido => {
+      if (status && pedido.status !== status) return false;
+      if (productId && !pedido.orderItems.some(i => i.product?.id === productId)) return false;
+      if (from || to) {
+        const created = new Date(pedido.created_at);
+        if (from && created < from) return false;
+        if (to && created > to) return false;
+      }
+      return true;
+    });
+  });
 
   constructor(private orderService: OrderService) { }
 
@@ -92,63 +162,24 @@ export class PedidosComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    if (this.selectedStatus() == 'undefined') {
-      this.orderService.getMyOrders(
-        this.currentPage(),
-        10
-      ).pipe(
-        catchError(err => {
-          this.error.set('Error al cargar tus pedidos. Por favor, inténtalo nuevamente.');
-          return of({
-            status: 'error',
-            data: {
-              orders: [],
-              pagination: {
-                total: 0,
-                page: 1,
-                limit: 10,
-                totalPages: 0
-              }
-            }
-          } as OrderListResponse);
-        }),
-        finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe(response => {
-        console.log(response);
-        this.pedidos.set(response.data.orders);
-        this.totalPages.set(response.data.pagination.totalPages);
-        this.initializeExpandedProducts();
-      });
-    } else {
-      this.orderService.getMyOrders(
-        this.currentPage(),
-        10,
-        this.selectedStatus() as OrderStatus
-      ).pipe(
-        catchError(err => {
-          this.error.set('Error al cargar tus pedidos. Por favor, inténtalo nuevamente.');
-          return of({
-            status: 'error',
-            data: {
-              orders: [],
-              pagination: {
-                total: 0,
-                page: 1,
-                limit: 10,
-                totalPages: 0
-              }
-            }
-          } as OrderListResponse);
-        }),
-        finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe(response => {
-        this.pedidos.set(response.data.orders);
-        this.totalPages.set(response.data.pagination.totalPages);
-        this.initializeExpandedProducts();
-      });
-    }
+    this.orderService.getMyOrders(this.currentPage(), 10).pipe(
+      catchError(() => {
+        this.error.set('Error al cargar tus pedidos. Por favor, inténtalo nuevamente.');
+        return of({
+          status: 'error',
+          data: {
+            orders: [],
+            pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
+          },
+        } as OrderListResponse);
+      }),
+      finalize(() => this.isLoading.set(false)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(response => {
+      this.pedidos.set(response.data.orders);
+      this.totalPages.set(response.data.pagination.totalPages);
+      this.initializeExpandedProducts();
+    });
   }
 
   cambiarPagina(pagina: number): void {
@@ -156,11 +187,19 @@ export class PedidosComponent implements OnInit {
     this.cargarPedidos();
   }
 
-  filtrarPorEstado(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedStatus.set(selectElement.value as OrderStatus | undefined);
-    this.currentPage.set(1);
-    this.cargarPedidos();
+  limpiarFiltros(): void {
+    this.filterStatus.set('');
+    this.filterDateFrom.set('');
+    this.filterDateTo.set('');
+    this.filterProductId.set('');
+  }
+
+  openMobileFilter(filter: 'status' | 'date' | 'product'): void {
+    this.activeMobileFilter.set(filter);
+  }
+
+  closeMobileFilter(): void {
+    this.activeMobileFilter.set(null);
   }
 
   cancelarPedido(orderId: string): void {
@@ -207,33 +246,8 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  obtenerTextoEstado(estado: string): string {
-    const textos: Record<string, string> = {
-      'PAID': 'Pagado',
-      'PENDING_PAYMENT': 'Pendiente de pago',
-      'PROCESSING': 'En proceso',
-      'SHIPPED': 'Enviado',
-      'DELIVERED': 'Entregado',
-      'CANCELLED': 'Cancelado',
-      'REFUNDED': 'Reembolsado',
-      'REJECTED': 'Rechazado'
-    };
-
-    return textos[estado] || estado;
-  }
-
-  getOrderStatusColor(status: string): BadgeColor {
-    const map: Record<string, BadgeColor> = {
-      PENDING_PAYMENT: 'yellow',
-      PROCESSING:      'blue',
-      SHIPPED:         'indigo',
-      DELIVERED:       'green',
-      CANCELLED:       'red',
-      REJECTED:        'red',
-      PAID:            'gray',
-      REFUNDED:        'gray',
-    };
-    return map[status] ?? 'gray';
+  orderBadge(status: string | undefined): StatusBadge {
+    return getOrderStatusBadge(status);
   }
 
   generarArrayPaginas(): number[] {

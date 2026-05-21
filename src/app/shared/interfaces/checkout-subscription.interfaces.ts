@@ -48,6 +48,16 @@ export interface CheckoutSubscriptionRequest {
   firstChargeAmount: number;
   firstChargeSubject: string;
   firstChargeOptionals?: Record<string, any>;
+  /**
+   * Si true, el backend NO ejecuta `chargeCustomer` — Flow cobra
+   * automáticamente al crear la suscripción recurrente. Usar para flujos
+   * de "suscripción directa" donde no hay pre-charge (ej. botón Suscribir
+   * en /cuenta/suscripcion con tarjeta ya registrada).
+   *
+   * Cuando se setea, `firstChargeAmount` puede ser 0 y los campos `charge.*`
+   * en la respuesta vienen con valores sintéticos — no leerlos.
+   */
+  skipFirstCharge?: boolean;
   order: CheckoutSubscriptionOrder;
   /** Solo poblado en reintentos tras TX_FAILED_AFTER_CHARGE. */
   chargeReference?: ChargeReference;

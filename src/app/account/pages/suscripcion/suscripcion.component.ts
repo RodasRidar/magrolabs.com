@@ -33,7 +33,8 @@ import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
 import { AlertComponent } from '../../../shared/ui/alert/alert.component';
-import { BadgeComponent, BadgeColor } from '../../../shared/ui/badge/badge.component';
+import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+import { getSubscriptionStatusBadge, getChargeStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 @Component({
@@ -167,7 +168,12 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   pauseEndDateString = signal<string>('');
   nextPaymentDateString = signal<string>('');
   pauseEndDate = signal<Date>(new Date());
-  nextPaymentDate = signal<Date>(new Date());
+  // Null = la sub aún no tiene next_billing_date computado (por ejemplo,
+  // recién creada — el job de Flow asignará la fecha en el próximo ciclo).
+  // Importante: NO usar `new Date()` como default porque la UI mostraría
+  // una fecha falsa, ni `new Date(undefined)` porque caería al epoch
+  // (31/12/1969 en UTC-5).
+  nextPaymentDate = signal<Date | null>(null);
   // Variables para modal de confirmación final de cancelación
   showFinalCancelModal = signal<boolean>(false);
 
@@ -517,7 +523,8 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
         switchMap(response => {
           if (response.data.subscriptions && response.data.subscriptions.length > 0) {
             console.log('response.data.subscriptions[0]', response.data.subscriptions[0]);
-            this.nextPaymentDate.set(new Date(response.data.subscriptions[0].next_billing_date!)); 
+            const nextBilling = response.data.subscriptions[0].next_billing_date;
+            this.nextPaymentDate.set(nextBilling ? new Date(nextBilling) : null); 
             this.subscription.set(response.data.subscriptions[0]);
             this.loadSubscriptionPlan(response.data.subscriptions[0].subscription_plan_id);
             this.loadPaymentMethod();
@@ -732,39 +739,26 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Devuelve las clases CSS para el estado del cobro
+   * Parsea el subject de un cobro en sus partes legibles.
+   * Formato esperado: "{producto} - {plan} S/{precio} - período: YYYY-MM-DD / YYYY-MM-DD"
    */
-  getChargeStatusClass(status: number): string {
-    switch (status) {
-      case FlowChargeStatus.PENDING:
-        return 'bg-yellow-100 text-yellow-800';
-      case FlowChargeStatus.COMPLETED:
-        return 'bg-green-100 text-green-800';
-      case FlowChargeStatus.REJECTED:
-        return 'bg-red-100 text-red-800';
-      case FlowChargeStatus.CANCELLED:
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+  parseChargeSubject(subject: string): { product: string; plan: string; period: string } {
+    const periodoMatch = subject.match(/- período:\s*(\d{4}-\d{2}-\d{2})\s*\/\s*(\d{4}-\d{2}-\d{2})/i);
+    const withoutPeriodo = periodoMatch
+      ? subject.slice(0, subject.toLowerCase().indexOf(' - período:')).trim()
+      : subject;
+    const dashIdx = withoutPeriodo.indexOf(' - ');
+    const product = dashIdx !== -1 ? withoutPeriodo.slice(0, dashIdx).trim() : withoutPeriodo;
+    const plan = dashIdx !== -1 ? withoutPeriodo.slice(dashIdx + 3).trim() : '';
+    let period = '';
+    if (periodoMatch) {
+      const fmt = (d: string) => {
+        const [y, m, day] = d.split('-');
+        return `${day}/${m}/${y}`;
+      };
+      period = `${fmt(periodoMatch[1])} — ${fmt(periodoMatch[2])}`;
     }
-  }
-
-  /**
-   * Devuelve el texto descriptivo del estado del cobro
-   */
-  getChargeStatusText(status: number): string {
-    switch (status) {
-      case FlowChargeStatus.PENDING:
-        return 'Pendiente';
-      case FlowChargeStatus.COMPLETED:
-        return 'Completado';
-      case FlowChargeStatus.REJECTED:
-        return 'Rechazado';
-      case FlowChargeStatus.CANCELLED:
-        return 'Cancelado';
-      default:
-        return 'Desconocido';
-    }
+    return { product, plan, period };
   }
 
   /**
@@ -1133,7 +1127,7 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
 
     this.isLoading.set(true);
 
-    this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? this.nextPaymentDate() : undefined)
+    this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? (this.nextPaymentDate() ?? undefined) : undefined)
       .pipe(
         switchMap((response) => {
           // Cancelar suscripción en Flow si es necesario
@@ -1358,7 +1352,8 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
           if (combinedResponse.flowResponse) {
             this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
           }
-          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
+          const nextBilling = response.data.subscription.next_billing_date;
+          this.nextPaymentDate.set(nextBilling ? new Date(nextBilling) : null);
           let credits = '10'
           if (response.data.subscription.status === SubscriptionStatusEnum.PAUSED || response.data.subscription.status === SubscriptionStatusEnum.TO_CANCEL ) {
             credits = this.userCredits()
@@ -1592,92 +1587,12 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getStatusColor(status: SubscriptionStatusEnum): BadgeColor {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:    return 'green';
-      case SubscriptionStatusEnum.PAUSED:    return 'yellow';
-      case SubscriptionStatusEnum.CANCELLED: return 'red';
-      case SubscriptionStatusEnum.TRIAL:     return 'blue';
-      case SubscriptionStatusEnum.EXPIRED:   return 'gray';
-      case SubscriptionStatusEnum.TO_CANCEL: return 'red';
-      default:                               return 'gray';
-    }
+  subscriptionBadge(status: SubscriptionStatusEnum): StatusBadge {
+    return getSubscriptionStatusBadge(status);
   }
 
-  getStatusClass(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-100 text-green-800';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-100 text-yellow-800';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-100 text-red-800';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-100 text-blue-800';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-100 text-gray-800';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  getDotClass(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-500';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-500';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-500';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-500';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-500';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
-  get DotClass(): string {
-    switch (this.subscription()!.status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-500';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-500';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-500';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-500';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-500';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
-  getStatusText(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'Activa';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'Pausada';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'Cancelada';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'Periodo de prueba';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'Expirada';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'Por Cancelar';
-      default:
-        return 'Desconocido';
-    }
+  chargeBadge(status: number): StatusBadge {
+    return getChargeStatusBadge(status);
   }
 
   getPeriodText(period?: string): string {
@@ -1817,18 +1732,22 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   /**
    * Procede con la suscripción tras verificar la tarjeta.
    *
-   * Orquestación directa (NO usa el endpoint saga `/checkout/subscription`
-   * porque ese siempre dispara un `chargeCustomer` upfront + el cobro
-   * automático de Flow al crear la suscripción → doble cargo).
+   * Una sola llamada al saga `POST /checkout/subscription` con
+   * `skipFirstCharge: true`. El backend:
+   *  1. Salta `chargeCustomer` (Flow cobrará al crear la sub en background).
+   *  2. Crea Order + Subscription (TRIAL → ACTIVE al confirmar pago) +
+   *     SubscriptionOrder + crédito '¡Bienvenido a Magrolabs!' (+10MP) en una
+   *     sola TX con reintentos.
+   *  3. Dispara `flow.createSubscription` en background con reintentos.
    *
-   * Aquí solo dejamos que Flow cobre automáticamente al crear la sub
-   * (sin trial → cobra de inmediato del plan recurrente). Después
-   * persistimos los registros en backend.
+   * El crédito 'Magropuntos de lealtad' (+10MP) NO se acredita en el primer
+   * pago — solo en renovaciones (controlado server-side en
+   * `confirmFlowSubscriptionPayment`).
    *
-   * Convención de este flujo `/cuenta/suscripcion`:
-   * - **Sin trial**: Flow cobra el monto del plan al crear la sub.
-   * - **Un solo cargo**: el de Flow (no hay `chargeCustomer` adicional).
-   * - **Sin cupones**: no se aplican descuentos desde esta vista.
+   * Antes hacíamos 6 llamadas encadenadas desde el front
+   * (getUserById → createOrder → flow.createSubscription →
+   * subscriptionService.createSubscription → subscriptionOrderService.create
+   * → creditTransactionService.create). El saga consolida todo.
    */
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
@@ -1838,25 +1757,22 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Esperamos a que el producto canónico esté cargado desde BD.
+    // El producto canónico ya debe estar cargado desde BD.
     const product = this.subscriptionProduct();
     if (!product) {
       this._toastService.warning('Catálogo cargando', 'Espera un instante e intenta nuevamente.');
       return;
     }
 
+    const flowCustomerId = user.flowCustomerId;
     this.isLoading.set(true);
 
-    const isTwoSoles = localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
-    const flowPlanId = isTwoSoles
-      ? this.ENV.flowPlanIdTest
-      : this.ENV.flowCreatina250Gr2025_55_PlanId;
-
-    // Resolver address_id del perfil. Si falta, mandamos al perfil a
-    // configurar dirección antes de continuar.
-    this.userService.getUserById(user.id).pipe(
-      switchMap(userResponse => {
-        const addressId = userResponse.address_id;
+    // El user en cookies (del login) no incluye `address` — la fuente de verdad
+    // es GET /users/profile. Sin esta llamada el chequeo de dirección siempre
+    // falla y redirige a /perfil aunque el usuario sí tenga una configurada.
+    this.userService.getCurrentUser().pipe(
+      switchMap(profile => {
+        const addressId = profile?.address?.id;
         if (!addressId) {
           this._toastService.warning(
             'Falta tu dirección',
@@ -1866,58 +1782,30 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
           return EMPTY;
         }
 
-        // 1) Crear orden en BD (registra item + dirección).
-        return this.orderService.createOrder({
-          shipping_address: addressId,
-          payment_method: PaymentMethod.CREDIT_CARD,
-          isLoyaltyWebShow: false,
-          orderItems: [{ product_id: product.id, quantity: 1 }],
-        }).pipe(
-          switchMap(orderResp => {
-            const orderId = orderResp.data.order.id;
-            localStorage.setItem('OrderId', orderId);
+        const isTwoSoles = localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
+        const flowPlanId = isTwoSoles
+          ? this.ENV.flowPlanIdTest
+          : this.ENV.flowCreatina250Gr2025_55_PlanId;
 
-            // 2) Crear suscripción en Flow → Flow cobra automáticamente
-            //    el monto del plan al crear (sin trial). Este es el único
-            //    cargo del flujo.
-            return this.flowService.createSubscription({
-              planId: flowPlanId,
-              customerId: user.flowCustomerId!,
-            }).pipe(map(() => orderId));
-          }),
-          switchMap(orderId => {
-            // 3) Registrar suscripción en backend (estado ACTIVE).
-            return this.subscriptionService.createSubscription({
-              subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
-              start_date: new Date().toISOString(),
-              status: SubscriptionStatusEnum.ACTIVE,
-            }).pipe(map(sub => ({ orderId, subscriptionId: sub.id })));
-          }),
-          switchMap(({ orderId, subscriptionId }) => {
-            // 4) Enlazar orden ↔ suscripción.
-            const shipmentDate = new Date(
-              Date.now()
-              + this.ENV.plazoDeEntregaDiasHabiles.max * 24 * 60 * 60 * 1000
-              - 5 * 60 * 60 * 1000,
-            ).toISOString();
-
-            return this.subscriptionOrderService.createSubscriptionOrder({
-              subscription_id: subscriptionId,
-              order_id: orderId,
-              shipment_date: shipmentDate,
-            });
-          }),
-          switchMap(() => {
-            // 5) Acreditar Magropuntos de bienvenida.
-            return this._creditTransactionService.createTransaction({
-              user_id: user.id!,
-              type: TransactionType.EARNED,
-              amount: this.ENV.creditoRegaloPorCompraMes,
-              description: '¡Bienvenido a Magrolabs!',
-              source: PaymentMethod.CREDIT_CARD,
-            });
-          }),
-        );
+        return this._checkoutSubscriptionService.processSubscription({
+          customerId: flowCustomerId,
+          flowPlanId,
+          backendSubscriptionPlanId: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
+          trialPeriodDays: 0,
+          // skipFirstCharge=true → backend salta chargeCustomer. firstChargeAmount
+          // se ignora pero el schema lo requiere ≥ 0. firstChargeSubject también
+          // se requiere por schema; pasamos un placeholder.
+          firstChargeAmount: 0,
+          firstChargeSubject: 'Suscripción directa',
+          skipFirstCharge: true,
+          creditAmount: Number(this.ENV.creditoRegaloPorCompraMes),
+          order: {
+            mode: 'new',
+            shipping_address: addressId,
+            payment_method: PaymentMethod.CREDIT_CARD,
+            orderItems: [{ product_id: product.id, quantity: 1 }],
+          },
+        });
       }),
       catchError(err => {
         console.error('Error creando suscripción:', err);

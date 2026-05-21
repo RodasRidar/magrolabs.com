@@ -841,12 +841,12 @@
               </h3>
             </div>
             @if (isPorActivar()) {
-              <ml-badge color="green" label="Activa por pagar" />
+              <ml-badge color="green" label="Activa por pagar" [pulse]="true" />
             } @else {
               <ml-badge
-                [color]="getStatusColor(subscription()!.status)"
-                [label]="getStatusText(subscription()!.status)"
-                [pulse]="true"
+                [color]="subscriptionBadge(subscription()!.status).color"
+                [label]="subscriptionBadge(subscription()!.status).label"
+                [pulse]="subscriptionBadge(subscription()!.status).pulse"
               />
             }
           </div>
@@ -1370,21 +1370,21 @@
                   <!-- Skeleton de carga -->
                   @if (isLoadingCharges()) {
                     <div class="animate-pulse">
-                      <div
-                        class="grid grid-cols-4 gap-4 pb-3 border-b border-gray-200"
-                      >
+                      <div class="grid grid-cols-6 gap-4 pb-3 border-b border-gray-200">
+                        <div class="h-3 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-3 bg-gray-300 rounded w-1/2"></div>
                         <div class="h-3 bg-gray-300 rounded w-3/4"></div>
                         <div class="h-3 bg-gray-300 rounded w-1/2"></div>
                         <div class="h-3 bg-gray-300 rounded w-3/4"></div>
                         <div class="h-3 bg-gray-300 rounded w-1/2"></div>
                       </div>
                       @for (i of [1, 2, 3, 4, 5]; track i) {
-                        <div
-                          class="grid grid-cols-4 gap-4 py-3 border-b border-gray-100"
-                        >
+                        <div class="grid grid-cols-6 gap-4 py-3 border-b border-gray-100">
                           <div class="h-4 bg-gray-200 rounded w-full"></div>
                           <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
                           <div class="h-4 bg-gray-200 rounded w-full"></div>
+                          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
                           <div class="h-4 bg-gray-200 rounded w-1/2"></div>
                         </div>
                       }
@@ -1403,146 +1403,74 @@
                         <table class="min-w-full">
                           <thead>
                             <tr class="border-b border-gray-200">
-                              <th scope="col" class="pb-3 pr-4 text-left">
+                              <!-- Producto -->
+                              <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('subject')"
                                   class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
                                 >
-                                  Concepto
-                                  <svg
-                                    class="w-3 h-3 shrink-0"
-                                    [class.opacity-30]="
-                                      chargesSortCol() !== 'subject'
-                                    "
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    @if (
-                                      chargesSortCol() === "subject" &&
-                                      chargesSortDir() === "asc"
-                                    ) {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 15l7-7 7 7"
-                                      />
+                                  Producto
+                                  <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'subject'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    @if (chargesSortCol() === "subject" && chargesSortDir() === "asc") {
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                                     } @else {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     }
                                   </svg>
                                 </button>
                               </th>
-                              <th scope="col" class="pb-3 pr-4 text-left">
+                              <!-- Plan -->
+                              <th scope="col" class="pb-3 pr-6 text-left">
+                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</span>
+                              </th>
+                              <!-- Período -->
+                              <th scope="col" class="pb-3 pr-6 text-left">
+                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Período</span>
+                              </th>
+                              <!-- Total -->
+                              <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('amount')"
                                   class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
                                 >
                                   Total
-                                  <svg
-                                    class="w-3 h-3 shrink-0"
-                                    [class.opacity-30]="
-                                      chargesSortCol() !== 'amount'
-                                    "
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    @if (
-                                      chargesSortCol() === "amount" &&
-                                      chargesSortDir() === "asc"
-                                    ) {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 15l7-7 7 7"
-                                      />
+                                  <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'amount'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    @if (chargesSortCol() === "amount" && chargesSortDir() === "asc") {
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                                     } @else {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     }
                                   </svg>
                                 </button>
                               </th>
-                              <th scope="col" class="pb-3 pr-4 text-left">
+                              <!-- Fecha -->
+                              <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('requestDate')"
                                   class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
                                 >
-                                  Fecha y hora
-                                  <svg
-                                    class="w-3 h-3 shrink-0"
-                                    [class.opacity-30]="
-                                      chargesSortCol() !== 'requestDate'
-                                    "
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    @if (
-                                      chargesSortCol() === "requestDate" &&
-                                      chargesSortDir() === "asc"
-                                    ) {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 15l7-7 7 7"
-                                      />
+                                  Fecha
+                                  <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'requestDate'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    @if (chargesSortCol() === "requestDate" && chargesSortDir() === "asc") {
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                                     } @else {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     }
                                   </svg>
                                 </button>
                               </th>
+                              <!-- Estado -->
                               <th scope="col" class="pb-3 text-left">
                                 <button
                                   (click)="sortChargesBy('status')"
                                   class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
                                 >
                                   Estado
-                                  <svg
-                                    class="w-3 h-3 shrink-0"
-                                    [class.opacity-30]="
-                                      chargesSortCol() !== 'status'
-                                    "
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    @if (
-                                      chargesSortCol() === "status" &&
-                                      chargesSortDir() === "asc"
-                                    ) {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 15l7-7 7 7"
-                                      />
+                                  <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'status'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    @if (chargesSortCol() === "status" && chargesSortDir() === "asc") {
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                                     } @else {
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     }
                                   </svg>
                                 </button>
@@ -1555,47 +1483,32 @@
                               track charge.flowOrder
                             ) {
                               <tr class="hover:bg-gray-50 transition-colors">
-                                <td
-                                  class="py-3 pr-4 text-sm text-gray-800 max-w-[180px] truncate"
-                                  [title]="charge.subject.slice(0, -9)"
-                                >
-                                  {{ charge.subject.slice(0, -9) }}
+                                @let s = parseChargeSubject(charge.subject);
+                                <!-- Producto -->
+                                <td class="py-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                  {{ s.product }}
                                 </td>
-                                <td
-                                  class="py-3 pr-4 text-sm font-medium text-gray-900 whitespace-nowrap"
-                                >
-                                  {{
-                                    charge.amount
-                                      | currency: "S/" : "symbol" : "1.1-2"
-                                  }}
+                                <!-- Plan -->
+                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
+                                  {{ s.plan || '—' }}
                                 </td>
-                                <td
-                                  class="py-3 pr-4 text-sm text-gray-600 whitespace-nowrap"
-                                >
+                                <!-- Período -->
+                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
+                                  {{ s.period || '—' }}
+                                </td>
+                                <!-- Total -->
+                                <td class="py-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                  {{ charge.amount | currency: "S/" : "symbol" : "1.1-2" }}
+                                </td>
+                                <!-- Fecha -->
+                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
                                   {{ formatChargeDate(charge.requestDate) }}
                                 </td>
                                 <td class="py-3">
-                                  <span
-                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                                    [ngClass]="
-                                      getChargeStatusClass(charge.status)
-                                    "
-                                  >
-                                    {{ getChargeStatusText(charge.status) }}
-                                  </span>
-                                  <!-- Pre-generación de clases dinámicas de Tailwind -->
-                                  <span
-                                    class="bg-green-100 text-green-800 hidden"
-                                  ></span>
-                                  <span
-                                    class="bg-yellow-100 text-yellow-800 hidden"
-                                  ></span>
-                                  <span
-                                    class="bg-red-100 text-red-800 hidden"
-                                  ></span>
-                                  <span
-                                    class="bg-gray-100 text-gray-800 hidden"
-                                  ></span>
+                                  <ml-badge
+                                    [color]="chargeBadge(charge.status).color"
+                                    [label]="chargeBadge(charge.status).label"
+                                  />
                                 </td>
                               </tr>
                             }

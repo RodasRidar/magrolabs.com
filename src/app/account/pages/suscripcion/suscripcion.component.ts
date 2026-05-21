@@ -1666,13 +1666,33 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Crea un nuevo customer en Flow y genera el token
+   * Crea un nuevo customer en Flow y genera el token.
+   *
+   * `externalId` SIEMPRE es `user.documentNumber` (DNI/CE/etc.). No hay
+   * fallback a `user.id` — el UUID de BD no debe llegar a Flow porque:
+   *  1. Es el identificador interno; exponerlo a un proveedor externo es
+   *     leak de información.
+   *  2. Si el usuario actualiza su documento, queda inconsistente.
+   *  3. Las reconciliaciones manuales contra Flow asumen documento.
+   *
+   * Si el usuario no tiene documento registrado, lo redirigimos al perfil
+   * para que lo complete antes de continuar.
    */
   private createFlowCustomerAndGenerateToken(user: any): void {
+    if (!user?.documentNumber) {
+      this._toastService.warning(
+        'Documento requerido',
+        'Tu cuenta no tiene un documento registrado. Complétalo en tu perfil antes de suscribirte.',
+      );
+      this.router.navigate(['/cuenta/perfil']);
+      this.showPaymentVerification.set(false);
+      return;
+    }
+
     const flowCustomerRequest: CreateCustomerRequest = {
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
-      externalId: user.documentNumber || user.id.toString(),
+      externalId: user.documentNumber,
     };
 
     this.flowService.createCustomer(flowCustomerRequest)

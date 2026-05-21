@@ -756,7 +756,7 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
         const [y, m, day] = d.split('-');
         return `${day}/${m}/${y}`;
       };
-      period = `${fmt(periodoMatch[1])} — ${fmt(periodoMatch[2])}`;
+      period = `${fmt(periodoMatch[1])} - ${fmt(periodoMatch[2])}`;
     }
     return { product, plan, period };
   }

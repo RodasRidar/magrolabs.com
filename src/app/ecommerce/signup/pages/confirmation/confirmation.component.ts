@@ -208,6 +208,8 @@ export class ConfirmationComponent implements OnInit {
     } else if (status == ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
       this.status = ConfirmationStatus.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA;
       this.trackCompleteSuscription();
+      const _s = this._summaryService.getSummary();
+      this.urlShared = ('https://magrolabs.com/referido-por-amigo?codigo=' + (_s?.userData?.referralCode ?? '') + '&nombre=' + (_s?.userData?.nombre || this.clientName)).replace(/ /g, '%20');
       UrgencyBarComponent.decrementUnits();
     } else if (status == ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
       this.status = ConfirmationStatus.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION;

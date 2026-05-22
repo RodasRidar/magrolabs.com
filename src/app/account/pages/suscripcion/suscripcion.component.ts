@@ -749,7 +749,18 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
       : subject;
     const dashIdx = withoutPeriodo.indexOf(' - ');
     const product = dashIdx !== -1 ? withoutPeriodo.slice(0, dashIdx).trim() : withoutPeriodo;
-    const plan = dashIdx !== -1 ? withoutPeriodo.slice(dashIdx + 3).trim() : '';
+    const planRaw = dashIdx !== -1 ? withoutPeriodo.slice(dashIdx + 3).trim() : '';
+
+    // Caso especial: producto de prueba 100g — subject sin precio ni período
+    // Ej: "Creatina 100% Monohidratada Magrolabs 100g - Magrolabs"
+    if (!periodoMatch && planRaw === 'Magrolabs') {
+      return {
+        product,
+        plan: '-',
+        period: `Prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`,
+      };
+    }
+
     let period = '';
     if (periodoMatch) {
       const fmt = (d: string) => {
@@ -758,7 +769,7 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
       };
       period = `${fmt(periodoMatch[1])} - ${fmt(periodoMatch[2])}`;
     }
-    return { product, plan, period };
+    return { product, plan: planRaw, period };
   }
 
   /**
@@ -767,19 +778,18 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   formatChargeDate(dateString: string): string {
     if (!dateString) return 'No disponible';
 
-    const parts = dateString.split(' ');
-    if (parts.length < 2) return dateString;
+    const date = new Date(dateString.replace(' ', 'T'));
+    if (isNaN(date.getTime())) return dateString;
 
-    const dateParts = parts[0].split('-');
-    if (dateParts.length !== 3) return dateString;
+    date.setHours(date.getHours() - 1);
 
-    const day = parseInt(dateParts[2], 10);
-    const month = parseInt(dateParts[1], 10);
-    const year = dateParts[0];
-    const timeParts = parts[1].split(':');
-    const time = `${timeParts[0]}:${timeParts[1]}h`;
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
 
-    return `${day}/${month}/${year} ${time}`;
+    return `${day}/${month}/${year} ${hours}:${minutes}h`;
   }
 
   cancelSubscription(): void {

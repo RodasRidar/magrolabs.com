@@ -127,7 +127,7 @@
         <div class="relative mt-7 mb-2 lg:mt-9">
 
             @if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoExito.parrafo1}}</p>
@@ -136,7 +136,7 @@
             <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
             }
             @else if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Hola {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoError.parrafo1}}</p>
@@ -144,7 +144,7 @@
 
             <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
             }@else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
 
@@ -154,7 +154,7 @@
             <p class="text-base mt-5">{{parrafoCompraConRegistroExito.parrafo3}}</p>
             }
             @else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoCompraSinRegistroExito.parrafo1}}</p>

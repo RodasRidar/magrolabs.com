@@ -6,14 +6,14 @@
             <div class="max-w-xl max-lg:max-w-sm">
                 <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                     @if (isRefered) {
-                    <strong class="text-[#d07d66] font-bold ">{{name}}</strong> te invita a probar la {{ENV.campanaPrimeraCreatina.textos.heroOferta}}!
+                    <strong class="text-primary font-bold ">{{name}}</strong> te invita a probar la {{ENV.campanaPrimeraCreatina.textos.heroOferta}}!
                     }
                     @else{
                     Te invitamos a probar una creatina.
                     }
                 </h1>
                 <p class="mt-4 text-base text-gray-700">
-                    ¡Recibes <strong class="text-[#d07d66] font-extrabold">{{ENV.campanaPrimeraCreatina.textos.heroOferta}} y
+                    ¡Recibes <strong class="text-primary font-extrabold">{{ENV.campanaPrimeraCreatina.textos.heroOferta}} y
                         {{ENV.creditoRegaloPorCompraMes}} de Magropuntos para compras</strong>!
                     Regístrate a continuación para una
                     suscripción. Durante tu período de prueba de {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días 
@@ -200,7 +200,7 @@
         </div>
         <div class="text-center">
             <a [routerLink]="'/productos/creatinas/creatina-monohidratada-250-gr'" [fragment]="'reviews'"
-                class="text-[#d07d66] hover:text-[#d7816a] w-fit hover:underline">
+                class="text-primary hover:text-primary-hover w-fit hover:underline">
                 Mira todas las reseñas →
             </a>
         </div>
@@ -209,79 +209,21 @@
 
 <!-- FAQs -->
 <div class="mx-auto max-w-3xl px-6 lg:pb-8 pb-4 bg-white">
-    <div class="space-y-4">
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloOferta}}</h2>
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+    <ml-accordion-group>
+        <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloOferta">
+            <p class="leading-relaxed text-gray-700">{{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}</p>
+        </ml-accordion-item>
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-
-            <p class="mt-4 leading-relaxed text-gray-700">
-                {{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}
-            </p>
-        </details>
-
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">{{ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion}}</h2>
-
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-
-            <p class="mt-4 leading-relaxed text-gray-700">
+        <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion">
+            <p class="leading-relaxed text-gray-700">
                 {{ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
             </p>
-        </details>
+        </ml-accordion-item>
 
-        <details class="group rounded-lg bg-gray-50 p-6 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900">
-                <h2 class="font-semibold">¿Hay un periodo de cancelación?</h2>
-
-                <span class="relative size-5 shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </summary>
-
-            <p class="mt-4 leading-relaxed text-gray-700">
+        <ml-accordion-item title="¿Hay un periodo de cancelación?">
+            <p class="leading-relaxed text-gray-700">
                 Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para
-                probarla,
-                este es tu período de prueba.
+                probarla, este es tu período de prueba.
                 @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {
                     Si cancelas durante el período de prueba, no pagarás nada y se cancelará tu suscripción.
                 } @else {
@@ -291,8 +233,8 @@
                 cancelación mensual.
                 ¿Cancelas antes de {{ENV.diasAntesDeSiguienteCobroSubscripcion}} días de tu fecha de facturación? Entonces no habrá un pago ni entrega, caso contrario, habrá un pago y una entrega más.
             </p>
-        </details>
-    </div>
+        </ml-accordion-item>
+    </ml-accordion-group>
 </div>
 
 <!-- Footer -->

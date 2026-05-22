@@ -8,8 +8,11 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/env';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
-import { LoyaltyTier, LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
+import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
+import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
+import { CardComponent } from '../../../shared/ui/card/card.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 interface TransactionHistoryItem {
   date: Date;
@@ -19,11 +22,10 @@ interface TransactionHistoryItem {
 }
 
 @Component({
-  selector: 'app-credito',
-  standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './credito.component.html',
-  styleUrl: './credito.component.css'
+    selector: 'app-credito',
+    imports: [CommonModule, RouterLink, FormsModule, LinkButtonComponent, CardComponent, PageHeaderComponent],
+    templateUrl: './credito.component.html',
+    styleUrl: './credito.component.css'
 })
 export class CreditoComponent implements OnInit {
   private _creditTransactionService = inject(CreditTransactionService);
@@ -93,7 +95,7 @@ export class CreditoComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mis Magropuntos | Magrolabs');
+    this._seoService.setTitle('Recompensas | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);

@@ -280,6 +280,14 @@ export interface ProductResponse {
   id: string;
 
   /**
+   * Slug canónico actual del producto. El backend lo devuelve para todos
+   * los productos. Si el cliente consulta un slug `deprecated-*`, el
+   * backend retorna el producto canónico con su slug actual — útil para
+   * redirigir transparentemente desde URLs viejas.
+   */
+  slug?: string;
+
+  /**
    * Nombre del producto
    * @example "Smartphone XYZ Pro"
    */

@@ -1,19 +1,26 @@
 <app-navbar [isCheckout]="true" [type]="navbarTypeEnum.BOLSA"></app-navbar>
-
 <section class="body-font  flex flex-col justify-center items-center">
     <div class="sm:px-2 sm:py-4 justify-center self-center flex sm:flex-nowrap flex-wrap">
-        <div class=" shadow-xl mx-auto sm:rounded-3xl bg-[#f6f6f6] flex items-end justify-center relative">
+        <div class=" shadow-xl mx-auto sm:rounded-3xl bg-surface flex items-end justify-center relative">
             <div class="w-full h-full">
+
                 <main class="lg:min-h-full lg:flex lg:flex-row-reverse">
                     <h1 class="sr-only">Checkout</h1>
 
                     <!-- Mobile order summary -->
                     <section aria-labelledby="order-heading" class="px-4 py-4 sm:px-6 lg:hidden">
                         <div class="max-w-lg mx-auto">
-                            <div class="flex items-center justify-between mb-2">
-                                <h2 id="order-heading" class="text-lg font-medium text-gray-900">Tu Orden.</h2>
-                            </div>
-
+                            <!-- <div class="flex items-center justify-between mb-2">
+                                <h2 id="order-heading" class="text-4xl font-extrabold tracking-tight text-gray-900">Tu Orden.</h2>
+                            </div> -->
+                            <button [routerLink]="'/bolsa'"
+                                class="sm:hidden col-span-6 py-1 flex items-center gap-1 text-gray-500 hover:text-gray-800 focus:outline-none transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span class="text-sm">Volver</span>
+                            </button>
                             <div id="disclosure-1">
                                 <ul role="list" class="divide-y divide-gray-200">
                                     @for (item of shoppingCart.items; track $index) {
@@ -23,44 +30,34 @@
                                 </ul>
 
                                 <form class="mt-4">
-                                    <label for="discount-code-mobile" class="block text-sm font-medium text-gray-700">
-                                        Código de descuento
-                                    </label>
-                                    <div class="flex space-x-2 mt-1">
-                                        <input 
-                                            type="text" 
-                                            id="discount-code-mobile" 
-                                            name="discount-code-mobile"
-                                            [formControl]="form.controls.discountCodeInput"
-                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
-                                        @if (!isDiscountApplied()) {
-                                        <button 
-                                            type="button"
-                                            (click)="applyDiscountCode()"
-                                            [disabled]="isApplyingDiscount()"
-                                            class="bg-[#d07d66] text-sm font-medium text-white rounded-md px-4 hover:bg-[#b86b56] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
-                                            {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
-                                        </button>
-                                        } @else {
-                                        <button 
-                                            type="button"
-                                            (click)="removeDiscountCode()"
-                                            class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
-                                            Eliminar
-                                        </button>
+                                    <ml-form-field label="Código de descuento" inputId="discount-code-mobile"
+                                        [errors]="discountError() ? [discountError()] : []">
+                                        <div class="flex space-x-2">
+                                            <input type="text" id="discount-code-mobile" name="discount-code-mobile"
+                                                [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9"
+                                                autocomplete="off"
+                                                class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                            @if (!isDiscountApplied()) {
+                                            <ml-button [name]="isApplyingDiscount() ? 'Aplicando...' : 'Aplicar'"
+                                                type="secondary" [isDisabled]="isApplyingDiscount()"
+                                                (click)="applyDiscountCode()"></ml-button>
+                                            } @else {
+                                            <ml-button name="Eliminar" type="secondary-outlined"
+                                                (click)="removeDiscountCode()"></ml-button>
+                                            }
+
+                                        </div>
+                                        @if (isDiscountApplied()) {
+                                        <p class="mt-2 text-xs text-green-600 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Código aplicado exitosamente
+                                        </p>
                                         }
-                                    </div>
-                                    @if (discountError()) {
-                                    <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
-                                    }
-                                    @if (isDiscountApplied()) {
-                                    <p class="mt-2 text-xs text-green-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                        </svg>
-                                        Código aplicado exitosamente
-                                    </p>
-                                    }
+                                    </ml-form-field>
                                 </form>
 
                             </div>
@@ -69,23 +66,25 @@
                     </section>
 
                     <dl
-                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-gray-500 mt-4 space-y-3 sticky top-0 bg-white shadow-md ">
+                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-gray-500 space-y-3 sticky top-0 bg-white shadow-md ">
                         <div class="flex justify-between">
                             <dt>Subtotal</dt>
                             <dd class="text-gray-900">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>
                         </div>
                         @if (isDiscountApplied()) {
-                        <div class="flex justify-between text-[#d07d66]">
+                        <div class="flex justify-between text-primary">
                             <dt class="flex items-center">
                                 Descuento
-                                <span class="ml-2 rounded-full bg-[#fae8e3] text-xs text-[#d07d66] py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
+                                <span
+                                    class="ml-2 rounded-full bg-primary-surface text-xs text-primary py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
                             </dt>
-                            <dd class="text-[#d07d66]">-{{discountAmount() | currency : 'S/'}}</dd>
+                            <dd class="text-primary">-{{discountAmount() | currency : 'S/'}}</dd>
                         </div>
                         }
                         <div class="flex justify-between">
                             <dt>Envío</dt>
-                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
+                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+
+                                precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                         </div>
                         <p
                             class="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-3 mt-3">
@@ -108,44 +107,37 @@
 
                         <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
                             <form class="mb-6">
-                                <label for="discount-code" class="block text-sm font-medium text-gray-700">
-                                    Código de descuento
-                                </label>
-                                <div class="flex space-x-2 mt-1">
-                                    <input 
-                                        type="text" 
-                                        id="discount-code" 
-                                        name="discount-code"
-                                        [formControl]="form.controls.discountCodeInput"
-                                        class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d07d66] focus:border-[#d07d66] sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
-                                    @if (!isDiscountApplied()) {
-                                    <button 
-                                        type="button"
-                                        (click)="applyDiscountCode()"
-                                        [disabled]="isApplyingDiscount()"
-                                        class="bg-[#d07d66] text-sm font-medium text-white rounded-md px-4 hover:bg-[#b86b56] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d07d66] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
-                                        {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
-                                    </button>
-                                    } @else {
-                                    <button 
-                                        type="button"
-                                        (click)="removeDiscountCode()"
-                                        class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
-                                        Eliminar
-                                    </button>
+                                <ml-form-field label="Código de descuento" inputId="discount-code"
+                                    [errors]="discountError() ? [discountError()] : []">
+                                    <div class="flex space-x-2">
+                                        <input type="text" id="discount-code" name="discount-code"
+                                            [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9"
+                                            autocomplete="off"
+                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                        @if (!isDiscountApplied()) {
+                                        <button type="button" (click)="applyDiscountCode()"
+                                            [disabled]="isApplyingDiscount()"
+                                            class="bg-primary text-sm font-medium text-white rounded-md px-4 hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+                                            {{ isApplyingDiscount() ? 'Aplicando...' : 'Aplicar' }}
+                                        </button>
+                                        } @else {
+                                        <button type="button" (click)="removeDiscountCode()"
+                                            class="bg-red-500 text-sm font-medium text-white rounded-md px-4 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap">
+                                            Eliminar
+                                        </button>
+                                        }
+                                    </div>
+                                    @if (isDiscountApplied()) {
+                                    <p class="mt-2 text-xs text-green-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Código aplicado exitosamente
+                                    </p>
                                     }
-                                </div>
-                                @if (discountError()) {
-                                <p class="mt-2 text-xs text-red-500">{{ discountError() }}</p>
-                                }
-                                @if (isDiscountApplied()) {
-                                <p class="mt-2 text-xs text-green-600 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Código aplicado exitosamente
-                                </p>
-                                }
+                                </ml-form-field>
                             </form>
 
                             <dl class="text-sm font-medium text-gray-500 space-y-6">
@@ -154,17 +146,19 @@
                                     <dd class="text-gray-900">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
                                 </div>
                                 @if (isDiscountApplied()) {
-                                <div class="flex justify-between text-[#d07d66]">
+                                <div class="flex justify-between text-primary">
                                     <dt class="flex items-center">
                                         Descuento
-                                        <span class="ml-2 rounded-full bg-[#fae8e3] text-xs text-[#d07d66] py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
+                                        <span
+                                            class="ml-2 rounded-full bg-primary-surface text-xs text-primary py-0.5 px-2 tracking-wide">{{discountCode()}}</span>
                                     </dt>
-                                    <dd class="text-[#d07d66]">-{{discountAmount() | currency : 'S/'}}</dd>
+                                    <dd class="text-primary">-{{discountAmount() | currency : 'S/'}}</dd>
                                 </div>
                                 }
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
-                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+ precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
+                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+
+                                        precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                                 </div>
                                 <div
                                     class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6 text-base">
@@ -179,215 +173,109 @@
                     <section aria-labelledby="payment-heading"
                         class="flex-auto overflow-y-auto px-4 pt-0 pb-16 sm:px-6 sm:pt-0 lg:px-8 lg:pt-0 lg:pb-24">
                         <h2 id="payment-heading" class="sr-only">Payment and shipping details</h2>
-
                         <div class="max-w-lg mx-auto">
                             <form [formGroup]="form" method="post">
                                 <div class="space-y-12">
                                     <div class="pb-4">
                                         <div class="mt-5 grid grid-cols-6 gap-x-6 gap-y-2 lg:grid-cols-6">
+                                            <button [routerLink]="'/bolsa'"
+                                                class="max-sm:hidden col-span-6 py-1 flex items-center gap-1 text-gray-500 hover:text-gray-800 focus:outline-none transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M15 19l-7-7 7-7" />
+                                                </svg>
+                                                <span class="text-sm">Volver</span>
+                                            </button>
                                             <!-- REGISTRO -->
                                             <div class="col-span-6 flex justify-between mb-3 items-end">
                                                 <h2
                                                     class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
                                                     Información.</h2>
-                                                <a class="text-sm underline font-normal antialiased hover:text-[#d07d66]"
+                                                @if (!isAuthUser) {
+                                                <a class="text-sm underline font-normal antialiased hover:text-primary"
                                                     [routerLink]="'/login'"
                                                     [queryParams]="{'returnUrl':'/checkout'}">Iniciar sesión</a>
+                                                }
                                             </div>
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="first-name"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">Nombres
-                                                    *</label>
-                                                <div class="mt-2">
-                                                    <input type="text" name="first-name" id="first-name"
-                                                        autocomplete="given-name" formControlName="firtName"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('firtName')) {
-                                                    <p class="text-xs text-red-500">*Nombres es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('firtName')) {
-                                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                                    }
-                                                </div>
+                                                <ml-input label="Nombres" inputId="first-name" inputType="text"
+                                                    autocomplete="given-name" [required]="true"
+                                                    [errors]="firtNameErrors" formControlName="firtName"
+                                                    placeholder="Juan" />
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="last-name"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">Apellidos
-                                                    *</label>
-                                                <div class="mt-2">
-                                                    <input type="text" name="last-name" id="last-name"
-                                                        autocomplete="family-name" formControlName="lastName"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('lastName')) {
-                                                    <p class="text-xs text-red-500">*Apellidos es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('lastName')) {
-                                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                                    }
-                                                </div>
+                                                <ml-input label="Apellidos" inputId="last-name" inputType="text"
+                                                    autocomplete="family-name" [required]="true"
+                                                    [errors]="lastNameErrors" formControlName="lastName"
+                                                    placeholder="Pérez Rodríguez" />
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="cellphone"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    Celular *
-                                                </label>
-                                                <div class="mt-2 flex items-center text-gray-400">
-                                                    <div
-                                                        class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
-                                                        +51
+                                                <ml-form-field label="Celular" inputId="cellphone" [required]="true"
+                                                    [errors]="cellphoneErrors">
+                                                    <div class="flex items-center text-gray-400">
+                                                        <div
+                                                            class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300">
+                                                            +51
+                                                        </div>
+                                                        <input type="number" id="cellphone" placeholder="987654321"
+                                                            (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
+                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
+                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            formControlName="cellphone" />
                                                     </div>
-                                                    <input type="number" placeholder="987654321" #cellphoneInput
-                                                        (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
-                                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
-                                                         block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
-                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                        formControlName="cellphone" />
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('cellphone')) {
-                                                    <p class="text-xs text-red-500">*El número de celular es obligatorio
-                                                    </p>
-                                                    }
-                                                    @if(hasValidatorError('cellphone')) {
-                                                    <p class="text-xs text-red-500">*Número inválido, solo se permite 9
-                                                        dígitos</p>
-                                                    }
-                                                    @if(hasExistCellphone()) {
-                                                    <p class="text-xs text-red-500">
-                                                        *El número de celular ya está registrado
-                                                    </p>
-                                                    }
-                                                </div>
+                                                </ml-form-field>
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="cellphone"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    N° de Documento *
-                                                </label>
-                                                <div class="mt-2 flex items-center">
+                                                <ml-form-field label="N° de Documento" inputId="nroDocument"
+                                                    [required]="true" [errors]="nroDocumentErrors">
                                                     <div class="flex items-center">
                                                         <select formControlName="typeDocument"
-                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-[#d07d66] disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
+                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-primary disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60">
                                                             <option value="DNI">DNI</option>
                                                             <option value="CE">Carnet Ext.</option>
                                                             <option value="PASSPORT">Pasaporte</option>
                                                         </select>
+                                                        <input id="nroDocument"
+                                                            [type]="form.get('typeDocument')?.value === 'DNI' ? 'number' : 'text'"
+                                                            placeholder="87654321" autocomplete="identity-card-number"
+                                                            (input)="limitDigits(form.get('typeDocument')?.value === 'DNI' ? 8 : 12, 'nroDocument')"
+                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
+                                                            formControlName="nroDocument" />
                                                     </div>
-                                                    <input #nroDocInput
-                                                        [type]="form.get('typeDocument')?.value == 'DNI' ? 'number' : 'text'"
-                                                        placeholder="87654321" autocomplete="identity-card-number"
-                                                        (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
-                                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
-                                                         block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
-                                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
-                                                        formControlName="nroDocument" />
-                                                </div>
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('nroDocument')) {
-                                                    <p class="text-xs text-red-500"> *Número de documento es obligatorio
-                                                    </p>
-                                                    }
-                                                    @if(hasValidatorError('nroDocument') &&
-                                                    form.get('typeDocument')?.value == 'DNI') {
-                                                    <p class="text-xs text-red-500">*DNI permite 8 dígitos</p>
-                                                    }
-                                                    @if(hasValidatorError('nroDocument') &&
-                                                    form.get('typeDocument')?.value == 'CE') {
-                                                    <p class="text-xs text-red-500">*Carnet Ext. permite 12
-                                                        alfanuméricos</p>
-                                                    }
-                                                    @if(hasValidatorError('nroDocument') &&
-                                                    form.get('typeDocument')?.value == 'PASSPORT') {
-                                                    <p class="text-xs text-red-500">*Pasaporte permite 12
-                                                        alfanuméricos</p>
-                                                    }
-                                                    @if(hasExistDocument()) {
-                                                    <p class="text-xs text-red-500">
-                                                        *El documento ya está registrado
-                                                    </p>
-                                                    }
-                                                </div>
+                                                </ml-form-field>
                                             </div>
 
                                             <div class="sm:col-span-3 col-span-6">
-                                                <label for="email"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    Correo *</label>
-                                                <div class="mt-2">
-                                                    <input formControlName="email" #emailInput id="email" name="email"
-                                                        type="email" autocomplete="email" placeholder="tu@example.com"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasInvalidEmail() || hasValidatorError('email')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                @if(hasRequiredError('email') || hasValidatorError('email') || hasExistEmail() || hasInvalidEmail()) {
-                                                <div class="p-2">
-                                                    @if(hasRequiredError('email')) {
-                                                    <p class="text-xs text-red-500">*Correo es obligatorio</p>
-                                                    }
-                                                    @if(hasExistEmail()) {
-                                                    <p class="text-xs text-red-500">
-                                                        *El correo ya está registrado
-                                                    </p>
-                                                    }
-                                                    @if(hasInvalidEmail()) {
-                                                    <p class="text-xs text-red-500">*Correo inválido o no existente</p>
-                                                    }
-                                                    @if(hasValidatorError('email') && !hasRequiredError('email') && !hasExistEmail() && !hasInvalidEmail()) {
-                                                    <p class="text-xs text-red-500">*Formato de correo inválido</p>
-                                                    }
-                                                </div>
-                                                }
+                                                <ml-input #emailInput label="Correo" inputId="email" inputType="email"
+                                                    autocomplete="email" placeholder="juan.perez@example.com"
+                                                    [required]="true" [errors]="emailErrors" formControlName="email" />
                                             </div>
-
+                                            @if(!isAuthUser) {
                                             <div class="sm:col-span-3 col-span-6"
                                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value}">
-                                                <label for="password"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">
-                                                    Contraseña *</label>
-                                                <div class="mt-2">
-                                                    <input formControlName="password" name="password" type="password"
-                                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                </div>
-                                                @if(hasRequiredError('password') || hasValidatorError('password')) {
-                                                <div class="p-2">
-
-                                                    @if(hasRequiredError('password')) {
-                                                    <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
-                                                    }
-                                                    @if(hasValidatorError('password')) {
-                                                    <p class="text-xs text-red-500">*Debe contener mínimo 8 caracteres
-                                                    </p>
-                                                    <!-- <p class="text-xs text-red-500">*Contener al menos una letra mayúscula</p>
-                                                    <p class="text-xs text-red-500">*Contener al menos una número</p>
-                                                    <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
-                                                    }
-                                                </div>
-
-                                                }
-                                            </div>
+                                                <ml-password-input label="Contraseña" inputId="password"
+                                                    [required]="true" [errors]="passwordErrors"
+                                                    formControlName="password" [showStrength]="true"
+                                                    placeholder="Crea una contraseña segura" />
+                                            </div>}
+                                            @if (!isAuthUser) {
                                             <div class="sm:col-span-4 col-span-6 flex items-end pb-2">
-                                                <label class="inline-flex items-center my-2 cursor-pointer" 
-                                                       [ngClass]="{'cursor-not-allowed opacity-60': form.get('isSignUpAcepted')?.disabled}">
-                                                    <input #isSignUpAceptedInput type="checkbox" (change)="isSignUpAceptedChange()"
+                                                <label class="inline-flex items-center my-2 cursor-pointer py-2"
+                                                    [ngClass]="{'cursor-not-allowed opacity-60': form.get('isSignUpAcepted')?.disabled}">
+                                                    <input #isSignUpAceptedInput type="checkbox"
+                                                        (change)="isSignUpAceptedChange()"
                                                         formControlName="isSignUpAcepted"
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
                                                         class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
                                                     <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted'), 'opacity-60': form.get('isSignUpAcepted')?.disabled}"
                                                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
+
                                                     <span
                                                         [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
                                                         class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme
@@ -395,6 +283,8 @@
                                                         hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
                                                 </label>
                                             </div>
+                                            }
+
                                             @if(hasRequiredError('isSignUpAcepted') ||
                                             hasValidatorError('isSignUpAcepted')) {
                                             <div class="sm:col-span-3 col-span-6">
@@ -406,12 +296,12 @@
                                                 </div>
                                             </div>
                                             }
-                                            
+
                                             <!-- ENTREGA -->
 
                                             <div class="col-span-6 my-3">
                                                 <h2
-                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl mt-4">
                                                     Envío.</h2>
                                             </div>
 
@@ -430,7 +320,7 @@
                                                     </div>
                                                     <div class="relative">
                                                         <input
-                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
+                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
                                                             type="text" role="combobox" aria-expanded="false"
                                                             placeholder="Busca tu dirección de entrega" value=""
                                                             formControlName="searchAddress" autocomplete="off">
@@ -438,7 +328,7 @@
                                                         <div role="status" class="absolute top-3 right-2"
                                                             [hidden]="!isSearchingAddress">
                                                             <svg aria-hidden="true"
-                                                                class="w-6 h-6 text-gray-200 animate-spin fill-[#d07d66]"
+                                                                class="w-6 h-6 text-gray-200 animate-spin fill-primary"
                                                                 viewBox="0 0 100 101" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <path
@@ -455,7 +345,7 @@
 
                                                 @if (addressList.length > 0) {
                                                 <div
-                                                    class="relative z-30 w-full bg-white border ring-1 ring-gray-300 rounded-lg max-h-48 overflow-auto overflow-y-scroll focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6">
+                                                    class="relative z-30 w-full bg-white border ring-1 ring-gray-300 rounded-lg max-h-48 overflow-auto overflow-y-scroll focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6">
                                                     <ul>
                                                         @for (item of addressList; track $index) {
                                                         <li (click)="selectAddress(item)"
@@ -469,181 +359,80 @@
                                                 }
                                             </div>
 
-                                            <div class="col-span-6 mb-3"  [ngClass]="hideSearching ? 'hidden' : ''">
+                                            <div class="col-span-6 mb-3" [ngClass]="hideSearching ? 'hidden' : ''">
                                                 <p class="my-5 text-sm text-center">
-                                                    <span class="cursor-pointer font-bold antialiased text-[#d07d66]"
-                                                        (click)="hideSearching = true; isSearched = true">O ingresa tu dirección manualmente →</span>
+                                                    <span class="cursor-pointer font-bold antialiased text-primary"
+                                                        (click)="hideSearching = true; isSearched = true">O ingresa tu
+                                                        dirección manualmente →</span>
                                                 </p>
                                             </div>
                                             <div class="col-span-6 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6"
                                                 [ngClass]="hideSearching ? '' : 'hidden'">
 
                                                 <div class="sm:col-span-6">
-                                                    <label for="street-address"
-                                                        class="block text-sm/6 font-medium text-gray-900">Avenida /
-                                                        Calle / Jirón
-                                                        *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" autocomplete="street-address"
-                                                            (input)="limitDigits(70, 'streetAddress')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('streetAddress') || hasValidatorError('streetAddress')}"
-                                                            formControlName="streetAddress">
-
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('streetAddress')) {
-                                                            <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                            }
-                                                            @if(hasValidatorError('streetAddress')) {
-                                                            <p class="text-xs text-red-500">*Solo se permite más de 3
-                                                                caracteres</p>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    <ml-input label="Avenida / Calle / Jirón" inputId="street-address"
+                                                        inputType="text" autocomplete="street-address" [required]="true"
+                                                        [maxLength]="70" [errors]="streetAddressErrors"
+                                                        formControlName="streetAddress" placeholder="Av.Javier Prado" />
                                                 </div>
 
                                                 <div class="sm:col-span-3 sm:col-start-1">
-                                                    <label for="city"
-                                                        class="block text-sm/6 font-medium text-gray-900">Departamento
-                                                        *</label>
-                                                    <div class="mt-2">
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('department')}"
-                                                            (change)="selectDepartment($event)"
-                                                            formControlName="department" [value]="departmentUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (departments$ | async; as departmentsList) {
-                                                            @for (item of departmentsList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
-                                                            }
-                                                            }
-                                                        </select>
-
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('department')) {
-                                                            <small class="text-xs text-red-500">*Departamento es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    <ml-select label="Departamento" inputId="department"
+                                                        [required]="true" [errors]="departmentErrors"
+                                                        formControlName="department"
+                                                        (selectionChange)="selectDepartment($event)">
+                                                        @if (departments$ | async; as departmentsList) {
+                                                        @for (item of departmentsList; track $index) {
+                                                        <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
+                                                        }
+                                                        }
+                                                    </ml-select>
                                                 </div>
 
 
                                                 <div class="sm:col-span-3">
-                                                    <label for="province"
-                                                        class="block text-sm/6 font-medium text-gray-900">Provincia
-                                                        *</label>
-                                                    <div class="mt-2">
-
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('province')}"
-                                                            (change)="selectProvince($event)" formControlName="province"
-                                                            [value]="provinceUbigeo"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (provinces$ | async; as provincesList) {
-                                                            @for (item of provincesList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
-                                                            }
-                                                            }
-                                                        </select>
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('province')) {
-                                                            <small class="text-xs text-red-500">*Provincia es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    <ml-select label="Provincia" inputId="province" [required]="true"
+                                                        [errors]="provinceErrors" formControlName="province"
+                                                        (selectionChange)="selectProvince($event)">
+                                                        @if (provinces$ | async; as provincesList) {
+                                                        <option value="0">Seleccione una provincia</option>
+                                                        @for (item of provincesList; track $index) {
+                                                        <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
+                                                        }
+                                                        }
+                                                    </ml-select>
                                                 </div>
 
                                                 <div class="sm:col-span-3">
-                                                    <label for="district"
-                                                        class="block text-sm/6 font-medium text-gray-900">Distrito
-                                                        *</label>
-                                                    <div class="mt-2">
-
-                                                        <select
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('district')}"
-                                                            formControlName="district" [value]="districtUbigeo" (change)="selectDistrict($event)"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                            @if (districts$ | async; as districtsList) {
-                                                            @for (item of districtsList; track $index) {
-                                                            <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}
-                                                            </option>
-                                                            }
-                                                            }
-
-                                                        </select>
-                                                        <div class="p-2">
-                                                            @if(hasRequiredError('district')) {
-                                                            <small class="text-xs text-red-500">*Distrito es
-                                                                obligatorio</small>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    <ml-select label="Distrito" inputId="district" [required]="true"
+                                                        [errors]="districtErrors" formControlName="district"
+                                                        (selectionChange)="selectDistrict($event)">
+                                                        @if (districts$ | async; as districtsList) {
+                                                        <option value="0">Seleccione un distrito</option>
+                                                        @for (item of districtsList; track $index) {
+                                                        <option [value]="item.id_ubigeo">{{item.nombre_ubigeo}}</option>
+                                                        }
+                                                        }
+                                                    </ml-select>
                                                 </div>
+
+                                                <!-- <div class="sm:col-span-3">
+                                                    <ml-input label="Código Postal" inputId="postalCode"
+                                                        inputType="text" [maxLength]="5" [errors]="postalCodeErrors"
+                                                        formControlName="postalCode" />
+                                                </div> -->
 
                                                 <div class="sm:col-span-3">
-                                                    <label for="region"
-                                                        class="block text-sm/6 font-medium text-gray-900">Código
-                                                        Postal</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" (input)="limitDigits(5, 'postalCode')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasValidatorError('postalCode')}"
-                                                            formControlName="postalCode">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        <!-- @if(hasRequiredError('postalCode')) {
-                                                        <p class="text-xs text-red-500">*Código Postal es obligatorio
-                                                        </p>
-                                                        } -->
-                                                        @if(hasValidatorError('postalCode')) {
-                                                        <p class="text-xs text-red-500">*Solo se permite 5 dígitos</p>
-                                                        }
-                                                    </div>
-                                                </div>
-
-                                                <div class="sm:col-span-2">
-                                                    <label for="number"
-                                                        class="block text-sm/6 font-medium text-gray-900">N° / Mz. / Lt. *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" id="number" name="number" placeholder="Ej: 123, Mz A Lt 5"
-                                                            (input)="limitDigits(20, 'number')"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
-                                                            formControlName="number"
-                                                            [ngClass]="{'ring-red-500 ring-2': hasRequiredError('number') || hasValidatorError('number')}">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        @if(hasRequiredError('number')) {
-                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                        }
-                                                        @if(hasValidatorError('number') && !hasRequiredError('number')) {
-                                                        <p class="text-xs text-red-500">*Formato: números, letras, / . , -</p>
-                                                        }
-                                                    </div>
+                                                    <ml-input label="N° / Mz. / Lt." inputId="number" inputType="text"
+                                                        placeholder="403" [required]="true" [maxLength]="20"
+                                                        [errors]="numberErrors" formControlName="number" />
                                                 </div>
 
 
-                                                <div class="sm:col-span-4 mb-2">
-                                                    <label for="reference"
-                                                        class="block text-sm/6 font-medium text-gray-900">Referencia *</label>
-                                                    <div class="mt-2">
-                                                        <input type="text" id="reference" name="reference" formControlName="reference"
-                                                            placeholder="Ej: Casa azul al lado del parque"
-                                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('reference') || hasValidatorError('reference')}"
-                                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60">
-                                                    </div>
-                                                    <div class="p-2">
-                                                        @if(hasRequiredError('reference')) {
-                                                        <p class="text-xs text-red-500">*Campo obligatorio</p>
-                                                        }
-                                                        @if(hasValidatorError('reference')) {
-                                                        <p class="text-xs text-red-500">*Se permite de 3 a 250
-                                                            caracteres</p>
-                                                        }
-                                                    </div>
+                                                <div class="sm:col-span-6 mb-2">
+                                                    <ml-input label="Referencia" inputId="reference" inputType="text"
+                                                        placeholder="Ej: Casa azul al lado del parque" [required]="true"
+                                                        [errors]="referenceErrors" formControlName="reference" />
                                                 </div>
 
                                             </div>
@@ -651,7 +440,7 @@
                                             <!-- PAGO -->
                                             <div class="col-span-6 my-3">
                                                 <h2
-                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl mt-4">
                                                     Pago.</h2>
 
                                                 <!-- @if (cartHas250Creatine) {
@@ -670,12 +459,18 @@
                                             </div>
 
                                             <div class="col-span-6">
-                                                <app-payment-method (paymentMethod)="selectPaymentMethod($event)" />
+                                                <app-payment-method [enrolledCard]="enrolledCard()"
+                                                    [flowToken]="flowToken()" [canEnrollCard]="canEnrollCard()"
+                                                    [canPayCardViaPortal]="canPayCardViaPortal()"
+                                                    [disabled]="isProcessing()"
+                                                    (paymentMethodChanged)="onPaymentSelectionChanged($event)"
+                                                    (enrollmentRequested)="onEnrollmentRequested()"
+                                                    (cardEnrolled)="onCardEnrolled($event)" />
 
                                                 <!-- Acepto términos y condiciones -->
                                                 <div class="flex items-end pb-3 pt-6">
                                                     <label class="inline-flex items-center cursor-pointer"
-                                                           [ngClass]="{'cursor-not-allowed opacity-60': form.get('termsAccepted')?.disabled}">
+                                                        [ngClass]="{'cursor-not-allowed opacity-60': form.get('termsAccepted')?.disabled}">
                                                         <input type="checkbox" formControlName="termsAccepted"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
                                                             class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
@@ -684,25 +479,38 @@
                                                         </div>
                                                         <span
                                                             [ngClass]="{'text-red-500 dark:text-red-500': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
-                                                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Acepto los
-                                                            <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank"
-                                                               class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>,
-                                                            <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank"
-                                                               class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la
-                                                            <a href="https://magrolabs.com/politicas/privacidad" target="_blank"
-                                                               class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
-                                                            {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted') ? '*' : ''}}</span>
+                                                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Acepto
+                                                            los
+                                                            <a href="https://magrolabs.com/politicas/terminos-y-condiciones"
+                                                                target="_blank"
+                                                                class="underline cursor-pointer hover:text-primary">Términos
+                                                                y condiciones</a>,
+                                                            <a href="https://magrolabs.com/politicas/condiciones-de-uso"
+                                                                target="_blank"
+                                                                class="underline cursor-pointer hover:text-primary">Términos
+                                                                de uso</a> y la
+                                                            <a href="https://magrolabs.com/politicas/privacidad"
+                                                                target="_blank"
+                                                                class="underline cursor-pointer hover:text-primary">Declaración
+                                                                de privacidad</a>
+                                                            {{hasRequiredError('termsAccepted') ||
+                                                            hasValidatorError('termsAccepted') ? '*' : ''}}</span>
                                                     </label>
                                                 </div>
-                                                @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
-                                                <p class="text-xs text-red-500 mb-2">*Debe aceptar los términos y condiciones para continuar</p>
+                                                @if(hasRequiredError('termsAccepted') ||
+                                                hasValidatorError('termsAccepted')) {
+                                                <p class="text-xs text-red-500 mb-2">*Debe aceptar los términos y
+                                                    condiciones para continuar</p>
                                                 }
 
                                                 <div class="my-4 lg:w-72">
                                                     <ml-button [name]="buttonName"
-                                                        [isDisabled]="isProcessing() || (!form.valid) "
+                                                        [isDisabled]="isProcessing() || !form.valid || !paymentSelection()"
                                                         [isProcessing]="isProcessing()"
                                                         (click)="nextStep()"></ml-button>
+                                                    @if (!paymentSelection()) {
+                                                    <p class="text-xs text-red-500 mt-2">*Selecciona un método de pago para continuar</p>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

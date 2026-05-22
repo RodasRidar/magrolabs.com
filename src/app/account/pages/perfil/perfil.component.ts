@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../../../shared/services/auth.service';
 import { UserService } from '../../../shared/services/user.service';
-import { finalize, takeUntil, debounceTime, distinctUntilChanged, filter, catchError, EMPTY, Subscription, Subject, Observable, tap, switchMap, map, of } from 'rxjs';
+import { finalize, debounceTime, distinctUntilChanged, filter, catchError, EMPTY, Subject, Observable, tap, switchMap, map, of } from 'rxjs';
 import { UpdatePasswordRequest, UserDetailResponse, UpdateUserRequest } from '../../../shared/interfaces/user.interfaces';
 import { TypeDocument } from '../../../shared/interfaces/auth.interfaces';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -11,6 +12,12 @@ import { AddressService, PlaceAPI, Ubigeo } from '../../../shared/services/addre
 import { AddressApiService } from '../../../shared/services/address-api.service';
 import { CreateAddressRequest } from '../../../shared/interfaces/address.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormFieldComponent } from '../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../shared/ui/input/input.component';
+import { SelectComponent } from '../../../shared/ui/select/select.component';
+import { PasswordInputComponent } from '../../../shared/ui/password-input/password-input.component';
+import { CardComponent } from '../../../shared/ui/card/card.component';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 // Ahora que hemos añadido birth_date a la interfaz original, solo necesitamos definir address_id
 declare module '../../../shared/interfaces/user.interfaces' {
@@ -20,20 +27,19 @@ declare module '../../../shared/interfaces/user.interfaces' {
 }
 
 @Component({
-  selector: 'app-perfil',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+    selector: 'app-perfil',
+    imports: [CommonModule, ReactiveFormsModule, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, CardComponent, PageHeaderComponent],
+    templateUrl: './perfil.component.html',
+    styleUrl: './perfil.component.css'
 })
-export class PerfilComponent implements OnInit, OnDestroy {
+export class PerfilComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private toastService = inject(ToastService);
   private addressService = inject(AddressService);
   private addressApiService = inject(AddressApiService);
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -51,9 +57,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
   isEditingPassword = signal(false);
   isEditingAddress = signal(false);
   isLoading = signal(true); // Comenzamos con estado de carga
-  showCurrentPassword = signal(false);
-  showNewPassword = signal(false);
-  showConfirmPassword = signal(false);
   submitAttempted = signal(false);
   formSubmitted = signal(false);
   
@@ -83,8 +86,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
   // Dirección
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
-  isSearched = signal(false);
-  hideSearching = signal(false);
+  isSearched = signal(true);
+  hideSearching = signal(true);
   departmentUbigeo = '';
   provinceUbigeo = '';
   districtUbigeo = '';
@@ -102,11 +105,10 @@ export class PerfilComponent implements OnInit, OnDestroy {
   private emailSubject = new Subject<string>();
   private phoneSubject = new Subject<string>();
   private documentSubject = new Subject<string>();
-  private subscriptions: Subscription[] = [];
   
   ngOnInit(): void {
     // Detectar si viene del flujo de creatina gratis
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       if (params['isFromFreeCreatineFlow'] === 'true') {
         this.isFromFreeCreatineFlow.set(true);
         this.toastService.info('Completa tu dirección', 'Por favor, completa tu dirección para continuar con la activación de tu prueba.');
@@ -125,11 +127,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.loadUserData();
   }
   
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
   
   private initForms(): void {
     // Formulario de perfil
@@ -170,89 +167,97 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   private setupValidators(): void {
     // Configurar debounce para email
-    const emailSubscription = this.emailSubject.pipe(
+    this.emailSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(email => !!email && email.length > 5 && this.isValidEmail(email))
+      filter(email => !!email && email.length > 5 && this.isValidEmail(email)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(email => {
       this.validateEmailWithServer(email);
     });
 
     // Configurar validación en tiempo real para teléfono
-    const phoneSubscription = this.phoneSubject.pipe(
+    this.phoneSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(phone => !!phone && phone.length === 9)
+      filter(phone => !!phone && phone.length === 9),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(phone => {
       this.validatePhoneWithServer(phone);
     });
 
     // Configurar validación en tiempo real para documento
-    const documentSubscription = this.documentSubject.pipe(
+    this.documentSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       filter(document => {
         const typeDoc = this.profileForm.get('documentType')?.value;
         if (typeDoc === 'DNI') return !!document && document.length === 8;
         return !!document && document.length >= 8 && document.length <= 12;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(document => {
       this.validateDocumentWithServer(document, this.profileForm.get('documentType')?.value);
     });
 
-    this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
-
     // Escuchar cambios en el email
-    this.profileForm.get('email')?.valueChanges.subscribe(val => {
-      if (val && this.isEditingProfile()) {
-        this.emailSubject.next(val);
-      }
-    });
+    this.profileForm.get('email')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val && this.isEditingProfile()) {
+          this.emailSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el teléfono
-    this.profileForm.get('phone')?.valueChanges.subscribe(val => {
-      if (val && this.isEditingProfile()) {
-        this.phoneSubject.next(val);
-      }
-    });
+    this.profileForm.get('phone')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val && this.isEditingProfile()) {
+          this.phoneSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el documento
-    this.profileForm.get('documentNumber')?.valueChanges.subscribe(val => {
-      if (val && this.isEditingProfile()) {
-        this.documentSubject.next(val);
-      }
-    });
+    this.profileForm.get('documentNumber')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val && this.isEditingProfile()) {
+          this.documentSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el tipo de documento
-    this.profileForm.get('documentType')?.valueChanges.subscribe(val => {
-      if (val && this.isEditingProfile()) {
-        const documentNumber = this.profileForm.get('documentNumber')?.value;
-        if (documentNumber) {
-          this.documentSubject.next(documentNumber);
+    this.profileForm.get('documentType')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val && this.isEditingProfile()) {
+          const documentNumber = this.profileForm.get('documentNumber')?.value;
+          if (documentNumber) {
+            this.documentSubject.next(documentNumber);
+          }
         }
-      }
-    });
+      });
   }
-  
+
   private setupAddressObservables(): void {
     // Configurar búsqueda de direcciones
-    const searchSubscription = this.addressForm.get('searchAddress')?.valueChanges.pipe(
+    this.addressForm.get('searchAddress')?.valueChanges.pipe(
       debounceTime(300),
       tap(() => this.isSearchingAddress.set(true)),
       switchMap(value => this.addressService.searchAddress(value || '')),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
       this.isSearchingAddress.set(false);
     });
     
-    if (searchSubscription) {
-      this.subscriptions.push(searchSubscription);
-    }
-    
     // Cargar listas de ubigeos
-    this.departments$.subscribe(departments => {
-      this.departmentsList = departments;
-    });
+    this.departments$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(departments => {
+        this.departmentsList = departments;
+      });
   }
   
   private passwordMatchValidator(form: FormGroup): {[key: string]: boolean} | null {
@@ -268,7 +273,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     
     this.userService.getCurrentUser()
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.loadingProfile.set(false);
           this.isLoading.set(false);
@@ -306,7 +311,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     
     this.addressApiService.getAddressById(addressId)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.loadingAddress.set(false);
         })
@@ -324,16 +329,20 @@ export class PerfilComponent implements OnInit, OnDestroy {
             // Actualizar selects encadenados
             if (this.departmentUbigeo) {
               this.provinces$ = this.addressService.getProvinces(this.departmentUbigeo);
-              this.provinces$.subscribe(provinces => {
-                this.provincesList = provinces;
-              });
+              this.provinces$
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(provinces => {
+                  this.provincesList = provinces;
+                });
               this.addressForm.get('province')?.enable();
-              
+
               if (this.provinceUbigeo) {
                 this.districts$ = this.addressService.getDistricts(this.provinceUbigeo);
-                this.districts$.subscribe(districts => {
-                  this.districtsList = districts;
-                });
+                this.districts$
+                  .pipe(takeUntilDestroyed(this.destroyRef))
+                  .subscribe(districts => {
+                    this.districtsList = districts;
+                  });
                 this.addressForm.get('district')?.enable();
               }
             }
@@ -379,7 +388,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
     if (control && !control.hasError('email')) {
       this.userService.validateEmail(email).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        finalize(() => this.isProcessing.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
@@ -404,7 +414,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
     if (control && !control.hasError('pattern')) {
       this.userService.validatePhone(phone).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        finalize(() => this.isProcessing.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ phoneExists: true });
@@ -429,7 +440,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
     if (control && !control.hasError('pattern') && typeDoc) {
       this.userService.validateDocument(document, typeDoc).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing.set(false))
+        finalize(() => this.isProcessing.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ documentExists: true });
@@ -550,7 +562,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     
     this.userService.updateUser(userId, userData)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.isLoading.set(false);
           this.formSubmitted.set(false);
@@ -607,7 +619,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     
     this.userService.updatePassword(passwordData)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.loadingPassword.set(false);
           this.formSubmitted.set(false);
@@ -702,7 +714,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       // Actualizar dirección existente
       this.addressApiService.updateAddress(this.userData.address_id, addressRequest)
         .pipe(
-          takeUntil(this.destroy$),
+          takeUntilDestroyed(this.destroyRef),
           finalize(() => {
             this.isSavingAddress.set(false);
           })
@@ -733,7 +745,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
             // Actualizar el usuario con la nueva dirección
             return this.userService.updateUser(this.userData?.id || '', { address_id: addressId });
           }),
-          takeUntil(this.destroy$),
+          takeUntilDestroyed(this.destroyRef),
           finalize(() => {
             this.isSavingAddress.set(false);
           })
@@ -792,7 +804,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
             return this.districtUbigeo;
           })
         )
-      )
+      ),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       // Actualizar formulario con datos de la dirección seleccionada
       this.addressForm.patchValue({
@@ -816,10 +829,12 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.provinces$ = this.addressService.getProvinces(this.departmentUbigeo);
     
     // Actualizar la lista de provincias
-    this.provinces$.subscribe(provinces => {
-      this.provincesList = provinces;
-    });
-    
+    this.provinces$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(provinces => {
+        this.provincesList = provinces;
+      });
+
     this.addressForm.get('province')?.enable();
     this.addressForm.get('district')?.disable();
     
@@ -835,10 +850,12 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.districts$ = this.addressService.getDistricts(this.provinceUbigeo);
     
     // Actualizar la lista de distritos
-    this.districts$.subscribe(districts => {
-      this.districtsList = districts;
-    });
-    
+    this.districts$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(districts => {
+        this.districtsList = districts;
+      });
+
     this.addressForm.get('district')?.enable();
     
     // Resetear el valor de distrito
@@ -863,21 +880,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.errorMessage.set('');
     this.isProfileError.set(false);
     this.loadUserData();
-  }
-  
-  // Helpers para contraseñas
-  togglePasswordVisibility(field: 'current' | 'new' | 'confirm'): void {
-    switch (field) {
-      case 'current':
-        this.showCurrentPassword.update(value => !value);
-        break;
-      case 'new':
-        this.showNewPassword.update(value => !value);
-        break;
-      case 'confirm':
-        this.showConfirmPassword.update(value => !value);
-        break;
-    }
   }
   
   // Validación de campos
@@ -944,5 +946,102 @@ export class PerfilComponent implements OnInit, OnDestroy {
       this.passwordForm.hasError('passwordMismatch') && 
       this.passwordForm.get('confirm_password')?.value
     );
+  }
+
+  // --- ml-form-field error getters ---
+
+  // profileForm
+  get firstNameErrors(): string[] {
+    if (this.hasError(this.profileForm, 'first_name', 'required')) return ['El nombre es obligatorio'];
+    return [];
+  }
+
+  get lastNameErrors(): string[] {
+    if (this.hasError(this.profileForm, 'last_name', 'required')) return ['El apellido es obligatorio'];
+    return [];
+  }
+
+  get documentTypeErrors(): string[] {
+    if (this.hasError(this.profileForm, 'documentType', 'required')) return ['El tipo de documento es obligatorio'];
+    return [];
+  }
+
+  get documentNumberErrors(): string[] {
+    if (this.hasError(this.profileForm, 'documentNumber', 'required')) return ['El número de documento es obligatorio'];
+    if (this.hasError(this.profileForm, 'documentNumber', 'minlength') || this.hasError(this.profileForm, 'documentNumber', 'maxlength'))
+      return [`El ${this.getDocumentLabel()} debe tener entre ${this.getDocumentMinLength()} y ${this.getDocumentMaxLength()} caracteres`];
+    if (this.hasError(this.profileForm, 'documentNumber', 'pattern')) return ['El formato del documento no es válido'];
+    if (this.hasDocumentExistsError()) return ['Este número de documento ya está registrado'];
+    return [];
+  }
+
+  get birthDateErrors(): string[] {
+    if (this.hasError(this.profileForm, 'birth_date', 'required')) return ['La fecha de nacimiento es obligatoria'];
+    return [];
+  }
+
+  get phoneErrors(): string[] {
+    if (this.hasError(this.profileForm, 'phone', 'required')) return ['El teléfono es obligatorio'];
+    if (this.hasError(this.profileForm, 'phone', 'pattern')) return ['Ingrese un número válido que comience con 9 seguido de 8 dígitos'];
+    if (this.hasPhoneExistsError()) return ['Este número de teléfono ya está registrado'];
+    return [];
+  }
+
+  // addressForm
+  get addrStreetAddressErrors(): string[] {
+    if (this.hasError(this.addressForm, 'streetAddress', 'required')) return ['La calle/avenida es obligatoria'];
+    if (this.hasError(this.addressForm, 'streetAddress', 'pattern')) return ['El formato de la calle/avenida no es válido'];
+    return [];
+  }
+
+  get addrNumberErrors(): string[] {
+    if (this.hasError(this.addressForm, 'number', 'required')) return ['Campo obligatorio'];
+    if (this.hasError(this.addressForm, 'number', 'pattern')) return ['Solo se permiten caracteres alfanuméricos y . - / (máximo 20 caracteres)'];
+    return [];
+  }
+
+  get addrDepartmentErrors(): string[] {
+    if (this.hasError(this.addressForm, 'department', 'required')) return ['El departamento es obligatorio'];
+    return [];
+  }
+
+  get addrProvinceErrors(): string[] {
+    if (this.hasError(this.addressForm, 'province', 'required')) return ['La provincia es obligatoria'];
+    return [];
+  }
+
+  get addrDistrictErrors(): string[] {
+    if (this.hasError(this.addressForm, 'district', 'required')) return ['El distrito es obligatorio'];
+    return [];
+  }
+
+  get addrPostalCodeErrors(): string[] {
+    if (this.hasError(this.addressForm, 'postalCode', 'pattern')) return ['El código postal debe tener 5 dígitos numéricos'];
+    return [];
+  }
+
+  get addrReferenceErrors(): string[] {
+    if (this.hasError(this.addressForm, 'reference', 'required')) return ['La referencia es obligatoria'];
+    if (this.hasError(this.addressForm, 'reference', 'pattern')) return ['La referencia contiene caracteres no permitidos'];
+    if (this.hasError(this.addressForm, 'reference', 'minlength')) return ['La referencia debe tener al menos 3 caracteres'];
+    return [];
+  }
+
+  // passwordForm
+  get currentPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'current_password', 'required')) return ['La contraseña actual es obligatoria'];
+    return [];
+  }
+
+  get newPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'new_password', 'required')) return ['La nueva contraseña es obligatoria'];
+    if (this.hasError(this.passwordForm, 'new_password', 'minlength')) return ['La contraseña debe tener al menos 8 caracteres'];
+    return [];
+  }
+
+  get confirmPasswordErrors(): string[] {
+    if (this.hasError(this.passwordForm, 'confirm_password', 'required')) return ['Debes confirmar la contraseña'];
+    if (this.getPasswordMatchError()) return ['Las contraseñas no coinciden'];
+    return [];
   }
 }

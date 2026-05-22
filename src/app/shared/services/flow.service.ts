@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
 import { CreateCustomerRequest, CreateCustomerResponse, CreateSubscriptionResponse, EditCustomerRequest, EditCustomerResponse, FlowAddCouponToSubscriptionRequest, FlowAddCouponToSubscriptionResponse, FlowChargeCustomerRequest, FlowChargeCustomerResponse, FlowChargesResponse, FlowCreateSubscriptionRequest, FlowPaymentRequest, FlowPaymentResponse, RegisterCardResponse, RegisterStatusResponse } from '../models/flow.model';
-import * as CryptoJS from 'crypto-js';
+import { HmacSHA256, Hex } from 'crypto-es';
 import { AtPeriodEnd } from './subscription.service';
 
 /**
@@ -387,8 +387,8 @@ export class FlowService {
       .join('')
 
     // Generar la firma HMAC-SHA256 en Base64
-    const signature = CryptoJS.HmacSHA256(concatenatedString, environment.flowSecretKey);
-    return signature.toString(CryptoJS.enc.Hex);
+    const signature = HmacSHA256(concatenatedString, environment.flowSecretKey);
+    return signature.toString(Hex);
   }
 
 

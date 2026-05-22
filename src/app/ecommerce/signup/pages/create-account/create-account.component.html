@@ -13,12 +13,14 @@
                 @if (isCreatinaGratis) {
                 <h1 data-qa="signup-step-3-title"
                     class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    Crea tu cuenta para recibir tu creatina de prueba.</h1>
+                    <!-- Regístrate para recibir tu creatina de prueba. -->
+                     Registrate.
+                </h1>
                 }
                 @else {
                 <h1 data-qa="signup-step-3-title"
                     class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
-                    Crea tu cuenta.</h1>
+                    Regístrate.</h1>
                 }
 
             </div>
@@ -30,166 +32,89 @@
                     <div class="pb-4">
                         <div class="sm:mt-10 mt-5 grid grid-cols-1 gap-x-6 gap-y-2 lg:grid-cols-6">
                             <div class="sm:col-span-3">
-                                <label for="first-name"
-                                    class="block text-sm font-medium leading-6 text-gray-900">Nombres *</label>
-                                <div class="mt-2">
-                                    <input type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                        formControlName="firtName"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('firtName')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
-
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('firtName')) {
-                                    <p class="text-xs text-red-500">*Nombres es obligatorio</p>
-                                    }
-                                    @if(hasValidatorError('firtName')) {
-                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                    }
-                                </div>
+                                <ml-input
+                                    label="Nombres"
+                                    inputId="first-name"
+                                    inputType="text"
+                                    autocomplete="given-name"
+                                    [required]="true"
+                                    [errors]="firtNameErrors"
+                                    formControlName="firtName"
+                                    placeholder="Juan"
+                                />
                             </div>
 
                             <div class="sm:col-span-3">
-                                <label for="last-name"
-                                    class="block text-sm font-medium leading-6 text-gray-900">Apellidos *</label>
-                                <div class="mt-2">
-                                    <input type="text" name="last-name" id="last-name" autocomplete="family-name"
-                                        formControlName="lastName"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('lastName')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('lastName')) {
-                                    <p class="text-xs text-red-500">*Apellidos es obligatorio</p>
-                                    }
-                                    @if(hasValidatorError('lastName')) {
-                                    <p class="text-xs text-red-500">*Solo se permite más de 3 letras</p>
-                                    }
-                                </div>
+                                <ml-input
+                                    label="Apellidos"
+                                    inputId="last-name"
+                                    inputType="text"
+                                    autocomplete="family-name"
+                                    [required]="true"
+                                    [errors]="lastNameErrors"
+                                    formControlName="lastName"
+                                    placeholder="Pérez Rodríguez"
+                                />
                             </div>
 
                             <div class="sm:col-span-3">
-                                <label for="cellphone" class="block text-sm font-medium leading-6 text-gray-900">
-                                    Celular *
-                                </label>
-                                <div class="mt-2 flex items-center text-gray-400">
-                                    <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300 ">
-                                        +51
+                                <ml-form-field label="Celular" inputId="cellphone" [required]="true" [errors]="cellphoneErrors">
+                                    <div class="flex items-center text-gray-400">
+                                        <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300">
+                                            +51
+                                        </div>
+                                        <input type="number" id="cellphone" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
+                                            autocomplete="tel"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
+                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                                            formControlName="cellphone" />
                                     </div>
-                                    <input type="number" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
-                                        autocomplete="tel"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
-                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
-                                         block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300
-                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
-                                        formControlName="cellphone" />
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('cellphone')) {
-                                    <p class="text-xs text-red-500">*El número de celular es obligatorio</p>
-                                    }
-                                    @if(hasValidatorError('cellphone')) {
-                                    <p class="text-xs text-red-500">*Número inválido, solo se permite 9 dígitos</p>
-                                    }
-                                    @if(hasExistCellphone()) {
-                                    <p class="text-xs text-red-500">
-                                        *El número de celular ya está registrado
-                                    </p>
-                                    }
-                                </div>
+                                </ml-form-field>
                             </div>
 
                             <div class="sm:col-span-3">
-                                <label for="cellphone" class="block text-sm font-medium leading-6 text-gray-900">
-                                    N° de Documento *
-                                </label>
-                                <div class="mt-2 flex items-center">
+                                <ml-form-field label="N° de Documento" inputId="nroDocument" [required]="true" [errors]="nroDocumentErrors">
                                     <div class="flex items-center">
                                         <select formControlName="typeDocument"
-                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r  border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-[#d07d66]">
+                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-primary">
                                             <option value="DNI">DNI</option>
                                             <option value="CE">Carnet Ext.</option>
                                             <option value="PASSPORT">Pasaporte</option>
                                         </select>
+                                        <input id="nroDocument" [type]="form.get('typeDocument')?.value == 'DNI' ? 'number' : 'text'"
+                                            placeholder="87654321" autocomplete="identity-card-number"
+                                            (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
+                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                                            [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
+                                            formControlName="nroDocument" />
                                     </div>
-                                    <input [type]="form.get('typeDocument')?.value == 'DNI' ? 'number' : 'text'"
-                                        placeholder="87654321" autocomplete="identity-card-number"
-                                        (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
-                                        class="appearance-none w-full p-2.5 outline-none focus:border-[#d07d66]
-                                         block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300
-                                         text-gray-900  placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
-                                        formControlName="nroDocument" />
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('nroDocument')) {
-                                    <p class="text-xs text-red-500"> *Número de documento es obligatorio</p>
-                                    }
-                                    @if(hasValidatorError('nroDocument') && form.get('typeDocument')?.value == 'DNI') {
-                                    <p class="text-xs text-red-500">*DNI permite 8 dígitos</p>
-                                    }
-                                    @if(hasValidatorError('nroDocument') && form.get('typeDocument')?.value == 'CE') {
-                                    <p class="text-xs text-red-500">*Carnet Ext. permite 12 alfanuméricos</p>
-                                    }
-                                    @if(hasValidatorError('nroDocument') && form.get('typeDocument')?.value == 'PASSPORT') {
-                                    <p class="text-xs text-red-500">*Pasaporte permite 12 alfanuméricos</p>
-                                    }
-                                    @if(hasExistDocument()) {
-                                    <p class="text-xs text-red-500">
-                                        *El documento ya está registrado
-                                    </p>
-                                    }
-                                    </div>
+                                </ml-form-field>
                             </div>
 
                             <div class="sm:col-span-3">
-                                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
-                                    Correo *</label>
-                                <div class="mt-2">
-                                    <input formControlName="email" id="email" name="email" type="email"
-                                        autocomplete="email" placeholder="tu@example.com"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('email') || hasExistEmail() || hasValidatorError('email')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('email') || hasValidatorError('email')) {
-
-                                    @if(hasRequiredError('email')) {
-                                    <p class="text-xs text-red-500">*Correo es obligatorio</p>
-                                    }
-                                    @if(hasExistEmail()) {
-                                    <p class="text-xs text-red-500">
-                                        *El correo ya está registrado
-                                    </p>
-                                    }
-                                    @if(hasValidatorError('email')) {
-                                    <p class="text-xs text-red-500">*Correo inválido o no existente</p>
-                                    }
-                                    }
-
-                                </div>
+                                <ml-input
+                                    label="Correo"
+                                    inputId="email"
+                                    inputType="email"
+                                    autocomplete="email"
+                                    formControlName="email"
+                                    [required]="true"
+                                    [errors]="createAccountEmailErrors"
+                                    placeholder="juan.perez@example.com"
+                                />
                             </div>
 
                             <div class="sm:col-span-3"
                                 [ngClass]="{ 'hidden':!form.get('isSignUpAcepted')?.value && !isCreatinaGratis }">
-                                <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
-                                    Contraseña *</label>
-                                <div class="mt-2">
-                                    <input formControlName="password" name="password" type="password"
-                                        [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('password') || hasValidatorError('password')}"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#d07d66] sm:text-sm sm:leading-6">
-                                </div>
-                                <div class="p-2">
-                                    @if(hasRequiredError('password')) {
-                                    <p class="text-xs text-red-500">*Contraseña es obligatorio</p>
-                                    }
-                                    @if(hasValidatorError('password')) {
-                                    <p class="text-xs text-red-500">*Debe contener mínimo 8 caracteres</p>
-                                    <!-- <p class="text-xs text-red-500">*Contener al menos una letra mayúscula</p>
-                                    <p class="text-xs text-red-500">*Contener al menos una número</p>
-                                    <p class="text-xs text-red-500">*Contener al menos una carácter especial</p> -->
-                                    }
-                                </div>
+                                <ml-password-input
+                                    label="Contraseña"
+                                    inputId="password"
+                                    [required]="true"
+                                    [errors]="createAccountPasswordErrors"
+                                    formControlName="password"
+                                    [showStrength]="true"
+                                    placeholder="Crea una contraseña segura"
+                                />
                             </div>
 
 
@@ -197,7 +122,7 @@
 
                         </div>
                         @if(!isCreatinaGratis){
-                            <div class=" flex items-end">
+                            <div class=" flex items-end py-2">
                                 <label class="inline-flex items-center my-2 cursor-pointer">
                                     <input type="checkbox" formControlName="isSignUpAcepted" class="sr-only peer" (change)="isSignUpAceptedChange()">
                                     <div
@@ -211,7 +136,7 @@
                             
                             <!-- Checkbox de aceptación de términos y condiciones -->
                             
-                                <div class="pb-2">
+                                <div class="py-2">
                                     <label class="inline-flex items-center my-2 cursor-pointer">
                                         <input type="checkbox" formControlName="termsAccepted" 
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
@@ -222,11 +147,11 @@
                                         <span [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
                                             class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900 w-fit">Acepto los 
                                             <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos y condiciones</a>, 
+                                            class="underline cursor-pointer hover:text-primary">Términos y condiciones</a>, 
                                             <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Términos de uso</a> y la 
+                                            class="underline cursor-pointer hover:text-primary">Términos de uso</a> y la 
                                             <a href="https://magrolabs.com/politicas/privacidad" target="_blank" 
-                                            class="underline cursor-pointer hover:text-[#d07d66]">Declaración de privacidad</a>
+                                            class="underline cursor-pointer hover:text-primary">Declaración de privacidad</a>
                                             {{hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')? '*' : ''}}</span>
                                     </label>
                                     @if(hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')) {
@@ -246,7 +171,7 @@
                 </div>
                 <div class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
                     <button (click)="nextStep()" type="button" [disabled]="isProcessing || !form.valid"
-                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
+                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed">
                         Continuar →
                     </button>
                 </div>

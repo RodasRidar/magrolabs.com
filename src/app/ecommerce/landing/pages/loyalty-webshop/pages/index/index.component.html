@@ -247,9 +247,15 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative z-10 flex items-baseline justify-between pt-10 px-6 border-b border-gray-200">
             <div class="flex flex-col justify-start">
-                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Webshop</h1>
+                <h1
+                    class="text-4xl font-extrabold tracking-tight text-gray-900 pb-8 border-b-4 border-primary-hover w-full pl-16 -ml-16">
+                    Webshop</h1>
+                <div class="mt-4">
+                    <ml-breadcrumb [items]="breadcrumbItems" />
+                </div>
                 <p class="text-base text-gray-700 my-4 font-light text-pretty">
-                    Acumular Magropuntos (MP) para compras es muy fácil. Cada miembro recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos al mes. Ahorra para
+                    Acumular Magropuntos (MP) para compras es muy fácil. Cada miembro recibe
+                    {{ENV.creditoRegaloPorCompraMes}} Magropuntos al mes. Ahorra para
                     tu artículo favorito en nuestra tienda online. Cada temporada, actualizamos la tienda web con nuevos
                     artículos exclusivos. Mantente siempre atento a la tienda online.
                 </p>
@@ -537,17 +543,16 @@
 
                 <div class="mx-auto grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-4 lg:col-span-4 lg:gap-x-8">
                     @for (product of products(); track product.slug) {
-                        <a [routerLink]="'articulos/' + product.slug" class="group text-sm">
-                            <div class="w-full aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-gray-100 group-hover:opacity-75">
-                                <img 
-                                    [src]="product.imageUrl"
-                                    [alt]="product.name + ' - ' + product.color"
-                                    class="w-full h-full object-center object-cover">
-                            </div>
-                            <h3 class="mt-4 font-medium text-gray-900">{{product.name}}</h3>
-                            <p class="text-gray-500 italic">{{product.color}}</p>
-                            <p class="mt-2 font-medium text-gray-900">{{product.price}} MP</p>
-                        </a>
+                    <a [routerLink]="'articulos/' + product.slug" class="group text-sm">
+                        <div
+                            class="w-full aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-gray-100 group-hover:opacity-75">
+                            <img [src]="product.imageUrl" [alt]="product.name + ' - ' + product.color"
+                                class="w-full h-full object-center object-cover">
+                        </div>
+                        <h3 class="mt-4 font-medium text-gray-900">{{product.name}}</h3>
+                        <p class="text-gray-500 italic">{{product.color}}</p>
+                        <p class="mt-2 font-medium text-gray-900">{{product.price}} MP</p>
+                    </a>
                     }
                 </div>
             </div>

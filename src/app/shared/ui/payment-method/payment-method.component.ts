@@ -1,72 +1,186 @@
-import { Component, inject, output } from '@angular/core';
-import { SummaryService } from '../../services/summary-service.service';
-import { FlowPaymentMethod } from '../../models/flow.model';
-import { environment } from '../../../../environments/env';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal, OnInit,
+} from "@angular/core";
+
+import { SummaryService } from "../../services/summary-service.service";
+import { FlowPaymentMethod } from "../../models/flow.model";
+import { environment } from "../../../../environments/env";
+import { FlowWidgetAddCardComponent } from "../flow-widget-add-card/flow-widget-add-card.component";
+
+/**
+ * Identificadores de selección visibles en el componente.
+ * Internamente mapean a FlowPaymentMethod cuando aplica.
+ *
+ * - CARD_ENROLLED: tarjeta ya guardada del cliente (cargo síncrono).
+ * - ADD_CARD: enrolar nueva tarjeta vía widget de Flow Elements (cargo síncrono).
+ * - CARD_PORTAL: tarjeta sin enrolar — redirect al portal Flow para que el
+ *   cliente ingrese su tarjeta directamente. Aplica al guest sin flag de
+ *   registro (no queremos guardarle la tarjeta).
+ * - YAPE: redirect al portal Flow con paymentMethod=152.
+ */
+export type PaymentSelection =
+  | "CARD_ENROLLED"
+  | "ADD_CARD"
+  | "CARD_PORTAL"
+  | "YAPE";
+
+export interface PaymentMethodSelection {
+  selection: PaymentSelection;
+  flowMethod: FlowPaymentMethod;
+}
+
+/**
+ * Datos de la tarjeta enrolada del usuario para mostrarla como opción.
+ * El parent obtiene estos datos de localStorage o vía FlowService.getCustomer.
+ */
+export interface EnrolledCardInfo {
+  last4: string;
+  brand: string;
+}
 
 @Component({
-  selector: 'app-payment-method',
-  standalone: true,
-  imports: [],
-  templateUrl: './payment-method.component.html',
-  styleUrl: './payment-method.component.css'
+  selector: "app-payment-method",
+  imports: [FlowWidgetAddCardComponent],
+  templateUrl: "./payment-method.component.html",
+  styleUrl: "./payment-method.component.css",
 })
-export class PaymentMethodComponent {
+export class PaymentMethodComponent implements OnInit {
   private _summaryService = inject(SummaryService);
-  env = environment
+  env = environment;
+
+  /** Tarjeta enrolada actual del cliente (si existe). */
+  enrolledCard = input<EnrolledCardInfo | null>(null);
+
+  /** Token del widget de Flow Elements (entregado por prepare-card). */
+  flowToken = input<string | null>(null);
+
+  /** Cambia a true cuando el flag "Registrarse" del checkout permite enrolar tarjeta como guest. */
+  canEnrollCard = input<boolean>(true);
+
+  /**
+   * True cuando se debe ofrecer pagar con tarjeta vía redirect al portal Flow
+   * (sin enrolar). Solo aplica al guest sin flag de registro.
+   * Mutuamente excluyente con canEnrollCard.
+   */
+  canPayCardViaPortal = input<boolean>(false);
+
+  /**
+   * Bloquea la selección y el widget cuando el padre está procesando un pago.
+   * Aplica clases visuales de "deshabilitado" y deshabilita los inputs radio
+   * para evitar que el cliente cambie de método mientras la API responde.
+   */
+  disabled = input<boolean>(false);
+
+  /** Emite cada vez que el cliente cambia de método de pago. */
+  paymentMethodChanged = output<PaymentMethodSelection>();
+
+  /** Emite cuando el cliente selecciona "Agregar Tarjeta" y el parent debe pedir el token (prepare-card). */
+  enrollmentRequested = output<void>();
+
+  /** Emite cuando el widget de Flow confirma que la tarjeta se enroló exitosamente. */
+  cardEnrolled = output<boolean>();
+
+  /**
+   * Selección actual del cliente. null = aún no eligió.
+   * Si hay enrolledCard cuando se monta el componente, se preselecciona CARD_ENROLLED.
+   * Si NO hay enrolledCard, se deja null para que el cliente elija activamente —
+   * así no se monta el widget (ni se ve el loader) hasta que el cliente toca
+   * "Agregar Tarjeta".
+   */
+  currentSelection = signal<PaymentSelection | null>(null);
+
+  /** El widget de Flow se renderiza solo cuando ADD_CARD está activo y hay token. */
+  showWidget = computed(
+    () => this.currentSelection() === "ADD_CARD" && !!this.flowToken(),
+  );
+
+  /**
+   * Flag interno que sube a true cuando el widget emite cardAddedSuccessfully(true).
+   * Lo usa el effect para autoseleccionar CARD_ENROLLED apenas la tarjeta
+   * recién enrolada esté disponible en el input enrolledCard.
+   */
+  private justEnrolled = signal(false);
+
+  constructor() {
+    effect(
+      () => {
+        const card = this.enrolledCard();
+        const selection = this.currentSelection();
+
+        // Caso 1: aún no hay nada seleccionado y llegó una tarjeta enrolada
+        // (cliente autenticado al iniciar) → autoseleccionar.
+        if (card && selection === null) {
+          this.currentSelection.set("CARD_ENROLLED");
+          this.emitSelection("CARD_ENROLLED");
+          return;
+        }
+
+        // Caso 2: el cliente acaba de enrolar una tarjeta vía widget. La selección
+        // está en ADD_CARD pero ya hay enrolledCard poblado por el padre tras el
+        // getCustomer post-enrolamiento → cambiar a CARD_ENROLLED para que la
+        // tarjeta recién agregada quede seleccionada.
+        if (card && this.justEnrolled() && selection === "ADD_CARD") {
+          this.currentSelection.set("CARD_ENROLLED");
+          this.emitSelection("CARD_ENROLLED");
+          this.justEnrolled.set(false);
+        }
+      },
+    );
+  }
 
   ngOnInit(): void {
-    this.paymentMethod.emit(FlowPaymentMethod.DEBIT_CREDIT_CARD);
+    // Default solo si la tarjeta ya estaba disponible al init (caso síncrono raro).
+    // En el caso normal, enrolledCard está null al init y el effect() se encarga
+    // cuando llegue la respuesta async de getCustomer.
+    if (this.enrolledCard()) {
+      this.currentSelection.set("CARD_ENROLLED");
+      this.emitSelection("CARD_ENROLLED");
+    }
+    // Sin enrolledCard: dejamos currentSelection en null. El cliente elige.
+  }
 
-    const last4CardDigits = this._summaryService.getSummary()?.userData?.last4CardDigits || '';
-    const creditCardType = this._summaryService.getSummary()?.userData?.creditCardType || '';
+  selectOption(selection: PaymentSelection): void {
+    if (this.disabled()) return;
+    this.currentSelection.set(selection);
+    this.emitSelection(selection);
 
-    if(this._summaryService.getSummary()?.userData?.isPaymentVerified) {
-      this.radios.unshift({
-        name: '**** **** **** ' + last4CardDigits + ' (' + creditCardType + ')',
-        description: 'Paga con tu tarjeta '+ creditCardType + 'que termina en ' + last4CardDigits + ' registrada en tu cuenta.',
-        icon: `CARD_ENROLLED`,
-        id: FlowPaymentMethod.CARD_ENROLLED,
-      })
+    if (selection === "ADD_CARD" && !this.flowToken()) {
+      this.enrollmentRequested.emit();
     }
   }
-  paymentMethod = output<FlowPaymentMethod>()
-    
-  radios = [
-    {
-      name: 'Tarjetas',
-      description: 'Paga con tu tarjeta de débito o crédito.',
-      icon: `DEBIT_CREDIT_CARD`,
-      id: FlowPaymentMethod.DEBIT_CREDIT_CARD,
-    },
-    /*{
-      name: 'Transferencia bancaria',
-      description: 'Paga a través de todos los bancos.',
-      icon: ``,
-      id: FlowPaymentMethod.BANK_TRANSFER,
-    },*/
-    {
-      name: 'Yape',
-      description: 'Paga con Yape y otras billeteras.',
-      icon: `YAPE`,
-      id: FlowPaymentMethod.YAPE,
-    }
-    /*,
-    {
-      name: 'Pago Efectivo',
-      description: 'Pagos vía banca móvil, agentes y bodegas.',
-      icon: `PAGO_EFECTIVO`,
-      id: FlowPaymentMethod.PAGO_EFECTIVO,
-    }*/,
-    {
-      name: 'Suscripción mensual',
-      // description: 'Ahorra S/'+ (this.env.precioCreatinaOnePurchase - this.env.precioCreatinaSubscription).toString() + ' y llevate una creatina gratis + S/'+ this.env.creditoRegaloPorCompraMes.toString() + '.',
-      description: 'Ahorra '+ this.env.creatina2025Descuento +' y llévate una ' + this.env.campanaPrimeraCreatina.textos.heroOferta + '.',
-      icon: `RECURRENT_PAYMENT`,
-      id: FlowPaymentMethod.RECURRENT_PAYMENT,
-    }
-  ];
 
-  selectPaymentMethod( id: FlowPaymentMethod ) {
-    this.paymentMethod.emit(id);
+  private emitSelection(selection: PaymentSelection): void {
+    let flowMethod: FlowPaymentMethod;
+    switch (selection) {
+      case "CARD_ENROLLED":
+        flowMethod = FlowPaymentMethod.CARD_ENROLLED;
+        break;
+      case "ADD_CARD":
+      case "CARD_PORTAL":
+        // Ambos son tarjeta de crédito/débito desde la perspectiva de Flow.
+        // La diferencia (charge síncrono vs portal) la decide el parent
+        // según `selection` al construir el body del checkout.
+        flowMethod = FlowPaymentMethod.DEBIT_CREDIT_CARD;
+        break;
+      case "YAPE":
+        flowMethod = FlowPaymentMethod.YAPE;
+        break;
+    }
+    this.paymentMethodChanged.emit({ selection, flowMethod });
+  }
+
+  onCardEnrolled(success: boolean): void {
+    this.cardEnrolled.emit(success);
+    if (success) {
+      // Marcar enrolamiento exitoso. El effect cambiará a CARD_ENROLLED apenas
+      // el padre popule enrolledCard tras su getCustomer.
+      this.justEnrolled.set(true);
+    }
   }
 }

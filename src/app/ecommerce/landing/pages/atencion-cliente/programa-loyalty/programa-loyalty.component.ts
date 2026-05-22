@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-programa-loyalty',
-  standalone: true,
-  imports: [],
-  templateUrl: './programa-loyalty.component.html',
-  styleUrl: './programa-loyalty.component.css'
+    selector: 'app-programa-loyalty',
+    imports: [],
+    templateUrl: './programa-loyalty.component.html',
+    styleUrl: './programa-loyalty.component.css'
 })
 export class ProgramaLoyaltyComponent {
   ENV = environment

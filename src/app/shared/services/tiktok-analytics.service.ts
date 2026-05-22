@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { SHA256 } from 'crypto-es';
 import { environment } from '../../../environments/env';
 
 declare global {
@@ -30,22 +31,32 @@ export interface TikTokIdentifyData {
   providedIn: 'root'
 })
 export class TiktokAnalyticsService {
+  private readonly platformId = inject(PLATFORM_ID);
 
-  constructor() { 
+  constructor() {
   }
 
   /**
-   * Verifica si TikTok Pixel está disponible
+   * Verifica si TikTok Pixel está disponible.
+   * En SSR/prerender siempre retorna false silenciosamente (sin loggear).
    */
   private isTikTokAvailable(): boolean {
-    return typeof window !== 'undefined' && window.ttq && typeof window.ttq.track === 'function';
+    if (!isPlatformBrowser(this.platformId)) return false;
+    return !!window.ttq && typeof window.ttq.track === 'function';
+  }
+
+  /** Log "no disponible" solo en browser — evita spam durante prerender. */
+  private warnNotAvailable(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      console.warn('TikTok Pixel no está disponible');
+    }
   }
 
   /**
    * Hash de datos PII con SHA-256
    */
   private hashData(data: string): string {
-    return CryptoJS.SHA256(data.toLowerCase().trim()).toString();
+    return SHA256(data.toLowerCase().trim()).toString();
   }
 
   /**
@@ -53,7 +64,7 @@ export class TiktokAnalyticsService {
    */
   identify(data: TikTokIdentifyData): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -87,7 +98,7 @@ export class TiktokAnalyticsService {
    */
   trackViewContent(options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -122,7 +133,7 @@ export class TiktokAnalyticsService {
    */
   trackAddToCart(options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -157,7 +168,7 @@ export class TiktokAnalyticsService {
    */
   trackInitiateCheckout(options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -192,7 +203,7 @@ export class TiktokAnalyticsService {
    */
   trackCompleteRegistration(options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -227,7 +238,7 @@ export class TiktokAnalyticsService {
    */
   trackPurchase(options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 
@@ -262,7 +273,7 @@ export class TiktokAnalyticsService {
    */
   trackCustomEvent(eventName: string, options: TikTokTrackingOptions): void {
     if (!this.isTikTokAvailable()) {
-      console.warn('TikTok Pixel no está disponible');
+      this.warnNotAvailable();
       return;
     }
 

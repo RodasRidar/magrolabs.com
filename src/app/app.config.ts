@@ -3,7 +3,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './shared/services/auth.interceptor';
 
@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
       // withViewTransitions()
     ),
     provideClientHydration(),
-    provideAnimations(),
+    provideAnimationsAsync(),
     provideHttpClient(
       withFetch(), 
       withInterceptors([authInterceptor])

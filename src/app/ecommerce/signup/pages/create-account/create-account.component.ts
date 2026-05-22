@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { StepEnum } from '../../models/step.model';
 import { StepComponent } from '../../components/step/step.component';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
@@ -11,23 +11,26 @@ import {
 } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Information, InformationComponent } from '../../components/information/information.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { environment } from '../../../../../environments/env';
 import { SummaryEnum, UserDataSummary } from '../../../../shared/models/summary.model';
 import { FlowService } from '../../../../shared/services/flow.service';
-import { CreateCustomerRequest, CreateCustomerResponse, EditCustomerRequest } from '../../../../shared/models/flow.model';
+import { CreateCustomerRequest, EditCustomerRequest } from '../../../../shared/models/flow.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserService } from '../../../../shared/services/user.service';
 import { RegisterUserRequest, TypeDocument } from '../../../../shared/interfaces/auth.interfaces';
-import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, Subscription, of, map, finalize } from 'rxjs';
+import { switchMap, catchError, EMPTY, Subject, debounceTime, distinctUntilChanged, filter, of, map, finalize } from 'rxjs';
 import { UpdateUserRequest, UpdatePasswordRequest } from '../../../../shared/interfaces/user.interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
 
 export interface SignUp {
   firtName: FormControl<string>;
@@ -43,11 +46,10 @@ export interface SignUp {
 
 @Component({
   selector: 'app-create-account',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule],
-  templateUrl: './create-account.component.html',
+  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InformationComponent, FormsModule, FormFieldComponent, InputComponent, PasswordInputComponent],
+  templateUrl: './create-account.component.html'
 })
-export class CreateAccountComponent implements OnDestroy {
+export class CreateAccountComponent implements OnInit {
   private _formBuilder = inject(FormBuilder)
   private _router = inject(Router)
   private _summaryService = inject(SummaryService)
@@ -55,7 +57,7 @@ export class CreateAccountComponent implements OnDestroy {
   private _route = inject(ActivatedRoute)
   private _seo = inject(SeoService)
   private _flowService = inject(FlowService)
-  private readonly destroy$ = takeUntilDestroyed();
+  private readonly destroyRef = inject(DestroyRef);
   private _toastService = inject(ToastService)
   private _authService = inject(AuthService)
   private _userService = inject(UserService)
@@ -74,7 +76,7 @@ export class CreateAccountComponent implements OnDestroy {
     lastName: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern(/^([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+)(n+([A-Za-zÑñÁáÉéÍíÓóÚú ]+['-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú ]+))*$/)]),
     cellphone: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern(/^9[0-9]{8}$/)]),
     nroDocument: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern(/^[0-9A-Za-z]{8,12}$/)]),
-    typeDocument: this._formBuilder.nonNullable.control(<TypeDocument>'DNI', [Validators.required]),
+    typeDocument: this._formBuilder.nonNullable.control(('DNI' as TypeDocument), [Validators.required]),
     email: this._formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
     password: this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
     isSignUpAcepted: this._formBuilder.nonNullable.control(true, []),
@@ -84,14 +86,13 @@ export class CreateAccountComponent implements OnDestroy {
   private emailSubject = new Subject<string>();
   private phoneSubject = new Subject<string>();
   private documentSubject = new Subject<string>();
-  private subscriptions: Subscription[] = [];
 
   ngOnInit() {
     this._seo.title.setTitle('Registro | Datos de registro');
     this._seo.setCanonicalURL('magrolabs.com/registro/crear-cuenta');
     this._seo.setIndexFollow(false);
 
-    let summary = this._summaryService.getSummary()
+    const summary = this._summaryService.getSummary()
     if (!summary?.chosePlan) {
       this._router.navigate(['registro/']);
     }
@@ -100,9 +101,11 @@ export class CreateAccountComponent implements OnDestroy {
       this.isCreatinaGratis = true;
     }
 
-    this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || '';
-    });
+    this._route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        this.nextUrl = params['next'] || '';
+      });
 
     this.form.get('firtName')?.setValue(summary?.userData?.nombre ?? '');
     this.form.get('lastName')?.setValue(summary?.userData?.apellido ?? '');
@@ -114,10 +117,11 @@ export class CreateAccountComponent implements OnDestroy {
     this.form.get('isSignUpAcepted')?.setValue(summary?.userData?.isSignUpAcepted ?? true);
 
     // Configurar debounce para email
-    const emailSubscription = this.emailSubject.pipe(
+    this.emailSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(email => !!email && email.length > 5 && this.isValidEmail(email))
+      filter(email => !!email && email.length > 5 && this.isValidEmail(email)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(email => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateEmailWithServer(email);
@@ -125,10 +129,11 @@ export class CreateAccountComponent implements OnDestroy {
     });
 
     // Configurar validación en tiempo real para teléfono
-    const phoneSubscription = this.phoneSubject.pipe(
+    this.phoneSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(phone => !!phone && phone.length === 9)
+      filter(phone => !!phone && phone.length === 9),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(phone => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validatePhoneWithServer(phone);
@@ -136,56 +141,63 @@ export class CreateAccountComponent implements OnDestroy {
     });
 
     // Configurar validación en tiempo real para documento
-    const documentSubscription = this.documentSubject.pipe(
+    this.documentSubject.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       filter(document => {
         const typeDoc = this.form.get('typeDocument')?.value;
         if (typeDoc === 'DNI') return !!document && document.length === 8;
         return !!document && document.length >= 8 && document.length <= 12;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(document => {
       if (this.form.get('isSignUpAcepted')?.value) {
         this.validateDocumentWithServer(document);
       }
     });
 
-    this.subscriptions.push(emailSubscription, phoneSubscription, documentSubscription);
-
     // Escuchar cambios en el email
-    this.form.get('email')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.emailSubject.next(val);
-      }
-    });
+    this.form.get('email')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.emailSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el teléfono
-    this.form.get('cellphone')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.phoneSubject.next(val);
-      }
-    });
+    this.form.get('cellphone')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.phoneSubject.next(val);
+        }
+      });
 
     // Escuchar cambios en el documento
-    this.form.get('nroDocument')?.valueChanges.subscribe(val => {
-      if (val) {
-        this.documentSubject.next(val);
-      }
-    });
+    this.form.get('nroDocument')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(val => {
+        if (val) {
+          this.documentSubject.next(val);
+        }
+      });
 
     if (this.form.get('isSignUpAcepted')) {
-      this.form.get('isSignUpAcepted')!.valueChanges.subscribe(signUp => {
-        const passwordControl = this.form.get('password');
+      this.form.get('isSignUpAcepted')!.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(signUp => {
+          const passwordControl = this.form.get('password');
 
-        if (signUp) {
-          passwordControl?.addValidators(Validators.required);
-        } else {
-          passwordControl?.clearValidators();
-          passwordControl?.addValidators(Validators.minLength(8));
-        }
+          if (signUp) {
+            passwordControl?.addValidators(Validators.required);
+          } else {
+            passwordControl?.clearValidators();
+            passwordControl?.addValidators(Validators.minLength(8));
+          }
 
-        passwordControl?.updateValueAndValidity();
-      });
+          passwordControl?.updateValueAndValidity();
+        });
     }
 
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('passwordSignal') == 'true') {
@@ -204,11 +216,6 @@ export class CreateAccountComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    // Limpiar todas las suscripciones
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
   // Verificar si el email tiene un formato válido
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -222,7 +229,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('email')) {
       this._userService.validateEmail(email).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ emailExists: true });
@@ -239,7 +247,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('pattern')) {
       this._userService.validatePhone(phone).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => {
         if (response.data.exists) {
           control.setErrors({ cellphoneExists: true });
@@ -247,7 +256,7 @@ export class CreateAccountComponent implements OnDestroy {
       });
     }
   }
-  
+
   private validateDocumentWithServer(document: string): void {
     this.isProcessing = true;
     const control = this.form.get('nroDocument');
@@ -256,7 +265,8 @@ export class CreateAccountComponent implements OnDestroy {
     if (control && !control.hasError('pattern') && typeDoc) {
       this._userService.validateDocument(document, typeDoc).pipe(
         catchError(() => EMPTY),
-        finalize(() => this.isProcessing = false)
+        finalize(() => this.isProcessing = false),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe((response: { data: { exists: boolean } }) => {
         if (response.data.exists) {
           control.setErrors({ nroDocumentExists: true });
@@ -278,6 +288,48 @@ export class CreateAccountComponent implements OnDestroy {
       name: 'Canjea tus Magropuntos por artículos exclusivos.',
     }
   ]
+
+  get firtNameErrors(): string[] {
+    if (this.hasRequiredError('firtName')) return ['*Nombres es obligatorio'];
+    if (this.hasValidatorError('firtName')) return ['*Solo se permite más de 3 letras'];
+    return [];
+  }
+
+  get lastNameErrors(): string[] {
+    if (this.hasRequiredError('lastName')) return ['*Apellidos es obligatorio'];
+    if (this.hasValidatorError('lastName')) return ['*Solo se permite más de 3 letras'];
+    return [];
+  }
+
+  get cellphoneErrors(): string[] {
+    if (this.hasRequiredError('cellphone')) return ['*El número de celular es obligatorio'];
+    if (this.hasExistCellphone()) return ['*El número de celular ya está registrado'];
+    if (this.hasValidatorError('cellphone')) return ['*Número inválido, solo se permite 9 dígitos'];
+    return [];
+  }
+
+  get nroDocumentErrors(): string[] {
+    const type = this.form.get('typeDocument')?.value;
+    if (this.hasRequiredError('nroDocument')) return ['*Número de documento es obligatorio'];
+    if (this.hasValidatorError('nroDocument') && type === 'DNI') return ['*DNI permite 8 dígitos'];
+    if (this.hasValidatorError('nroDocument') && type === 'CE') return ['*Carnet Ext. permite 12 alfanuméricos'];
+    if (this.hasValidatorError('nroDocument') && type === 'PASSPORT') return ['*Pasaporte permite 12 alfanuméricos'];
+    if (this.hasExistDocument()) return ['*El documento ya está registrado'];
+    return [];
+  }
+
+  get createAccountEmailErrors(): string[] {
+    if (this.hasRequiredError('email')) return ['*Correo es obligatorio'];
+    if (this.hasExistEmail()) return ['*El correo ya está registrado'];
+    if (this.hasValidatorError('email')) return ['*Correo inválido o no existente'];
+    return [];
+  }
+
+  get createAccountPasswordErrors(): string[] {
+    if (this.hasRequiredError('password')) return ['*Contraseña es obligatorio'];
+    if (this.hasValidatorError('password')) return ['*Debe contener mínimo 8 caracteres'];
+    return [];
+  }
 
   hasValidatorError(field: string) {
     const control = this.form.get(field);
@@ -339,8 +391,8 @@ export class CreateAccountComponent implements OnDestroy {
     this.isProcessing = true;
     //const customerId = this._summaryService.getSummary()?.userData?.customerId;
     const userId = this._summaryService.getSummary()?.userData?.id;
-    let userData = this.getUserDataFromForm();
-    if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0 )|| this.isCreatinaGratis) {
+    const userData = this.getUserDataFromForm();
+    if ((localStorage.getItem('passwordSignal') == 'true' && this.form.get('password')!.value.length > 0) || this.isCreatinaGratis) {
       userData.isSignUpAcepted = true;
     }
     if (userId) {
@@ -409,7 +461,8 @@ export class CreateAccountComponent implements OnDestroy {
         this._toastService.error('Ups!', 'Error al actualizar los datos del usuario.');
         this.isProcessing = false;
         return EMPTY;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (response) => {
         const customerId = this._summaryService.getSummary()?.userData?.customerId;
@@ -419,7 +472,7 @@ export class CreateAccountComponent implements OnDestroy {
       }
     });
   }
-  
+
   isSignUpAceptedChange() {
     if (this.form.get('isSignUpAcepted')?.value) {
 
@@ -432,18 +485,18 @@ export class CreateAccountComponent implements OnDestroy {
       // Validar documento
       this.validateDocumentWithServer(this.form.get('nroDocument')?.value ?? '');
     } else {
-      let emailControl = this.form.get('email');
-      let cellphoneControl = this.form.get('cellphone');
-      let nroDocumentControl = this.form.get('nroDocument');
+      const emailControl = this.form.get('email');
+      const cellphoneControl = this.form.get('cellphone');
+      const nroDocumentControl = this.form.get('nroDocument');
 
       emailControl?.setErrors({ emailExists: false });
       cellphoneControl?.setErrors({ cellphoneExists: false });
       nroDocumentControl?.setErrors({ nroDocumentExists: false });
 
 
-      let emailValue = emailControl?.value;
-      let cellphoneValue = cellphoneControl?.value;
-      let nroDocumentValue = nroDocumentControl?.value;
+      const emailValue = emailControl?.value;
+      const cellphoneValue = cellphoneControl?.value;
+      const nroDocumentValue = nroDocumentControl?.value;
 
       if (emailControl) {
         emailControl.setValue(emailValue ?? '');
@@ -456,7 +509,7 @@ export class CreateAccountComponent implements OnDestroy {
       }
     }
   }
-  
+
   private createNewCustomerByApi(userData: UserDataSummary) {
     const registerRequest: RegisterUserRequest = {
       email: userData.email,
@@ -480,19 +533,18 @@ export class CreateAccountComponent implements OnDestroy {
           console.error(err);
           this._toastService.error('Ups!', 'Error al crear la cuenta. Por favor, intenta nuevamente.');
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(response => {
         userData.id = response.data.user.id;
         userData.referralCode = response.data.user.referralCode;
-        
         // Track successful registration
-          this._tiktokAnalytics.identify({
-            email: response.data.user.email,
-            external_id: response.data.user.id,
-            phone_number: response.data.user.phone
-          });          
-        this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
+        this._tiktokAnalytics.identify({
+          email: response.data.user.email,
+          external_id: response.data.user.id,
+          phone_number: response.data.user.phone
+        });
         this.saveUserDataAndNavigate(userData);
       });
   }
@@ -519,6 +571,23 @@ export class CreateAccountComponent implements OnDestroy {
     }
 
     this._summaryService.setUserData(userData);
+
+    this._tiktokAnalytics.trackCompleteRegistration({
+      contents: [{
+        content_id: 'registration',
+        content_type: 'product_group',
+        content_name: 'Registro Completado'
+      }]
+    });
+
+    // Tracking Meta Analytics
+    this._metaAnalytics.trackCompleteRegistration({
+      content_name: 'Registro Completado',
+      status: true,
+      value: this.ENV.precioCreatinaSubscription,
+      currency: 'PEN'
+    });
+    this._toastService.success('¡Listo!', 'Datos guardados correctamente.');
     this.isProcessing = false;
 
     if (this.nextUrl !== '') {
@@ -557,7 +626,8 @@ export class CreateAccountComponent implements OnDestroy {
         catchError(err => {
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {
@@ -604,7 +674,8 @@ export class CreateAccountComponent implements OnDestroy {
         catchError(err => {
           this.handleCustomerError(err);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {
@@ -620,14 +691,14 @@ export class CreateAccountComponent implements OnDestroy {
   }
 
   // Manejar errores de cliente
-  private handleCustomerError(err: any) {
+  private handleCustomerError(err: { error?: { code?: number; message?: string };[key: string]: unknown }) {
     this.isProcessing = false;
 
     if (err.error?.code === 501) {
-      if (err.error.message.includes('externalId')) {
+      if (err.error.message?.includes('externalId')) {
         this._toastService.error('Ups!', 'Ya existe una cuenta con el N° de documento ingresado.');
         this.form.get('nroDocument')?.setErrors({ nroDocumentExists: true });
-      } else if (err.error.message.includes('email')) {
+      } else if (err.error.message?.includes('email')) {
         this._toastService.error('Ups!', 'El correo ingresado no existe o no es válido.');
         this.form.get('email')?.setErrors({ emailInvalid: true });
       }

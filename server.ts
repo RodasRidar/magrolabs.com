@@ -1,107 +1,52 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr';
+import {
+  AngularNodeAppEngine,
+  createNodeRequestHandler,
+  isMainModule,
+  writeResponseToNodeResponse,
+} from '@angular/ssr/node';
 import express from 'express';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';
-import bootstrap from './src/main.server';
-import apicache from 'apicache';
-import { SitemapStream } from 'sitemap';
-// import { createGzip } from 'zlib';
 
-// const { SitemapStream } = require('sitemap')
-let cache = apicache.middleware
-// The Express app is exported so that it can be used by serverless Functions.
-export function app(): express.Express {
-  const server = express();
-  const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-  const browserDistFolder = resolve(serverDistFolder, '../browser');
-  const indexHtml = join(serverDistFolder, 'index.server.html');
+const serverDistFolder = dirname(fileURLToPath(import.meta.url));
+const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-  const commonEngine = new CommonEngine();
+const app = express();
+const angularApp = new AngularNodeAppEngine();
 
-  server.set('view engine', 'html');
-  server.set('views', browserDistFolder);
-
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  
-  // Serve static files from /browser
-  server.use(express.static(browserDistFolder, {
+app.use(
+  express.static(browserDistFolder, {
     maxAge: '1y',
     index: false,
+    redirect: false,
     setHeaders: (res, path) => {
-      // Ensure proper MIME types for JavaScript files
-      if (path.endsWith('.js')) {
+      if (path.endsWith('.js') || path.endsWith('.mjs')) {
         res.setHeader('Content-Type', 'application/javascript');
       }
-      if (path.endsWith('.mjs')) {
-        res.setHeader('Content-Type', 'application/javascript');
-      }
-    }
-  }));
+    },
+  }),
+);
 
-  // Handle POST requests from Flow payment gateway returnUrl
-  // Flow may send POST to returnUrl, so we redirect to GET
-  server.post('/registro/confirmacion', (req, res) => {
-    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
-    res.redirect(303, `/registro/confirmacion${queryString}`);
-  });
+// Flow payment gateway puede mandar POST al returnUrl: lo convertimos en GET
+app.post('/registro/confirmacion', (req, res) => {
+  const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+  res.redirect(303, `/registro/confirmacion${queryString}`);
+});
 
-  // All regular routes use the Angular engine
-  server.get('**', (req, res, next) => {
-    const { protocol, originalUrl, baseUrl, headers } = req;
+app.use((req, res, next) => {
+  angularApp
+    .handle(req)
+    .then((response) =>
+      response ? writeResponseToNodeResponse(response, res) : next(),
+    )
+    .catch(next);
+});
 
-    commonEngine
-      .render({
-        bootstrap,
-        documentFilePath: indexHtml,
-        url: `${protocol}://${headers.host}${originalUrl}`,
-        publicPath: browserDistFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
-      })
-      .then((html) => res.send(html))
-      .catch((err) => next(err));
-  });
-
-  server.get('/sitemap.xml', cache('1 hour'), (req, res) => {
-    res.header('Content-Type', 'application/xml');
-
-    try {
-      const smStream = new SitemapStream({ hostname: 'https://magrolabs.com' });
-
-      (async () => {
-        const routes = [
-          { url: '/', changefreq: 'daily', priority: 1 },
-          { url: '/registro', changefreq: 'weekly', priority: 0.9 },
-        ];
-
-        for (const route of routes) {
-          smStream.write(route);
-        }
-
-        smStream.end();
-
-        smStream.pipe(res).on('error', (e: any) => {
-          throw e;
-        });
-      })();
-    } catch (e) {
-      console.error(e);
-      res.status(500).end();
-    }
-  });
-
-  return server;
-}
-
-function run(): void {
+if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
-
-  // Start up the Node server
-  const server = app();
-  server.listen(port, () => {
+  app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
 
-run();
+export const reqHandler = createNodeRequestHandler(app);

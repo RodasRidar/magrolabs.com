@@ -1,4 +1,5 @@
-import { Component, inject, PLATFORM_ID, HostListener } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID, HostListener } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HeaderComponent } from './components/header/header.component';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SummaryComponent } from './components/summary/summary.component';
@@ -7,16 +8,16 @@ import { environment } from '../../../environments/env';
 import { SeoService } from '../../shared/services/seo.service';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [HeaderComponent, RouterOutlet, SummaryComponent, CommonModule],
-  templateUrl: './signup.component.html',
+    selector: 'app-signup',
+    imports: [HeaderComponent, RouterOutlet, SummaryComponent, CommonModule],
+    templateUrl: './signup.component.html'
 })
 
 export class SignupComponent {
   private _router = inject(Router);
   private _seo = inject(SeoService);
   private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
 
   currentUrl = '';
   isChoosePlanView = true;
@@ -26,7 +27,7 @@ export class SignupComponent {
       this.currentUrl = window.location.pathname.split('/').pop()?.split('?').shift() || '';
       this.isChoosePlanView = this.currentUrl === 'registro' || this.currentUrl ==='confirmacion'
 
-      this._router.events.subscribe(event => {
+      this._router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
         if (event instanceof NavigationEnd) {
           this.currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
           this.isChoosePlanView = this.currentUrl === 'registro' || this.currentUrl ==='confirmacion';

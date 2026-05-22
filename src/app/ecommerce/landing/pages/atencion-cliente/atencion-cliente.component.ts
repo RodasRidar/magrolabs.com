@@ -1,25 +1,32 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../../../environments/env';
 import { NavbarComponent, NavbarTypeEnum } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-atencion-cliente',
-  standalone: true,
-  imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive],
-  templateUrl: './atencion-cliente.component.html',
-  styleUrl: './atencion-cliente.component.css'
+    selector: 'app-atencion-cliente',
+    imports: [NavbarComponent, FooterComponent, RouterOutlet, FormsModule, RouterLink, RouterLinkActive, BreadcrumbComponent],
+    templateUrl: './atencion-cliente.component.html',
+    styleUrl: './atencion-cliente.component.css'
 })
 export class AtencionClienteComponent {
   private router = inject(Router);
   private _seo = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
 
   selectedOption = 'preguntas-frecuentes';
   ENV = environment;
   navbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Atención al cliente' },
+  ];
 
   ngOnInit() {
     let currentUrl = this.router.url;
@@ -30,7 +37,7 @@ export class AtencionClienteComponent {
       this.selectedOption = matchingOption;
     }
 
-    this.router.events.subscribe(event => {
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       if (event instanceof NavigationEnd) {
         currentUrl = this.router.url;
         const matchingOption = this.options.find(opt => currentUrl.includes(opt));

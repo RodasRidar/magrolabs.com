@@ -31,7 +31,7 @@
 @else {
 <button
   type="button"  [ngClass]="{'cursor-progress': isProcessing()}"
-  class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed"
+  class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed"
   [disabled]="isDisabled()"
 >
   @if (isProcessing()) {

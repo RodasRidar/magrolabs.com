@@ -1,4 +1,5 @@
-import { Component, inject, input, InputSignal, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -7,54 +8,53 @@ import { ShoppingCartService } from '../../../../shared/services/cart-service.se
 import { CartComponent } from '../../../../shared/ui/cart/cart.component';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
-import { Subscription } from 'rxjs';
 import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 import { BlackFridayBarComponent } from '../../../../shared/ui/black-friday-bar/black-friday-bar.component';
 import { environment } from '../../../../../environments/env';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
-  animations: [
-    trigger('fadeInOut', [
-      state('inactive', style({
-        opacity: 0,
-        transform: 'translateY(-100%)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'translateY(0)'
-      })),
-      transition('inactive => active', [
-        animate('200ms ease-in-out')
-      ]),
-      transition('active => inactive', [
-        animate('200ms ease-in-out')
-      ])
-    ]),
-    trigger('cartAnimation', [
-      state('start', style({ transform: 'scale(1)' })),
-      state('end', style({ transform: 'scale(1.2)' })),
-      transition('start => end', [
-        animate('0.5s ease')
-      ]),
-      transition('end => start', [
-        animate('0.5s ease')
-      ])
-    ])
-  ]
+    selector: 'app-navbar',
+    imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    animations: [
+        trigger('fadeInOut', [
+            state('inactive', style({
+                opacity: 0,
+                transform: 'translateY(-100%)'
+            })),
+            state('active', style({
+                opacity: 1,
+                transform: 'translateY(0)'
+            })),
+            transition('inactive => active', [
+                animate('200ms ease-in-out')
+            ]),
+            transition('active => inactive', [
+                animate('200ms ease-in-out')
+            ])
+        ]),
+        trigger('cartAnimation', [
+            state('start', style({ transform: 'scale(1)' })),
+            state('end', style({ transform: 'scale(1.2)' })),
+            transition('start => end', [
+                animate('0.5s ease')
+            ]),
+            transition('end => start', [
+                animate('0.5s ease')
+            ])
+        ])
+    ]
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   isCheckout = input.required<boolean>();
-  
+
   private readonly _shoppingCartService = inject(ShoppingCartService);
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
+  private readonly _elementRef = inject(ElementRef);
   private readonly _cdr = inject(ChangeDetectorRef);
-  private _subscriptions: Subscription[] = [];
+  private readonly destroyRef = inject(DestroyRef);
   
   isLoading = false;
   showCart = 'inactivate';
@@ -71,30 +71,37 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ENV = environment
 
   ngOnInit(): void {
-    this._subscriptions.push(
-      this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
+    this._shoppingCartService.shoppingCart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(shoppingCart => {
         this.numItemsCart = this._shoppingCartService.getTotalItemsByShoppingCart(shoppingCart);
         this.cartState = this.cartState === 'start' ? 'end' : 'start';
         setTimeout(() => {
           this.cartState = 'start';
           this._cdr.detectChanges();
         }, 500);
-      }),
+      });
 
-      this._authService.currentUser$.subscribe(user => {
+    this._authService.currentUser$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
         this.user = user;
         this._cdr.detectChanges();
-      }),
+      });
 
-      this._authService.isAuthenticated$.subscribe(isAuth => {
+    this._authService.isAuthenticated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isAuth => {
         this.isAuthenticated = isAuth;
         this._cdr.detectChanges();
-      })
-    );
+      });
   }
 
-  ngOnDestroy(): void {
-    this._subscriptions.forEach(sub => sub.unsubscribe());
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this._elementRef.nativeElement.contains(event.target)) {
+      this.isUserMenuOpen = false;
+    }
   }
 
   toggleNavbar(): void {
@@ -110,12 +117,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this._authService.logout().subscribe({
-      next: () => {
-        this.isUserMenuOpen = false;
-        this._router.navigate(['/']);
-      }
-    });
+    this._authService.logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isUserMenuOpen = false;
+          this._router.navigate(['/']);
+        }
+      });
   }
 }
 

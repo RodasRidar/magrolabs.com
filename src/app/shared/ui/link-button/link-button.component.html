@@ -1,0 +1,9 @@
+<a
+  [routerLink]="routerLink() ?? null"
+  [attr.href]="!routerLink() ? (href() ?? null) : null"
+  [target]="target()"
+  [attr.rel]="rel()"
+  [class]="classes()"
+>
+  <ng-content />
+</a>

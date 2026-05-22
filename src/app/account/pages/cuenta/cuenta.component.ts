@@ -21,13 +21,20 @@ import { MonthlyRewardModalService } from '../../../shared/services/monthly-rewa
 import { MonthlyRewardModalComponent } from '../../../shared/ui/monthly-reward-modal/monthly-reward-modal.component';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { CardComponent } from '../../../shared/ui/card/card.component';
+import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+import { getOrderStatusBadge, getSubscriptionStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
+import { ActionCardComponent } from '../../../shared/ui/action-card/action-card.component';
+import { LoyaltyMeterComponent } from '../../../shared/ui/loyalty-meter/loyalty-meter.component';
+import { describe } from 'node:test';
+import { title } from 'process';
 
 @Component({
-  selector: 'app-cuenta',
-  standalone: true,
-  imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent],
-  templateUrl: './cuenta.component.html',
-  styleUrl: './cuenta.component.css'
+    selector: 'app-cuenta',
+    imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent],
+    templateUrl: './cuenta.component.html',
+    styleUrl: './cuenta.component.css'
 })
 export class CuentaComponent implements OnInit {
   private authService = inject(AuthService);
@@ -69,7 +76,7 @@ export class CuentaComponent implements OnInit {
   // Saludo dinámico
   greetingMessage = computed(() => {
     const user = this.user();
-    if (!user) return '';
+    if (!user) return { title: '', description: '' };
     
     const hour = new Date().getHours();
     let greeting = '';
@@ -89,7 +96,10 @@ export class CuentaComponent implements OnInit {
     // Usar solo el primer nombre si tiene varios nombres separados por espacios
     const firstName = user.first_name.split(' ')[0];
     
-    return `¡${greeting} ${firstName}!, qué gusto tenerte de vuelta ${emoji}`;
+    return {
+      title: `¡${greeting} ${firstName}!`,
+      description: `Un gusto tenerte de vuelta ${emoji}`
+    };
   });
 
   // Computed signals
@@ -248,7 +258,7 @@ export class CuentaComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mi Cuenta | Magrolabs');
+    this._seoService.setTitle('Inicio | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);
@@ -270,94 +280,12 @@ export class CuentaComponent implements OnInit {
     return this.authService.getCurrentUser()?.id || '';
   }
 
-  getSubscriptionStatusText(status: SubscriptionStatusEnum | undefined): string {
-    if (!status) return 'Sin suscripción';
-
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'Activa';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'Período de prueba';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'Pausada';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'Cancelada';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'Expirada';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'Por Cancelar';
-      default:
-        return 'Estado desconocido';
-    }
+  subscriptionBadge(status: SubscriptionStatusEnum | undefined): StatusBadge {
+    return getSubscriptionStatusBadge(status);
   }
 
-  getOrderStatusText(status: OrderStatus | undefined): string {
-    if (!status) return 'Estado desconocido';
-
-    switch (status) {
-      case OrderStatus.PENDING_PAYMENT:
-        return 'Pendiente';
-      case OrderStatus.PROCESSING:
-        return 'En proceso';
-      case OrderStatus.SHIPPED:
-        return 'Enviado';
-      case OrderStatus.DELIVERED:
-        return 'Entregado';
-      case OrderStatus.CANCELLED:
-        return 'Cancelado';
-      case OrderStatus.PAID:
-        return 'Pagado';
-      case OrderStatus.REFUNDED:
-        return 'Reembolsado';
-      case OrderStatus.REJECTED:
-        return 'Rechazado';
-      default:
-        return 'Estado desconocido';
-    }
-  }
-
-  /**
-   * Devuelve las clases CSS para el estado de la suscripción
-   */
-  getStatusClass(status: SubscriptionStatusEnum | undefined): string {
-    if (!status) return 'bg-gray-100 text-gray-800';
-
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-100 text-green-800';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-100 text-yellow-800';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-100 text-red-800';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-100 text-blue-800';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  /**
-   * Devuelve la clase CSS para el punto indicador de estado
-   */
-  getDotClass(status: SubscriptionStatusEnum | undefined): string {
-    if (!status) return 'bg-gray-500';
-
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-500';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-500';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-500';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-500';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-500';
-      default:
-        return 'bg-gray-500';
-    }
+  orderBadge(status: OrderStatus | undefined): StatusBadge {
+    return getOrderStatusBadge(status);
   }
 
   /**

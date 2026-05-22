@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-envio-entrega',
-  standalone: true,
-  imports: [],
-  templateUrl: './envio-entrega.component.html',
-  styleUrl: './envio-entrega.component.css'
+    selector: 'app-envio-entrega',
+    imports: [],
+    templateUrl: './envio-entrega.component.html',
+    styleUrl: './envio-entrega.component.css'
 })
 export class EnvioEntregaComponent {
   ENV = environment

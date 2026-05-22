@@ -3,11 +3,10 @@ import { environment } from '../../../../../../environments/env';
 import { title } from 'process';
 
 @Component({
-  selector: 'app-pago',
-  standalone: true,
-  imports: [],
-  templateUrl: './pago.component.html',
-  styleUrl: './pago.component.css'
+    selector: 'app-pago',
+    imports: [],
+    templateUrl: './pago.component.html',
+    styleUrl: './pago.component.css'
 })
 export class PagoComponent {
   ENV = environment

@@ -20,7 +20,7 @@ const campanaPrimeraCreatina = {
   tipo: 'precio-especial' as 'gratis' | 'precio-especial',
   
   // Precio de la primera creatina (0 si es gratis, ej: 9.90, 14.90, etc.)
-  precio: 9.90,
+  precio: 29.90,
   
   // Gramos de la primera creatina
   gramos: 100,
@@ -152,6 +152,7 @@ const useProxy = true;
 const cancelDiscout = 20;
 const flowCouponId50PercentDiscount = 874;
 const flowCouponId30PercentDiscount = 884;
+const flowCouponId20PercentDiscount = 884;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
 const flowUrlConfirmationSubscription = 'https://dev-api.magrolabs.com/api/v1/subscriptions/confirm-payment'
 const precioEnvioFueraLimaMetropolitana = 14;
@@ -161,7 +162,7 @@ const metaTrackingEnabled = true;
 const metaPixelId = '1929231371136371'; // ID del pixel de Meta para desarrollo
 const metaDebug = true;
 const isBlackFridayActive = false;
-const creatina100GrDescuentoBlackFriday = '80%'
+const creatina100GrDescuentoBlackFriday = '33%'
 
 export const environment = {
     production,
@@ -221,6 +222,7 @@ export const environment = {
     flowUrlConfirmationSubscription,
     flowPlanIdTest,
     flowCouponId30PercentDiscount,
+    flowCouponId20PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
     tiktokTrackingEnabled,
     tiktok: {

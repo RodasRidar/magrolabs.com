@@ -245,9 +245,10 @@
     </div> -->
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative z-10 flex items-baseline justify-between pt-10 px-6 border-b-4 border-[#d7816a] -ml-9">
-            <div class="flex flex-col justify-start mb-8">
-                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Todos nuestros productos.</h1>
+        <div
+            class="relative z-10 flex items-baseline justify-between pt-4 sm:pt-8 px-6 border-b-4 border-primary-hover -ml-7 sm:-ml-9">
+            <div class="flex flex-col justify-start mb-6 sm:mb-8">
+                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Tienda.</h1>
                 <!-- <p class="text-base text-gray-700 my-4 font-light text-pretty">
                     Acumular crédito para compras es muy fácil. Cada miembro recibe S/{{ENV.creditoRegaloPorCompraMes}} de crédito al mes. Ahorra para
                     tu artículo favorito en nuestra tienda online. Cada temporada, actualizamos la tienda web con nuevos
@@ -314,148 +315,216 @@
             </div> -->
         </div>
 
-        <section aria-labelledby="products-heading" class="pt-6 pb-24">
+        <section aria-labelledby="products-heading" class="pt-4 pb-12">
             <h2 id="products-heading" class="sr-only">Products</h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
-                <form class="hidden lg:block">
-                    <h3 class="sr-only">Categories</h3>
-                    <!-- <ul role="list" class="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                        <li>
-                            <a routerLink="/productos" fragment='creatinas'
-                                class="hover:text-[#d7816a] hover:underline"> Creatinas → </a>
-                        </li>
-                    </ul> -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-4">
 
-                    <div class="border-b border-gray-200 py-6">
-                        <h3 class="-my-3 flow-root">
-                            <button type="button"
-                                class="py-3  w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500"
-                                aria-controls="filter-section-1" aria-expanded="false">
-                                <span class="font-medium text-gray-900"> Categorias </span>
-                                <!-- <span class="ml-6 flex items-center">
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                        fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                        fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </span> -->
-                            </button>
-                        </h3>
-
-                        <div class="pt-6" id="filter-section-1">
-                            <div class="space-y-4">
-                                <div class="flex items-center">
-                                    <input id="filter-category-0" name="category[]" value="new-arrivals" type="checkbox"
-                                        class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-category-0" class="ml-3 text-sm text-gray-600"> Nuevos
-                                        lanzamientos
-                                    </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input id="filter-category-1" name="category[]" value="sale" type="checkbox"
-                                        class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-category-1" class="ml-3 text-sm text-gray-600"> Oferta </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-b border-gray-200 py-6">
-                        <h3 class="-my-3 flow-root">
-                            <button type="button"
-                                class="py-3  w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500"
-                                aria-controls="filter-section-2" aria-expanded="false">
-                                <span class="font-medium text-gray-900"> Tamaños </span>
-                                <!-- <span class="ml-6 flex items-center">
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                        fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                        fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </span> -->
-                            </button>
-                        </h3>
-                        <div class="pt-6" id="filter-section-2">
-                            <div class="space-y-4">
-                                <div class="flex items-center">
-                                    <input id="filter-size-0" name="size[]" value="2l" type="checkbox"
-                                        class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-0" class="ml-3 text-sm text-gray-600"> 100 gr </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input id="filter-size-1" name="size[]" value="6l" type="checkbox"
-                                        class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-1" class="ml-3 text-sm text-gray-600"> 250 gr </label>
-                                </div>
-
-                                <div class="flex items-center">
-                                    <input id="filter-size-2" name="size[]" value="12l" type="checkbox"
-                                        class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                    <label for="filter-size-2" class="ml-3 text-sm text-gray-600"> 3 kg </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="mx-auto grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:col-span-3 lg:gap-x-8">
-                    <a routerLink="creatinas/creatina-monohidratada-100-gr" class="group text-sm">
-                        <div
-                            class="w-[320px] h-[320px] aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="100gr_front_mockup_2000x2000.webp" alt="Creatina 100% monohidratada oferta especial"
-                                class="object-center object-cover" width="1500" height="1500" priority>
-                        </div>
-                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada {{ENV.creatinaFreeGramos}} gr</h3>
-                        <p class="text-gray-500">{{ENV.creatinaFreeGramos}} gr</p>
-                        <p class="mt-2 font-extralight text-xs"></p>
-                        <div class="flex items-center mt-2">
-                            <p class="font-extralight text-gray-900 text-xs line-through"> {{ENV.creatinaFreePrecio | currency:'S/'}}             
-                            </p>
-                            <span class="ml-2 text-[#d7816a] text-sm">{{ ENV.campanaPrimeraCreatina.textos.ofertaCorta }}</span>
-                        </div>
-                    </a>
-
-                    <a routerLink="creatinas/creatina-monohidratada-250-gr" class="group text-sm">
-                        <div
-                            class="w-[320px] h-[320px] aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="250gr_front_mockup_2000x2000.webp" alt="Creatina monohidratada Magrolabs 250 gr"
-                                class="object-center object-cover brightness-125" width="1500" height="1500" priority>
-                        </div>
-                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada 250 gr</h3>
-                        <p class="text-gray-500">250 gr</p>
-                        <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{ENV.precioCreatinaSubscription|
-                            currency:'S/'}}</p>
-                    </a>
-
-                    <!-- Creatina 3kg - Temporalmente oculta
-                    <a routerLink="creatinas/creatina-monohidratada-3-kg" class="group text-sm">
-                        <div
-                            class="w-[320px] h-[320px] px-14 pt-4 aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
-                            <img ngSrc="package-image-3000.png" alt="Creatina Monohidratada 3 kg"
-                                class="object-center object-cover" width="884" height="1186" priority>
-                        </div>
-                        <h3 class="mt-4 font-medium text-gray-900">Creatina Monohidratada 3 kg</h3>
-                        <p class="text-gray-500">3 kg</p>
-                        <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{ENV.precioCreatina3kgSubscription|
-                            currency:'S/'}}</p>
-                    </a>
-                    -->
+                <!-- Breadcrumb (mobile + desktop) -->
+                <div class="lg:col-span-4">
+                    <ml-breadcrumb [items]="breadcrumbItems" />
                 </div>
+
+                <!-- Filtro móvil: chips pill (< lg) -->
+                <div class="lg:hidden">
+                    <div class="flex items-center gap-2 pb-2">
+                        <!-- Chip Categorías -->
+                        <button type="button" (click)="openMobileFilter('categories')"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors"
+                            [class.border-primary]="activeCategoriesCount > 0"
+                            [class.text-primary]="activeCategoriesCount > 0"
+                            [class.bg-primary]="false"
+                            [class.border-gray-300]="activeCategoriesCount === 0"
+                            [class.text-gray-600]="activeCategoriesCount === 0">
+                            Categorías
+                            @if (activeCategoriesCount > 0) {
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeCategoriesCount }}</span>
+                            } @else {
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                            }
+                        </button>
+
+                        <!-- Chip Tamaños -->
+                        <button type="button" (click)="openMobileFilter('sizes')"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors"
+                            [class.border-primary]="activeSizesCount > 0"
+                            [class.text-primary]="activeSizesCount > 0"
+                            [class.border-gray-300]="activeSizesCount === 0"
+                            [class.text-gray-600]="activeSizesCount === 0">
+                            Tamaños
+                            @if (activeSizesCount > 0) {
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeSizesCount }}</span>
+                            } @else {
+                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bottom Sheet overlay (mobile) -->
+                @if (activeMobileFilter() !== null) {
+                <div class="lg:hidden fixed inset-0 z-[60] flex flex-col justify-end"
+                    (click)="closeMobileFilter()">
+                    <!-- Backdrop -->
+                    <div class="sheet-backdrop absolute inset-0 bg-black/40"></div>
+
+                    <!-- Panel -->
+                    <div class="sheet-panel relative bg-white rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
+                        (click)="$event.stopPropagation()">
+
+                        <!-- Handle -->
+                        <div class="mx-auto w-10 h-1 rounded-full bg-gray-200 mb-5"></div>
+
+                        @if (activeMobileFilter() === 'categories') {
+                        <!-- Sheet: Categorías -->
+                        <h3 class="text-base font-semibold text-gray-900 mb-6">Categorías</h3>
+                        <div class="space-y-5">
+                            <label class="flex items-center justify-between cursor-pointer py-1">
+                                <span class="text-sm text-gray-700">Oferta</span>
+                                <input type="checkbox" [checked]="isCategorySelected('sale')"
+                                    (change)="toggleCategory('sale')"
+                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                            </label>
+                            <div class="border-t border-gray-100"></div>
+                            <label class="flex items-center justify-between cursor-pointer py-1">
+                                <span class="text-sm text-gray-700">Nuevos lanzamientos</span>
+                                <input type="checkbox" [checked]="isCategorySelected('new-arrivals')"
+                                    (change)="toggleCategory('new-arrivals')"
+                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                            </label>
+                        </div>
+                        }
+
+                        @if (activeMobileFilter() === 'sizes') {
+                        <!-- Sheet: Tamaños -->
+                        <h3 class="text-base font-semibold text-gray-900 mb-6">Tamaños</h3>
+                        <div class="space-y-5">
+                            <label class="flex items-center justify-between cursor-pointer py-1">
+                                <span class="text-sm text-gray-700">100 gr</span>
+                                <input type="checkbox" [checked]="isSizeSelected('100gr')"
+                                    (change)="toggleSize('100gr')"
+                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                            </label>
+                            <div class="border-t border-gray-100"></div>
+                            <label class="flex items-center justify-between cursor-pointer py-1">
+                                <span class="text-sm text-gray-700">250 gr</span>
+                                <input type="checkbox" [checked]="isSizeSelected('250gr')"
+                                    (change)="toggleSize('250gr')"
+                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                            </label>
+                        </div>
+                        }
+
+                        <!-- Acciones -->
+                        <div class="flex items-center justify-between mt-8">
+                            <button type="button" (click)="clearFilters()"
+                                class="text-sm text-gray-500 hover:text-gray-900 underline underline-offset-2">
+                                Limpiar filtros
+                            </button>
+                            <button type="button" (click)="closeMobileFilter()"
+                                class="px-6 py-2.5 rounded-full bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
+                                Mostrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Sidebar filtros desktop (>= lg) -->
+                <aside class="hidden lg:block lg:col-span-1">
+                    <div class="border-b border-gray-200 py-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-4">Categorías</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" [checked]="isCategorySelected('sale')"
+                                    (change)="toggleCategory('sale')"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-600">Oferta</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" [checked]="isCategorySelected('new-arrivals')"
+                                    (change)="toggleCategory('new-arrivals')"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-600">Nuevos lanzamientos</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="border-b border-gray-200 py-6">
+                        <h3 class="text-sm font-medium text-gray-900 mb-4">Tamaños</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" [checked]="isSizeSelected('100gr')"
+                                    (change)="toggleSize('100gr')"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-600">100 gr</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" [checked]="isSizeSelected('250gr')"
+                                    (change)="toggleSize('250gr')"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-600">250 gr</span>
+                            </label>
+                            <!-- <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" [checked]="isSizeSelected('3kg')" (change)="toggleSize('3kg')"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-600">3 kg</span>
+                            </label> -->
+                        </div>
+                    </div>
+                    @if (hasActiveFilters) {
+                    <button type="button" (click)="clearFilters()"
+                        class="mt-4 text-xs text-gray-500 hover:text-gray-900 underline">
+                        Limpiar filtros
+                    </button>
+                    }
+                </aside>
+
+                <!-- Grid de productos -->
+                <div class="lg:col-span-3">
+                    @if (filteredProducts().length === 0) {
+                    <div class="flex flex-col items-center justify-center py-16 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mb-4" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-gray-500 text-sm">No hay productos que coincidan con los filtros.</p>
+                        <button (click)="clearFilters()" class="mt-3 text-sm text-primary hover:underline">Limpiar
+                            filtros</button>
+                    </div>
+                    } @else {
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:gap-x-8">
+                        @for (product of filteredProducts(); track product.route) {
+                        <a [routerLink]="product.route" class="group text-sm">
+                            <div
+                                class="w-full aspect-square rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
+                                <img [ngSrc]="product.imgSrc" [alt]="product.imgAlt"
+                                    class="w-full h-full object-center object-cover" width="1500" height="1500"
+                                    priority>
+                            </div>
+                            <h3 class="mt-3 font-medium text-gray-900 text-sm leading-snug">{{ product.title }}</h3>
+                            <p class="text-gray-500 text-xs mt-0.5">{{ product.subtitle }}</p>
+                            @if (product.route.includes('100-gr')) {
+                            <div class="flex items-center mt-2 gap-1.5 flex-wrap">
+                                <p class="font-extralight text-gray-900 text-xs line-through">{{ ENV.creatinaFreePrecio
+                                    | currency:'S/' }}</p>
+                                <span class="text-primary-hover text-xs font-medium">{{
+                                    ENV.campanaPrimeraCreatina.textos.ofertaCorta }}</span>
+                            </div>
+                            } @else {
+                            <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{
+                                ENV.precioCreatinaSubscription | currency:'S/' }}</p>
+                            }
+                        </a>
+                        }
+                    </div>
+                    }
+                </div>
+
             </div>
         </section>
     </main>

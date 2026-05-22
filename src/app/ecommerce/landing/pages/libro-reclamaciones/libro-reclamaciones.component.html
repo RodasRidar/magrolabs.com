@@ -1,264 +1,284 @@
 <app-navbar [isCheckout]="false" [type]="type.LANDING"></app-navbar>
-<div class="libro-reclamaciones-container">
-    <div class="header-section">
-        <h1 class="main-title">Libro de Reclamaciones</h1>
-        <p class="subtitle">
-            Conforme a lo dispuesto en el Código de Protección y Defensa del Consumidor. Ley N° 29571
-        </p>
-    </div>
+<ml-breadcrumb [items]="breadcrumbItems" />
 
-    <div class="form-container" [class.loading]="isSubmitting()">
-        <form [formGroup]="reclamacionForm" (ngSubmit)="onSubmit()" class="reclamacion-form">
+<div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+  <header class="text-center mb-10 pb-8 border-b border-gray-200">
+    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Libro de Reclamaciones</h1>
+    <p class="text-sm text-gray-600 max-w-xl mx-auto">
+      Conforme a lo dispuesto en el Código de Protección y Defensa del Consumidor. Ley N° 29571
+    </p>
+  </header>
 
-            <!-- Información del consumidor -->
-            <section class="form-section">
-                <h2 class="section-title">1. Identificación del Consumidor Reclamante</h2>
+  <ml-card [extraClass]="isSubmitting() ? 'opacity-70 pointer-events-none transition-opacity' : 'transition-opacity'">
+    <form [formGroup]="reclamacionForm" class="divide-y divide-gray-100">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombreConsumidor">Nombre y Apellidos *</label>
-                        <input id="nombreConsumidor" type="text" formControlName="nombreConsumidor"
-                            placeholder="Ingrese sus nombres y apellidos completos"
-                            [class.error]="isFieldInvalid('nombreConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('nombreConsumidor')">
-                            El nombre y apellidos son obligatorios
-                        </span>
-                    </div>
-                </div>
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          1. Identificación del Consumidor Reclamante
+        </h2>
 
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label for="tipoDocumento">Tipo de Documento *</label>
-                        <select id="tipoDocumento" formControlName="tipoDocumento"
-                            [class.error]="isFieldInvalid('tipoDocumento')">
-                            <option value="">Seleccione</option>
-                            <option value="dni">DNI</option>
-                            <option value="ce">Carné de Extranjería</option>
-                            <option value="pasaporte">Pasaporte</option>
-                        </select>
-                        <span class="error-message" *ngIf="isFieldInvalid('tipoDocumento')">
-                            Seleccione un tipo de documento
-                        </span>
-                    </div>
+        <div class="space-y-5">
+          <div>
+            <label for="nombreConsumidor" class="block text-sm font-medium text-gray-700">Nombre y Apellidos *</label>
+            <input id="nombreConsumidor" type="text" formControlName="nombreConsumidor"
+              placeholder="Ingrese sus nombres y apellidos completos"
+              [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('nombreConsumidor')}"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+            @if (isFieldInvalid('nombreConsumidor')) {
+              <p class="mt-1 text-xs text-red-500">El nombre y apellidos son obligatorios</p>
+            }
+          </div>
 
-                    <div class="form-group half">
-                        <label for="documentoConsumidor">Número de Documento *</label>
-                        <input id="documentoConsumidor" type="text" formControlName="documentoConsumidor"
-                            placeholder="Número de documento" [class.error]="isFieldInvalid('documentoConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('documentoConsumidor')">
-                            El número de documento es obligatorio
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="direccionConsumidor">Domicilio *</label>
-                        <input id="direccionConsumidor" type="text" formControlName="direccionConsumidor"
-                            placeholder="Dirección completa" [class.error]="isFieldInvalid('direccionConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('direccionConsumidor')">
-                            La dirección es obligatoria
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group third">
-                        <label for="distritoConsumidor">Distrito *</label>
-                        <input id="distritoConsumidor" type="text" formControlName="distritoConsumidor"
-                            placeholder="Distrito" [class.error]="isFieldInvalid('distritoConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('distritoConsumidor')">
-                            El distrito es obligatorio
-                        </span>
-                    </div>
-
-                    <div class="form-group third">
-                        <label for="provinciaConsumidor">Provincia *</label>
-                        <input id="provinciaConsumidor" type="text" formControlName="provinciaConsumidor"
-                            placeholder="Provincia" [class.error]="isFieldInvalid('provinciaConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('provinciaConsumidor')">
-                            La provincia es obligatoria
-                        </span>
-                    </div>
-
-                    <div class="form-group third">
-                        <label for="departamentoConsumidor">Departamento *</label>
-                        <input id="departamentoConsumidor" type="text" formControlName="departamentoConsumidor"
-                            placeholder="Departamento" [class.error]="isFieldInvalid('departamentoConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('departamentoConsumidor')">
-                            El departamento es obligatorio
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label for="telefonoConsumidor">Teléfono *</label>
-                        <input id="telefonoConsumidor" type="tel" formControlName="telefonoConsumidor"
-                            placeholder="Número de teléfono" [class.error]="isFieldInvalid('telefonoConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('telefonoConsumidor')">
-                            El teléfono es obligatorio
-                        </span>
-                    </div>
-
-                    <div class="form-group half">
-                        <label for="emailConsumidor">Correo Electrónico *</label>
-                        <input id="emailConsumidor" type="email" formControlName="emailConsumidor"
-                            placeholder="correo@ejemplo.com" [class.error]="isFieldInvalid('emailConsumidor')" />
-                        <span class="error-message" *ngIf="isFieldInvalid('emailConsumidor')">
-                            Ingrese un correo electrónico válido
-                        </span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Información del proveedor -->
-            <section class="form-section">
-                <h2 class="section-title">2. Identificación del Proveedor</h2>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombreProveedor">Razón Social del Proveedor *</label>
-                        <input id="nombreProveedor" type="text" formControlName="nombreProveedor"
-                            value="MAGRO LABS S.A.C." readonly />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label for="rucProveedor">RUC *</label>
-                        <input id="rucProveedor" type="text" formControlName="rucProveedor" value="20606664971"
-                            readonly />
-                    </div>
-
-                    <div class="form-group half">
-                        <label for="direccionProveedor">Dirección *</label>
-                        <input id="direccionProveedor" type="text" formControlName="direccionProveedor"
-                            value="Av. José Larco 1232, Miraflores, Lima, Perú" readonly />
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tipo de reclamación -->
-            <section class="form-section">
-                <h2 class="section-title">3. Tipo de Reclamación</h2>
-
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input id="reclamo" type="radio" formControlName="tipoReclamacion" value="reclamo" />
-                        <label for="reclamo">
-                            <strong>Reclamo:</strong> Disconformidad relacionada a los productos o servicios.
-                        </label>
-                    </div>
-
-                    <div class="radio-option">
-                        <input id="queja" type="radio" formControlName="tipoReclamacion" value="queja" />
-                        <label for="queja">
-                            <strong>Queja:</strong> Disconformidad no relacionada a los productos o servicios, o
-                            malestar por la atención al público.
-                        </label>
-                    </div>
-                </div>
-
-                <span class="error-message" *ngIf="isFieldInvalid('tipoReclamacion')">
-                    Seleccione el tipo de reclamación
-                </span>
-            </section>
-
-            <!-- Detalle del bien o servicio -->
-            <section class="form-section">
-                <h2 class="section-title">4. Detalle del Bien Contratado o Servicio Prestado</h2>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="descripcionBien">Descripción del Producto o Servicio *</label>
-                        <textarea id="descripcionBien" formControlName="descripcionBien" rows="3"
-                            placeholder="Describa detalladamente el producto o servicio objeto de su reclamación"
-                            [class.error]="isFieldInvalid('descripcionBien')"></textarea>
-                        <span class="error-message" *ngIf="isFieldInvalid('descripcionBien')">
-                            La descripción del producto/servicio es obligatoria
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="montoReclamado">Monto Reclamado (opcional)</label>
-                        <input id="montoReclamado" type="number" formControlName="montoReclamado" placeholder="S/. 0.00"
-                            min="0" step="0.01" />
-                    </div>
-                </div>
-            </section>
-
-            <!-- Detalle de la reclamación -->
-            <section class="form-section">
-                <h2 class="section-title">5. Detalle de la Reclamación y Pedido del Consumidor</h2>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="detalleReclamacion">Detalle de la Reclamación *</label>
-                        <textarea id="detalleReclamacion" formControlName="detalleReclamacion" rows="4"
-                            placeholder="Describa detalladamente el motivo de su reclamación, indicando fechas, lugares y personas involucradas"
-                            [class.error]="isFieldInvalid('detalleReclamacion')"></textarea>
-                        <span class="error-message" *ngIf="isFieldInvalid('detalleReclamacion')">
-                            El detalle de la reclamación es obligatorio
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pedidoConsumidor">Pedido del Consumidor *</label>
-                        <textarea id="pedidoConsumidor" formControlName="pedidoConsumidor" rows="3"
-                            placeholder="Indique claramente qué solicita que haga la empresa para resolver su reclamación"
-                            [class.error]="isFieldInvalid('pedidoConsumidor')"></textarea>
-                        <span class="error-message" *ngIf="isFieldInvalid('pedidoConsumidor')">
-                            El pedido del consumidor es obligatorio
-                        </span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Archivos adjuntos -->
-            <section class="form-section">
-                <h2 class="section-title">6. Documentos Adjuntos (opcional)</h2>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="archivos">Adjuntar Archivos</label>
-                        <input id="archivos" type="file" formControlName="archivos" multiple
-                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
-                        <small class="help-text">
-                            Formatos permitidos: PDF, JPG, PNG, DOC, DOCX. Máximo 5MB por archivo.
-                        </small>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Botones de acción -->
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" (click)="goBack()" [disabled]="isSubmitting()">
-                    Cancelar
-                </button>
-
-                <button type="submit" class="btn btn-primary" [disabled]="reclamacionForm.invalid || isSubmitting()">
-                    {{ isSubmitting() ? 'Enviando...' : 'Enviar Reclamación' }}
-                </button>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="tipoDocumento" class="block text-sm font-medium text-gray-700">Tipo de Documento *</label>
+              <select id="tipoDocumento" formControlName="tipoDocumento"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('tipoDocumento')}"
+                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                <option value="">Seleccione</option>
+                <option value="dni">DNI</option>
+                <option value="ce">Carné de Extranjería</option>
+                <option value="pasaporte">Pasaporte</option>
+              </select>
+              @if (isFieldInvalid('tipoDocumento')) {
+                <p class="mt-1 text-xs text-red-500">Seleccione un tipo de documento</p>
+              }
             </div>
-        </form>
-    </div>
 
-    <!-- Información adicional -->
-    <div class="info-section">
-        <div class="info-box">
-            <h3>Información Importante</h3>
-            <ul>
-                <li>La empresa debe responder a su reclamo en un plazo no mayor a 30 días calendario.</li>
-                <li>En caso de queja, la respuesta debe darse en un plazo no mayor a 15 días calendario.</li>
-                <li>Conserve una copia de su reclamación para sus registros.</li>
-                <li>Si no está conforme con la respuesta, puede acudir al INDECOPI.</li>
-            </ul>
+            <div>
+              <label for="documentoConsumidor" class="block text-sm font-medium text-gray-700">Número de Documento *</label>
+              <input id="documentoConsumidor" type="text" formControlName="documentoConsumidor"
+                placeholder="Número de documento"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('documentoConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('documentoConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">El número de documento es obligatorio</p>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label for="direccionConsumidor" class="block text-sm font-medium text-gray-700">Domicilio *</label>
+            <input id="direccionConsumidor" type="text" formControlName="direccionConsumidor"
+              placeholder="Dirección completa"
+              [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('direccionConsumidor')}"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+            @if (isFieldInvalid('direccionConsumidor')) {
+              <p class="mt-1 text-xs text-red-500">La dirección es obligatoria</p>
+            }
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="distritoConsumidor" class="block text-sm font-medium text-gray-700">Distrito *</label>
+              <input id="distritoConsumidor" type="text" formControlName="distritoConsumidor"
+                placeholder="Distrito"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('distritoConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('distritoConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">El distrito es obligatorio</p>
+              }
+            </div>
+
+            <div>
+              <label for="provinciaConsumidor" class="block text-sm font-medium text-gray-700">Provincia *</label>
+              <input id="provinciaConsumidor" type="text" formControlName="provinciaConsumidor"
+                placeholder="Provincia"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('provinciaConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('provinciaConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">La provincia es obligatoria</p>
+              }
+            </div>
+
+            <div>
+              <label for="departamentoConsumidor" class="block text-sm font-medium text-gray-700">Departamento *</label>
+              <input id="departamentoConsumidor" type="text" formControlName="departamentoConsumidor"
+                placeholder="Departamento"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('departamentoConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('departamentoConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">El departamento es obligatorio</p>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="telefonoConsumidor" class="block text-sm font-medium text-gray-700">Teléfono *</label>
+              <input id="telefonoConsumidor" type="tel" formControlName="telefonoConsumidor"
+                placeholder="Número de teléfono"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('telefonoConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('telefonoConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">El teléfono es obligatorio</p>
+              }
+            </div>
+
+            <div>
+              <label for="emailConsumidor" class="block text-sm font-medium text-gray-700">Correo Electrónico *</label>
+              <input id="emailConsumidor" type="email" formControlName="emailConsumidor"
+                placeholder="correo@ejemplo.com"
+                [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('emailConsumidor')}"
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              @if (isFieldInvalid('emailConsumidor')) {
+                <p class="mt-1 text-xs text-red-500">Ingrese un correo electrónico válido</p>
+              }
+            </div>
+          </div>
         </div>
+      </section>
+
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          2. Identificación del Proveedor
+        </h2>
+
+        <div class="space-y-5">
+          <div>
+            <label for="nombreProveedor" class="block text-sm font-medium text-gray-700">Razón Social del Proveedor *</label>
+            <input id="nombreProveedor" type="text" formControlName="nombreProveedor" readonly
+              class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="rucProveedor" class="block text-sm font-medium text-gray-700">RUC *</label>
+              <input id="rucProveedor" type="text" formControlName="rucProveedor" readonly
+                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+            </div>
+
+            <div>
+              <label for="direccionProveedor" class="block text-sm font-medium text-gray-700">Dirección *</label>
+              <input id="direccionProveedor" type="text" formControlName="direccionProveedor" readonly
+                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          3. Tipo de Reclamación
+        </h2>
+
+        <div class="space-y-3">
+          <label for="reclamo"
+            class="flex items-start gap-3 p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
+            <input id="reclamo" type="radio" formControlName="tipoReclamacion" value="reclamo"
+              class="mt-1 h-4 w-4 text-primary border-gray-300 focus:ring-primary-hover">
+            <span class="text-sm text-gray-700">
+              <strong class="text-gray-900">Reclamo:</strong> Disconformidad relacionada a los productos o servicios.
+            </span>
+          </label>
+
+          <label for="queja"
+            class="flex items-start gap-3 p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
+            <input id="queja" type="radio" formControlName="tipoReclamacion" value="queja"
+              class="mt-1 h-4 w-4 text-primary border-gray-300 focus:ring-primary-hover">
+            <span class="text-sm text-gray-700">
+              <strong class="text-gray-900">Queja:</strong> Disconformidad no relacionada a los productos o servicios, o malestar por la atención al público.
+            </span>
+          </label>
+        </div>
+
+        @if (isFieldInvalid('tipoReclamacion')) {
+          <p class="mt-3 text-xs text-red-500">Seleccione el tipo de reclamación</p>
+        }
+      </section>
+
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          4. Detalle del Bien Contratado o Servicio Prestado
+        </h2>
+
+        <div class="space-y-5">
+          <div>
+            <label for="descripcionBien" class="block text-sm font-medium text-gray-700">Descripción del Producto o Servicio *</label>
+            <textarea id="descripcionBien" formControlName="descripcionBien" rows="3"
+              placeholder="Describa detalladamente el producto o servicio objeto de su reclamación"
+              [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('descripcionBien')}"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+            @if (isFieldInvalid('descripcionBien')) {
+              <p class="mt-1 text-xs text-red-500">La descripción del producto/servicio es obligatoria</p>
+            }
+          </div>
+
+          <div>
+            <label for="montoReclamado" class="block text-sm font-medium text-gray-700">Monto Reclamado (opcional)</label>
+            <input id="montoReclamado" type="number" formControlName="montoReclamado" min="0" step="0.01"
+              placeholder="S/. 0.00"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+          </div>
+        </div>
+      </section>
+
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          5. Detalle de la Reclamación y Pedido del Consumidor
+        </h2>
+
+        <div class="space-y-5">
+          <div>
+            <label for="detalleReclamacion" class="block text-sm font-medium text-gray-700">Detalle de la Reclamación *</label>
+            <textarea id="detalleReclamacion" formControlName="detalleReclamacion" rows="4"
+              placeholder="Describa detalladamente el motivo de su reclamación, indicando fechas, lugares y personas involucradas"
+              [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('detalleReclamacion')}"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+            @if (isFieldInvalid('detalleReclamacion')) {
+              <p class="mt-1 text-xs text-red-500">El detalle de la reclamación es obligatorio</p>
+            }
+          </div>
+
+          <div>
+            <label for="pedidoConsumidor" class="block text-sm font-medium text-gray-700">Pedido del Consumidor *</label>
+            <textarea id="pedidoConsumidor" formControlName="pedidoConsumidor" rows="3"
+              placeholder="Indique claramente qué solicita que haga la empresa para resolver su reclamación"
+              [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('pedidoConsumidor')}"
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+            @if (isFieldInvalid('pedidoConsumidor')) {
+              <p class="mt-1 text-xs text-red-500">El pedido del consumidor es obligatorio</p>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="px-6 py-8 sm:px-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+          6. Documentos Adjuntos (opcional)
+        </h2>
+
+        <div>
+          <label for="archivos" class="block text-sm font-medium text-gray-700">Adjuntar Archivos</label>
+          <input id="archivos" type="file" formControlName="archivos" multiple
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            class="mt-1.5 block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-surface file:text-primary-dark hover:file:bg-primary-surface-light cursor-pointer">
+          <p class="mt-2 text-xs text-gray-500">Formatos permitidos: PDF, JPG, PNG, DOC, DOCX. Máximo 5MB por archivo.</p>
+        </div>
+      </section>
+    </form>
+
+    <div class="px-6 py-6 sm:px-8 bg-surface flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-gray-200">
+      <div class="sm:w-40">
+        <ml-button name="Cancelar" type="secondary-outlined" [isDisabled]="isSubmitting()" (click)="goBack()" />
+      </div>
+      <div class="sm:w-56">
+        <ml-button [name]="isSubmitting() ? 'Enviando...' : 'Enviar Reclamación'" type="primary"
+          [isDisabled]="reclamacionForm.invalid || isSubmitting()" [isProcessing]="isSubmitting()"
+          (click)="onSubmit()" />
+      </div>
     </div>
+  </ml-card>
+
+  <div class="mt-10 bg-primary-surface border border-primary-muted/40 rounded-lg p-6">
+    <h3 class="text-base font-semibold text-gray-900 mb-3">Información Importante</h3>
+    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+      <li>La empresa debe responder a su reclamo en un plazo no mayor a 30 días calendario.</li>
+      <li>En caso de queja, la respuesta debe darse en un plazo no mayor a 15 días calendario.</li>
+      <li>Conserve una copia de su reclamación para sus registros.</li>
+      <li>Si no está conforme con la respuesta, puede acudir al INDECOPI.</li>
+    </ul>
+  </div>
 </div>
+
 <app-footer></app-footer>

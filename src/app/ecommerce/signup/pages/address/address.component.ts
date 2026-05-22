@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { StepComponent } from '../../components/step/step.component';
@@ -14,6 +15,9 @@ import { AddressApiService } from '../../../../shared/services/address-api.servi
 import { CreateAddressRequest } from '../../../../shared/interfaces/address.interfaces';
 import { UserService } from '../../../../shared/services/user.service';
 import { MetaAnalyticsService } from '../../../../shared/services/meta-analytics.service';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { InputComponent } from '../../../../shared/ui/input/input.component';
+import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { environment } from '../../../../../environments/env';
 
 export interface Address {
@@ -28,11 +32,10 @@ export interface Address {
 }
 
 @Component({
-  selector: 'app-address',
-  standalone: true,
-  imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule],
-  templateUrl: './address.component.html',
-  styleUrl: './address.component.css'
+    selector: 'app-address',
+    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, InputComponent, SelectComponent],
+    templateUrl: './address.component.html',
+    styleUrl: './address.component.css'
 })
 export class AddressComponent {
 
@@ -47,13 +50,14 @@ export class AddressComponent {
   private _userService = inject(UserService)
   private nextUrl = '';
   private _metaAnalytics = inject(MetaAnalyticsService);
+  private destroyRef = inject(DestroyRef);
 
   stepEnum = StepEnum;
   addressList: PlaceAPI[] = [];
   userAddress: PlaceAPI | null = null;
 
-  isSearched = false;
-  hideSearching = false;
+  isSearched = true;
+  hideSearching = true;
   departmentEmpty = true;
   provinceEmpty = true;
   isSaving = false;
@@ -83,9 +87,11 @@ export class AddressComponent {
     this._seo.title.setTitle('Registro | Dirección de envío');
     this._seo.setCanonicalURL('magrolabs.com/registro/direccion');
     this._seo.setIndexFollow(false);
-    this._route.queryParams.subscribe(params => {
-      this.nextUrl = params['next'] || '';
-    });
+    this._route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        this.nextUrl = params['next'] || '';
+      });
 
     let summary = this._summaryService.getSummary()
 
@@ -97,6 +103,7 @@ export class AddressComponent {
       debounceTime(300),
       tap(() => this.isSearchingAddress = true),
       switchMap(value => this._addressService.searchAddress(value)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe((results: PlaceAPI[]) => {
       this.addressList = results;
       this.isSearchingAddress = false;
@@ -129,7 +136,8 @@ export class AddressComponent {
               return this.districtUbigeo ?? '3949';
             })
           )
-        )
+        ),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe(() => {
         this.form.get('streetAddress')?.setValue(summary.address?.nombreVia ?? '');
         this.form.get('number')?.setValue(summary.address?.numero ?? '');
@@ -181,7 +189,8 @@ export class AddressComponent {
             return this.districtUbigeo ?? '3949';
           })
         )
-      )
+      ),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => {
       this.form.get('streetAddress')?.setValue(address.address.road ?? '');
       this.form.get('postalCode')?.setValue(address.address.postcode ?? '');
@@ -292,7 +301,8 @@ export class AddressComponent {
             }),
             finalize(() => {
               this.isSaving = false;
-            })
+            }),
+            takeUntilDestroyed(this.destroyRef),
           ).subscribe({
             next: (response) => {
               if (response) {
@@ -322,7 +332,8 @@ export class AddressComponent {
           }),
           finalize(() => {
             this.isSaving = false;
-          })
+          }),
+          takeUntilDestroyed(this.destroyRef),
         )
         .subscribe({
           next: (response) => {
@@ -351,6 +362,44 @@ export class AddressComponent {
     } else {
       this._router.navigate(['/registro/verificacion']);
     }
+  }
+
+  get streetAddressErrors(): string[] {
+    if (this.hasRequiredError('streetAddress')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('streetAddress')) return ['*Solo se permite más de 3 caracteres'];
+    return [];
+  }
+
+  get departmentErrors(): string[] {
+    if (this.hasRequiredError('department')) return ['*Departamento es obligatorio'];
+    return [];
+  }
+
+  get provinceErrors(): string[] {
+    if (this.hasRequiredError('province')) return ['*Provincia es obligatorio'];
+    return [];
+  }
+
+  get districtErrors(): string[] {
+    if (this.hasRequiredError('district')) return ['*Distrito es obligatorio'];
+    return [];
+  }
+
+  get postalCodeErrors(): string[] {
+    if (this.hasValidatorError('postalCode')) return ['*Solo se permite 5 dígitos'];
+    return [];
+  }
+
+  get numberErrors(): string[] {
+    if (this.hasRequiredError('number')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('number') && !this.hasRequiredError('number')) return ['*Formato: números, letras, / . , -'];
+    return [];
+  }
+
+  get referenceErrors(): string[] {
+    if (this.hasRequiredError('reference')) return ['*Campo obligatorio'];
+    if (this.hasValidatorError('reference')) return ['*Se permite de 3 a 250 caracteres'];
+    return [];
   }
 
   hasValidatorError(field: string) {

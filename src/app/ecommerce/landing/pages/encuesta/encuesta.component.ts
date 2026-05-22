@@ -4,10 +4,9 @@ import { environment } from '../../../../../environments/env';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-encuesta',
-  standalone: true,
-  imports: [HeaderComponent],
-  templateUrl: './encuesta.component.html'
+    selector: 'app-encuesta',
+    imports: [HeaderComponent],
+    templateUrl: './encuesta.component.html'
 })
 export class EncuestaComponent {
   private router = inject(Router);

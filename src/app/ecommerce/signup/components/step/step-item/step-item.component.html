@@ -2,46 +2,76 @@
 @if(stepNumber === StepEnum.CHOSE_PLAN){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem] start-0-[0%] rounded-full text-white w-10 h-10 flex items-center justify-center">
+    @if (isCompleted()) {
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" height="20px" width="20px">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    } @else {
     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor">
         <path
             d="M216-216h51l375-375-51-51-375 375v51Zm-72 72v-153l498-498q11-11 23.84-16 12.83-5 27-5 14.16 0 27.16 5t24 16l51 51q11 11 16 24t5 26.54q0 14.45-5.02 27.54T795-642L297-144H144Zm600-549-51-51 51 51Zm-127.95 76.95L591-642l51 51-25.95-25.05Z" />
     </svg>
+    }
 </span>
 }
 @if(stepNumber === StepEnum.USER_DATA){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem] left-[15%] rounded-full text-white w-10 h-10 flex items-center justify-center">
+    @if (isCompleted()) {
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" height="20px" width="20px">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    } @else {
     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor">
         <path
             d="M360.11-408Q340-408 326-421.89q-14-13.88-14-34Q312-476 325.89-490q13.88-14 34-14Q380-504 394-490.11q14 13.88 14 34Q408-436 394.11-422q-13.88 14-34 14Zm240 0Q580-408 566-421.89q-14-13.88-14-34Q552-476 565.89-490q13.88-14 34-14Q620-504 634-490.11q14 13.88 14 34Q648-436 634.11-422q-13.88 14-34 14ZM480.46-168q130.46 0 221-91Q792-350 792-479.76q0-23.24-5-52.74-5-29.5-13-51.5-21 5-38 6.5t-40 1.5q-85.96 0-162.48-33.5T397-706q-37 78-93.5 129T170-500q-1 4-1.5 10t-.5 10q0 130 91 221t221.46 91ZM480-96q-79.38 0-149.19-30T208.5-208.5Q156-261 126-330.96t-30-149.5Q96-560 126-630q30-70 82.5-122t122.46-82q69.96-30 149.5-30t149.55 30.24q70 30.24 121.79 82.08 51.78 51.84 81.99 121.92Q864-559.68 864-480q0 79.38-30 149.19T752-208.5Q700-156 629.87-126T480-96Zm-55-691q46 63 117 101t154 38q12 0 21-.5t23-2.47Q691-720 625-756t-144.51-36q-12.49 0-26.47 1.5Q440.05-789 425-787ZM187-585q57-29 95-71.5T342-758q-63 37-100 78t-55 95Zm238-202Zm-83 29Z" />
     </svg>
+    }
 </span>
 }
 @if(stepNumber === StepEnum.ADDRESS){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem]  left-[30%] rounded-full text-white w-10 h-10 flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" [attr.fill]="iconColor" height="22px" viewBox="0 -960 960 960" width="22px" fill="#e8eaed">
-        <path d="M240-192q-50 0-85-35t-35-85H48v-408q0-29.7 21.15-50.85Q90.3-792 120-792h552v144h120l120 168v168h-72q0 50-35 85t-85 35q-50 0-85-35t-35-85H360q0 50-35 85t-85 35Zm0-72q20.4 0 34.2-13.8Q288-291.6 288-312q0-20.4-13.8-34.2Q260.4-360 240-360q-20.4 0-34.2 13.8Q192-332.4 192-312q0 20.4 13.8 34.2Q219.6-264 240-264ZM120-384h24q17-23 42-35.5t54-12.5q29 0 54 12.5t41.53 35.5H600v-336H120v336Zm600 120q20.4 0 34.2-13.8Q768-291.6 768-312q0-20.4-13.8-34.2Q740.4-360 720-360q-20.4 0-34.2 13.8Q672-332.4 672-312q0 20.4 13.8 34.2Q699.6-264 720-264Zm-48-192 168-1-85-119h-83v120Zm-310-93Z"/>
+    @if (isCompleted()) {
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" height="20px" width="20px">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
     </svg>
+    } @else {
+    <svg xmlns="http://www.w3.org/2000/svg" [attr.fill]="iconColor" height="22px" viewBox="0 -960 960 960" width="22px"
+        fill="#e8eaed">
+        <path
+            d="M240-192q-50 0-85-35t-35-85H48v-408q0-29.7 21.15-50.85Q90.3-792 120-792h552v144h120l120 168v168h-72q0 50-35 85t-85 35q-50 0-85-35t-35-85H360q0 50-35 85t-85 35Zm0-72q20.4 0 34.2-13.8Q288-291.6 288-312q0-20.4-13.8-34.2Q260.4-360 240-360q-20.4 0-34.2 13.8Q192-332.4 192-312q0 20.4 13.8 34.2Q219.6-264 240-264ZM120-384h24q17-23 42-35.5t54-12.5q29 0 54 12.5t41.53 35.5H600v-336H120v336Zm600 120q20.4 0 34.2-13.8Q768-291.6 768-312q0-20.4-13.8-34.2Q740.4-360 720-360q-20.4 0-34.2 13.8Q672-332.4 672-312q0 20.4 13.8 34.2Q699.6-264 720-264Zm-48-192 168-1-85-119h-83v120Zm-310-93Z" />
+    </svg>
+    }
 </span>
 }
 @if(stepNumber === StepEnum.CARD_VALIDATION){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem] left-[45%]  rounded-full text-white w-10 h-10 flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor">
-        <path d="M389-267 195-460l51-52 143 143 325-324 51 51-376 375Z" />
+    @if (isCompleted()) {
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" height="20px" width="20px">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
     </svg>
+    } @else {
+<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor"><path d="M864-696v432q0 29-21.15 50.5T792-192H168q-29 0-50.5-21.5T96-264v-432q0-29 21.5-50.5T168-768h624q29.7 0 50.85 21.5Q864-725 864-696Zm-696 72h624v-72H168v72Zm0 144v216h624v-216H168Zm0 216v-432 432Z"/></svg>
+    }
 </span>
 }
 @if(stepNumber === StepEnum.CONFIRMATION){
 <span [ngClass]="[bgColor]"
     class="absolute -bottom-[2.3rem] end-0 rounded-full text-white w-10 h-10 flex items-center justify-center">
-    @if(flag()!=""){
-        <span class="badge max-sm:text-xs">{{flag()}}</span>
+    @if(flag()!==""){
+    <span class="badge max-sm:text-xs">{{flag()}}</span>
     }
+    @if (isCompleted()) {
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" height="20px" width="20px">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    } @else {
     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" [attr.fill]="iconColor">
         <path
             d="M216-96q-29.7 0-50.85-21.15Q144-138.3 144-168v-480q0-29.7 21.15-50.85Q186.3-720 216-720h72q0-79.68 56.23-135.84 56.22-56.16 136-56.16Q560-912 616-855.84q56 56.16 56 135.84h72q29.7 0 50.85 21.15Q816-677.7 816-648v480q0 29.7-21.15 50.85Q773.7-96 744-96H216Zm0-72h528v-480H216v480Zm264.23-216Q560-384 616-440.16q56-56.16 56-135.84h-72q0 50-35 85t-85 35q-50 0-85-35t-35-85h-72q0 80 56.23 136 56.22 56 136 56ZM360-720h240q0-50-35-85t-85-35q-50 0-85 35t-35 85ZM216-168v-480 480Z" />
     </svg>
+    }
 </span>
 }

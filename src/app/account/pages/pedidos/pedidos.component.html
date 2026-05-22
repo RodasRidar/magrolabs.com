@@ -1,24 +1,258 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-    <h1 class="text-3xl font-bold leading-tight text-gray-900">Mis Pedidos.</h1>
-
-    <div class="flex items-center gap-2">
-      <!-- Filtro de estado
-      <label for="filtroEstado" class="text-sm text-gray-600">Filtrar por estado:</label>
-      <select id="filtroEstado"
-        class="border border-gray-300 rounded-md pl-2 pr-7 text-center py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        (change)="filtrarPorEstado($event)">
-        @for (option of statusOptions; track option.value) {
-        <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select> -->
-    </div>
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold leading-tight text-gray-900">Pedidos.</h1>
   </div>
 
-  <!-- Estado de carga -->
+  <!-- Filtros desktop (≥ lg) -->
+  @if (!isLoading() && pedidos().length > 0) {
+    <div class="hidden lg:block bg-white border border-gray-200 rounded-lg p-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div>
+          <label for="filtroEstado" class="block text-xs font-medium text-gray-600 mb-1">Estado</label>
+          <select
+            id="filtroEstado"
+            [ngModel]="filterStatus()"
+            (ngModelChange)="filterStatus.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+            @for (option of statusOptions(); track option.value) {
+              <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="filtroFechaDesde" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+          <input
+            id="filtroFechaDesde"
+            type="date"
+            [ngModel]="filterDateFrom()"
+            (ngModelChange)="filterDateFrom.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+          <label for="filtroFechaHasta" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+          <input
+            id="filtroFechaHasta"
+            type="date"
+            [ngModel]="filterDateTo()"
+            (ngModelChange)="filterDateTo.set($event)"
+            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        @if (showProductFilter()) {
+          <div>
+            <label for="filtroProducto" class="block text-xs font-medium text-gray-600 mb-1">Producto</label>
+            <select
+              id="filtroProducto"
+              [ngModel]="filterProductId()"
+              (ngModelChange)="filterProductId.set($event)"
+              class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="">Todos</option>
+              @for (option of productOptions(); track option.id) {
+                <option [value]="option.id">{{ option.name }}</option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+      @if (hasActiveFilters()) {
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+          <span class="text-xs text-gray-500">
+            {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
+          </span>
+          <button
+            type="button"
+            (click)="limpiarFiltros()"
+            class="text-xs font-medium text-primary hover:text-primary-hover">
+            Limpiar filtros
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Filtros móvil: chips pill (< lg) -->
+    <div class="lg:hidden mb-4">
+      <div class="flex items-center gap-2 pb-2 overflow-x-auto">
+        <!-- Chip Estado -->
+        <button type="button" (click)="openMobileFilter('status')"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+          [class.border-primary]="activeStatusCount() > 0"
+          [class.text-primary]="activeStatusCount() > 0"
+          [class.border-gray-300]="activeStatusCount() === 0"
+          [class.text-gray-600]="activeStatusCount() === 0">
+          Estado
+          @if (activeStatusCount() > 0) {
+            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeStatusCount() }}</span>
+          } @else {
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          }
+        </button>
+
+        <!-- Chip Fecha -->
+        <button type="button" (click)="openMobileFilter('date')"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+          [class.border-primary]="activeDateCount() > 0"
+          [class.text-primary]="activeDateCount() > 0"
+          [class.border-gray-300]="activeDateCount() === 0"
+          [class.text-gray-600]="activeDateCount() === 0">
+          Fecha
+          @if (activeDateCount() > 0) {
+            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeDateCount() }}</span>
+          } @else {
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          }
+        </button>
+
+        <!-- Chip Producto -->
+        @if (showProductFilter()) {
+          <button type="button" (click)="openMobileFilter('product')"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
+            [class.border-primary]="activeProductCount() > 0"
+            [class.text-primary]="activeProductCount() > 0"
+            [class.border-gray-300]="activeProductCount() === 0"
+            [class.text-gray-600]="activeProductCount() === 0">
+            Producto
+            @if (activeProductCount() > 0) {
+              <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeProductCount() }}</span>
+            } @else {
+              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            }
+          </button>
+        }
+      </div>
+
+      @if (hasActiveFilters()) {
+        <div class="flex items-center justify-between text-xs px-1">
+          <span class="text-gray-500">
+            {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
+          </span>
+          <button type="button" (click)="limpiarFiltros()"
+            class="font-medium text-primary hover:text-primary-hover">
+            Limpiar filtros
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Bottom Sheet overlay (mobile) -->
+    @if (activeMobileFilter() !== null) {
+      <div class="lg:hidden fixed inset-0 z-[60] flex flex-col justify-end"
+        (click)="closeMobileFilter()">
+        <!-- Backdrop -->
+        <div class="sheet-backdrop absolute inset-0 bg-black/40"></div>
+
+        <!-- Panel -->
+        <div class="sheet-panel relative bg-white rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
+          (click)="$event.stopPropagation()">
+
+          <!-- Handle -->
+          <div class="mx-auto w-10 h-1 rounded-full bg-gray-200 mb-5"></div>
+
+          @if (activeMobileFilter() === 'status') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Estado</h3>
+            <div class="space-y-1 max-h-[60vh] overflow-y-auto">
+              @for (option of statusOptions(); track option.value) {
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
+                  <span class="text-sm text-gray-700">{{ option.label }}</span>
+                  <input type="radio" name="filterStatus" [value]="option.value"
+                    [checked]="filterStatus() === option.value"
+                    (change)="filterStatus.set(option.value)"
+                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                </label>
+              }
+            </div>
+          }
+
+          @if (activeMobileFilter() === 'date') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Fecha</h3>
+            <div class="space-y-4">
+              <div>
+                <label for="filtroFechaDesdeMobile" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+                <input id="filtroFechaDesdeMobile" type="date"
+                  [ngModel]="filterDateFrom()"
+                  (ngModelChange)="filterDateFrom.set($event)"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label for="filtroFechaHastaMobile" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+                <input id="filtroFechaHastaMobile" type="date"
+                  [ngModel]="filterDateTo()"
+                  (ngModelChange)="filterDateTo.set($event)"
+                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          }
+
+          @if (activeMobileFilter() === 'product') {
+            <h3 class="text-base font-semibold text-gray-900 mb-6">Producto</h3>
+            <div class="space-y-1 max-h-[60vh] overflow-y-auto">
+              <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100">
+                <span class="text-sm text-gray-700">Todos</span>
+                <input type="radio" name="filterProduct" value=""
+                  [checked]="filterProductId() === ''"
+                  (change)="filterProductId.set('')"
+                  class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+              </label>
+              @for (option of productOptions(); track option.id) {
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
+                  <span class="text-sm text-gray-700">{{ option.name }}</span>
+                  <input type="radio" name="filterProduct" [value]="option.id"
+                    [checked]="filterProductId() === option.id"
+                    (change)="filterProductId.set(option.id)"
+                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                </label>
+              }
+            </div>
+          }
+
+          <!-- Acciones -->
+          <div class="flex items-center justify-between mt-8">
+            <button type="button" (click)="limpiarFiltros()"
+              class="text-sm text-gray-500 hover:text-gray-900 underline underline-offset-2">
+              Limpiar filtros
+            </button>
+            <button type="button" (click)="closeMobileFilter()"
+              class="px-6 py-2.5 rounded-full bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
+              Mostrar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Skeleton de carga -->
   @if (isLoading()) {
-  <div class="flex justify-center items-center h-64">
-    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+  <div class="space-y-6 animate-pulse">
+    @for (i of [1, 2, 3]; track i) {
+    <ml-card>
+      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div class="h-5 bg-gray-300 rounded w-40"></div>
+        <div class="h-5 bg-gray-300 rounded w-24"></div>
+      </div>
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="h-4 bg-gray-300 rounded w-20 mb-3"></div>
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 bg-gray-300 rounded-md flex-shrink-0"></div>
+          <div class="flex-1 space-y-2">
+            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+            <div class="h-3 bg-gray-300 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 py-4 flex justify-between items-center">
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 rounded w-24"></div>
+          <div class="h-6 bg-gray-300 rounded w-32"></div>
+        </div>
+        <div class="h-10 bg-gray-300 rounded w-32"></div>
+      </div>
+    </ml-card>
+    }
   </div>
   }
 
@@ -40,44 +274,50 @@
 
   <!-- Sin pedidos -->
   @if (!isLoading() && !error() && pedidos().length === 0) {
-  <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
-    <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-        </path>
-      </svg>
+    <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
+      <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">No tienes pedidos</h2>
+      <p class="text-gray-600 max-w-md mb-6">
+        Aún no has realizado ningún pedido. ¡Explora nuestros productos y realiza tu primera compra!
+      </p>
+      <a routerLink="/productos"
+        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
     </div>
-    <h2 class="text-xl font-semibold text-gray-700 mb-2">No tienes pedidos</h2>
-    <p class="text-gray-600 max-w-md mb-6">Aún no has realizado ningún pedido. ¡Explora nuestros productos y realiza tu
-      primera compra!</p>
-    <a routerLink="/productos"
-      class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors">Explorar productos</a>
-  </div>
+  }
+
+  <!-- Filtros activos pero sin resultados -->
+  @if (!isLoading() && !error() && pedidos().length > 0 && pedidosFiltrados().length === 0) {
+    <div class="flex flex-col items-center justify-center p-10 text-center bg-gray-50 rounded-lg my-8">
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">Sin resultados</h2>
+      <p class="text-gray-600 mb-4">Ningún pedido coincide con los filtros aplicados.</p>
+      <button
+        type="button"
+        (click)="limpiarFiltros()"
+        class="text-sm font-medium text-primary hover:text-primary-hover">
+        Limpiar filtros
+      </button>
+    </div>
   }
 
   <!-- Lista de pedidos -->
-  @if (!isLoading() && !error() && pedidos().length > 0) {
+  @if (!isLoading() && !error() && pedidosFiltrados().length > 0) {
   <div class="space-y-6">
-    @for (pedido of pedidos(); track pedido.id) {
-    <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition hover:-translate-y-1">
+    @for (pedido of pedidosFiltrados(); track pedido.id) {
+    <ml-card class="transform transition hover:-translate-y-1">
       <!-- Cabecera del pedido -->
       <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
         <div class="mb-0">
-          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase() }}</span>
+          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase()
+            }}</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
-                  'bg-yellow-100 text-yellow-800': pedido.status === 'PENDING_PAYMENT',
-                  'bg-blue-100 text-blue-800': pedido.status === 'PROCESSING',
-                  'bg-indigo-100 text-indigo-800': pedido.status === 'SHIPPED',
-                  'bg-green-100 text-green-800': pedido.status === 'DELIVERED',
-                  'bg-red-100 text-red-800': pedido.status === 'CANCELLED'|| pedido.status === 'REJECTED',
-                  'bg-gray-200 text-gray-800': pedido.status === 'PAID' || pedido.status === 'REFUNDED'
-                }">
-            {{ obtenerTextoEstado(pedido.status) }}
-          </span>
+          <ml-badge size="md" [color]="orderBadge(pedido.status).color"
+            [label]="orderBadge(pedido.status).label" />
         </div>
       </div>
 
@@ -90,63 +330,81 @@
           <!-- Cabecera de producto (siempre visible) -->
           <div class="border border-gray-200 rounded-lg overflow-hidden">
             <div class="flex justify-between items-center p-2 bg-gray-50 cursor-pointer"
-              (click)="toggleProductExpand(item.id)">
+              (click)="toggleProductExpand(item.id)" (keypress)="toggleProductExpand(item.id)" tabindex="0">
               <div class="flex items-center gap-4">
                 <div class="flex-shrink-0 w-16 h-16 overflow-hidden rounded-md">
                   <img [src]="getImageUrl(item)" [alt]="item.product?.name || 'Producto'"
-                    class="w-full h-full object-cover" onerror="this.src='/product-img-not-found.png'">
+                    class="w-full h-full object-cover" onerror="this.src = '/product-img-not-found.png'" />
                 </div>
                 <div>
-                  <p class="text-sm font-medium text-gray-800">{{ item.product?.name || 'Producto' }}</p>
+                  <p class="text-sm font-medium text-gray-800">
+                    {{ item.product?.name || "Producto" }}
+                  </p>
                   @if (pedido.total_amount > 0) {
-                  <p class="text-sm text-gray-500">{{ item.unit_price| currency:'S/':'symbol':'1.2-2' }}</p>
-                  }@else {
+                  <p class="text-sm text-gray-500">
+                    {{
+                    item.unit_price
+                    | currency: "S/" : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                  } @else {
                   <p class="text-sm text-gray-500">Gratis</p>
                   }
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <span class="items-center flex text-sm font-medium bg-gray-200 text-black px-2 py-1 rounded">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded p-1.5"
+                  [attr.aria-label]="isProductExpanded(item.id) ? 'Ocultar detalles' : 'Mostrar detalles'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200"
+                    [class.rotate-180]="isProductExpanded(item.id)"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                   </svg>
-                  <span class="hidden sm:block">{{ isProductExpanded(item.id) ? 'Ocultar' : 'Detalles' }}</span>
                 </span>
               </div>
             </div>
 
-            <!-- Detalles desplegables del producto -->
-            @if (isProductExpanded(item.id)) {
-            <div class="p-4 border-t border-gray-200 bg-white">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
-                  <p class="font-medium text-gray-800">{{ item.id.substring(0, 8).toUpperCase() }}</p>
+            <!-- Detalles desplegables del producto (acordeón animado) -->
+            <div class="grid transition-[grid-template-rows] duration-300 ease-out"
+              [class]="isProductExpanded(item.id) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+              <div class="overflow-hidden">
+                <div class="p-4 border-t border-gray-200 bg-white">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
+                      <p class="font-medium text-gray-800">
+                        {{ item.id.substring(0, 8).toUpperCase() }}
+                      </p>
 
-                  <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
-                  <p class="font-medium text-gray-800">{{ formatearFecha(pedido.created_at) }}</p>
-                </div>
+                      <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
+                      <p class="font-medium text-gray-800">
+                        {{ formatearFecha(pedido.created_at) }}
+                      </p>
+                    </div>
 
-                <div>
-                  <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
-                  <p class="font-medium text-gray-800">{{ item.quantity }}</p>
-
-                  <div class="mt-6 flex flex-col gap-2 w-fit">
-                    <ml-button *ngIf="pedido.status === 'DELIVERED'"
-                      (click)="escribirResena(item.product.id); $event.stopPropagation()"
-                      name="Escribir reseña →" type="secondary">
-                    </ml-button>
+                    <div>
+                      <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
+                      <p class="font-medium text-gray-800">{{ item.quantity }}</p>
+                      @if (pedido.status === "DELIVERED") {
+                        <div class="mt-6 flex flex-col gap-2 w-fit">
+                          <a class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
+                            (click)="escribirResena(item.product?.slug);$event.stopPropagation()"
+                            (keypress)="escribirResena(item.product?.slug);$event.stopPropagation()" tabindex="0">
+                            Escribir reseña →</a>
+                        </div>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            }
           </div>
           }
         </div>
         } @else {
-        <p class="text-center text-gray-500 italic">No hay información de productos disponible</p>
+        <p class="text-center text-gray-500 italic">
+          No hay información de productos disponible
+        </p>
         }
       </div>
 
@@ -154,57 +412,72 @@
       <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div class="mb-4 sm:mb-0">
           <div class="flex flex-col gap-1">
+            @if (
+            pedido.shipping_cost !== undefined &&
+            pedido.shipping_cost !== null
+            ) {
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">Costo de envío:</span>
+              <span class="text-sm font-medium text-gray-800">
+                {{
+                pedido.shipping_cost === 0
+                ? "Gratis"
+                : (pedido.shipping_cost
+                | currency: "S/" : "symbol" : "1.2-2")
+                }}
+              </span>
+            </div>
+            }
             <div class="flex items-center gap-2">
               <span class="font-semibold text-gray-700">Total:</span>
-              <span class="font-bold text-gray-900 text-lg">{{ pedido.total_amount | currency:'S/':'symbol':'1.2-2' }}</span>
+              <span class="font-bold text-gray-900 text-lg">{{
+                pedido.total_amount | currency: "S/" : "symbol" : "1.2-2"
+                }}</span>
             </div>
-            @if (pedido.shipping_cost !== undefined && pedido.shipping_cost !== null) {
-              <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-600">Costo de envío:</span>
-                <span class="text-sm font-medium text-gray-800">
-                  {{ pedido.shipping_cost === 0 ? 'Gratis' : (pedido.shipping_cost | currency:'S/':'symbol':'1.2-2') }}
-                </span>
-              </div>
-            }
           </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <ml-button 
-            *ngIf="pedido.status !== 'REFUNDED' && pedido.status !== 'REJECTED' && pedido.status !== 'CANCELLED' && pedido.status !== 'PENDING_PAYMENT'"
-            (click)="seguirCompra(pedido.id)" 
-            name="Seguir mi compra" 
-            type="primary">
+          @if (
+          pedido.status !== "REFUNDED" &&
+          pedido.status !== "REJECTED" &&
+          pedido.status !== "CANCELLED" &&
+          pedido.status !== "PENDING_PAYMENT"
+          ) {
+          <ml-button (click)="seguirCompra(pedido.id)" name="Seguir mi compra" type="primary">
           </ml-button>
+          }
 
-          <ml-button 
-            *ngIf="(pedido.status === 'PAID' || pedido.status === 'SHIPPED' || pedido.status === 'DELIVERED') && pedido.total_amount !== 0"
-            (click)="descargarBoleta(pedido.id)" 
-            name="Descargar boleta" 
-            type="secondary-outlined">
+          @if (
+          (pedido.status === "PAID" ||
+          pedido.status === "SHIPPED" ||
+          pedido.status === "DELIVERED") &&
+          pedido.total_amount !== 0
+          ) {
+          <ml-button (click)="descargarBoleta(pedido.id)" name="Descargar boleta" type="secondary-outlined">
           </ml-button>
+          }
 
-          @if (pedido.status === 'PENDING_PAYMENT') {
+          @if (pedido.status === "PENDING_PAYMENT") {
           <div class="flex gap-2">
-            <ml-button
-              (click)="pagarPedido(pedido.id, pedido.total_amount, pedido.id)"
-              name="Pagar"
-              type="primary">
+            <ml-button (click)="
+                      pagarPedido(pedido.id, pedido.total_amount, pedido.id)
+                    " name="Pagar" type="primary">
             </ml-button>
-            
+
             <!--
-            TODO: Descomentar cuando se implemente el cancelar pedido(si se cancela un pedido que esta ligado a una subscripcion, se debe cancelar la subscripcion)
-            <ml-button
-              (click)="cancelarPedido(pedido.id)"
-              name="Cancelar"
-              type="secondary-outlined">
-            </ml-button>
-            -->
+                  TODO: Descomentar cuando se implemente el cancelar pedido(si se cancela un pedido que esta ligado a una subscripcion, se debe cancelar la subscripcion)
+                  <ml-button
+                    (click)="cancelarPedido(pedido.id)"
+                    name="Cancelar"
+                    type="secondary-outlined">
+                  </ml-button>
+                  -->
           </div>
           }
         </div>
       </div>
-    </div>
+    </ml-card>
     }
   </div>
 
@@ -243,7 +516,7 @@
 
 <!-- Modal de Seguimiento de compra -->
 @if (mostrarSeguimiento()) {
-<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
     <div class="flex justify-between items-center p-6 border-b">
       <h2 class="text-2xl font-bold text-gray-800">Seguimiento de compra</h2>
@@ -257,90 +530,17 @@
     <div class="p-2 sm:p-6">
       <!-- Timeline de seguimiento -->
       <div class="relative">
-        <!-- Contenido del timeline -->
-        <div class="flex items-center justify-between my-10 sm:my-20 relative">
-          <!-- Línea horizontal que conecta los círculos -->
-          <div class="absolute top-8 left-4 right-0 h-0.5 bg-gray-300 z-0 w-[90%]"></div>
-
-          <!-- Paso 1: Recibido -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10">
-              <svg class="w-8 h-8 text-[#d7816a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Recibimos tu pedido</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ formatearFechaCompleta(pedidoSeleccionado()?.created_at || '') }}</p>
-          </div>
-
-          <!-- Paso 2: En proceso -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10">
-              <svg class="w-8 h-8 text-[#d7816a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base">Pedido en proceso</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{
-            pedidoSeleccionado()?.status === 'PROCESSING' || pedidoSeleccionado()?.status === 'PAID' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
-            }}</p>
-          </div>
-
-          <!-- Paso 3: En camino -->
-          <div class="flex flex-col items-center">
-            <div
-              class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 border-[#d7816a] z-10"
-              [ngClass]="{'border-[#d7816a]': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
-              <svg class="w-8 h-8"
-                [ngClass]="{'text-[#d7816a]': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
-              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': !(pedidoSeleccionado()?.status === 'SHIPPED' || pedidoSeleccionado()?.status === 'DELIVERED')}">
-              ¡Vamos en camino!</h3>
-            <p class="text-gray-600 text-center  min-h-[24px]">{{ pedidoSeleccionado()?.status === 'SHIPPED' ||
-              pedidoSeleccionado()?.status === 'SHIPPED' ? formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : ''
-              }}</p>
-          </div>
-
-          <!-- Paso 4: Entregado -->
-          <div class="flex flex-col items-center">
-            <div class="rounded-full h-16 w-16 flex items-center justify-center bg-white border-4 z-10"
-              [ngClass]="{'border-[#d7816a]': pedidoSeleccionado()?.status === 'DELIVERED', 'border-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}">
-              <svg class="w-8 h-8"
-                [ngClass]="{'text-[#d7816a]': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-300': pedidoSeleccionado()?.status !== 'DELIVERED'}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h3 class="mt-4 text-center font-bold text-sm sm:text-base"
-              [ngClass]="{'text-gray-800': pedidoSeleccionado()?.status === 'DELIVERED', 'text-gray-400': pedidoSeleccionado()?.status !== 'DELIVERED'}">
-              ¡Tu pedido llegó!</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ pedidoSeleccionado()?.status === 'DELIVERED' ?
-              formatearFechaCompleta(pedidoSeleccionado()?.updated_at || '') : '' }}</p>
-          </div>
-        </div>
-
-        <!-- Información de entrega -->
-        <div class="flex items-center justify-center mt-8 border-t border-gray-200 pt-6">
-          <svg class="w-8 h-8 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span class="text-base sm:text-xl font-semibold">Entrega a domicilio de {{ENV.plazoDeEntregaHorasCreatinaFree.min}} a {{ENV.plazoDeEntregaHorasCreatinaFree.max}} horas.</span>
-        </div>
+        <app-step type="order-tracking" [orderStatus]="pedidoSeleccionado()?.status ?? ''"
+          [orderCreatedAt]="pedidoSeleccionado()?.created_at ?? ''"
+          [orderUpdatedAt]="pedidoSeleccionado()?.updated_at ?? ''"
+          [deliveryHoursMin]="ENV.plazoDeEntregaHorasCreatinaFree.min"
+          [deliveryHoursMax]="ENV.plazoDeEntregaHorasCreatinaFree.max" />
 
         <!-- Seguimiento en tiempo real con Olva Courier -->
         @if (pedidoSeleccionado()?.trackingNumber) {
         <div class="mt-8 pt-6 border-t border-gray-100">
-          <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
+          <div
+            class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
             <div class="flex flex-col gap-4">
               <!-- Título y número de tracking -->
               <div class="flex items-center gap-3">
@@ -348,24 +548,27 @@
                   <svg class="w-5 h-5 text-[#f9b52f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-base font-semibold text-gray-900">Seguimiento en tiempo real</h3>
+                  <h3 class="text-base font-semibold text-gray-900">
+                    Seguimiento en tiempo real
+                  </h3>
                   <p class="text-xs text-gray-500 mt-0.5">
-                    <span class="font-mono">Nro Tracking: {{ pedidoSeleccionado()?.trackingNumber }}</span>
+                    <span class="font-mono">Nro Tracking:
+                      {{ pedidoSeleccionado()?.trackingNumber }}</span>
                   </p>
                 </div>
               </div>
-              
+
               <!-- Botón de rastreo -->
-              <button 
-                (click)="abrirSeguimientoOlva()"
+              <button (click)="abrirSeguimientoOlva()"
                 class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-gray-900 text-sm font-medium rounded-lg transition-all duration-200">
                 <span>Rastrear con Olva Courier</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </button>

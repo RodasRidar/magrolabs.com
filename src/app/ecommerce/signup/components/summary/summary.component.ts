@@ -1,27 +1,27 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Summary } from '../../../../shared/models/summary.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import e from 'express';
 import { AddressService, Ubigeo } from '../../../../shared/services/address-service.service';
 
 @Component({
-  selector: 'app-summary',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './summary.component.html'
+    selector: 'app-summary',
+    imports: [CommonModule],
+    templateUrl: './summary.component.html'
 })
-export class SummaryComponent {
+export class SummaryComponent implements OnInit {
 
   private _addressService = inject(AddressService);
   private _summaryService = inject(SummaryService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
 
   summaryState$ = this._summaryService.summaryState$;
-  summary: Summary = <Summary>{}
+  summary: Summary = {} as Summary
   iframeReady = false
   nextUrl = '';
   currentUrl = '';
@@ -37,10 +37,10 @@ export class SummaryComponent {
 
   ngOnInit(): void {
 
-    this.summary = this._summaryService.getSummary() ?? <Summary>{};
+    this.summary = this._summaryService.getSummary() ?? {} as Summary;
     this.setAddress();
 
-    this._route.queryParams.subscribe(param => {
+    this._route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(param => {
       this.nextUrl = param['next'] || '';
       this.showFinalSummary = false;
 
@@ -73,7 +73,7 @@ export class SummaryComponent {
       }
     });
 
-    this._router.events.subscribe(event => {
+    this._router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       this.showFinalSummary = false;
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
@@ -148,16 +148,20 @@ export class SummaryComponent {
   setAddress() {
     const provincia = this.summary.address?.provincia ?? '';
     if (provincia) {
-      this._addressService.getDistricts(provincia).subscribe((data) => {
-        this.districts = data;
-      });
+      this._addressService.getDistricts(provincia)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((data) => {
+          this.districts = data;
+        });
     }
 
     const departamento = this.summary.address?.department ?? '';
     if (departamento) {
-      this._addressService.getProvinces(departamento).subscribe((data) => {
-        this.provinces = data;
-      });
+      this._addressService.getProvinces(departamento)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((data) => {
+          this.provinces = data;
+        });
     }
   }
 

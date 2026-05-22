@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 
 @Component({
-  selector: 'app-cookies',
-  standalone: true,
-  imports: [],
-  templateUrl: './cookies.component.html',
-  styleUrl: './cookies.component.css'
+    selector: 'app-cookies',
+    imports: [],
+    templateUrl: './cookies.component.html',
+    styleUrl: './cookies.component.css'
 })
 export class CookiesComponent {  
   ENV = environment

@@ -1,0 +1,24 @@
+<div>
+  <label [for]="_id()" class="block text-sm font-medium leading-6 text-gray-700">
+    {{ label() }}@if (required()) { <span class="text-red-500">*</span> }
+  </label>
+  <div class="mt-1">
+    <select
+      [id]="_id()"
+      [value]="value()"
+      [disabled]="isDisabled()"
+      [class]="selectClass()"
+      (change)="onNativeChange($event)"
+      (blur)="onBlur()"
+    >
+      <ng-content />
+    </select>
+  </div>
+  @if (hasErrors()) {
+    <div class="mt-1 px-1">
+      @for (error of errors(); track $index) {
+        <p class="text-xs text-red-500">{{ error }}</p>
+      }
+    </div>
+  }
+</div>

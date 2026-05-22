@@ -1,1175 +1,1244 @@
 <!--
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-      require('@tailwindcss/typography'),
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
+This example requires Tailwind CSS v2.0+
+
+This example requires some changes to your config:
+
+```
+// tailwind.config.js
+module.exports = {
+// ...
+plugins: [
+// ...
+require('@tailwindcss/forms'),
+require('@tailwindcss/typography'),
+require('@tailwindcss/aspect-ratio'),
+],
+}
+```
 -->
 
 <main class="max-w-7xl mx-auto sm:pb-16 sm:pt-4 sm:px-6 lg:px-8">
-    <div class="max-w-2xl mx-auto lg:max-w-none">
-        <div class="sm:flex block sm:mb-4 p-2 gap-1">
-            <div class="flex items-center">
-                <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900"
-                    routerLink="/" routerLinkActive="active">Inicio</a>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-                <a class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900"
-                    routerLink="/productos" routerLinkActive="active">Productos</a>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-                <span class="text-gray-700 text-sm font-extralight">Creatina</span>
-                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px"
-                    fill="#434343">
-                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                </svg>
-                <span class="text-gray-700 text-sm font-extralight tracking-tighter">{{productName}}</span>
-            </div>
-        </div>
-        <!-- Product -->
-        <div class="md:grid sm:grid-cols-2 sm:gap-x-2 sm:items-start mb-2">
-            <!-- Image gallery -->
-            <div class="flex flex-col-reverse">
-                <!-- Image selector (solo desktop) -->
-                <div class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none">
-                    <div class="grid grid-cols-4 gap-2" aria-orientation="horizontal" role="tablist">
-
-                        <button id="tabs-2-tab-1" (click)="selectTap(1)"
-                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 1" aria-controls="tabs-2-panel-1" role="tab"
-                            type="button">
-                            <span class="sr-only">Vista frontal</span>
-                            <span class="absolute inset-0 rounded-md overflow-hidden">
-                                <img [ngSrc]="previewImgFront" [alt]="productName" draggable="false"
-                                    class="w-full h-full object-center object-cover select-none" height="96" width="96"
-                                    lazyLoad>
-                            </span>
-                            <span [class.ring-[#d07d66]]="tapSelected === 1"
-                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
-                                aria-hidden="true"></span>
-                        </button>
-
-                        <button id="tabs-2-tab-2" (click)="selectTap(2)"
-                            class="relative h-24 w-24  rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 2" aria-controls="tabs-2-panel-2" role="tab"
-                            type="button">
-                            <span class="sr-only">Vista trasera</span>
-                            <span class="absolute inset-0 rounded-md overflow-hidden">
-                                <img [ngSrc]="previewImgBack" [alt]="productName" draggable="false"
-                                    class="w-full h-full object-center object-cover select-none" height="96" width="96"
-                                    lazyLoad>
-                            </span>
-                            <span [class.ring-[#d07d66]]="tapSelected === 2"
-                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
-                                aria-hidden="true"></span>
-                        </button>
-
-                        <!-- <button id="tabs-2-tab-3" (click)="selectTap(3)"
-                            class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                            [class.ring-[#d07d66]]="tapSelected === 3"
-                            aria-controls="tabs-2-panel-3" role="tab" type="button">
-                            <span class="sr-only">Modelo 3D</span>
-                            <span class="absolute inset-0 rounded-md overflow-hidden">
-                                <img [ngSrc]="previewmodel3d" [alt]="productName" draggable="false"
-                                    class="w-full h-full object-center object-contain p-8 select-none" height="96" width="96" lazyLoad>
-                            </span>
-                            <span
-                                [class.ring-[#d07d66]]="tapSelected === 3"
-                                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
-                                aria-hidden="true"></span>
-                        </button> -->
-
-                    </div>
-                </div>
-
-                <!-- Carrusel móvil -->
-                <div class="block sm:hidden w-full relative">
-                    <div class="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide" #imageCarousel
-                        (scroll)="onCarouselScroll($event)">
-                        <!-- Imagen frontal -->
-                        <div class="snap-center shrink-0 w-full h-96 flex items-center justify-center">
-                            <img [ngSrc]="principalImgFront" priority [alt]="productName" draggable="false"
-                                class="w-auto h-full object-center object-cover mx-auto select-none" height="96"
-                                width="76">
-                        </div>
-                        <!-- Imagen trasera -->
-                        <div class="snap-center shrink-0 w-full h-96 flex items-center justify-center">
-                            <img [ngSrc]="principalImgBack" [alt]="productName + ' - vista trasera'" draggable="false"
-                                class="w-auto h-full object-center object-cover mx-auto select-none" height="96"
-                                width="76">
-                        </div>
-                    </div>
-
-                    <!-- Indicadores de carrusel -->
-                    <div class="flex justify-center gap-2 mt-4">
-                        <button *ngFor="let _ of [1,2]; let i = index" (click)="scrollToImage(i)"
-                            [class.bg-[#d07d66]]="currentImageIndex === i" [class.bg-gray-300]="currentImageIndex !== i"
-                            class="w-2 h-2 rounded-full transition-colors duration-200"
-                            [attr.aria-label]="'Ver imagen ' + (i + 1)">
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Versión desktop con zoom -->
-                <div class="hidden sm:block w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto">
-                    <!-- Panel 1: Imagen frontal -->
-                    <div class=" sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in"
-                        id="tabs-2-panel-1" aria-labelledby="tabs-2-tab-1" role="tabpanel" tabindex="0"
-                        [ngClass]="{'hidden': tapSelected !== 1}" (mouseenter)="onMouseEnterImage()"
-                        (mouseleave)="onMouseLeaveImage()" (mousemove)="onMouseMoveImage($event)">
-                        <img [ngSrc]="principalImgFront" priority lazyLoad [alt]="productName" draggable="false"
-                            class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
-                            [class.opacity-0]="isZoomActive" height="96" width="76">
-                        <!-- Zoom overlay -->
-                        <div *ngIf="isZoomActive" class="absolute inset-0 "
-                            [style.background-image]="'url(' + principalImgFront + ')'"
-                            [style.background-position]="zoomBackgroundPosition" [style.background-size]="'200%'"
-                            [style.background-repeat]="'no-repeat'">
-                        </div>
-                    </div>
-
-                    <!-- Panel 2: Imagen trasera -->
-                    <div class=" sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in"
-                        id="tabs-2-panel-2" aria-labelledby="tabs-2-tab-2" role="tabpanel" tabindex="0"
-                        [ngClass]="{'hidden': tapSelected !== 2}" (mouseenter)="onMouseEnterImage()"
-                        (mouseleave)="onMouseLeaveImage()" (mousemove)="onMouseMoveImage($event)">
-                        <img [ngSrc]="principalImgBack" lazyLoad [alt]="productName + ' - vista trasera'"
-                            draggable="false"
-                            class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
-                            [class.opacity-0]="isZoomActive" height="96" width="76">
-                        <!-- Zoom overlay -->
-                        <div *ngIf="isZoomActive" class="absolute inset-0 "
-                            [style.background-image]="'url(' + principalImgBack + ')'"
-                            [style.background-position]="zoomBackgroundPosition" [style.background-size]="'200%'"
-                            [style.background-repeat]="'no-repeat'">
-                        </div>
-                    </div>
-
-                    <!-- Panel 3: Modelo 3D -->
-                    <div id="tabs-2-panel-3" aria-labelledby="tabs-2-tab-3" role="tabpanel" tabindex="0"
-                        [ngClass]="{'hidden': tapSelected !== 3}">
-                        <div class="mx-auto flex overflow-hidden lg:h-[500px] lg:w-[500px] h-96 sm:rounded-lg">
-                            <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}" role="status"
-                                class="max-sm:absolute max-sm:top-[9%] max-sm:right-[44%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
-                                <div [ngClass]="{'opacity-100': isLoading , 'hidden': !isLoading}"
-                                    class="flex items-center justify-center w-full h-full rounded sm:w-96">
-                                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                                        <path
-                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            @if(model3dUrl == '250g'){
-                            <iframe [ngClass]="{'opacity-0': isLoading}" (load)="onLoadmodel3dUrl()"
-                                src="https://www.pacdora.com/es/share?filter_url=pshgir3x0f"
-                                class="h-full w-full object-cover object-center opacity-0" frameborder="0"
-                                allowfullscreen loading="lazy">
-                            </iframe>
-                            }
-                            @else {
-                            <iframe [ngClass]="{'opacity-0': isLoading}" (load)="onLoadmodel3dUrl()"
-                                src="https://www.pacdora.com/es/share?filter_url=psyrx0gout"
-                                class="h-full w-full object-cover object-center opacity-0" frameborder="0"
-                                allowfullscreen loading="lazy">
-                            </iframe>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product info -->
-            <div class="max-sm:mt-4 px-2 sm:px-0">
-                <div class="">
-                    <div class="max-w-2xl mx-auto lg:max-w-7xl max-sm:px-2  max-sm:py-1 max-lg:px-2 max-lg:py-4 px-8">
-                        <!-- Product details -->
-                        <div class=" lg:self-end">
-                            <div class="mt-2">
-                                <h2 class="sr-only">Reviews</h2>
-                                <div class="flex items-center">
-                                    <div>
-                                        <app-star-rating [rating]="reviewStats.averageRating"></app-star-rating>
-                                        <p class="sr-only">{{reviewStats.averageRating}} out of 5 stars</p>
-                                    </div>
-                                    <a [routerLink]="'/productos/creatinas/'+slug" [fragment]="'reviews'"
-                                        class="ml-2 text-sm font-light text-gray-500 hover:text-[#d7816a] w-fit hover:underline">
-                                        ({{reviewStats.totalReviews}} reseñas)</a>
-                                </div>
-                            </div>
-
-                            <div class="mt-1">
-                                <h1
-                                    class="text-3xl font-thin sm:font-light tracking-tighter sm:tracking-normal text-gray-900 sm:text-3xl product-name">
-                                    {{productName}}
-                                </h1>
-                            </div>
-
-                            <section aria-labelledby="information-heading" class="mt-4">
-                                <h2 id="information-heading" class="sr-only">Product information</h2>
-
-                                <div class="flex items-center">
-                                    @if(isFreeCreatine){
-                                    <div class="flex flex-col gap-2">
-                                        <div class="flex  items-center font-extralight">
-                                            <p class="text-base text-gray-500 sm:text-lg line-through">
-                                                {{ENV.creatinaFreePrecio | currency : 'S/'}}</p>
-                                            <p class="text-lg text-[#d7816a] sm:text-xl ml-2">
-                                                {{ENV.campanaPrimeraCreatina.textos.ofertaCorta}}
-                                            </p>
-                                            <span
-                                                class="ml-2 px-3 py-1 bg-red-600 text-white text-xs font-light rounded-full">-{{ENV.creatina100GrDescuentoBlackFriday}}</span>
-                                        </div>
-                                        <div
-                                            class="mt-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-3 max-w-md">
-                                            <p class="text-sm text-gray-700 leading-relaxed">
-                                                <span class="font-semibold text-[#d07d66]">Creatina
-                                                    {{ENV.campanaPrimeraCreatina.gramos}}gr para tus
-                                                    {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días de
-                                                    prueba.</span>
-                                                Luego continúa automáticamente con tu suscripción mensual de <span
-                                                    class="font-semibold text-gray-900">{{ENV.precioCreatinaSubscription
-                                                    | currency : 'S/'}}</span> y recibe
-                                                {{ENV.creatinaSubscription250}}gr cada mes.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    }@else {
-                                    @if (isSelectSubscription()) {
-                                    <div class="flex justify-center items-center font-extralight price">
-                                        <p class="text-base text-gray-500 sm:text-lg line-through">
-                                            {{productPriceOnePurchase| currency : 'S/'}}</p>
-                                        <p class="text-lg text-gray-900 sm:text-xl ml-2">{{productPriceSubscription |
-                                            currency : 'S/'}}</p>
-                                        <span
-                                            class="ml-2 px-3 py-1 bg-[#d07d66] text-white text-xs font-light rounded-full">-{{ENV.creatina2025Descuento}}</span>
-                                    </div>
-                                    }
-                                    @if(isSelectOnePurchase()) {
-                                    <div class="flex justify-center items-center font-extralight price">
-                                        <p class="text-lg text-gray-900 sm:text-xl ml-2">{{productPriceOnePurchase |
-                                            currency : 'S/'}}</p>
-                                    </div>
-                                    }
-                                    }
-
-                                </div>
-                            </section>
-                        </div>
-
-                        <div class="lg:col-start-1 lg:row-start-2 lg:self-start caracteristicas">
-                            <section aria-labelledby="options-heading">
-                                <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Monohidratada al 100%.</p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la recuperación
-                                            muscular.</p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Certificado de alta pureza.</p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Sin sabor y fácil digestión.
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Mejora la fuerza y resistencia.
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <p class="ml-1 text-sm text-gray-700 font-light">Aumenta la densidad ósea.</p>
-                                    </div>
-                                </div>
-                                <h2 class="text-gray-500 text-[12px] font-extralight">
-                                    {{productServicesAndWeight}}
-                                </h2>
-                                @if(!isFreeCreatine){
-                                <h2 id="options-heading" class="sr-only">Product options</h2>
-
-                                <div class="mx-auto pt-6 pb-2 max-sm:mb-4">
-                                    <div class="space-y-4">
-
-                                        <details #OnePurchase (click)="selectOnePurchase($event)"
-                                            [ngClass]="{'border-gray-800': isSelectOnePurchase()}"
-                                            class="rounded-lg overflow-hidden group border [&_summary::-webkit-details-marker]:hidden">
-                                            <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
-                                                <div class="flex items-center">
-                                                    <span class="relative size-5 shrink-0 mr-2">
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                                                            width="24px" fill="#000000">
-                                                            <path
-                                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                                                            width="24px" fill="#434343">
-                                                            <path
-                                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-                                                    </span>
-                                                    <h2 class="font-light mr-2 max-lg:text-sm">Compra única</h2>
-                                                </div>
-
-                                                <div class="flex items-center">
-                                                    <div class="flex justify-center items-center font-extralight">
-                                                        <p class="text-sm text-gray-900 sm:text-sm ml-2">
-                                                            {{productPriceOnePurchase| currency : 'S/'}}</p>
-                                                    </div>
-                                                </div>
-
-                                            </summary>
-                                        </details>
-                                        <details #Subscription (click)="selectSubscription($event)"
-                                            [ngClass]="{'border-gray-800': isSelectSubscription(),'border-gray-900': isSelectSubscription()}"
-                                            class="rounded-lg overflow-hidden group border border-gray-900 [&_summary::-webkit-details-marker]:hidden">
-                                            <summary
-                                                class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3">
-                                                <div class="flex items-center">
-                                                    <span class="relative size-5 shrink-0 mr-2">
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                                                            width="24px" fill="#000000">
-                                                            <path
-                                                                d="M480-280q83 0 141.5-58.5T680-480q0-83-58.5-141.5T480-680q-83 0-141.5 58.5T280-480q0 83 58.5 141.5T480-280Zm0 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                                            viewBox="0 -960 960 960"
-                                                            class="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                                                            width="24px" fill="#434343">
-                                                            <path
-                                                                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-                                                        </svg>
-                                                    </span>
-
-                                                    <h2 class="font-light mr-2 max-lg:text-sm">Suscribir</h2>
-                                                    <div class="p-[0.35rem]  bg-[#d07d66] rounded-2xl">
-                                                        <p
-                                                            class="max-lg:text-[10px] text-xs text-white font-extralight">
-                                                            Ahorra {{ENV.creatina2025Descuento}}</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex items-center">
-                                                    <div class="flex justify-center items-center font-extralight">
-                                                        <p class="text-xs text-gray-500  line-through">
-                                                            {{productPriceOnePurchase| currency : 'S/'}}</p>
-                                                        <p class="text-sm text-gray-900  ml-2">
-                                                            {{productPriceSubscription | currency : 'S/'}}{{
-                                                            productPriceSubscription > 200 ? '/año' : '/mes' }}</p>
-                                                    </div>
-                                                </div>
-
-                                            </summary>
-
-                                            <div class="m-3">
-                                                <div
-                                                    class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2 bg-[#f8f6f3] py-4 px-3">
-                                                    <span class="text-sm mb-1 text-left text-gray-900 font-light">
-                                                        Así es como funciona la suscripción:
-                                                    </span>
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
-                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
-                                                            <path
-                                                                d="m384-312 264-168-264-168v336Zm96.28 216Q401-96 331-126t-122.5-82.5Q156-261 126-330.96t-30-149.5Q96-560 126-629.5q30-69.5 82.5-122T330.96-834q69.96-30 149.5-30t149.04 30q69.5 30 122 82.5T834-629.28q30 69.73 30 149Q864-401 834-331t-82.5 122.5Q699-156 629.28-126q-69.73 30-149 30Zm-.28-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            Iniciarás con una creatina de prueba a solo
-                                                            S/{{ENV.campanaPrimeraCreatina.precio}}.
-                                                        </p>
-                                                    </div>
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px"
-                                                            viewBox="0 -960 960 960" width="20px" fill="#434343">
-                                                            <path
-                                                                d="M444-189v-270L216-591v270l228 132Zm72 0 228-131v-270L516-459v270Zm-72 84L180-258q-17.1-9.88-26.55-26.06Q144-300.23 144-320v-320q0-19.77 9.45-35.94Q162.9-692.12 180-702l264-153q17.13-10 36.07-10Q499-865 516-855l264 153q17.1 9.88 26.55 26.06Q816-659.77 816-640v320q0 19.77-9.45 35.94Q797.1-267.88 780-258L516-105q-17.13 10-36.07 10Q461-95 444-105Zm188-505 83-47-236-135-80 47 233 135Zm-152 88 82-47-237-134-80 46 235 135Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            Te enviaremos {{ENV.campanaPrimeraCreatina.gramos}}g para
-                                                            que pruebes la
-                                                            calidad.
-                                                    </div>
-
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
-                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
-                                                            <path
-                                                                d="M662-60 520-202l56-56 85 85 170-170 56 57L662-60ZM296-280l-56-56 64-64-64-64 56-56 64 64 64-64 56 56-64 64 64 64-56 56-64-64-64 64ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v254l-80 81v-175H200v400h250l79 80H200Zm0-560h560v-80H200v80Zm0 0v-80 80Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            El periodo de prueba dura
-                                                            {{ENV.diasNormalesDePruebaOperiodoDeReflexion}}
-                                                            días.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
-                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
-                                                            <path
-                                                                d="M314-115q-104-48-169-145T80-479q0-26 2.5-51t8.5-49l-46 27-40-69 191-110 110 190-70 40-54-94q-11 27-16.5 56t-5.5 60q0 97 53 176.5T354-185l-40 70Zm306-485v-80h109q-46-57-111-88.5T480-800q-55 0-104 17t-90 48l-40-70q50-35 109-55t125-20q79 0 151 29.5T760-765v-55h80v220H620ZM594 0 403-110l110-190 69 40-57 98q118-17 196.5-107T800-480q0-11-.5-20.5T797-520h81q1 10 1.5 19.5t.5 20.5q0 135-80.5 241.5T590-95l44 26-40 69Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            Pasada la prueba, tu suscripción de
-                                                            S/{{ENV.precioCreatinaSubscription}} se
-                                                            activará.
-                                                        </p>
-                                                    </div>
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px"
-                                                            viewBox="0 -960 960 960" width="20px" fill="#434343">
-                                                            <path
-                                                                d="M276-168q-50 0-85-35t-35-85H72l24-72h84q17-22 42.24-35 25.23-13 53.76-13 28.53 0 53.76 13Q355-382 372-360h196l84-336H216l8-24q8-22 26.5-35t41.5-13h452l-36 144h84l120 168-48 168h-48q0 50-35 85t-85 35q-50 0-85-35t-35-85H396q0 50-35 85t-85 35Zm384-264h170l3-11-78-109h-65l-30 120Zm-12-248 4-16-84 336 4-16 34-136 42-168ZM24-424l18-72h198l-18 72H24Zm72-136 18-72h234l-18 72H96Zm180 320q20.4 0 34.2-13.8Q324-267.6 324-288q0-20.4-13.8-34.2Q296.4-336 276-336q-20.4 0-34.2 13.8Q228-308.4 228-288q0 20.4 13.8 34.2Q255.6-240 276-240Zm420 0q20.4 0 34.2-13.8Q744-267.6 744-288q0-20.4-13.8-34.2Q716.4-336 696-336q-20.4 0-34.2 13.8Q648-308.4 648-288q0 20.4 13.8 34.2Q675.6-240 696-240Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            Enviaremos tu creatina 250g cada mes (envío gratis).
-                                                        </p>
-                                                    </div>
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18px"
-                                                            viewBox="0 -960 960 960" width="18px" fill="#434343">
-                                                            <path
-                                                                d="M480-48q-113 0-207.5-52.5T120-241v121H48v-240h240v72H175q48 76 128 122t177 46q75 0 140.5-28.5t114-77q48.5-48.5 77-114T840-480h72q0 90-34 168.5t-92.5 137Q727-116 648.5-82T480-48Zm-33-168v-48q-21-5-58.5-27T333-376l63-26q2 6 20 42.5t70 36.5q26 0 50.5-14.5T561-384q0-27-20.5-43.5T475-460q-31-11-78.5-35.5T349-585q0-3 13-49t86-62v-48h66v47q53 9 74.5 40t25.5 44l-59 25q-3-10-19-30t-53-20q-20 0-44 11.5T415-586q0 27 24.5 41t75.5 31q67 23 89.5 56.5T627-384q0 37-15 60t-34.5 36.5Q558-274 539.5-269t-26.5 6v47h-66ZM48-480q0-90 34-168.5t92.5-137Q233-844 311.5-878T480-912q113 0 207.5 52.5T840-719v-121h72v240H672v-72h113q-48-76-128-122t-177-46q-75 0-140.5 28.5t-114 77q-48.5 48.5-77 114T120-480H48Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            +10 MP cada mes (canjealo por articulos exclusivos).
-                                                        </p>
-                                                    </div>
-                                                    <div class="flex flex-row items-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="20px"
-                                                            viewBox="0 -960 960 960" width="20px" fill="#434343">
-                                                            <path
-                                                                d="m339-288 141-141 141 141 51-51-141-141 141-141-51-51-141 141-141-141-51 51 141 141-141 141 51 51ZM480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
-                                                        </svg>
-                                                        <p class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3">
-                                                            Cancela o pausa tu suscripción cuando quieras.
-                                                        </p>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </details>
-
-                                    </div>
-                                </div>
-                                }
-                                <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto">
-                                    <!-- Timeline de seguimiento -->
-                                    <div class="relative">
-                                        <!-- Contenido del timeline -->
-                                        <div class="flex items-center justify-between my-2 sm:my-2 relative">
-                                            <!-- Línea horizontal que conecta los círculos -->
-                                            <div class="absolute top-4 left-8 right-0 h-0.5 bg-gray-300 z-0 w-[85.5%]">
-                                            </div>
-                                            <!-- Paso 1: Pedido realizado -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">Preparando</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{preparandoDate}}</p>
-                                            </div>
-                                            <!-- Paso 2: Preparando -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full border-2 h-8 w-8 flex items-center justify-center bg-white z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">
-                                                    Enviado</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{enviadoDate}}</p>
-                                            </div>
-                                            <!-- Paso 3: Enviado -->
-                                            <div class="flex flex-col items-center">
-                                                <div
-                                                    class="rounded-full  border-2 h-8 w-8 flex items-center justify-center bg-white  z-10">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </div>
-                                                <h3 class="mt-2 text-center font-bold text-xs">
-                                                    Entregado</h3>
-                                                <p class="text-gray-600 text-center text-xs min-h-[24px]">
-                                                    {{entregadoDate}}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <!-- Disclaimer envío gratis -->
-                                        <div class="flex justify-center items-center mt-3">
-                                            <p class="text-xs text-gray-500 font-light">
-                                                Envíos a todo el Perú (Lima Metropolitana gratis).
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if(!isFreeCreatine){
-                                @if (isSelectSubscription()) {
-                                <div class="block my-2">
-                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Lo quiero →'" (click)="irRegistro()"
-                                        [isDisabled]="isButtonDisabled()"></ml-button>
-                                </div>
-                                <div
-                                    class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button (click)="irRegistro()" type="button" [disabled]="isButtonDisabled()"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
-                                        {{isOutOfStock ? 'Agotado' : 'Lo quiero →'}}
-                                    </button>
-                                </div>
-                                }
-                                @if(isSelectOnePurchase()) {
-                                <div class="block my-2">
-                                    <ml-button [name]="isOutOfStock ? 'Agotado' : 'Agregar al carrito'"
-                                        (click)="agregarCarrito()" [isDisabled]="isButtonDisabled()"></ml-button>
-                                </div>
-                                <div
-                                    class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button (click)="agregarCarrito()" type="button" [disabled]="isButtonDisabled()"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a] disabled:bg-[#d7826ab5] disabled:cursor-not-allowed">
-                                        {{isOutOfStock ? 'Agotado' : 'Agregar al carrito'}}
-                                    </button>
-                                </div>
-                                }
-
-                                }
-                                @else {
-                                <div class="block my-2">
-                                    <ml-button name="Lo quiero →" routerLink="/registro"
-                                        [isDisabled]="isButtonDisabled()"></ml-button>
-                                </div>
-                                <div
-                                    class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30">
-                                    <button routerLink="/registro" type="button"
-                                        class=" inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-[#d07d66] hover:bg-[#d7816a]">
-                                        Lo quiero →
-                                    </button>
-                                </div>
-
-                                }
-                                <!-- Sección de pago seguro -->
-                                <div class="mt-6 sm:pt-4 border-t border-gray-200">
-                                    <p class="flex justify-center text-sm font-medium text-gray-500 my-4">
-                                        <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Pago seguro con <a href="https://flowpagos.com/"
-                                            class="ml-1 hover:underline text-gray-800" target="_blank">Flow</a>
-                                    </p>
-                                    <div class="flex justify-center items-center gap-4">
-                                        <!-- American Express -->
-                                        <img class="h-4 w-auto" src="/logo_amex.svg" alt="American Express">
-                                        <!-- Mastercard -->
-                                        <img class="h-4 w-auto" src="/logo_mastercard.svg" alt="Mastercard">
-                                        <!-- Visa -->
-                                        <img class="h-4 w-auto" src="/logo_visa.png" alt="Visa">
-                                        <!-- Yape -->
-                                        <img src="/logo_yape.png" alt="Yape" class="h-6 w-auto object-contain">
-                                    </div>
-                                </div>
-                            </section>
-
-                        </div>
-                    </div>
-                </div>
-
-                <section aria-labelledby="details-heading" class="mt-12 px-8 max-lg:px-2 max-sm:px-2 max-lg:mt-3">
-                    <h2 id="details-heading" class="sr-only">Additional details</h2>
-
-                    <div class="border-t divide-y divide-gray-200 text">
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Descripción</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-
-                            <p class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                El monohidrato de creatina es uno de los ingredientes más estudiados e investigados para
-                                mejorar el rendimiento deportivo. Se ha demostrado que la creatina aumenta la
-                                resistencia, la masa muscular y la fuerza cuando se toma como parte de un régimen de
-                                entrenamiento.
-                            </p>
-                        </details>
-
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Objetivos</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-                            <ul class="list-disc list-outside">
-                                <li class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                    Incrementa la fuerza
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs">
-                                    Contribuye al aumento de la masa muscular cuando se usa conjuntamente con el
-                                    entrenamiento.
-                                </li>
-                            </ul>
-                        </details>
-
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Modo de empleo</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-                            <ul class="list-disc list-outside">
-                                <li class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                    Incrementa la fuerza.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs">
-                                    Como suplemento dietético, tomar 6gr una veces al día con el desayuno.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs">
-                                    Su consumo es diario. Si va a entrenar 15 minutos antes de los ejercicios. Los días
-                                    que no, tomarlo con el desayuno.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs">
-                                    Mezclar y tomar con agua 350ml.
-                                </li>
-                            </ul>
-                        </details>
-
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Advertencia y precauciones</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-
-                            <p class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                Creatine Monohydrate (DE-1868) Suplemento Nutricional. No superar la dosis diaria
-                                recomendada para suplementos dietéticos. No debe utilizarse como sustituto de una dieta
-                                equilibrada. No recomendado si está embarazada o está dando de lactar. Si experimenta
-                                erupción cutánea u otra reacción alérgica, suspenda su uso y consulte a su médico. No se
-                                recomienda usar en menores de 18 años.
-                            </p>
-
-                        </details>
-
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Sostenibilidad</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-
-                            <p class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                Además de hacer fácil la suplementación en Magrolabs también trabajamos duro por la
-                                sostenibilidad. Nos enfocamos en varias áreas.
-                            </p>
-                            <ul class="list-disc list-outside">
-                                <li class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                    <strong>Proceso de producción:</strong>
-                                    Minimizamos los residuos, compramos el material justo para el número de miembros que
-                                    recibirán nuestras creatinas. Esto significa pocos residuos y existencias mínimas.
-                                    Además, nuestro envases disponen de certificados de sostenibilidad, como el
-                                    certificado FSC.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs mt-1">
-                                    <strong>Transporte:</strong>
-                                    Optimizamos los envíos de las creatinas, usando envíos programados, gracias a tu
-                                    suscripción, para reducir las emisiones de CO2.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs mt-1">
-                                    <strong>Embalaje:</strong>
-                                    Nuestro embalaje consiste en una caja de cartón asegurada por una cinta de papel.
-                                    Además, la caja de cartón es reciclable.
-                                </li>
-                            </ul>
-                        </details>
-
-                        <details class="group rounded-lg p-6 [&_summary::-webkit-details-marker]:hidden">
-                            <summary class="flex cursor-pointer items-center justify-between gap-1.5">
-                                <h2 class="text-gray-900 text-sm font-medium">Origen y Calidad</h2>
-                                <span class="relative size-5 shrink-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                                        class="absolute inset-0 size-5 opacity-100 group-open:opacity-0" fill="none"
-                                        viewBox="0 -960 960 960" width="24px" fill="#434343">
-                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                                    </svg>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        class="absolute inset-0 size-5 opacity-0 group-open:opacity-100" fill="none"
-                                        width="24px" fill="#434343">
-                                        <path d="M200-440v-80h560v80H200Z" />
-                                    </svg>
-                                </span>
-                            </summary>
-
-                            <p class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                Nuestra creatina es 100% monohidratada y proviene de fabricantes internacionales
-                                especializados en alta pureza. Trabajamos con uno de los principales importadores
-                                del Perú, asegurando abastecimiento constante y control de calidad.
-                            </p>
-
-                            <ul class="list-disc list-outside">
-                                <li class="mt-4 leading-relaxed text-gray-500 text-xs">
-                                    <strong>Alta pureza:</strong> Creatina 100% monohidratada seleccionada bajo
-                                    estándares estrictos.
-                                </li>
-                                <li class="leading-relaxed text-gray-500 text-xs mt-1">
-                                    <strong>Control:</strong> Envasado y distribución gestionados por Magrolabs en Perú.
-                                </li>
-                            </ul>
-                        </details>
-                    </div>
-
-
-                </section>
-            </div>
-        </div>
-
-        <!-- Reviews -->
-        <div class="border-t border-gray-200 mt-4" id="reviews">
-            <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8">
-                <div class="lg:col-span-4">
-                    <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Reseñas de nuestros clientes</h2>
-
-                    <div class="mt-3 flex items-center">
-                        <div>
-                            <app-star-rating [rating]="reviewStats.averageRating"></app-star-rating>
-                            <p class="sr-only">{{reviewStats.averageRating}} out of 5 stars</p>
-                        </div>
-                        <p class="ml-2 text-sm text-gray-900">Basado en {{reviewStats.totalReviews}} reseñas</p>
-                    </div>
-
-                    <div class="mt-6">
-                        <h3 class="sr-only">Review data</h3>
-
-                        <dl class="space-y-3">
-                            <div class="flex items-center text-sm">
-                                <dt class="flex-1 flex items-center">
-                                    <p class="w-3 font-medium text-gray-900">5<span class="sr-only"> star reviews</span>
-                                    </p>
-                                    <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                                        <!-- Heroicon name: solid/star -->
-                                        <svg class="flex-shrink-0 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-
-                                        <div class="ml-3 relative flex-1">
-                                            <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
-
-                                            <div [style.width.%]="reviewStats.percentages[5]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </dt>
-                                <dd class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">
-                                    {{reviewStats.percentages[5]}}%</dd>
-                            </div>
-
-                            <div class="flex items-center text-sm">
-                                <dt class="flex-1 flex items-center">
-                                    <p class="w-3 font-medium text-gray-900">4<span class="sr-only"> star reviews</span>
-                                    </p>
-                                    <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                                        <!-- Heroicon name: solid/star -->
-                                        <svg class="flex-shrink-0 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-
-                                        <div class="ml-3 relative flex-1">
-                                            <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
-
-                                            <div [style.width.%]="reviewStats.percentages[4]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </dt>
-                                <dd class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">
-                                    {{reviewStats.percentages[4]}}%</dd>
-                            </div>
-
-                            <div class="flex items-center text-sm">
-                                <dt class="flex-1 flex items-center">
-                                    <p class="w-3 font-medium text-gray-900">3<span class="sr-only"> star reviews</span>
-                                    </p>
-                                    <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                                        <svg class="flex-shrink-0 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-
-                                        <div class="ml-3 relative flex-1">
-                                            <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
-
-                                            <div [style.width.%]="reviewStats.percentages[3]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </dt>
-                                <dd class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">
-                                    {{reviewStats.percentages[3]}}%</dd>
-                            </div>
-
-                            <div class="flex items-center text-sm">
-                                <dt class="flex-1 flex items-center">
-                                    <p class="w-3 font-medium text-gray-900">2<span class="sr-only"> star reviews</span>
-                                    </p>
-                                    <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                                        <svg class="flex-shrink-0 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-
-                                        <div class="ml-3 relative flex-1">
-                                            <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
-
-                                            <div [style.width.%]="reviewStats.percentages[2]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </dt>
-                                <dd class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">
-                                    {{reviewStats.percentages[2]}}%</dd>
-                            </div>
-
-                            <div class="flex items-center text-sm">
-                                <dt class="flex-1 flex items-center">
-                                    <p class="w-3 font-medium text-gray-900">1<span class="sr-only"> star reviews</span>
-                                    </p>
-                                    <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                                        <svg class="flex-shrink-0 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-
-                                        <div class="ml-3 relative flex-1">
-                                            <div class="h-3 bg-gray-100 border border-gray-200 rounded-full"></div>
-
-                                            <div [style.width.%]="reviewStats.percentages[1]"
-                                                class="absolute inset-y-0 bg-[#d07d66] border border-[#d07d66] rounded-full">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </dt>
-                                <dd class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">
-                                    {{reviewStats.percentages[1]}}%</dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <div class="mt-1">
-                        <button type="button" (click)="writeReview()" [disabled]="isCheckingReviewPermission"
-                            class="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed">
-                            <svg *ngIf="isCheckingReviewPermission"
-                                class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                            {{ isCheckingReviewPermission ? 'Verificando...' : 'Escribir review' }}
-                        </button>
-
-                    </div>
-                </div>
-
-                <div class="mt-4 sm:mt-16 lg:mt-0 lg:col-start-6 lg:col-span-7">
-                    <h3 class="sr-only">Recent reviews</h3>
-
-                    <div class="flow-root">
-                        <!-- Implementación con @defer para cargar reviews cuando entren en viewport -->
-                        @defer (on viewport) {
-                        <app-reviews-list [productId]="getProductId()" (reviewsLoaded)="onReviewsLoaded($event)"
-                            (reviewStats)="onReviewStatsReceived($event)">
-                        </app-reviews-list>
-                        } @loading () {
-                        <app-review-skeleton></app-review-skeleton>
-                        } @placeholder () {
-                        <div class="divide-y divide-gray-200 max-h-[34.5rem] overflow-y-scroll bg-white rounded-lg">
-                            <div class="py-6 px-4 text-center text-red-500">
-                                <p class="text-sm">Cargando reseñas...</p>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="max-w-2xl mx-auto lg:max-w-none">
+    <div class="my-4 ml-1">
+      <ml-breadcrumb [items]="breadcrumbItems" />
     </div>
+    <!-- Product -->
+    <div class="md:grid sm:grid-cols-2 sm:gap-x-2 sm:items-start mb-2 mt-2">
+      <!-- Image gallery -->
+      <div class="flex flex-col-reverse">
+        <!-- Image selector (solo desktop) -->
+        <div
+          class="hidden mt-6 w-full max-w-2xl mx-auto sm:block sm:max-w-none"
+        >
+          <div
+            class="grid grid-cols-4 gap-2"
+            aria-orientation="horizontal"
+            role="tablist"
+          >
+            <button
+              id="tabs-2-tab-1"
+              (click)="selectTap(1)"
+              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+              [class.ring-primary]="tapSelected === 1"
+              aria-controls="tabs-2-panel-1"
+              role="tab"
+              type="button"
+            >
+              <span class="sr-only">Vista frontal</span>
+              <span class="absolute inset-0 rounded-md overflow-hidden">
+                <img
+                  [ngSrc]="previewImgFront"
+                  [alt]="productName"
+                  draggable="false"
+                  class="w-full h-full object-center object-cover select-none"
+                  height="96"
+                  width="96"
+                  lazyLoad
+                />
+              </span>
+              <span
+                [class.ring-primary]="tapSelected === 1"
+                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+                aria-hidden="true"
+              ></span>
+            </button>
+
+            <button
+              id="tabs-2-tab-2"
+              (click)="selectTap(2)"
+              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+              [class.ring-primary]="tapSelected === 2"
+              aria-controls="tabs-2-panel-2"
+              role="tab"
+              type="button"
+            >
+              <span class="sr-only">Vista trasera</span>
+              <span class="absolute inset-0 rounded-md overflow-hidden">
+                <img
+                  [ngSrc]="previewImgBack"
+                  [alt]="productName"
+                  draggable="false"
+                  class="w-full h-full object-center object-cover select-none"
+                  height="96"
+                  width="96"
+                  lazyLoad
+                />
+              </span>
+              <span
+                [class.ring-primary]="tapSelected === 2"
+                class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+                aria-hidden="true"
+              ></span>
+            </button>
+
+            <!-- <button id="tabs-2-tab-3" (click)="selectTap(3)"
+            class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+            [class.ring-primary]="tapSelected === 3"
+            aria-controls="tabs-2-panel-3" role="tab" type="button">
+            <span class="sr-only">Modelo 3D</span>
+            <span class="absolute inset-0 rounded-md overflow-hidden">
+              <img [ngSrc]="previewmodel3d" [alt]="productName" draggable="false"
+                class="w-full h-full object-center object-contain p-8 select-none" height="96" width="96" lazyLoad>
+            </span>
+            <span
+              [class.ring-primary]="tapSelected === 3"
+              class="ring-transparent absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+            aria-hidden="true"></span>
+          </button> -->
+          </div>
+        </div>
+
+        <!-- Carrusel móvil -->
+        <div class="block sm:hidden w-full relative">
+          <div
+            class="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide"
+            #imageCarousel
+            (scroll)="onCarouselScroll($event)"
+          >
+            <!-- Imagen frontal -->
+            <div
+              class="snap-center shrink-0 w-full h-96 flex items-center justify-center"
+            >
+              <img
+                [ngSrc]="principalImgFront"
+                priority
+                [alt]="productName"
+                draggable="false"
+                class="w-auto h-full object-center object-cover mx-auto select-none"
+                height="96"
+                width="76"
+              />
+            </div>
+            <!-- Imagen trasera -->
+            <div
+              class="snap-center shrink-0 w-full h-96 flex items-center justify-center"
+            >
+              <img
+                [ngSrc]="principalImgBack"
+                [alt]="productName + ' - vista trasera'"
+                draggable="false"
+                class="w-auto h-full object-center object-cover mx-auto select-none"
+                height="96"
+                width="76"
+              />
+            </div>
+          </div>
+
+          <!-- Indicadores de carrusel -->
+          <div class="flex justify-center gap-2 mt-4">
+            @for (_ of [1, 2]; track _; let i = $index) {
+              <button
+                (click)="scrollToImage(i)"
+                [class.bg-primary]="currentImageIndex === i"
+                [class.bg-gray-300]="currentImageIndex !== i"
+                class="w-2 h-2 rounded-full transition-colors duration-200"
+                [attr.aria-label]="'Ver imagen ' + (i + 1)"
+              ></button>
+            }
+          </div>
+        </div>
+
+        <!-- Versión desktop con zoom -->
+        <div
+          class="hidden sm:block w-full h-full aspect-w-1 aspect-h-1 max-h-[500px] max-w-[500px] mx-auto"
+        >
+          <!-- Panel 1: Imagen frontal -->
+          <div
+            class="sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in"
+            id="tabs-2-panel-1"
+            aria-labelledby="tabs-2-tab-1"
+            role="tabpanel"
+            tabindex="0"
+            [ngClass]="{ hidden: tapSelected !== 1 }"
+            (mouseenter)="onMouseEnterImage()"
+            (mouseleave)="onMouseLeaveImage()"
+            (mousemove)="onMouseMoveImage($event)"
+          >
+            <img
+              [ngSrc]="principalImgFront"
+              priority
+              lazyLoad
+              [alt]="productName"
+              draggable="false"
+              class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
+              [class.opacity-0]="isZoomActive"
+              height="96"
+              width="76"
+            />
+            <!-- Zoom overlay -->
+            @if (isZoomActive) {
+              <div
+                class="absolute inset-0"
+                [style.background-image]="'url(' + principalImgFront + ')'"
+                [style.background-position]="zoomBackgroundPosition"
+                [style.background-size]="'200%'"
+                [style.background-repeat]="'no-repeat'"
+              ></div>
+            }
+          </div>
+
+          <!-- Panel 2: Imagen trasera -->
+          <div
+            class="sm:rounded-lg lg:h-[500px] lg:w-[500px] h-96 relative overflow-hidden cursor-zoom-in"
+            id="tabs-2-panel-2"
+            aria-labelledby="tabs-2-tab-2"
+            role="tabpanel"
+            tabindex="0"
+            [ngClass]="{ hidden: tapSelected !== 2 }"
+            (mouseenter)="onMouseEnterImage()"
+            (mouseleave)="onMouseLeaveImage()"
+            (mousemove)="onMouseMoveImage($event)"
+          >
+            <img
+              [ngSrc]="principalImgBack"
+              lazyLoad
+              [alt]="productName + ' - vista trasera'"
+              draggable="false"
+              class="w-auto h-full object-center object-cover sm:rounded-lg mx-auto select-none transition-opacity duration-200"
+              [class.opacity-0]="isZoomActive"
+              height="96"
+              width="76"
+            />
+            <!-- Zoom overlay -->
+            @if (isZoomActive) {
+              <div
+                class="absolute inset-0"
+                [style.background-image]="'url(' + principalImgBack + ')'"
+                [style.background-position]="zoomBackgroundPosition"
+                [style.background-size]="'200%'"
+                [style.background-repeat]="'no-repeat'"
+              ></div>
+            }
+          </div>
+
+          <!-- Panel 3: Modelo 3D -->
+          <div
+            id="tabs-2-panel-3"
+            aria-labelledby="tabs-2-tab-3"
+            role="tabpanel"
+            tabindex="0"
+            [ngClass]="{ hidden: tapSelected !== 3 }"
+          >
+            <div
+              class="mx-auto flex overflow-hidden lg:h-[500px] lg:w-[500px] h-96 sm:rounded-lg"
+            >
+              <div
+                [ngClass]="{ 'opacity-100': isLoading, hidden: !isLoading }"
+                role="status"
+                class="max-sm:absolute max-sm:top-[9%] max-sm:right-[44%] space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+              >
+                <div
+                  [ngClass]="{ 'opacity-100': isLoading, hidden: !isLoading }"
+                  class="flex items-center justify-center w-full h-full rounded sm:w-96"
+                >
+                  <svg
+                    class="w-10 h-10 text-gray-200 dark:text-gray-600"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 18"
+                  >
+                    <path
+                      d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              @if (model3dUrl === "250g") {
+                <iframe
+                  [ngClass]="{ 'opacity-0': isLoading }"
+                  (load)="onLoadmodel3dUrl()"
+                  src="https://www.pacdora.com/es/share?filter_url=pshgir3x0f"
+                  class="h-full w-full object-cover object-center opacity-0"
+                  frameborder="0"
+                  allowfullscreen
+                  loading="lazy"
+                >
+                </iframe>
+              } @else {
+                <iframe
+                  [ngClass]="{ 'opacity-0': isLoading }"
+                  (load)="onLoadmodel3dUrl()"
+                  src="https://www.pacdora.com/es/share?filter_url=psyrx0gout"
+                  class="h-full w-full object-cover object-center opacity-0"
+                  frameborder="0"
+                  allowfullscreen
+                  loading="lazy"
+                >
+                </iframe>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product info -->
+      <div class="max-sm:mt-4 px-2 sm:px-0">
+        <div class="">
+          <div
+            class="max-w-2xl mx-auto lg:max-w-7xl max-sm:px-2 max-sm:py-1 max-lg:px-2 max-lg:py-4 px-8"
+          >
+            <!-- Product details -->
+            <div class="lg:self-end">
+              <div class="mt-2">
+                <h2 class="sr-only">Reviews</h2>
+                <div class="flex items-center">
+                  <div>
+                    <app-star-rating
+                      [rating]="reviewStats.averageRating"
+                    ></app-star-rating>
+                    <p class="sr-only">
+                      {{ reviewStats.averageRating }} out of 5 stars
+                    </p>
+                  </div>
+                  <a
+                    [routerLink]="'/productos/creatinas/' + slug"
+                    [fragment]="'reviews'"
+                    class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline"
+                  >
+                    ({{ reviewStats.totalReviews }} reseñas)</a
+                  >
+                </div>
+              </div>
+
+              <div class="mt-1">
+                <h1
+                  class="text-3xl font-thin sm:font-light tracking-tighter sm:tracking-normal text-gray-900 sm:text-3xl product-name"
+                >
+                  {{ productName }}
+                </h1>
+              </div>
+
+              <section aria-labelledby="information-heading" class="mt-4">
+                <h2 id="information-heading" class="sr-only">
+                  Product information
+                </h2>
+
+                <div class="flex items-center">
+                  @if (isFreeCreatine) {
+                    <div class="flex flex-col gap-2">
+                      <div class="flex items-center font-extralight">
+                        <p
+                          class="text-base text-gray-500 sm:text-lg line-through"
+                        >
+                          {{ ENV.creatinaFreePrecio | currency: "S/" }}
+                        </p>
+                        <p class="text-lg text-primary-hover sm:text-xl ml-2">
+                          {{ ENV.campanaPrimeraCreatina.textos.ofertaCorta }}
+                        </p>
+                        <span
+                          class="ml-2 px-3 py-1 bg-red-600 text-white text-xs font-light rounded-full"
+                          >-{{ ENV.creatina100GrDescuentoBlackFriday }}</span
+                        >
+                      </div>
+                      <div
+                        class="mt-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-3 max-w-md"
+                      >
+                        <p class="text-sm text-gray-700 leading-relaxed">
+                          <span class="font-semibold text-primary"
+                            >Creatina {{ ENV.campanaPrimeraCreatina.gramos }}gr
+                            para tus
+                            {{
+                              ENV.diasNormalesDePruebaOperiodoDeReflexion
+                            }}
+                            días de prueba.</span
+                          >
+                          Luego continúa automáticamente con tu suscripción
+                          mensual de
+                          <span class="font-semibold text-gray-900">{{
+                            ENV.precioCreatinaSubscription | currency: "S/"
+                          }}</span>
+                          y recibe {{ ENV.creatinaSubscription250 }}gr cada mes.
+                        </p>
+                      </div>
+                    </div>
+                  } @else {
+                    @if (isSelectSubscription()) {
+                      <div
+                        class="flex justify-center items-center font-extralight price"
+                      >
+                        <p
+                          class="text-base text-gray-500 sm:text-lg line-through"
+                        >
+                          {{ productPriceOnePurchase | currency: "S/" }}
+                        </p>
+                        <p class="text-lg text-gray-900 sm:text-xl ml-2">
+                          {{ productPriceSubscription | currency: "S/" }}
+                        </p>
+                        <span
+                          class="ml-2 px-3 py-1 bg-primary text-white text-xs font-light rounded-full"
+                          >-{{ ENV.creatina2025Descuento }}</span
+                        >
+                      </div>
+                    }
+                    @if (isSelectOnePurchase()) {
+                      <div
+                        class="flex justify-center items-center font-extralight price"
+                      >
+                        <p class="text-lg text-gray-900 sm:text-xl ml-2">
+                          {{ productPriceOnePurchase | currency: "S/" }}
+                        </p>
+                      </div>
+                    }
+                  }
+                </div>
+              </section>
+            </div>
+
+            <div
+              class="lg:col-start-1 lg:row-start-2 lg:self-start caracteristicas"
+            >
+              <section aria-labelledby="options-heading">
+                <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Monohidratada al 100%.
+                    </p>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Mejora la recuperación muscular.
+                    </p>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Certificado de alta pureza.
+                    </p>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Sin sabor y fácil digestión.
+                    </p>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Mejora la fuerza y resistencia.
+                    </p>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="flex-shrink-0 w-4 h-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <p class="ml-1 text-sm text-gray-700 font-light">
+                      Aumenta la densidad ósea.
+                    </p>
+                  </div>
+                </div>
+                <h2 class="text-gray-500 text-[12px] font-extralight">
+                  {{ productServicesAndWeight }}
+                </h2>
+                @if (!isFreeCreatine) {
+                  <h2 id="options-heading" class="sr-only">Product options</h2>
+
+                  <div class="mx-auto pt-6 sm:pb-2">
+                    <div class="space-y-4">
+                      <ml-purchase-option
+                        #onePurchaseOption
+                        label="Compra única"
+                        [price]="productPriceOnePurchase"
+                        [benefits]="onePurchaseBenefits"
+                        benefitsLabel="Te ofrecemos:"
+                        (optionSelected)="selectOnePurchase()"
+                      />
+
+                      <ml-purchase-option
+                        #subscriptionOption
+                        label="Suscribir"
+                        [price]="productPriceSubscription"
+                        [originalPrice]="productPriceOnePurchase"
+                        [priceSuffix]="
+                          productPriceSubscription > 200 ? '/año' : '/mes'
+                        "
+                        [badge]="'Ahorra ' + ENV.creatina2025Descuento"
+                        [benefits]="subscriptionBenefits"
+                        benefitsLabel="Así es como funciona la suscripción:"
+                        (optionSelected)="selectSubscription()"
+                      />
+                    </div>
+                  </div>
+                }
+                @if (!isFreeCreatine) {
+                  @if (isSelectSubscription()) {
+                    <div class="block my-2">
+                      <ml-button
+                        [name]="isOutOfStock ? 'Agotado' : 'Lo quiero →'"
+                        (click)="irRegistro()"
+                        [isDisabled]="isButtonDisabled()"
+                      ></ml-button>
+                    </div>
+                    <div
+                      class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30"
+                    >
+                      <button
+                        (click)="irRegistro()"
+                        type="button"
+                        [disabled]="isButtonDisabled()"
+                        class="inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed"
+                      >
+                        {{ isOutOfStock ? "Agotado" : "Lo quiero →" }}
+                      </button>
+                    </div>
+                  }
+                  @if (isSelectOnePurchase()) {
+                    <div class="flex items-stretch gap-2 my-2">
+                      <app-product-quantity
+                        [predeterminedQuantity]="quantity()"
+                        (quantityValue)="onQuantityChange($event)"
+                      />
+                      <div class="flex-1">
+                        <ml-button
+                          [name]="
+                            isOutOfStock ? 'Agotado' : 'Agregar al carrito'
+                          "
+                          (click)="agregarCarrito()"
+                          [isDisabled]="isButtonDisabled()"
+                        ></ml-button>
+                      </div>
+                    </div>
+                    <div
+                      class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30"
+                    >
+                      <button
+                        (click)="agregarCarrito()"
+                        type="button"
+                        [disabled]="isButtonDisabled()"
+                        class="inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover disabled:bg-primary-hover/70 disabled:cursor-not-allowed"
+                      >
+                        {{ isOutOfStock ? "Agotado" : "Agregar al carrito" }}
+                      </button>
+                    </div>
+                  }
+                } @else {
+                  <div class="block mt-6">
+                    <ml-button
+                      name="Lo quiero →"
+                      routerLink="/registro"
+                      [isDisabled]="isButtonDisabled()"
+                    ></ml-button>
+                  </div>
+                  <div
+                    class="hidden max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:w-full max-sm:z-30"
+                  >
+                    <button
+                      routerLink="/registro"
+                      type="button"
+                      class="inline-flex w-full items-center justify-center px-4 py-5 border border-transparent text-lg font-medium text-white bg-primary hover:bg-primary-hover"
+                    >
+                      Lo quiero →
+                    </button>
+                  </div>
+                }
+
+                <div class="p-2 sm:p-6 sm:max-w-[80%] mx-auto pt-6">
+                  <app-step
+                    type="delivery-preview"
+                    [preparandoDate]="preparandoDate"
+                    [enviadoDate]="enviadoDate"
+                    [entregadoDate]="entregadoDate"
+                  />
+                </div>
+
+                <!-- Sección de pago seguro -->
+                <div class="mt-6 sm:pt-4 border-t border-gray-200">
+                  <p
+                    class="flex justify-center text-sm font-medium text-gray-500 my-4"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400 mr-1.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Pago seguro con
+                    <a
+                      href="https://flowpagos.com/"
+                      class="ml-1 hover:underline text-gray-800"
+                      target="_blank"
+                      >Flow</a
+                    >
+                  </p>
+                  <div class="flex justify-center items-center gap-4">
+                    <!-- American Express -->
+                    <img
+                      class="h-4 w-auto"
+                      src="/logo_amex.svg"
+                      alt="American Express"
+                    />
+                    <!-- Mastercard -->
+                    <img
+                      class="h-4 w-auto"
+                      src="/logo_mastercard.svg"
+                      alt="Mastercard"
+                    />
+                    <!-- Visa -->
+                    <img class="h-4 w-auto" src="/logo_visa.png" alt="Visa" />
+                    <!-- Yape -->
+                    <img
+                      src="/logo_yape.png"
+                      alt="Yape"
+                      class="h-6 w-auto object-contain"
+                    />
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <section
+          aria-labelledby="details-heading"
+          class="mt-12 px-8 max-lg:px-2 max-sm:px-2 max-lg:mt-3"
+        >
+          <h2 id="details-heading" class="sr-only">Additional details</h2>
+
+          <ml-accordion-group>
+            <ml-accordion-item title="Descripción">
+              <p class="leading-relaxed text-gray-500 text-xs">
+                El monohidrato de creatina es uno de los ingredientes más
+                estudiados e investigados para mejorar el rendimiento deportivo.
+                Se ha demostrado que la creatina aumenta la resistencia, la masa
+                muscular y la fuerza cuando se toma como parte de un régimen de
+                entrenamiento.
+              </p>
+            </ml-accordion-item>
+
+            <ml-accordion-item title="Objetivos">
+              <ul class="list-disc list-outside space-y-1">
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Incrementa la fuerza
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Contribuye al aumento de la masa muscular cuando se usa
+                  conjuntamente con el entrenamiento.
+                </li>
+              </ul>
+            </ml-accordion-item>
+
+            <ml-accordion-item title="Modo de empleo">
+              <ul class="list-disc list-outside space-y-1">
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Incrementa la fuerza.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Como suplemento dietético, tomar 6gr una veces al día con el
+                  desayuno.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Su consumo es diario. Si va a entrenar 15 minutos antes de los
+                  ejercicios. Los días que no, tomarlo con el desayuno.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  Mezclar y tomar con agua 350ml.
+                </li>
+              </ul>
+            </ml-accordion-item>
+
+            <ml-accordion-item title="Advertencia y precauciones">
+              <p class="leading-relaxed text-gray-500 text-xs">
+                Creatine Monohydrate (DE-1868) Suplemento Nutricional. No
+                superar la dosis diaria recomendada para suplementos dietéticos.
+                No debe utilizarse como sustituto de una dieta equilibrada. No
+                recomendado si está embarazada o está dando de lactar. Si
+                experimenta erupción cutánea u otra reacción alérgica, suspenda
+                su uso y consulte a su médico. No se recomienda usar en menores
+                de 18 años.
+              </p>
+            </ml-accordion-item>
+
+            <ml-accordion-item title="Sostenibilidad">
+              <p class="leading-relaxed text-gray-500 text-xs">
+                Además de hacer fácil la suplementación en Magrolabs también
+                trabajamos duro por la sostenibilidad. Nos enfocamos en varias
+                áreas.
+              </p>
+              <ul class="list-disc list-outside space-y-1 mt-2">
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  <strong>Proceso de producción:</strong>
+                  Minimizamos los residuos, compramos el material justo para el
+                  número de miembros que recibirán nuestras creatinas. Esto
+                  significa pocos residuos y existencias mínimas. Además,
+                  nuestro envases disponen de certificados de sostenibilidad,
+                  como el certificado FSC.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  <strong>Transporte:</strong>
+                  Optimizamos los envíos de las creatinas, usando envíos
+                  programados, gracias a tu suscripción, para reducir las
+                  emisiones de CO2.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  <strong>Embalaje:</strong>
+                  Nuestro embalaje consiste en una caja de cartón asegurada por
+                  una cinta de papel. Además, la caja de cartón es reciclable.
+                </li>
+              </ul>
+            </ml-accordion-item>
+
+            <ml-accordion-item title="Origen y Calidad">
+              <p class="leading-relaxed text-gray-500 text-xs">
+                Nuestra creatina es 100% monohidratada y proviene de fabricantes
+                internacionales especializados en alta pureza. Trabajamos con
+                uno de los principales importadores del Perú, asegurando
+                abastecimiento constante y control de calidad.
+              </p>
+              <ul class="list-disc list-outside space-y-1 mt-2">
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  <strong>Alta pureza:</strong> Creatina 100% monohidratada
+                  seleccionada bajo estándares estrictos.
+                </li>
+                <li class="leading-relaxed text-gray-500 text-xs">
+                  <strong>Control:</strong> Envasado y distribución gestionados
+                  por Magrolabs en Perú.
+                </li>
+              </ul>
+            </ml-accordion-item>
+          </ml-accordion-group>
+        </section>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="border-t border-gray-200 mt-4" id="reviews">
+      <div
+        class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8"
+      >
+        <div class="lg:col-span-4">
+          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">
+            Reseñas de nuestros clientes
+          </h2>
+
+          <div class="mt-3 flex items-center">
+            <div>
+              <app-star-rating
+                [rating]="reviewStats.averageRating"
+              ></app-star-rating>
+              <p class="sr-only">
+                {{ reviewStats.averageRating }} out of 5 stars
+              </p>
+            </div>
+            <p class="ml-2 text-sm text-gray-900">
+              Basado en {{ reviewStats.totalReviews }} reseñas
+            </p>
+          </div>
+
+          <div class="mt-6">
+            <h3 class="sr-only">Review data</h3>
+
+            <dl class="space-y-3">
+              <div class="flex items-center text-sm">
+                <dt class="flex-1 flex items-center">
+                  <p class="w-3 font-medium text-gray-900">
+                    5<span class="sr-only"> star reviews</span>
+                  </p>
+                  <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
+                    <!-- Heroicon name: solid/star -->
+                    <svg
+                      class="flex-shrink-0 h-5 w-5 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+
+                    <div class="ml-3 relative flex-1">
+                      <div
+                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                      ></div>
+
+                      <div
+                        [style.width.%]="reviewStats.percentages[5]"
+                        class="absolute inset-y-0 bg-primary border border-primary rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </dt>
+                <dd
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                >
+                  {{ reviewStats.percentages[5] }}%
+                </dd>
+              </div>
+
+              <div class="flex items-center text-sm">
+                <dt class="flex-1 flex items-center">
+                  <p class="w-3 font-medium text-gray-900">
+                    4<span class="sr-only"> star reviews</span>
+                  </p>
+                  <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
+                    <!-- Heroicon name: solid/star -->
+                    <svg
+                      class="flex-shrink-0 h-5 w-5 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+
+                    <div class="ml-3 relative flex-1">
+                      <div
+                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                      ></div>
+
+                      <div
+                        [style.width.%]="reviewStats.percentages[4]"
+                        class="absolute inset-y-0 bg-primary border border-primary rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </dt>
+                <dd
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                >
+                  {{ reviewStats.percentages[4] }}%
+                </dd>
+              </div>
+
+              <div class="flex items-center text-sm">
+                <dt class="flex-1 flex items-center">
+                  <p class="w-3 font-medium text-gray-900">
+                    3<span class="sr-only"> star reviews</span>
+                  </p>
+                  <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
+                    <svg
+                      class="flex-shrink-0 h-5 w-5 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+
+                    <div class="ml-3 relative flex-1">
+                      <div
+                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                      ></div>
+
+                      <div
+                        [style.width.%]="reviewStats.percentages[3]"
+                        class="absolute inset-y-0 bg-primary border border-primary rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </dt>
+                <dd
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                >
+                  {{ reviewStats.percentages[3] }}%
+                </dd>
+              </div>
+
+              <div class="flex items-center text-sm">
+                <dt class="flex-1 flex items-center">
+                  <p class="w-3 font-medium text-gray-900">
+                    2<span class="sr-only"> star reviews</span>
+                  </p>
+                  <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
+                    <svg
+                      class="flex-shrink-0 h-5 w-5 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+
+                    <div class="ml-3 relative flex-1">
+                      <div
+                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                      ></div>
+
+                      <div
+                        [style.width.%]="reviewStats.percentages[2]"
+                        class="absolute inset-y-0 bg-primary border border-primary rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </dt>
+                <dd
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                >
+                  {{ reviewStats.percentages[2] }}%
+                </dd>
+              </div>
+
+              <div class="flex items-center text-sm">
+                <dt class="flex-1 flex items-center">
+                  <p class="w-3 font-medium text-gray-900">
+                    1<span class="sr-only"> star reviews</span>
+                  </p>
+                  <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
+                    <svg
+                      class="flex-shrink-0 h-5 w-5 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+
+                    <div class="ml-3 relative flex-1">
+                      <div
+                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                      ></div>
+
+                      <div
+                        [style.width.%]="reviewStats.percentages[1]"
+                        class="absolute inset-y-0 bg-primary border border-primary rounded-full"
+                      ></div>
+                    </div>
+                  </div>
+                </dt>
+                <dd
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                >
+                  {{ reviewStats.percentages[1] }}%
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="mt-1">
+            @if (isLogged && reviewPermission()?.reason === 'ALREADY_REVIEWED') {
+              <div
+                class="mt-6 inline-flex w-full bg-green-50 border border-green-200 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-green-700 sm:w-auto lg:w-full"
+                role="status"
+              >
+                <svg
+                  class="-ml-1 mr-2 h-4 w-4 text-green-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1.004 1.004 0 011.42-1.42L8.5 12.08l6.79-6.79a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Ya calificaste este producto
+              </div>
+            } @else {
+              <button
+                type="button"
+                (click)="writeReview()"
+                [disabled]="isCheckingReviewPermission || (isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED')"
+                [title]="isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED' ? reviewPermission()?.message : null"
+                class="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                @if (isCheckingReviewPermission) {
+                  <svg
+                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-900"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Verificando...
+                } @else if (isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED') {
+                  Disponible al recibir el producto
+                } @else {
+                  Escribir reseña
+                }
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="mt-4 sm:mt-16 lg:mt-0 lg:col-start-6 lg:col-span-7">
+          <h3 class="sr-only">Recent reviews</h3>
+
+          <div class="flow-root">
+            <!-- Implementación con @defer para cargar reviews cuando entren en viewport -->
+            @defer (on viewport) {
+              <app-reviews-list
+                [productId]="getProductId()"
+                (reviewsLoaded)="onReviewsLoaded($event)"
+                (reviewStats)="onReviewStatsReceived($event)"
+              >
+              </app-reviews-list>
+            } @loading {
+              <app-review-skeleton></app-review-skeleton>
+            } @placeholder {
+              <div
+                class="divide-y divide-gray-200 max-h-[34.5rem] overflow-y-scroll bg-white rounded-lg"
+              >
+                <div class="py-6 px-4 text-center text-red-500">
+                  <p class="text-sm">Cargando reseñas...</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
-
 <!-- Modal de Review -->
-<div *ngIf="isReviewModalOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-    aria-modal="true">
-    <!-- Background overlay -->
-    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-4 text-center sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeReviewModal()"></div>
-
-        <!-- Modal panel -->
-        <div
-            class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full w-full max-w-md mx-auto">
-            <form [formGroup]="reviewForm">
-                <!-- Modal header -->
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="flex items-start">
-                        <div class="w-full">
-                            <!-- Close button -->
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    Escribir reseña
-                                </h3>
-                                <button type="button"
-                                    class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150"
-                                    (click)="closeReviewModal()">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Product info -->
-                            <div class="flex items-center mb-6">
-                                <img [src]="principalImgFront" [alt]="productName" draggable="false"
-                                    class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none">
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
-                                    <p class="text-sm text-gray-500">Magrolabs</p>
-                                </div>
-                            </div>
-
-                            <!-- Rating selection -->
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-3">
-                                    Calificación *
-                                </label>
-                                <div class="flex items-center space-x-1">
-                                    <button *ngFor="let star of [1,2,3,4,5]" type="button"
-                                        class="focus:outline-none transition-colors duration-150"
-                                        (click)="setRating(star)" (mouseenter)="setHoveredRating(star)"
-                                        (mouseleave)="resetHoveredRating()">
-                                        <svg class="h-8 w-8 transition-colors duration-150"
-                                            [class.text-yellow-400]="star <= getRatingDisplay(star)"
-                                            [class.text-gray-300]="star > getRatingDisplay(star)" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div *ngIf="selectedRating === 0 && reviewForm.get('rating')?.touched"
-                                    class="mt-1 text-sm text-red-600">
-                                    Por favor selecciona una calificación
-                                </div>
-                            </div>
-
-                            <!-- Comment textarea -->
-                            <div class="mb-4">
-                                <label for="review-comment" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Tu reseña *
-                                </label>
-                                <textarea id="review-comment" formControlName="comment" rows="4"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#d7816a] focus:border-[#d7816a] sm:text-sm resize-none"
-                                    [class.border-red-500]="!isCommentValid && reviewForm.get('comment')?.touched"
-                                    placeholder="Comparte tu experiencia con este producto..."></textarea>
-
-                                <!-- Character count -->
-                                <div class="flex justify-between items-center mt-2">
-                                    <div class="text-sm"
-                                        [class.text-red-600]="remainingCharacters < 0 || (reviewForm.get('comment')?.value?.length || 0) < 10"
-                                        [class.text-gray-500]="remainingCharacters >= 0 && (reviewForm.get('comment')?.value?.length || 0) >= 10">
-                                        <span
-                                            *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10 && reviewForm.get('comment')?.touched">
-                                            Mínimo 10 caracteres ({{ 10 - (reviewForm.get('comment')?.value?.length ||
-                                            0) }} restantes)
-                                        </span>
-                                        <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) >= 10">
-                                            {{ remainingCharacters }} caracteres restantes
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Error message -->
-                                <div *ngIf="!isCommentValid && reviewForm.get('comment')?.touched"
-                                    class="mt-1 text-sm text-red-600">
-                                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) < 10">
-                                        La reseña debe tener al menos 10 caracteres
-                                    </span>
-                                    <span *ngIf="(reviewForm.get('comment')?.value?.length || 0) > 250">
-                                        La reseña no puede exceder 250 caracteres
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <div class="w-full sm:w-auto sm:ml-3">
-                        <ml-button [name]="isSubmittingReview ? 'Enviando...' : 'Enviar reseña'" [type]="'primary'"
-                            (click)="submitReview()" [isDisabled]="!isFormValid" [isProcessing]="isSubmittingReview">
-                        </ml-button>
-                    </div>
-                    <div class="mt-3 w-full sm:mt-0 sm:w-auto">
-                        <button type="button"
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                            [disabled]="isSubmittingReview" (click)="closeReviewModal()">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </form>
+@if (isReviewModalOpen) {
+  <ml-modal [closable]="true" (closeAction)="closeReviewModal()">
+    <div mlModalHeader>
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+        Escribir reseña
+      </h3>
+      <div class="flex items-center mb-4">
+        <img
+          [src]="principalImgFront"
+          [alt]="productName"
+          draggable="false"
+          class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none"
+        />
+        <div class="ml-3">
+          <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
+          <p class="text-sm text-gray-500">Magrolabs</p>
         </div>
+      </div>
     </div>
-</div>
+
+    <form [formGroup]="reviewForm">
+      <!-- Rating selection -->
+      <div class="mb-6">
+        <label for="calification" class="block text-sm font-medium text-gray-700 mb-3"
+          >Calificación *</label
+        >
+        <div class="flex items-center space-x-1">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+            <button
+              type="button"
+              class="focus:outline-none transition-colors duration-150"
+              (click)="setRating(star)"
+              (mouseenter)="setHoveredRating(star)"
+              (mouseleave)="resetHoveredRating()"
+            >
+              <svg
+                class="h-8 w-8 transition-colors duration-150"
+                [class.text-yellow-400]="star <= getRatingDisplay(star)"
+                [class.text-gray-300]="star > getRatingDisplay(star)"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                />
+              </svg>
+            </button>
+          }
+        </div>
+        @if (selectedRating === 0 && reviewForm.get("rating")?.touched) {
+          <div class="mt-1 text-sm text-red-600">
+            Por favor selecciona una calificación
+          </div>
+        }
+      </div>
+
+      <!-- Comment textarea -->
+      <div class="mb-4">
+        <label
+          for="review-comment"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >Tu reseña *</label
+        >
+        <textarea
+          id="review-comment"
+          formControlName="comment"
+          rows="4"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
+          [class.border-red-500]="
+            !isCommentValid && reviewForm.get('comment')?.touched
+          "
+          placeholder="Comparte tu experiencia con este producto..."
+        ></textarea>
+
+        <div class="flex justify-between items-center mt-2">
+          <div
+            class="text-sm"
+            [class.text-red-600]="
+              remainingCharacters < 0 ||
+              (reviewForm.get('comment')?.value?.length || 0) < 10
+            "
+            [class.text-gray-500]="
+              remainingCharacters >= 0 &&
+              (reviewForm.get('comment')?.value?.length || 0) >= 10
+            "
+          >
+            @if (
+              (reviewForm.get("comment")?.value?.length || 0) < 10 &&
+              reviewForm.get("comment")?.touched
+            ) {
+              <span>
+                Mínimo 10 caracteres ({{
+                  10 - (reviewForm.get("comment")?.value?.length || 0)
+                }}
+                restantes)
+              </span>
+            }
+            @if ((reviewForm.get("comment")?.value?.length || 0) >= 10) {
+              <span> {{ remainingCharacters }} caracteres restantes </span>
+            }
+          </div>
+        </div>
+
+        @if (!isCommentValid && reviewForm.get("comment")?.touched) {
+          <div class="mt-1 text-sm text-red-600">
+            @if ((reviewForm.get("comment")?.value?.length || 0) < 10) {
+              <span> La reseña debe tener al menos 10 caracteres </span>
+            }
+            @if ((reviewForm.get("comment")?.value?.length || 0) > 250) {
+              <span> La reseña no puede exceder 250 caracteres </span>
+            }
+          </div>
+        }
+      </div>
+    </form>
+
+    <div mlModalFooter class="flex flex-col sm:flex-row-reverse gap-3">
+      <ml-button
+        [name]="isSubmittingReview ? 'Enviando...' : 'Enviar reseña'"
+        (click)="submitReview()"
+        [isDisabled]="!isFormValid"
+        [isProcessing]="isSubmittingReview"
+      >
+      </ml-button>
+      <ml-button
+        name="Cancelar"
+        (click)="closeReviewModal()"
+        type="secondary-outlined"
+        [isDisabled]="isSubmittingReview"
+      >
+      </ml-button>
+    </div>
+  </ml-modal>
+}

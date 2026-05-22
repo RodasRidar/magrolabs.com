@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/env';
-import { 
-  CreateReviewRequest, 
-  Review, 
-  ReviewsResponse, 
-  ApproveReviewRequest 
+import {
+  CreateReviewRequest,
+  Review,
+  ReviewsResponse,
+  ApproveReviewRequest,
+  CanReviewResponse
 } from '../interfaces/review.interfaces';
 
 @Injectable({
@@ -29,7 +30,8 @@ export class ReviewService {
     let httpParams = new HttpParams();
     
     if (params?.product_id) {
-      httpParams = httpParams.set('product_id', params.product_id);
+      // Backend espera `product` (no `product_id`). Ver review.controller.getAllReviews.
+      httpParams = httpParams.set('product', params.product_id);
     }
     if (params?.is_approved !== undefined) {
       httpParams = httpParams.set('is_approved', params.is_approved.toString());
@@ -106,11 +108,9 @@ export class ReviewService {
    * Verificar si el usuario puede escribir una reseña para un producto
    * GET /api/v1/reviews/can-review/{product_id}
    */
-  canUserReviewProduct(productId: string): Observable<{ can_review: boolean; message?: string }> {
-    return this.http.get<{ status: string, data: { can_review: boolean; message?: string } }>(`${this.baseUrl}/can-review/${productId}`).pipe(
-      map(response => {
-        return response.data;
-      })
-    );
+  canUserReviewProduct(productId: string): Observable<CanReviewResponse> {
+    return this.http
+      .get<{ status: string; data: CanReviewResponse }>(`${this.baseUrl}/can-review/${productId}`)
+      .pipe(map(response => response.data));
   }
 } 

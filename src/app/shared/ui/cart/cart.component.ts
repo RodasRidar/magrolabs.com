@@ -1,8 +1,8 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from '../button/button.component';
-import { Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { ProductQuantityComponent } from '../product-quantity/product-quantity.component';
 import { DiscountPipe } from '../../pipes/discount.pipe';
@@ -10,28 +10,27 @@ import { ShoppingCart, ItemShoppingCart } from '../../models/item-cart.model';
 import { ShoppingCartService } from '../../services/cart-service.service';
 
 @Component({
-  selector: 'app-cart',
-  standalone: true,
-  templateUrl: './cart.component.html',
-  imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
-  animations: [
-    trigger('fadeInOut', [
-      state('inactive', style({
-        opacity: 0,
-        transform: 'translateX(100%)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'translateX(0)'
-      })),
-      transition('inactive => active', [
-        animate('200ms ease-in-out')
-      ]),
-      transition('active => inactive', [
-        animate('300ms ease-in-out')
-      ])
-    ])
-  ]
+    selector: 'app-cart',
+    templateUrl: './cart.component.html',
+    imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
+    animations: [
+        trigger('fadeInOut', [
+            state('inactive', style({
+                opacity: 0,
+                transform: 'translateX(100%)'
+            })),
+            state('active', style({
+                opacity: 1,
+                transform: 'translateX(0)'
+            })),
+            transition('inactive => active', [
+                animate('200ms ease-in-out')
+            ]),
+            transition('active => inactive', [
+                animate('300ms ease-in-out')
+            ])
+        ])
+    ]
 })
 export class CartComponent {
   readonly MAX_QUANTITY = 20;
@@ -39,26 +38,30 @@ export class CartComponent {
   state = 'active';
   businessColor = 'orange';
   shoppingCart: ShoppingCart = <ShoppingCart>{};
-  private configSubscription: Subscription | undefined;
   private _shoppingCartService = inject(ShoppingCartService);
   private _router = inject(Router);
-  private PLATAFORMID = inject(PLATFORM_ID)
+  private PLATAFORMID = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
   isProductPage = false;
 
   ngOnInit() {
-    this._shoppingCartService.cartState$.subscribe(state => {
-      state ? this.state = 'active' : this.state = 'inactive';
-    });
+    this._shoppingCartService.cartState$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(state => {
+        state ? this.state = 'active' : this.state = 'inactive';
+      });
 
-    this._shoppingCartService.shoppingCart$.subscribe(shoppingCart => {
-      if (shoppingCart && shoppingCart.items.length > 0) {
-        this.shoppingCart = shoppingCart;
-        this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
-        this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
-        this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
-      }
-    })
+    this._shoppingCartService.shoppingCart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(shoppingCart => {
+        if (shoppingCart && shoppingCart.items.length > 0) {
+          this.shoppingCart = shoppingCart;
+          this.shoppingCart.totalItems = this._shoppingCartService.getTotalItemsByShoppingCart(this.shoppingCart);
+          this.shoppingCart.total = this._shoppingCartService.getTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.subTotal = this._shoppingCartService.getSubTotalByShoppingCart(this.shoppingCart);
+          this.shoppingCart.totalDiscount = this._shoppingCartService.getTotalDiscountByShoppingCart(this.shoppingCart);
+        }
+      });
 
     if(isPlatformBrowser(this.PLATAFORMID)) {
       if (window.location.pathname == '/productos') {
@@ -69,17 +72,19 @@ export class CartComponent {
       }
     }
 
-    this._router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
-        if (currentUrl === 'productos' || window.location.pathname == 'productos') {
-          this.isProductPage = true;
+    this._router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          const currentUrl = event.url.split('/').pop()?.split('?').shift() || '';
+          if (currentUrl === 'productos' || window.location.pathname == 'productos') {
+            this.isProductPage = true;
+          }
+          else {
+            this.isProductPage = false;
+          }
         }
-        else {
-          this.isProductPage = false;
-        }
-      }
-    });
+      });
   }
 
   toggle() {
@@ -102,7 +107,7 @@ export class CartComponent {
       purple: 'text-purple-500',
       pink: 'text-pink-500',
       sky: 'text-sky-500',
-      orange: 'text-[#d7816a]',
+      orange: 'text-primary-hover',
       teal: 'text-teal-500',
       lime: 'text-lime-500',
       fuchsia: 'text-fuchsia-500',
@@ -129,12 +134,6 @@ export class CartComponent {
       black: 'hover:text-grey-700',
     };
     return colorsList[this.businessColor];
-  }
-
-  ngOnDestroy(): void {
-    if (this.configSubscription) {
-      this.configSubscription.unsubscribe();
-    }
   }
 
   quantityValue(value: number, product: ItemShoppingCart) {

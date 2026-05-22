@@ -1,16 +1,18 @@
-import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal, computed, PLATFORM_ID, AfterViewInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, isPlatformServer } from '@angular/common';
 import { AtPeriodEnd, SubscriptionService } from '../../../shared/services/subscription.service';
-import { Subscription, SubscriptionStatusEnum, SubscriptionPlan, CreateSubscriptionRequest } from '../../../shared/interfaces/subscription.interface';
+import { Subscription, SubscriptionStatusEnum, SubscriptionPlan } from '../../../shared/interfaces/subscription.interface';
 import { FlowService } from '../../../shared/services/flow.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { switchMap, catchError, of, takeUntil, map, finalize, EMPTY, tap, Observable, forkJoin } from 'rxjs';
+import { switchMap, catchError, of, map, finalize, EMPTY, tap, Observable, forkJoin, filter, take } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FlowCharge, FlowChargeStatus, FlowChargesResponse, RegisterCardResponse, FlowCreateSubscriptionRequest } from '../../../shared/models/flow.model';
 import { FlowWidgetAddCardComponent } from '../../../shared/ui/flow-widget-add-card/flow-widget-add-card.component';
+import { CardComponent } from '../../../shared/ui/card/card.component';
+import { InlineModalComponent } from '../../../shared/ui/inline-modal/inline-modal.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CreditTransactionService, TransactionType } from '../../../shared/services/credit-transactions.service';
-import { Subject } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/env';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
@@ -20,21 +22,28 @@ import { UserService } from '../../../shared/services/user.service';
 import { CreateCustomerRequest } from '../../../shared/models/flow.model';
 import { OrderService } from '../../../shared/services/order.service';
 import { SubscriptionOrderService } from '../../../shared/services/subscription-order.service';
-import { CreateOrderRequest, OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
-import { CreateSubscriptionOrderRequest } from '../../../shared/interfaces/subscription-order.interface';
+import { OrderStatus, PaymentMethod } from '../../../shared/interfaces/order.interfaces';
+import { CheckoutSubscriptionService } from '../../../shared/services/checkout-subscription.service';
+import { CheckoutSubscriptionRequest, ValidateCardReason } from '../../../shared/interfaces/checkout-subscription.interfaces';
+import { ProductService } from '../../../shared/services/product.service';
+import { ProductResponse } from '../../../shared/interfaces/product.interfaces';
+import { CREATINA_PRODUCT_SLUGS } from '../../../shared/constants/product-slugs.constants';
 import { CookieService } from 'ngx-cookie-service';
 import { LoyaltyService } from '../../../shared/services/loyalty.service';
 import { LoyaltyTierImageRoutes } from '../../../shared/interfaces/loyalty.interfaces';
 import { SeoService } from '../../../shared/services/seo.service';
+import { AlertComponent } from '../../../shared/ui/alert/alert.component';
+import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
+import { getSubscriptionStatusBadge, getChargeStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
+import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
 
 @Component({
-  selector: 'app-suscripcion',
-  standalone: true,
-  imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent],
-  templateUrl: './suscripcion.component.html',
-  styleUrl: './suscripcion.component.css'
+    selector: 'app-suscripcion',
+    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, CardComponent, InlineModalComponent],
+    templateUrl: './suscripcion.component.html',
+    styleUrl: './suscripcion.component.css'
 })
-export class SuscripcionComponent implements OnInit {
+export class SuscripcionComponent implements OnInit, AfterViewInit {
   // Signals para controlar el flujo de suscripción
   showPaymentVerification = signal<boolean>(false);
   isProcessingFlow = signal<boolean>(false);
@@ -45,11 +54,31 @@ export class SuscripcionComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private _toastService = inject(ToastService);
   private _creditTransactionService = inject(CreditTransactionService);
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
   private userService = inject(UserService);
   private reviewService = inject(ReviewService);
   private orderService = inject(OrderService);
   private subscriptionOrderService = inject(SubscriptionOrderService);
+  private _checkoutSubscriptionService = inject(CheckoutSubscriptionService);
+  private _productService = inject(ProductService);
+
+  /**
+   * Producto canónico de suscripción mensual (Creatina 250gr) resuelto
+   * desde BD vía slug. Reemplaza el UUID hardcodeado anterior
+   * (`00000010-50eb-4ac3-aa94-1b64fbf32b9c`). `toSignal()` hace
+   * subscribe + auto-cleanup. La UI espera a que esté cargado antes de
+   * habilitar el botón "Suscríbete".
+   */
+  readonly subscriptionProduct = toSignal(
+    this._productService.getBySlug(CREATINA_PRODUCT_SLUGS.CREATINE_MONTHLY_SUBSCRIPTION).pipe(
+      map(r => r.data.product),
+      catchError(err => {
+        console.error('No se pudo cargar el producto de suscripción', err);
+        return of<ProductResponse | null>(null);
+      }),
+    ),
+    { initialValue: null as ProductResponse | null },
+  );
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private cookieService = inject(CookieService);
@@ -85,8 +114,43 @@ export class SuscripcionComponent implements OnInit {
   isLoadingCharges = signal<boolean>(false);
   showChargesHistory = signal<boolean>(false);
   chargeStatusEnum = FlowChargeStatus;
+
+  // Paginación y ordenamiento del historial de pagos
+  chargesPage = signal<number>(1);
+  readonly chargesPageSize = 5;
+  chargesSortCol = signal<string>('requestDate');
+  chargesSortDir = signal<'asc' | 'desc'>('desc');
+  sortedCharges = computed(() => {
+    const col = this.chargesSortCol();
+    const dir = this.chargesSortDir();
+    return [...this.charges()].sort((a, b) => {
+      let aVal: any, bVal: any;
+      switch (col) {
+        case 'subject': aVal = a.subject; bVal = b.subject; break;
+        case 'amount': aVal = parseFloat(a.amount); bVal = parseFloat(b.amount); break;
+        case 'status': aVal = a.status; bVal = b.status; break;
+        default: aVal = a.requestDate; bVal = b.requestDate;
+      }
+      if (aVal < bVal) return dir === 'asc' ? -1 : 1;
+      if (aVal > bVal) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  });
+  pagedCharges = computed(() => {
+    const page = this.chargesPage();
+    const size = this.chargesPageSize;
+    return this.sortedCharges().slice((page - 1) * size, page * size);
+  });
+  chargesTotalPages = computed(() => Math.ceil(this.sortedCharges().length / this.chargesPageSize));
+  chargePages = computed(() => Array.from({ length: this.chargesTotalPages() }, (_, i) => i + 1));
+  chargesPageInfo = computed(() => {
+    const start = (this.chargesPage() - 1) * this.chargesPageSize + 1;
+    const end = Math.min(this.chargesPage() * this.chargesPageSize, this.sortedCharges().length);
+    return `${start}–${end} de ${this.sortedCharges().length}`;
+  });
+
   isCardAdded = false;
-  labelCardRegisted = '**** **** **** ';
+  labelCardRegisted = '**** ';
 
   // Variables para el modal de confirmación
   showReactivationModal = signal<boolean>(false);
@@ -103,8 +167,17 @@ export class SuscripcionComponent implements OnInit {
   pauseStartDate = signal<string>('');
   pauseEndDateString = signal<string>('');
   nextPaymentDateString = signal<string>('');
+  // True cuando el modal de pausa se abrió directamente desde el botón
+  // "Pausar suscripción" (no como oferta dentro del flujo de cancelación).
+  // Sirve para ocultar el botón "Continuar con la cancelación" en ese caso.
+  directPauseFlow = signal<boolean>(false);
   pauseEndDate = signal<Date>(new Date());
-  nextPaymentDate = signal<Date>(new Date());
+  // Null = la sub aún no tiene next_billing_date computado (por ejemplo,
+  // recién creada — el job de Flow asignará la fecha en el próximo ciclo).
+  // Importante: NO usar `new Date()` como default porque la UI mostraría
+  // una fecha falsa, ni `new Date(undefined)` porque caería al epoch
+  // (31/12/1969 en UTC-5).
+  nextPaymentDate = signal<Date | null>(null);
   // Variables para modal de confirmación final de cancelación
   showFinalCancelModal = signal<boolean>(false);
 
@@ -158,35 +231,28 @@ export class SuscripcionComponent implements OnInit {
   ngOnInit(): void {
     // Configuración SEO para página de suscripción de usuario
     this.configureSEO();
-    
+
     this.loadSubscription();
     this.loadUserCredits();
     this.loadUserTier();
     this.loadReviewsOnServer();
     this.updateSignalsFromLocalStorage();
     
-    this.authService.getCurrentUserObservable()?.subscribe(user => {
-      if (user?.flowCustomerId) {
-        // Si el usuario ya tiene flowCustomerId, generar token y mostrar directamente la validación de tarjeta
-        this.flowService.registerCard(user.flowCustomerId).subscribe(response => {
-          //console.log(response);
-          this.flowToken = (response as RegisterCardResponse).token;
-          this.showPaymentVerification.set(true);
-          //despues de 2 segundos redirigir a suscription [fragment]="'reviews'" si es que el usuario no tiene suscripcion
-          /*if (!this.subscription()) {
-            setTimeout(() => {
-              this.router.navigate(['/cuenta/suscripcion'], { fragment: 'verificacion' });
-            }, 500);
-          }*/
-        });
-      }
+    this.authService.getCurrentUserObservable()
+      ?.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        // NOTA: ya no pre-abrimos el modal de verificación de tarjeta acá.
+        // El usuario lo abre al hacer click en "Continuar" → nextStep() →
+        // registerUserInFlowAndGenerateToken() pide el token y abre el modal.
 
-      // Guardar nombre del usuario
-      if (user) {
-        const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
-        this.userName.set(nombre);
-      }
-    });
+        // Guardar nombre del usuario
+        if (user) {
+          const nombre = this.authService.getCurrentUser()?.first_name.split(' ')[0] || 'Usuario';
+          this.userName.set(nombre);
+          this.hydrateEnrolledCard();
+
+        }
+      });
 
     this.isPaymentVerified.set(localStorage.getItem('isPaymentVerified') === 'true');
     if (this.isPaymentVerified()) {
@@ -207,7 +273,7 @@ export class SuscripcionComponent implements OnInit {
    */
   private configureSEO(): void {
     // Establecer el título de la página
-    this._seoService.setTitle('Mi Suscripción | Magrolabs');
+    this._seoService.setTitle('Suscripción | Magrolabs');
     
     // Configurar para que no sea indexada por robots
     this._seoService.setIndexFollow(false);
@@ -254,9 +320,19 @@ export class SuscripcionComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+
+
+  /**
+   * Cierra el modal de verificación de pago (botón X o backdrop).
+   * Limpia el token de Flow para que el siguiente "Continuar" pida uno
+   * fresco. NO toca `isPaymentVerified` si la tarjeta ya quedó enrolada
+   * exitosamente — el cliente puede reabrir y seguir.
+   */
+  closeSubscriptionModal(): void {
+    this.showPaymentVerification.set(false);
+    if (!this.isPaymentVerified()) {
+      this.flowToken = '';
+    }
   }
 
   nextStep() {
@@ -267,13 +343,15 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    if (!this.showPaymentVerification()) {
-      // Primera vez - registrar en Flow y mostrar verificación
-      this.registerUserInFlowAndGenerateToken();
-    } else {
-      // Ya se mostró la verificación, proceder con la suscripción
+    // Si ya tiene tarjeta verificada (incluso si cerró el modal antes de
+    // confirmar), saltamos directo a crear la suscripción.
+    if (this.isPaymentVerified()) {
       this.proceedWithSubscription();
+      return;
     }
+
+    // Sin tarjeta verificada aún → abrir modal de registro/validación.
+    this.registerUserInFlowAndGenerateToken();
   }
 
   loadUserCredits(): void {
@@ -282,7 +360,7 @@ export class SuscripcionComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user && user.id) {
       this._creditTransactionService.getTotalCredits(user.id)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (response) => {
             if (response && response.data && response.data.totalCredits) {
@@ -306,7 +384,7 @@ export class SuscripcionComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user && user.id) {
       this._loyaltyService.getUserTierInfo(user.id)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (tierInfo) => {
             this.tierImageRoutes = tierInfo.imageRoutes;
@@ -327,31 +405,117 @@ export class SuscripcionComponent implements OnInit {
   }
 
   cardAddedSuccessfully($event: boolean) {
-    if ($event) {
-      setTimeout(() => {
-        this.isCardAdded = true;
-        this.showPaymentVerification.set(false);
-        localStorage.removeItem('last4CardDigits');
-        localStorage.removeItem('creditCardType');
-        localStorage.removeItem('isPaymentVerified');
-      }, 2000);
-      this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '')
-      this.cardType.set(localStorage.getItem('creditCardType') || '')
-      localStorage.setItem('isPaymentVerified', 'true');
-
-      const card = this.cardLastFour() + ' (' + this.cardType() + ')';
-      this.labelCardRegisted += card;
-      this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);
-      this.isPaymentVerified.set(true);
-
-      if(this.isPorActivar()) {
-        this.cookieService.set('isCardModifiedToReprocessPayment', 'true', 0.25, '/');
-        this.isCardModifiedToReprocessPayment.set(true);
-      }
-    }
-    else {
+    if (!$event) {
       this._toastService.error('Ups!', 'Error al registrar la tarjeta. Por favor, intenta nuevamente.');
+      return;
     }
+
+    this.cardLastFour.set(localStorage.getItem('last4CardDigits') || '');
+    this.cardType.set(localStorage.getItem('creditCardType') || '');
+    const card = this.cardLastFour() + ' (' + this.cardType() + ')';
+    this.labelCardRegisted += card;
+
+    // Validar que la tarjeta sea de CRÉDITO (no débito): Flow no soporta
+    // cobro recurrente confiable de débito. Si pasa débito, el primer
+    // cargo podría completarse pero el cobro mensual fallará. El service
+    // hace 3 reintentos con backoff antes de propagar el error.
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if (!customerId) {
+      // Edge case: tarjeta registrada sin customerId — best-effort.
+      this.markCardVerified();
+      return;
+    }
+
+    this._checkoutSubscriptionService.validateCard(customerId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          if (response.data.allowed) {
+            this.markCardVerified();
+            return;
+          }
+          this.handleCardNotAllowed(response.data.reason);
+        },
+        error: err => {
+          // Tras 3 reintentos del service: best-effort, permitimos seguir.
+          console.warn('validateCard falló tras 3 reintentos — permitiendo continuar', err);
+          this.markCardVerified();
+        },
+      });
+  }
+
+  private markCardVerified(): void {
+    this._toastService.success('Tarjeta agregada correctamente!', this.labelCardRegisted);
+    this.isPaymentVerified.set(true);
+    this.isCardAdded = true;
+
+    if (this.isPorActivar()) {
+      this.cookieService.set('isCardModifiedToReprocessPayment', 'true', 0.25, '/');
+      this.isCardModifiedToReprocessPayment.set(true);
+    }
+
+    // Limpiamos el localStorage legacy (eran flags del panel inline previo).
+    // El modal queda abierto mostrando el badge "Tarjeta verificada" + el
+    // botón "Suscríbete →" hasta que el usuario confirme.
+    localStorage.removeItem('last4CardDigits');
+    localStorage.removeItem('creditCardType');
+    localStorage.removeItem('isPaymentVerified');
+  }
+
+  /**
+   * Tarjeta no permitida (típicamente débito). Mostramos mensaje según
+   * razón y reseteamos el widget para que el cliente registre otra.
+   */
+  private handleCardNotAllowed(reason: ValidateCardReason | undefined): void {
+    switch (reason) {
+      case 'DEBIT_NOT_ALLOWED':
+        this._toastService.error(
+          'Tarjeta de débito no aceptada',
+          'Solo aceptamos tarjetas de crédito para suscripciones. Por favor, registra una tarjeta de crédito.',
+        );
+        break;
+      case 'NO_CARD':
+        this._toastService.error(
+          'No detectamos tu tarjeta',
+          'Hubo un problema al registrar tu tarjeta. Intenta nuevamente.',
+        );
+        break;
+      default:
+        this._toastService.error(
+          'Tarjeta no soportada',
+          'Tu tarjeta no es compatible con suscripciones. Intenta con una tarjeta de crédito.',
+        );
+        break;
+    }
+    this.resetCardWidget();
+  }
+
+  /**
+   * Vuelve a pedir un token de Flow para registrar otra tarjeta sin
+   * recargar la página.
+   */
+  private resetCardWidget(): void {
+    this.isPaymentVerified.set(false);
+    this.labelCardRegisted = '**** ';
+    this.flowToken = '';
+
+    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
+    if (!customerId) return;
+
+    this.flowService.registerCard(customerId)
+      .pipe(
+        catchError(err => {
+          console.error('Error generando nuevo token de Flow:', err);
+          this._toastService.error('Error', 'No se pudo preparar el formulario. Intenta nuevamente.');
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (response: RegisterCardResponse) => {
+          this.flowToken = response.token;
+        },
+      });
   }
 
   loadSubscription(): void {
@@ -359,11 +523,12 @@ export class SuscripcionComponent implements OnInit {
 
     this.subscriptionService.getMySubscriptions(1, 1)
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(response => {
           if (response.data.subscriptions && response.data.subscriptions.length > 0) {
             console.log('response.data.subscriptions[0]', response.data.subscriptions[0]);
-            this.nextPaymentDate.set(new Date(response.data.subscriptions[0].next_billing_date!)); 
+            const nextBilling = response.data.subscriptions[0].next_billing_date;
+            this.nextPaymentDate.set(nextBilling ? new Date(nextBilling) : null); 
             this.subscription.set(response.data.subscriptions[0]);
             this.loadSubscriptionPlan(response.data.subscriptions[0].subscription_plan_id);
             this.loadPaymentMethod();
@@ -389,7 +554,8 @@ export class SuscripcionComponent implements OnInit {
         }),
         finalize(() => {
           this.isLoading.set(false);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (combinedResponse) => {
@@ -407,6 +573,7 @@ export class SuscripcionComponent implements OnInit {
 
   loadSubscriptionPlan(planId: string): void {
     this.subscriptionService.getSubscriptionPlanById(planId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           //console.log('subscriptionPlan', response);
@@ -434,7 +601,8 @@ export class SuscripcionComponent implements OnInit {
         catchError(error => {
           console.error('Error obteniendo información de pago:', error);
           return of(null);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (customerResponse) => {
@@ -444,6 +612,82 @@ export class SuscripcionComponent implements OnInit {
           }
         }
       });
+  }
+
+  /**
+   * Hidrata el estado de tarjeta enrolada cuando el usuario llega a la
+   * página sin haber pasado por el widget en esta sesión.
+   *
+   * Caso de uso: el usuario agregó tarjeta antes (en este flujo o en
+   * verification-payment de signup), cerró/abandonó el modal sin
+   * confirmar, y luego volvió. Si Flow tiene tarjeta enrolada para el
+   * customerId, marcamos `isPaymentVerified=true` para que la vista
+   * principal muestre "Suscribirse →" en vez de "Continuar →".
+   *
+   * IMPORTANTE: usamos `currentUser$` (BehaviorSubject real) en vez de
+   * `getCurrentUserObservable()` — este último retorna `of(snapshot)`
+   * que emite una sola vez y completa. En navegación con router, el
+   * componente puede instanciarse antes de que `loadUserFromStorage`
+   * (`afterNextRender`) o el GET `users/profile` poblen `flowCustomerId`.
+   * El BehaviorSubject emite cada update; `filter+take(1)` espera al
+   * primer emit con `flowCustomerId` y ahí dispara `getCustomer`.
+   *
+   * Idempotente: si ya está verificado, retorna sin tocar nada.
+   */
+  private hydrateEnrolledCard(): void {
+    this.authService.currentUser$
+      .pipe(
+        filter(user => !!user),
+        take(1),
+        // Resolver flowCustomerId. Tras auto-login del checkout
+        // (setSessionFromCheckout) el user en cookies/BehaviorSubject
+        // NO incluye `flowCustomerId` — el caller solo pasa campos básicos.
+        // La fuente de verdad es GET /users/profile.
+        switchMap(user => {
+          if (user!.flowCustomerId) return of(user!.flowCustomerId);
+          return this.userService.getCurrentUser().pipe(
+            map(profile => profile?.flowCustomerId ?? null),
+            tap(customerId => {
+              // Cachear el id en auth para próximas lecturas y otros componentes.
+              if (customerId) this.authService.updateFlowCustomerId(customerId);
+            }),
+            catchError(err => {
+              console.warn('No se pudo obtener perfil para resolver flowCustomerId', err);
+              return of(null);
+            }),
+          );
+        }),
+        switchMap(customerId => {
+          if (!customerId) return of(null);
+          return this.flowService.getCustomer(customerId).pipe(
+            catchError(err => {
+              console.warn('No se pudo hidratar tarjeta enrolada — best-effort', err);
+              return of(null);
+            }),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(customer => {
+        if (this.isPaymentVerified()) return; // alguien ya la marcó (ej. flujo activo).
+        if (!customer?.last4CardDigits || !customer?.creditCardType) return;
+
+        this.cardLastFour.set(customer.last4CardDigits);
+        this.cardType.set(customer.creditCardType);
+        this.labelCardRegisted = `**** **** **** ${customer.last4CardDigits} (${customer.creditCardType})`;
+        this.isCardAdded = true;
+        this.isPaymentVerified.set(true);
+      });
+  }
+
+  sortChargesBy(col: string): void {
+    if (this.chargesSortCol() === col) {
+      this.chargesSortDir.update(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.chargesSortCol.set(col);
+      this.chargesSortDir.set('asc');
+    }
+    this.chargesPage.set(1);
   }
 
   toggleChargesHistory(): void {
@@ -467,7 +711,8 @@ export class SuscripcionComponent implements OnInit {
         catchError(error => {
           console.error('Error obteniendo historial de pagos:', error);
           return of(null);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: FlowChargesResponse | null) => {
@@ -498,39 +743,37 @@ export class SuscripcionComponent implements OnInit {
   }
 
   /**
-   * Devuelve las clases CSS para el estado del cobro
+   * Parsea el subject de un cobro en sus partes legibles.
+   * Formato esperado: "{producto} - {plan} S/{precio} - período: YYYY-MM-DD / YYYY-MM-DD"
    */
-  getChargeStatusClass(status: number): string {
-    switch (status) {
-      case FlowChargeStatus.PENDING:
-        return 'bg-yellow-100 text-yellow-800';
-      case FlowChargeStatus.COMPLETED:
-        return 'bg-green-100 text-green-800';
-      case FlowChargeStatus.REJECTED:
-        return 'bg-red-100 text-red-800';
-      case FlowChargeStatus.CANCELLED:
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
+  parseChargeSubject(subject: string): { product: string; plan: string; period: string } {
+    const periodoMatch = subject.match(/- período:\s*(\d{4}-\d{2}-\d{2})\s*\/\s*(\d{4}-\d{2}-\d{2})/i);
+    const withoutPeriodo = periodoMatch
+      ? subject.slice(0, subject.toLowerCase().indexOf(' - período:')).trim()
+      : subject;
+    const dashIdx = withoutPeriodo.indexOf(' - ');
+    const product = dashIdx !== -1 ? withoutPeriodo.slice(0, dashIdx).trim() : withoutPeriodo;
+    const planRaw = dashIdx !== -1 ? withoutPeriodo.slice(dashIdx + 3).trim() : '';
 
-  /**
-   * Devuelve el texto descriptivo del estado del cobro
-   */
-  getChargeStatusText(status: number): string {
-    switch (status) {
-      case FlowChargeStatus.PENDING:
-        return 'Pendiente';
-      case FlowChargeStatus.COMPLETED:
-        return 'Completado';
-      case FlowChargeStatus.REJECTED:
-        return 'Rechazado';
-      case FlowChargeStatus.CANCELLED:
-        return 'Cancelado';
-      default:
-        return 'Desconocido';
+    // Caso especial: producto de prueba 100g — subject sin precio ni período
+    // Ej: "Creatina 100% Monohidratada Magrolabs 100g - Magrolabs"
+    if (!periodoMatch && planRaw === 'Magrolabs') {
+      return {
+        product,
+        plan: '-',
+        period: `Prueba ${this.ENV.diasNormalesDePruebaOperiodoDeReflexion} días`,
+      };
     }
+
+    let period = '';
+    if (periodoMatch) {
+      const fmt = (d: string) => {
+        const [y, m, day] = d.split('-');
+        return `${day}/${m}/${y}`;
+      };
+      period = `${fmt(periodoMatch[1])} - ${fmt(periodoMatch[2])}`;
+    }
+    return { product, plan: planRaw, period };
   }
 
   /**
@@ -539,18 +782,39 @@ export class SuscripcionComponent implements OnInit {
   formatChargeDate(dateString: string): string {
     if (!dateString) return 'No disponible';
 
-    const parts = dateString.split(' ');
-    if (parts.length !== 2) return dateString;
+    const date = new Date(dateString.replace(' ', 'T'));
+    if (isNaN(date.getTime())) return dateString;
 
-    const dateParts = parts[0].split('-');
-    if (dateParts.length !== 3) return dateString;
+    date.setHours(date.getHours() - 1);
 
-    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]} ${parts[1]}`;
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}h`;
   }
 
   cancelSubscription(): void {
     // Mostrar el modal de cancelación en lugar de la confirmación directa
+    this.directPauseFlow.set(false);
+    this.cancellationReason.set('');
     this.showCancellationModal.set(true);
+  }
+
+  /**
+   * Abre directamente el modal de pausa (sin pasar por el modal de razones de
+   * cancelación). Se invoca desde el botón "Pausar suscripción" en la página.
+   * El modal pedirá razón + duración antes de enviar al backend.
+   */
+  openPauseModal(): void {
+    if (!this.subscription()) return;
+    this.directPauseFlow.set(true);
+    this.cancellationReason.set('');
+    this.pauseDurationMonths.set(1);
+    this.calculatePauseDates();
+    this.showPauseModal.set(true);
   }
 
   confirmCancellation(): void {
@@ -558,7 +822,7 @@ export class SuscripcionComponent implements OnInit {
 
     // Ocultar modal de cancelación
     this.showCancellationModal.set(false);
-    
+
     // Si la suscripción está en período de prueba, ir directamente al modal de créditos
     if (this.subscription()!.status === SubscriptionStatusEnum.TRIAL) {
       this.calculateCancellationDates();
@@ -566,14 +830,12 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    //TODO: Corregir logica de reactivacion tras pausa, de momento no se podra pausar
-     this.calculateCancellationDates();
-      this.showFinalCancelModal.set(true);
-      return;
-
-    // Para suscripciones activas, mostrar el modal de pausa
-    //this.calculatePauseDates();
-    //this.showPauseModal.set(true);
+    // Para suscripciones activas, mostrar el modal de pausa como alternativa
+    // a la cancelación. directPauseFlow=false → el modal mostrará el botón
+    // "Continuar con la cancelación".
+    this.directPauseFlow.set(false);
+    this.calculatePauseDates();
+    this.showPauseModal.set(true);
   }
 
   calculatePauseDates(): void {
@@ -651,84 +913,35 @@ export class SuscripcionComponent implements OnInit {
   }
 
   pauseSubscription(): void {
-    if (!this.subscription()) return;
+    if (!this.subscription() || !this.cancellationReason()) return;
 
     this.isLoading.set(true);
     this.showPauseModal.set(false);
 
-    // Añadir información adicional a la solicitud de pausa
-    const pauseInfo = {
-      reason: this.cancellationReason(),
-      durationMonths: this.pauseDurationMonths(),
-      startDate: this.pauseStartDate(),
-      endDate: this.pauseEndDate()
-    };
-
-    // Determinar si la pausa es inmediata o al final del período
-    const now = new Date();
-    const gracePeriodDays = environment.diasAntesDeSiguienteCobroSubscripcion;
-    const subscriptionStartDate = new Date(this.subscription()!.start_date);
-    const userBillingDay = subscriptionStartDate.getDate();
-
-    let nextBillingMonth = now.getMonth();
-    let nextBillingYear = now.getFullYear();
-
-    if (now.getDate() > userBillingDay) {
-      nextBillingMonth++;
-      if (nextBillingMonth > 11) {
-        nextBillingMonth = 0;
-        nextBillingYear++;
-      }
-    }
-
-    const nextBillingDate = new Date(nextBillingYear, nextBillingMonth, userBillingDay);
-    const cancelDeadline = new Date(nextBillingDate);
-    cancelDeadline.setDate(cancelDeadline.getDate() - gracePeriodDays);
-
-    // 0 = inmediato, 1 = al final del período
-    const atPeriodEnd = now <= cancelDeadline ? AtPeriodEnd.IMMEDIATE : AtPeriodEnd.END_OF_PERIOD;
-
-    // Llamar al servicio existente para pausar la suscripción
+    // El backend calcula paused_until, next_billing_date, atPeriodEnd y
+    // cancela la suscripción recurrente en Flow de forma atómica. Sólo
+    // enviamos la duración y la razón.
     this.subscriptionService.pauseSubscription(
       this.subscription()!.id,
-      this.cancellationReason(),
-      this.pauseEndDate(),
-      this.nextPaymentDate()
-    )
-      .pipe(
-        switchMap((response) => {
-          // Si tenemos el Flow subscription ID, cancelar también en Flow
-          if (this.flowSubscriptionId()) {
-            return this.flowService.cancelSubscription(this.flowSubscriptionId(), atPeriodEnd)
-              .pipe(
-                map(() => response),
-                catchError((flowError) => {
-                  console.error('Error cancelando suscripción en Flow:', flowError);
-                  // Continuar con la respuesta original aunque falle en Flow
-                  return of(response);
-                })
-              );
-          }
-          return of(response);
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          response.data.subscription.credits = 10;
-          this.subscription.set(response.data.subscription);
-          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
-          this.isLoading.set(false);
-
-          // Registrar la información de pausa para análisis
-          console.log('Información de pausa:', pauseInfo);
-          this._toastService.success('Éxito', 'Suscripción pausada correctamente');
-        },
-        error: (err) => {
-          this._toastService.error('Ups!', 'Ocurrio un error al pausar la suscripción');
-          this.isLoading.set(false);
-          console.error('Error pausando suscripción:', err);
+      this.pauseDurationMonths(),
+      this.cancellationReason()
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response) => {
+        this.subscription.set(response.data.subscription);
+        if (response.data.subscription.next_billing_date) {
+          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date));
         }
-      });
+        this.isLoading.set(false);
+        this.directPauseFlow.set(false);
+        this.cancellationReason.set('');
+        this._toastService.success('Éxito', 'Suscripción pausada correctamente');
+      },
+      error: (err) => {
+        this._toastService.error('Ups!', 'Ocurrio un error al pausar la suscripción');
+        this.isLoading.set(false);
+        console.error('Error pausando suscripción:', err);
+      }
+    });
   }
 
   pausarSuscripcionWtsp(): void {
@@ -792,7 +1005,7 @@ export class SuscripcionComponent implements OnInit {
         if (this.flowSubscriptionId()) {
           return this.flowService.addCouponToSubscription({
             subscriptionId: this.flowSubscriptionId(),
-            couponId: this.ENV.flowCouponId30PercentDiscount
+            couponId: this.ENV.flowCouponId20PercentDiscount
           }).pipe(
             map((flowResponse) => ({ backendResponse: response, flowResponse })),
             catchError((flowError) => {
@@ -806,7 +1019,8 @@ export class SuscripcionComponent implements OnInit {
       }),
       finalize(() => {
         this.isLoading.set(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (combinedResponse) => {
         // Actualizar la suscripción local con la respuesta del backend
@@ -948,7 +1162,7 @@ export class SuscripcionComponent implements OnInit {
 
     this.isLoading.set(true);
 
-    this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? this.nextPaymentDate() : undefined)
+    this.subscriptionService.cancelSubscription(this.subscription()!.id, this.cancellationReason(), isToCancel ? (this.nextPaymentDate() ?? undefined) : undefined)
       .pipe(
         switchMap((response) => {
           // Cancelar suscripción en Flow si es necesario
@@ -1012,7 +1226,8 @@ export class SuscripcionComponent implements OnInit {
         finalize(() => {
           this.isLoading.set(false);
           this.showFinalConfirmationModal.set(false);
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       ).subscribe({
         next: (result) => {
           const response = result.subscriptionResponse;
@@ -1086,129 +1301,35 @@ export class SuscripcionComponent implements OnInit {
   }
 
   reactivateSubscription(reactivateType: ReactivateType): void {
+    if (!this.subscription()) return;
     this.isLoading.set(true);
-    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-    if(!customerId || !this.subscription()) return;
 
-    let flowSubscriptionData: FlowCreateSubscriptionRequest = <FlowCreateSubscriptionRequest>{};
-    const reactivationDate = new Date();
-    let monthPaymentDate: Date | undefined = undefined;
-
-    // DE UNA SUSCRIPCION PAUSADA
-    if(reactivateType === ReactivateType.FROM_PAUSE){
-      const subscriptionStartDate = new Date(this.subscription()!.start_date);
-      const pausedAt = new Date(this.subscription()!.updated_at!);
-      
-      const reactivationResult = this.calculateReactivationBilling({
-        subscriptionStartDate,
-        pausedAt,
-        reactivationDate,
-        gracePeriodDays: environment.diasAntesDeSiguienteCobroSubscripcion
-      });
-
-      monthPaymentDate = reactivationResult.nextBillingDate;
-      const planId = this.subscription()!.subscriptionPlan?.name || '';
-      flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : planId,
-        customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(reactivationResult.nextBillingDate),
-      };
-
-      // Si se requiere cobro inmediato, se puede manejar aquí
-      if (reactivationResult.chargeNow) {
-        console.log('Se requiere cobro inmediato al reactivar');
-      }
-    }
-    //DE UNA SUSCRIPCION CANCELADA
-    if (reactivateType === ReactivateType.FROM_CANCELLATION) {
-      const nextBillingMonth = reactivationDate.getMonth() + 1 > 11 ? 0 : reactivationDate.getMonth() + 1;
-      const nextBillingYear = reactivationDate.getMonth() + 1 > 11 ? reactivationDate.getFullYear() + 1 : reactivationDate.getFullYear();
-      
-      monthPaymentDate = new Date(
-        nextBillingYear,
-        nextBillingMonth,
-        reactivationDate.getDate(),
-        reactivationDate.getHours(),
-        reactivationDate.getMinutes(),
-        reactivationDate.getSeconds()
-      );
-      flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
-        customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(reactivationDate),
-      };
-    }
-    // DE UNA SUSCRIPCION POR CANCELAR
-    if (reactivateType === ReactivateType.FROM_TO_CANCEL) {
-      monthPaymentDate = undefined;
-    }
-
-    this.subscriptionService.reactivateSubscription(this.subscription()!.id, monthPaymentDate)
-      .pipe(
-        switchMap((response) => {
-
-          // Crear suscripción en Flow después de reactivar en backend, 
-          if (reactivateType !== ReactivateType.FROM_TO_CANCEL) {    
-            return this.flowService.createSubscription(flowSubscriptionData)
-              .pipe(
-                map((flowResponse) => ({ backendResponse: response, flowResponse })),
-                catchError((flowError) => {
-                  console.error('Error creando suscripción en Flow:', flowError);
-                  // Continuar con la respuesta del backend aunque falle en Flow
-                  return of({ backendResponse: response, flowResponse: null });
-                })
-              );
-          }
-
-          return of({ backendResponse: response, flowResponse: null });
-        })
-      )
+    // El backend hace TODO de forma atómica:
+    // - calcula next_billing_date a partir del día de facturación original
+    // - decide si recrear la suscripción recurrente en Flow (caso A),
+    //   marcar pendingFlowSync (caso B) o solo cambio local (caso C)
+    // - otorga 10 Magropuntos si venía de CANCELLED
+    // - rollback automático si Flow falla
+    // El frontend solo envía el id; el backend es la fuente de verdad.
+    this.subscriptionService.reactivateSubscription(this.subscription()!.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (combinedResponse) => {
-          const response = combinedResponse.backendResponse;
+        next: (response) => {
+          const sub = response.data.subscription;
+          const nextBilling = sub.next_billing_date;
+          this.nextPaymentDate.set(nextBilling ? new Date(nextBilling) : null);
 
-          // Actualizar el Flow subscription ID si se creó exitosamente
-          if (combinedResponse.flowResponse) {
-            this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
-          }
-          this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date || ''));
-          let credits = '10'
-          if (response.data.subscription.status === SubscriptionStatusEnum.PAUSED || response.data.subscription.status === SubscriptionStatusEnum.TO_CANCEL ) {
-            credits = this.userCredits()
+          let credits = '10';
+          if (sub.status === SubscriptionStatusEnum.PAUSED || sub.status === SubscriptionStatusEnum.TO_CANCEL) {
+            credits = this.userCredits();
           }
           this.userCredits.set(credits);
-          this.subscription.set(response.data.subscription);
+          this.subscription.set(sub);
           this.isLoading.set(false);
 
-          // Calcular los meses de entrega y pago dinámicamente
-          const fechaActual = new Date();
-          const mesActual = fechaActual.getMonth();
-          const diaActual = fechaActual.getDate();
-
-          // Determinar mes de entrega y mes de pago
-          let mesEntrega: number;
-          let mesPago: number;
-
-
-          mesEntrega = (mesActual + 1) % 12;
-          mesPago = mesActual;
-
-
-          // Obtener nombres de los meses en español
-          const nombresMeses = [
-            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-          ];
-
-          const mesEntregaNombre = nombresMeses[mesEntrega];
-          const mesPagoNombre = nombresMeses[mesPago];
-
-          // Mostrar modal de confirmación con los meses calculados
           this.showReactivationModal.set(true);
           this.reactivationMessage.set(
-            `¡Bienvenido de nuevo! A partir de ahora, tu suscripción ` +
-            `está activa nuevamente. `
-            // +`Puedes esperar tu próxima entrega en ${mesEntregaNombre}.`
+            '¡Bienvenido de nuevo! A partir de ahora, tu suscripción está activa nuevamente.'
           );
         },
         error: (err) => {
@@ -1405,80 +1526,12 @@ export class SuscripcionComponent implements OnInit {
     });
   }
 
-  getStatusClass(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-100 text-green-800';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-100 text-yellow-800';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-100 text-red-800';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-100 text-blue-800';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-100 text-gray-800';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  subscriptionBadge(status: SubscriptionStatusEnum): StatusBadge {
+    return getSubscriptionStatusBadge(status);
   }
 
-  getDotClass(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-500';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-500';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-500';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-500';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-500';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
-  get DotClass(): string {
-    switch (this.subscription()!.status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'bg-green-500';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'bg-yellow-500';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'bg-red-500';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'bg-blue-500';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'bg-gray-500';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
-  getStatusText(status: SubscriptionStatusEnum): string {
-    switch (status) {
-      case SubscriptionStatusEnum.ACTIVE:
-        return 'Activa';
-      case SubscriptionStatusEnum.PAUSED:
-        return 'Pausada';
-      case SubscriptionStatusEnum.CANCELLED:
-        return 'Cancelada';
-      case SubscriptionStatusEnum.TRIAL:
-        return 'Periodo de prueba';
-      case SubscriptionStatusEnum.EXPIRED:
-        return 'Expirada';
-      case SubscriptionStatusEnum.TO_CANCEL:
-        return 'Por Cancelar';
-      default:
-        return 'Desconocido';
-    }
+  chargeBadge(status: number): StatusBadge {
+    return getChargeStatusBadge(status);
   }
 
   getPeriodText(period?: string): string {
@@ -1537,8 +1590,11 @@ export class SuscripcionComponent implements OnInit {
       return;
     }
 
-    this.isProcessingFlow.set(true);
-    this.isLoading.set(true);
+    // Abrimos el modal de inmediato. El modal muestra un spinner ("Preparando
+    // el formulario seguro…") mientras el token llega. Así el usuario nunca ve
+    // estado de carga en la vista principal.
+    this.flowToken = '';
+    this.showPaymentVerification.set(true);
 
     // Si el usuario ya tiene un customerId de Flow, solo generamos el token
     if (user.flowCustomerId) {
@@ -1549,13 +1605,33 @@ export class SuscripcionComponent implements OnInit {
   }
 
   /**
-   * Crea un nuevo customer en Flow y genera el token
+   * Crea un nuevo customer en Flow y genera el token.
+   *
+   * `externalId` SIEMPRE es `user.documentNumber` (DNI/CE/etc.). No hay
+   * fallback a `user.id` — el UUID de BD no debe llegar a Flow porque:
+   *  1. Es el identificador interno; exponerlo a un proveedor externo es
+   *     leak de información.
+   *  2. Si el usuario actualiza su documento, queda inconsistente.
+   *  3. Las reconciliaciones manuales contra Flow asumen documento.
+   *
+   * Si el usuario no tiene documento registrado, lo redirigimos al perfil
+   * para que lo complete antes de continuar.
    */
   private createFlowCustomerAndGenerateToken(user: any): void {
+    if (!user?.documentNumber) {
+      this._toastService.warning(
+        'Documento requerido',
+        'Tu cuenta no tiene un documento registrado. Complétalo en tu perfil antes de suscribirte.',
+      );
+      this.router.navigate(['/cuenta/perfil']);
+      this.showPaymentVerification.set(false);
+      return;
+    }
+
     const flowCustomerRequest: CreateCustomerRequest = {
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
-      externalId: user.documentNumber || user.id.toString(),
+      externalId: user.documentNumber,
     };
 
     this.flowService.createCustomer(flowCustomerRequest)
@@ -1576,18 +1652,17 @@ export class SuscripcionComponent implements OnInit {
           return this.flowService.registerCard(customerId);
         }),
         catchError(err => {
-          this.isProcessingFlow.set(false);
-          this.isLoading.set(false);
           console.error('Error en el registro de Flow:', err);
           this.handleFlowError(err);
+          // Cerramos el modal: el usuario no puede continuar sin token.
+          this.showPaymentVerification.set(false);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: RegisterCardResponse) => {
           this.flowToken = response.token;
-          this.showPaymentSection();
-          this._toastService.success('¡Genial!', 'Ahora verifica tu tarjeta de pago');
         }
       });
   }
@@ -1599,172 +1674,117 @@ export class SuscripcionComponent implements OnInit {
     this.flowService.registerCard(customerId)
       .pipe(
         catchError(err => {
-          this.isProcessingFlow.set(false);
-          this.isLoading.set(false);
           console.error('Error generando token de Flow:', err);
           this.handleFlowError(err);
+          this.showPaymentVerification.set(false);
           return EMPTY;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response: RegisterCardResponse) => {
           this.flowToken = response.token;
-          this.showPaymentSection();
-          this._toastService.success('¡Genial!', 'Ahora verifica tu tarjeta de pago');
         }
       });
   }
 
   /**
-   * Muestra la sección de verificación de pago
-   */
-  private showPaymentSection(): void {
-    this.isProcessingFlow.set(false);
-    this.isLoading.set(false);
-    this.showPaymentVerification.set(true);
-  }
-
-  /**
-   * Procede con la suscripción después de la verificación de pago
+   * Procede con la suscripción tras verificar la tarjeta.
+   *
+   * Una sola llamada al saga `POST /checkout/subscription` con
+   * `skipFirstCharge: true`. El backend:
+   *  1. Salta `chargeCustomer` (Flow cobrará al crear la sub en background).
+   *  2. Crea Order + Subscription (TRIAL → ACTIVE al confirmar pago) +
+   *     SubscriptionOrder + crédito '¡Bienvenido a Magrolabs!' (+10MP) en una
+   *     sola TX con reintentos.
+   *  3. Dispara `flow.createSubscription` en background con reintentos.
+   *
+   * El crédito 'Magropuntos de lealtad' (+10MP) NO se acredita en el primer
+   * pago — solo en renovaciones (controlado server-side en
+   * `confirmFlowSubscriptionPayment`).
+   *
+   * Antes hacíamos 6 llamadas encadenadas desde el front
+   * (getUserById → createOrder → flow.createSubscription →
+   * subscriptionService.createSubscription → subscriptionOrderService.create
+   * → creditTransactionService.create). El saga consolida todo.
    */
   private proceedWithSubscription(): void {
     const user = this.authService.getCurrentUser();
-    const subscriptionPlan: FlowCreateSubscriptionRequest = {
-      planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
-      customerId: user?.flowCustomerId ?? '',
-    }
 
-    if (!user?.flowCustomerId || !subscriptionPlan) {
+    if (!user?.id || !user.flowCustomerId) {
       this._toastService.error('Error', 'Información incompleta para crear la suscripción');
       return;
     }
 
-    this.isLoading.set(true);
-    this.processNewSubscription(subscriptionPlan);
-  }
-
-  /**
-   * Procesa la creación de una nueva suscripción
-   */
-  private processNewSubscription(flowCreateSubscriptionRequest: FlowCreateSubscriptionRequest): void {
-    const user = this.authService.getCurrentUser();
-
-    if (!user?.id) {
-      this._toastService.error('Error', 'No se encontró información del usuario');
+    // El producto canónico ya debe estar cargado desde BD.
+    const product = this.subscriptionProduct();
+    if (!product) {
+      this._toastService.warning('Catálogo cargando', 'Espera un instante e intenta nuevamente.');
       return;
     }
 
-    // Obtener dirección predeterminada del usuario
-    this.userService.getUserById(user.id).pipe(
-      catchError(error => {
-        console.error('Error obteniendo dirección predeterminada:', error);
-        this._toastService.error('Error', 'No se encontró una dirección predeterminada. Por favor, configura una dirección en tu perfil.');
+    const flowCustomerId = user.flowCustomerId;
+    this.isLoading.set(true);
+
+    // El user en cookies (del login) no incluye `address` — la fuente de verdad
+    // es GET /users/profile. Sin esta llamada el chequeo de dirección siempre
+    // falla y redirige a /perfil aunque el usuario sí tenga una configurada.
+    this.userService.getCurrentUser().pipe(
+      switchMap(profile => {
+        const addressId = profile?.address?.id;
+        if (!addressId) {
+          this._toastService.warning(
+            'Falta tu dirección',
+            'Configura una dirección de envío en tu perfil antes de suscribirte.',
+          );
+          this.router.navigate(['/cuenta/perfil']);
+          return EMPTY;
+        }
+
+        const isTwoSoles = localStorage.getItem('TEST-PROD-TWO-SOLES') === 'TEST-PROD-TWO-SOLES';
+        const flowPlanId = isTwoSoles
+          ? this.ENV.flowPlanIdTest
+          : this.ENV.flowCreatina250Gr2025_55_PlanId;
+
+        return this._checkoutSubscriptionService.processSubscription({
+          customerId: flowCustomerId,
+          flowPlanId,
+          backendSubscriptionPlanId: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
+          trialPeriodDays: 0,
+          // skipFirstCharge=true → backend salta chargeCustomer. firstChargeAmount
+          // se ignora pero el schema lo requiere ≥ 0. firstChargeSubject también
+          // se requiere por schema; pasamos un placeholder.
+          firstChargeAmount: 0,
+          firstChargeSubject: 'Suscripción directa',
+          skipFirstCharge: true,
+          creditAmount: Number(this.ENV.creditoRegaloPorCompraMes),
+          order: {
+            mode: 'new',
+            shipping_address: addressId,
+            payment_method: PaymentMethod.CREDIT_CARD,
+            orderItems: [{ product_id: product.id, quantity: 1 }],
+          },
+        });
+      }),
+      catchError(err => {
+        console.error('Error creando suscripción:', err);
+        this._toastService.error('Error', 'No se pudo crear la suscripción. Inténtalo nuevamente.');
         return EMPTY;
       }),
-      switchMap(userResponse => {
-        const orderRequest = this.createOrderRequest(userResponse.address_id ?? '');
-        return this.orderService.createOrder(orderRequest);
-      }),
-      switchMap(response => {
-        localStorage.setItem('OrderId', response.data.order.id);
-        return this.flowService.createSubscription(flowCreateSubscriptionRequest);
-      }),
-      switchMap(flowResponse => {
-        console.log('Flow Subscription created:', flowResponse);
-        return this.createBackendSubscription();
-      }),
-      switchMap(subscriptionResponse => {
-        const orderId = localStorage.getItem('OrderId') || ''
-        const subscriptionOrderRequest = this.createSubscriptionOrderRequest(subscriptionResponse.id, orderId);
-        return this.subscriptionOrderService.createSubscriptionOrder(subscriptionOrderRequest);
-      }),
-      switchMap(subscriptionOrderResponse => {
-        console.log('Subscription order created:', subscriptionOrderResponse)
-        // Agregar créditos al usuario por la suscripción
-        const user = this.authService.getCurrentUser();
-        if (user?.id) {
-          return this._creditTransactionService.createTransaction({
-            user_id: user.id,
-            type: TransactionType.EARNED,
-            amount: environment.creditoRegaloPorCompraMes,
-            description: '¡Bienvenido a Magrolabs!',
-            source: PaymentMethod.CREDIT_CARD
-          });
-        }
-        return of(null);
-      }),
-      catchError(error => this.handleSubscriptionError(error)),
       finalize(() => {
-        localStorage.setItem('isPaymentVerified', '');
-        this.userCredits.set(environment.creditoRegaloPorCompraMes.toString());
+        localStorage.removeItem('isPaymentVerified');
+        localStorage.removeItem('OrderId');
         this.isLoading.set(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (response) => {
-        console.log('Subscription completed:', response);
-        this._toastService.success('¡Excelente!', 'Suscripción creada exitosamente');
-        // Recargar la información de suscripción
+      next: () => {
+        this._toastService.success('¡Excelente!', 'Suscripción creada exitosamente.');
+        this.showPaymentVerification.set(false);
         this.loadSubscription();
-      }
+        this.loadUserCredits();
+      },
     });
-  }
-
-  /**
-   * Crea la solicitud de orden
-   * @param addressId ID de la dirección de envío
-   */
-  private createOrderRequest(addressId: string): CreateOrderRequest {
-    return {
-      shipping_address: addressId,
-      payment_method: PaymentMethod.CREDIT_CARD,
-      isLoyaltyWebShow: false,
-      orderItems: [
-        {
-          product_id: '00000010-50eb-4ac3-aa94-1b64fbf32b9c', // ID del producto de creatina 250gr - 55 soles
-          quantity: 1
-        }
-      ],
-      discount: 21
-    };
-
-  }
-
-  /**
-   * Crea la suscripción en el backend
-   */
-  private createBackendSubscription(): Observable<Subscription> {
-    const subscriptionRequestAPI: CreateSubscriptionRequest = {
-      subscription_plan_id: '00000003-50eb-4ac3-aa94-1b64fbf32b9c',
-      start_date: new Date().toISOString(),
-      status: SubscriptionStatusEnum.ACTIVE,
-    };
-
-    return this.subscriptionService.createSubscription(subscriptionRequestAPI)
-  }
-
-  /**
-   * Crea la solicitud de orden de suscripción
-   */
-  private createSubscriptionOrderRequest(subscriptionId: string, orderId: string): CreateSubscriptionOrderRequest {
-    return {
-      subscription_id: subscriptionId,
-      order_id: orderId,
-      shipment_date: new Date(
-        Date.now() +
-        (this.ENV.plazoDeEntregaDiasHabiles.max) *
-        24 * 60 * 60 * 1000 -
-        5 * 60 * 60 * 1000
-      ).toISOString()
-    };
-  }
-
-  /**
-   * Maneja errores en la creación de suscripciones
-   */
-  private handleSubscriptionError(error: any): any {
-    console.error('Error creating subscription:', error);
-    this._toastService.error('Error', 'No se pudo crear la suscripción. Inténtalo nuevamente.');
-    return EMPTY;
   }
 
 
@@ -1789,7 +1809,9 @@ export class SuscripcionComponent implements OnInit {
     const productId = '00000001-50eb-4ac3-aa94-1b64fbf32b9c';
     //TODO QUITAR EL MAS5
     return new Promise((resolve, reject) => {
-      this.reviewService.getAllReviews({product_id: productId, is_approved: true}).subscribe({
+      this.reviewService.getAllReviews({product_id: productId, is_approved: true})
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
         next: (response) => {
           console.log('Reviews cargadas desde servidor:', response);
           if (response.data && response.data.reviews && response.data.reviews.length > 0) {

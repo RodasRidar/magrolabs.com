@@ -1,15 +1,13 @@
-import { Component, inject, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { VerificationPaymentModalService } from '../../services/verification-payment-modal.service';
-import { VerificationPaymentComponent } from '../../../ecommerce/signup/pages/verification-payment/verification-payment.component';
+import { Component, inject, effect } from "@angular/core";
+
+import { VerificationPaymentModalService } from "../../services/verification-payment-modal.service";
+import { VerificationPaymentComponent } from "../../../ecommerce/signup/pages/verification-payment/verification-payment.component";
 
 @Component({
-  selector: 'app-verification-payment-modal',
-  standalone: true,
-  imports: [CommonModule, VerificationPaymentComponent],
-  templateUrl: './verification-payment-modal.component.html',
+  selector: "app-verification-payment-modal",
+  imports: [VerificationPaymentComponent],
+  templateUrl: "./verification-payment-modal.component.html",
 })
-
 export class VerificationPaymentModalComponent {
   modalService = inject(VerificationPaymentModalService);
 

@@ -5,7 +5,7 @@
         item.product.imageUrl === ''
         ? './assets/images/product-default-image.jpeg'
         : item.product.imageUrl!" [alt]="item.product.name" height="96" width="96" priority="true"
-            class="w-24 h-auto rounded-md object-center object-cover sm:w-30 sm:h-auto p-3">
+            class="w-20 h-auto rounded-md object-center object-cover sm:w-30 sm:h-auto">
     </a>
 
     <div class="ml-4 flex-1 flex flex-col justify-between sm:mx-2">
@@ -15,7 +15,7 @@
                 <div class="flex justify-between">
                     <h3 class="text-sm">
                         <a [routerLink]="['/productos/creatinas',item.product.slug]"
-                            class="font-medium text-gray-700 hover:text-[#d7816a] hover:underline">
+                            class="font-medium text-gray-700 hover:text-primary-hover hover:underline">
                             {{ item.product.name.trim() }}
                         </a>
                     </h3>

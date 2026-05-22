@@ -1,25 +1,32 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NavbarComponent, NavbarTypeEnum } from "../../components/navbar/navbar.component";
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from "../../components/footer/footer.component";
 import { environment } from '../../../../../environments/env';
 import { SeoService } from '../../../../shared/services/seo.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/ui/breadcrumb/breadcrumb.component';
 
 @Component({
-  selector: 'app-politicas',
-  standalone: true,
-  imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive],
-  templateUrl: './politicas.component.html',
-  styleUrl: './politicas.component.css'
+    selector: 'app-politicas',
+    imports: [NavbarComponent, FormsModule, RouterOutlet, FooterComponent, RouterLink, RouterLinkActive, BreadcrumbComponent],
+    templateUrl: './politicas.component.html',
+    styleUrl: './politicas.component.css'
 })
 export class PoliticasComponent {
   private router = inject(Router);
   private _seo = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
 
   selectedOption = 'preguntas-frecuentes';
   ENV = environment;
   navbarTypeEnum = NavbarTypeEnum;
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Políticas' },
+  ];
 
   ngOnInit() {
     let currentUrl = this.router.url;
@@ -30,7 +37,7 @@ export class PoliticasComponent {
       this.selectedOption = matchingOption;
     }
 
-    this.router.events.subscribe(event => {
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       if (event instanceof NavigationEnd) {
         currentUrl = this.router.url;
         const matchingOption = this.options.find(opt => currentUrl.includes(opt));

@@ -1,27 +1,126 @@
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../../../../environments/env';
 import { SeoService } from '../../../../../../shared/services/seo.service';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
+
+type FilterCategory = 'sale' | 'new-arrivals';
+type FilterSize = '100gr' | '250gr' | '3kg';
+
+interface Product {
+  route: string;
+  imgSrc: string;
+  imgAlt: string;
+  title: string;
+  subtitle: string;
+  categories: FilterCategory[];
+  sizes: FilterSize[];
+}
 
 @Component({
-  selector: 'app-index',
-  standalone: true,
-  imports: [RouterLink, CurrencyPipe, NgOptimizedImage],
-  templateUrl: './index.component.html',
-  styleUrl: './index.component.css'
+    selector: 'app-index',
+    imports: [RouterLink, CurrencyPipe, NgOptimizedImage, BreadcrumbComponent],
+    templateUrl: './index.component.html',
+    styleUrl: './index.component.css'
 })
 export class IndexComponent implements OnInit {
   private readonly _seo = inject(SeoService);
-  
+
   ENV = environment;
+
+  // Filtros
+  activeMobileFilter = signal<'categories' | 'sizes' | null>(null);
+  selectedCategories = signal<FilterCategory[]>([]);
+  selectedSizes = signal<FilterSize[]>([]);
+
+  readonly products: Product[] = [
+    {
+      route: 'creatinas/creatina-monohidratada-100-gr',
+      imgSrc: '100gr_front_mockup_2000x2000.webp',
+      imgAlt: 'Creatina 100% monohidratada oferta especial',
+      title: `Creatina Monohidratada ${environment.creatinaFreeGramos} gr`,
+      subtitle: `${environment.creatinaFreeGramos} gr`,
+      categories: ['sale'],
+      sizes: ['100gr'],
+    },
+    {
+      route: 'creatinas/creatina-monohidratada-250-gr',
+      imgSrc: '250gr_front_mockup_2000x2000.webp',
+      imgAlt: 'Creatina monohidratada Magrolabs 250 gr',
+      title: 'Creatina Monohidratada 250 gr',
+      subtitle: '250 gr',
+      categories: ['new-arrivals'],
+      sizes: ['250gr'],
+    },
+  ];
+
+  filteredProducts = computed(() => {
+    const cats = this.selectedCategories();
+    const sizes = this.selectedSizes();
+    return this.products.filter(p => {
+      const catMatch = cats.length === 0 || p.categories.some(c => cats.includes(c));
+      const sizeMatch = sizes.length === 0 || p.sizes.some(s => sizes.includes(s));
+      return catMatch && sizeMatch;
+    });
+  });
+
+  toggleCategory(cat: FilterCategory): void {
+    this.selectedCategories.update(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  }
+
+  toggleSize(size: FilterSize): void {
+    this.selectedSizes.update(prev =>
+      prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
+    );
+  }
+
+  isCategorySelected(cat: FilterCategory): boolean {
+    return this.selectedCategories().includes(cat);
+  }
+
+  isSizeSelected(size: FilterSize): boolean {
+    return this.selectedSizes().includes(size);
+  }
+
+  clearFilters(): void {
+    this.selectedCategories.set([]);
+    this.selectedSizes.set([]);
+  }
+
+  get hasActiveFilters(): boolean {
+    return this.selectedCategories().length > 0 || this.selectedSizes().length > 0;
+  }
+
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Inicio', link: '/' },
+    { label: 'Tienda' },
+  ];
+
+  get activeCategoriesCount(): number {
+    return this.selectedCategories().length;
+  }
+
+  get activeSizesCount(): number {
+    return this.selectedSizes().length;
+  }
+
+  openMobileFilter(filter: 'categories' | 'sizes'): void {
+    this.activeMobileFilter.set(filter);
+  }
+
+  closeMobileFilter(): void {
+    this.activeMobileFilter.set(null);
+  }
 
   ngOnInit(): void {
     this.loadSEO();
   }
 
   private loadSEO(): void {
-    const title = 'Productos Magrolabs - Suplementos de Alta Calidad';
+    const title = 'Tienda Magrolabs - Suplementos de Alta Calidad';
     const description = 'Descubre nuestra línea completa de suplementos de alta calidad. Creatina monohidratada, proteínas y más productos para potenciar tu rendimiento físico.';
     const URL = 'https://magrolabs.com/productos';
     const image = 'https://magrolabs.com/articulos-fit.png';
@@ -73,13 +172,13 @@ export class IndexComponent implements OnInit {
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Productos Magrolabs - Suplementos de Alta Calidad',
+      'twitter:image:alt': 'Tienda Magrolabs - Suplementos de Alta Calidad',
     });
 
     // Breadcrumbs para mejor contexto de navegación en IA
     this._seo.setBreadcrumbStructuredData([
       { name: 'Inicio', url: 'https://magrolabs.com' },
-      { name: 'Productos', url: URL }
+      { name: 'Tienda', url: URL }
     ]);
 
     // Organization Schema para marca
@@ -111,7 +210,7 @@ export class IndexComponent implements OnInit {
     const itemListSchema = {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'Productos Magrolabs',
+      name: 'Tienda Magrolabs',
       description: 'Catálogo completo de suplementos deportivos premium',
       url: URL,
       numberOfItems: 1,

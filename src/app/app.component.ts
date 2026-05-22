@@ -1,5 +1,6 @@
-import { afterNextRender, afterRender, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { afterNextRender, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
 import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
@@ -11,11 +12,10 @@ import { PixelInitializationService } from './shared/services/pixel-initializati
 import { filter } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent {
   private _router = inject(Router);
@@ -24,6 +24,7 @@ export class AppComponent {
   private _hotjar = inject(HotjarService);
   private _pixelInitialization = inject(PixelInitializationService);
   private moduleRetryService = inject(ModuleRetryService);
+  private destroyRef = inject(DestroyRef);
   title = 'Magrolabs';
   ENV = environment;
   isButtonVisible = false;
@@ -48,7 +49,10 @@ export class AppComponent {
 
   ngOnInit() {
     this._router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe((e) => {
         const url = e.urlAfterRedirects ?? e.url;
 
@@ -177,7 +181,7 @@ export class AppComponent {
       '/registro/verificacion': 'Registro - Verificación de Pago',
       '/registro/confirmacion': 'Registro - Confirmación',
       '/login': 'Iniciar Sesión',
-      '/productos': 'Productos',
+      '/productos': 'Tienda',
       '/loyalty-webshop': 'Loyalty WebShop',
       '/checkout': 'Checkout',
       '/bolsa': 'Carrito de Compras',
@@ -185,11 +189,11 @@ export class AppComponent {
       '/referido-por-amigo': 'Referido por Amigo',
       '/atencion-cliente': 'Atención al Cliente',
       '/politicas': 'Políticas',
-      '/cuenta/mi-cuenta': 'Mi Cuenta',
-      '/cuenta/pedidos': 'Mis Pedidos',
+      '/cuenta/mi-cuenta': 'Inicio',
+      '/cuenta/pedidos': 'Pedidos',
       '/cuenta/credito': 'Mi Crédito',
-      '/cuenta/suscripcion': 'Mi Suscripción',
-      '/cuenta/perfil': 'Mi Perfil'
+      '/cuenta/suscripcion': 'Suscripción',
+      '/cuenta/perfil': 'Perfil'
     };
 
     // Buscar coincidencia exacta o por patrón

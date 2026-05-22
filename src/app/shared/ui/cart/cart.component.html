@@ -1,6 +1,7 @@
-<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50"
-  [ngClass]="{'hidden': state === 'inactive'}"></div>
-<div [@fadeInOut]="state" class="fixed inset-0 overflow-hidden z-50">
+<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[60]"
+  [ngClass]="{'hidden': state === 'inactive'}">
+</div>
+<div [@fadeInOut]="state" class="fixed inset-0 overflow-hidden z-[60]">
   <div class="absolute inset-0 overflow-hidden">
     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
       <div class="pointer-events-auto w-screen max-w-md">
@@ -28,7 +29,8 @@
                 <ul role="list" class="-my-6 divide-y divide-gray-200">
                   @for (item of shoppingCart.items; track $index) {
                   <li class="flex py-6">
-                    <a class="h-25 sm:w-25 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-[#eeeae7]" [routerLink]="['/productos/creatinas',item.product.slug]">
+                    <a class="h-25 sm:w-25 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-[#eeeae7]"
+                      [routerLink]="['/productos/creatinas',item.product.slug]">
                       <img [ngSrc]="
                         item.product.imageUrl === ''
                           ? './assets/images/product-default-image.jpeg'
@@ -40,10 +42,12 @@
                     <div class="ml-3 flex flex-1 flex-col">
                       <div>
                         <div class="flex justify-between font-light text-sm text-gray-900 text-pretty mb-2">
-                          
-                            <a [routerLink]="['/productos/creatinas',item.product.slug]" routerLinkActive="router-link-active" class="max-w-[70%] hover:underline hover:text-[#d7816a]">
-                              {{ item.product.name.trim() }}
-                            </a>
+
+                          <a [routerLink]="['/productos/creatinas',item.product.slug]"
+                            routerLinkActive="router-link-active"
+                            class="max-w-[70%] hover:underline hover:text-primary-hover">
+                            {{ item.product.name.trim() }}
+                          </a>
                           @if (item.product.is_on_sale && item.product.discountPercentage) {
                           <!-- precio con descuento -->
                           <p class="ml-3">
@@ -94,8 +98,8 @@
               </div>
             </div>
             <div class="flex flex-col gap-5 h-full justify-center items-center">
-              <img src="svg/shopping-cart.svg"
-                class="aspect-square object-center overflow-hidden" height="64" width="64" alt="cart-icon" />
+              <img src="svg/shopping-cart.svg" class="aspect-square object-center overflow-hidden" height="64"
+                width="64" alt="cart-icon" />
               <p class="font-medium">Tu carro está vacío.</p>
             </div>
             }
@@ -113,18 +117,20 @@
               <!-- <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                   Ir al carro
                 </a> -->
-              <ml-button [routerLink]="['/bolsa']" (click)="toggle()"
-                name="Ir al carro" type="secondary-outlined"></ml-button>
-              <ml-button name="Finalizar compra &rarr;"  (click)="goCheckout()"></ml-button>
+              <ml-button [routerLink]="['/bolsa']" (click)="toggle()" name="Ir al carro"
+                type="secondary-outlined"></ml-button>
+              <ml-button name="Finalizar compra &rarr;" (click)="goCheckout()"></ml-button>
             </div>
             }
             @else {
-              <div class="flex flex-col gap-2">
-                @if (!isProductPage) {
-                  <ml-button type="primary" [routerLink]="['/productos']"  name="Ir a comprar &rarr;" (click)="toggle()"></ml-button>
-                }
-                <ml-button [type]="isProductPage ? 'secondary' : 'secondary-outlined'" class="w-[100%]" name="Cerrar" (click)="toggle()"></ml-button>
-              </div>
+            <div class="flex flex-col gap-2">
+              @if (!isProductPage) {
+              <ml-button type="primary" [routerLink]="['/productos']" name="Ir a comprar &rarr;"
+                (click)="toggle()"></ml-button>
+              }
+              <ml-button [type]="isProductPage ? 'secondary' : 'secondary-outlined'" class="w-[100%]" name="Cerrar"
+                (click)="toggle()"></ml-button>
+            </div>
             }
           </div>
         </div>

@@ -150,10 +150,11 @@ const apiMagroLabs = 'https://api.magrolabs.com/api/v1';
 const flowUrlReturnPagoPorAdmin = 'https://www.magrolabs.com/api/flow-return-pedidos';
 const useProxy = false;
 const cancelDiscout = 20;
-const flowCouponId50PercentDiscount = 5104;
 const diasReembolsoCreditosLoyaltyWebshop = 14;
 const flowUrlConfirmationSubscription = 'https://api.magrolabs.com/api/v1/subscriptions/confirm-payment'
+const flowCouponId50PercentDiscount = 5104;
 const flowCouponId30PercentDiscount = 5215;
+const flowCouponId20PercentDiscount = 6429;
 const precioEnvioFueraLimaMetropolitana = 14;
 const tiktokTrackingEnabled = true;
 const tiktokPixelId = 'D632L4JC77U5AUBMNBGG'; // ID del pixel de TikTok para producción
@@ -221,6 +222,7 @@ export const environment = {
     flowUrlConfirmationSubscription,
     flowPlanIdTest,
     flowCouponId30PercentDiscount,
+    flowCouponId20PercentDiscount,
     precioEnvioFueraLimaMetropolitana,
     tiktokTrackingEnabled,
     tiktok: {

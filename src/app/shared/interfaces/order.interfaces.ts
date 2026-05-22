@@ -153,15 +153,39 @@ export interface OrderResponse {
 
   /**
    * Código de descuento aplicado
-   * @example "SUMMER2023"
+   * @example "MAGRO9"
    */
   code_discount?: string;
 
   /**
-   * Monto de descuento
-   * @example 5.5
+   * @deprecated Renombrado a `discount_value`. Solo presente en órdenes
+   * legacy creadas antes del refactor de descuentos estructurados; las
+   * nuevas usan los campos `discount_type` / `discount_value` /
+   * `discount_amount` / `subtotal_amount`.
    */
-  discount: number;
+  discount?: number;
+
+  /**
+   * Tipo de descuento (PERCENTAGE | FIXED_AMOUNT) — null si la orden no tiene cupón.
+   */
+  discount_type?: 'PERCENTAGE' | 'FIXED_AMOUNT' | null;
+
+  /**
+   * Valor de la regla del cupón. 10 (=10%) ó 9.10 (=S/.9.10).
+   */
+  discount_value?: number | null;
+
+  /**
+   * Monto en soles efectivamente descontado en el pedido. Es el valor
+   * que la pantalla de confirmación debe mostrar al cliente.
+   */
+  discount_amount?: number | null;
+
+  /**
+   * Subtotal del carrito antes de descuento y envío. Útil para mostrar
+   * el desglose en la confirmación sin tener que sumar items.
+   */
+  subtotal_amount?: number | null;
 
   /**
    * Método de pago utilizado

@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,13 +8,14 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { CardComponent } from '../../../../shared/ui/card/card.component';
+import { AlertComponent } from '../../../../shared/ui/alert/alert.component';
 
 @Component({
-  selector: 'app-recuperar-password',
-  standalone: true,
-  imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink],
-  templateUrl: './recuperar-password.component.html',
-  styleUrl: './recuperar-password.component.css'
+    selector: 'app-recuperar-password',
+    imports: [ButtonComponent, ReactiveFormsModule, CommonModule, RouterLink, CardComponent, AlertComponent],
+    templateUrl: './recuperar-password.component.html',
+    styleUrl: './recuperar-password.component.css'
 })
 export class RecuperarPasswordComponent implements OnInit {
 
@@ -22,6 +24,7 @@ export class RecuperarPasswordComponent implements OnInit {
   private _authService = inject(AuthService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   isProcessing = false;
   isEmailSent = false;
@@ -41,7 +44,7 @@ export class RecuperarPasswordComponent implements OnInit {
 
   ngOnInit() {
     // Verificar si hay un token en la URL
-    this._route.queryParams.subscribe(params => {
+    this._route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.token = params['token'];
       
       if (this.token) {
@@ -109,7 +112,8 @@ export class RecuperarPasswordComponent implements OnInit {
         }),
         finalize(() => {
           this.isProcessing = false;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {
@@ -148,7 +152,8 @@ export class RecuperarPasswordComponent implements OnInit {
         }),
         finalize(() => {
           this.isProcessing = false;
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (response) => {

@@ -336,10 +336,35 @@ export class AuthService {
           console.error('Error handling auth response:', error);
         }
       }
-      
+
       this.currentUserSubject.next(response.data.user);
       this.isAuthenticatedSubject.next(true);
     }
+  }
+
+  /**
+   * Persistir sesión emitida por el endpoint POST /api/v1/checkout cuando
+   * registra a un cliente nuevo o hace auto-login. Reusa la misma lógica
+   * que login/register: cookies de token+refresh+user_data+is_authenticated
+   * y notificación a los BehaviorSubjects.
+   */
+  setSessionFromCheckout(
+    tokens: { token: string; refreshToken: string },
+    user: UserResponse
+  ): void {
+    if (this.isBrowser) {
+      try {
+        this.saveCookie(this.TOKEN_KEY, tokens.token);
+        this.saveCookie(this.REFRESH_TOKEN_KEY, tokens.refreshToken);
+        this.saveCookie(this.USER_KEY, JSON.stringify(user));
+        this.saveAuthenticationToCookie(true);
+      } catch (error) {
+        console.error('Error persisting session from checkout:', error);
+      }
+    }
+
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
   }
 
   /**

@@ -1005,7 +1005,7 @@
                 ) {
                   <div class="flex flex-col space-y-3 max-sm:w-full">
                     <button
-                      (click)="pausarSuscripcionWtsp()"
+                      (click)="openPauseModal()"
                       class="sm:w-60 flex items-center justify-center px-4 py-2 border border-yellow-300 shadow-sm text-sm font-medium rounded-md text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                     >
                       <svg
@@ -1743,6 +1743,94 @@
         </h3>
       </div>
 
+      @if (directPauseFlow()) {
+        <p class="text-base sm:text-lg text-gray-700 mb-4">
+          Cuéntanos por qué quieres pausar tu suscripción:
+        </p>
+        <div class="mt-2 mb-6 space-y-3">
+          <div class="flex items-left">
+            <input
+              type="radio"
+              id="pauseReason1"
+              name="pauseReason"
+              class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
+              [checked]="cancellationReason() === 'Estoy de viaje'"
+              (change)="cancellationReason.set('Estoy de viaje')"
+            />
+            <label
+              for="pauseReason1"
+              class="ml-3 block text-sm font-medium text-gray-700"
+            >
+              Estoy de viaje
+            </label>
+          </div>
+          <div class="flex items-left">
+            <input
+              type="radio"
+              id="pauseReason2"
+              name="pauseReason"
+              class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
+              [checked]="cancellationReason() === 'Se me acumuló creatina'"
+              (change)="cancellationReason.set('Se me acumuló creatina')"
+            />
+            <label
+              for="pauseReason2"
+              class="ml-3 block text-sm font-medium text-gray-700"
+            >
+              Se me acumuló creatina
+            </label>
+          </div>
+          <div class="flex items-left">
+            <input
+              type="radio"
+              id="pauseReason3"
+              name="pauseReason"
+              class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
+              [checked]="cancellationReason() === 'Por temas económicos'"
+              (change)="cancellationReason.set('Por temas económicos')"
+            />
+            <label
+              for="pauseReason3"
+              class="ml-3 block text-sm font-medium text-gray-700"
+            >
+              Por temas económicos
+            </label>
+          </div>
+          <div class="flex items-left">
+            <input
+              type="radio"
+              id="pauseReason4"
+              name="pauseReason"
+              class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
+              [checked]="cancellationReason() === 'Voy a dejar de entrenar por un tiempo'"
+              (change)="cancellationReason.set('Voy a dejar de entrenar por un tiempo')"
+            />
+            <label
+              for="pauseReason4"
+              class="ml-3 block text-sm font-medium text-gray-700"
+            >
+              Voy a dejar de entrenar por un tiempo
+            </label>
+          </div>
+          <div class="flex items-left">
+            <input
+              type="radio"
+              id="pauseReason5"
+              name="pauseReason"
+              class="h-4 w-4 text-primary-hover focus:ring-primary-hover"
+              [checked]="cancellationReason() === 'Otro motivo'"
+              (change)="cancellationReason.set('Otro motivo')"
+            />
+            <label
+              for="pauseReason5"
+              class="ml-3 block text-sm font-medium text-gray-700"
+            >
+              Otro motivo
+            </label>
+          </div>
+        </div>
+      }
+
       <p class="text-lg text-gray-700 mb-6">
         ¿Por cuántos meses quieres pausar tu suscripción?
       </p>
@@ -1790,15 +1878,18 @@
         mlModalFooter
         class="flex flex-col sm:flex-row-reverse gap-3 justify-center"
       >
-        <ml-button
-          name="Continuar con la cancelación"
-          (click)="proceedWithCancellation()"
-          type="secondary-outlined"
-        ></ml-button>
+        @if (!directPauseFlow()) {
+          <ml-button
+            name="Continuar con la cancelación"
+            (click)="proceedWithCancellation()"
+            type="secondary-outlined"
+          ></ml-button>
+        }
         <ml-button
           name="Pausar"
           (click)="pauseSubscription()"
           [isProcessing]="isLoading()"
+          [isDisabled]="!cancellationReason()"
         ></ml-button>
       </div>
     </ml-modal>

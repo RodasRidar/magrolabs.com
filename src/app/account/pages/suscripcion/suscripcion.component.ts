@@ -167,6 +167,10 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   pauseStartDate = signal<string>('');
   pauseEndDateString = signal<string>('');
   nextPaymentDateString = signal<string>('');
+  // True cuando el modal de pausa se abrió directamente desde el botón
+  // "Pausar suscripción" (no como oferta dentro del flujo de cancelación).
+  // Sirve para ocultar el botón "Continuar con la cancelación" en ese caso.
+  directPauseFlow = signal<boolean>(false);
   pauseEndDate = signal<Date>(new Date());
   // Null = la sub aún no tiene next_billing_date computado (por ejemplo,
   // recién creada — el job de Flow asignará la fecha en el próximo ciclo).
@@ -794,7 +798,23 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
 
   cancelSubscription(): void {
     // Mostrar el modal de cancelación en lugar de la confirmación directa
+    this.directPauseFlow.set(false);
+    this.cancellationReason.set('');
     this.showCancellationModal.set(true);
+  }
+
+  /**
+   * Abre directamente el modal de pausa (sin pasar por el modal de razones de
+   * cancelación). Se invoca desde el botón "Pausar suscripción" en la página.
+   * El modal pedirá razón + duración antes de enviar al backend.
+   */
+  openPauseModal(): void {
+    if (!this.subscription()) return;
+    this.directPauseFlow.set(true);
+    this.cancellationReason.set('');
+    this.pauseDurationMonths.set(1);
+    this.calculatePauseDates();
+    this.showPauseModal.set(true);
   }
 
   confirmCancellation(): void {
@@ -802,7 +822,7 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
 
     // Ocultar modal de cancelación
     this.showCancellationModal.set(false);
-    
+
     // Si la suscripción está en período de prueba, ir directamente al modal de créditos
     if (this.subscription()!.status === SubscriptionStatusEnum.TRIAL) {
       this.calculateCancellationDates();
@@ -810,7 +830,10 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Para suscripciones activas, mostrar el modal de pausa
+    // Para suscripciones activas, mostrar el modal de pausa como alternativa
+    // a la cancelación. directPauseFlow=false → el modal mostrará el botón
+    // "Continuar con la cancelación".
+    this.directPauseFlow.set(false);
     this.calculatePauseDates();
     this.showPauseModal.set(true);
   }
@@ -890,7 +913,7 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   }
 
   pauseSubscription(): void {
-    if (!this.subscription()) return;
+    if (!this.subscription() || !this.cancellationReason()) return;
 
     this.isLoading.set(true);
     this.showPauseModal.set(false);
@@ -909,6 +932,8 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
           this.nextPaymentDate.set(new Date(response.data.subscription.next_billing_date));
         }
         this.isLoading.set(false);
+        this.directPauseFlow.set(false);
+        this.cancellationReason.set('');
         this._toastService.success('Éxito', 'Suscripción pausada correctamente');
       },
       error: (err) => {

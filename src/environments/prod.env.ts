@@ -20,7 +20,7 @@ const campanaPrimeraCreatina = {
   tipo: 'precio-especial' as 'gratis' | 'precio-especial',
   
   // Precio de la primera creatina (0 si es gratis, ej: 9.90, 14.90, etc.)
-  precio: 9.90,
+  precio: 29.90,
   
   // Gramos de la primera creatina
   gramos: 100,
@@ -162,7 +162,7 @@ const metaTrackingEnabled = true;
 const metaPixelId = '797277002911669'; // ID del pixel de Meta para producción
 const metaDebug = false;
 const isBlackFridayActive = false;
-const creatina100GrDescuentoBlackFriday = '80%';
+const creatina100GrDescuentoBlackFriday = '33%';
 
 export const environment = {
     production,

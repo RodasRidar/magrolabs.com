@@ -1301,131 +1301,35 @@ export class SuscripcionComponent implements OnInit, AfterViewInit {
   }
 
   reactivateSubscription(reactivateType: ReactivateType): void {
+    if (!this.subscription()) return;
     this.isLoading.set(true);
-    const customerId = this.authService.getCurrentUser()?.flowCustomerId;
-    if(!customerId || !this.subscription()) return;
 
-    let flowSubscriptionData: FlowCreateSubscriptionRequest = {} as FlowCreateSubscriptionRequest;
-    const reactivationDate = new Date();
-    let monthPaymentDate: Date | undefined = undefined;
-
-    // DE UNA SUSCRIPCION PAUSADA
-    if(reactivateType === ReactivateType.FROM_PAUSE){
-      const subscriptionStartDate = new Date(this.subscription()!.start_date);
-      const pausedAt = new Date(this.subscription()!.updated_at!);
-      
-      const reactivationResult = this.calculateReactivationBilling({
-        subscriptionStartDate,
-        pausedAt,
-        reactivationDate,
-        gracePeriodDays: environment.diasAntesDeSiguienteCobroSubscripcion
-      });
-
-      monthPaymentDate = reactivationResult.nextBillingDate;
-      const planId = this.subscription()!.subscriptionPlan?.name || '';
-      flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : planId,
-        customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(reactivationResult.nextBillingDate),
-      };
-
-      // Si se requiere cobro inmediato, se puede manejar aquí
-      if (reactivationResult.chargeNow) {
-        console.log('Se requiere cobro inmediato al reactivar');
-      }
-    }
-    //DE UNA SUSCRIPCION CANCELADA
-    if (reactivateType === ReactivateType.FROM_CANCELLATION) {
-      const nextBillingMonth = reactivationDate.getMonth() + 1 > 11 ? 0 : reactivationDate.getMonth() + 1;
-      const nextBillingYear = reactivationDate.getMonth() + 1 > 11 ? reactivationDate.getFullYear() + 1 : reactivationDate.getFullYear();
-      
-      monthPaymentDate = new Date(
-        nextBillingYear,
-        nextBillingMonth,
-        reactivationDate.getDate(),
-        reactivationDate.getHours(),
-        reactivationDate.getMinutes(),
-        reactivationDate.getSeconds()
-      );
-      flowSubscriptionData = {
-        planId: localStorage.getItem('TEST-PROD-TWO-SOLES') == 'TEST-PROD-TWO-SOLES' ? this.ENV.flowPlanIdTest : environment.flowCreatina250Gr2025_55_PlanId,
-        customerId: customerId || '',
-        subscription_start: this.formatDateToLimaTimezone(reactivationDate),
-      };
-    }
-    // DE UNA SUSCRIPCION POR CANCELAR
-    if (reactivateType === ReactivateType.FROM_TO_CANCEL) {
-      monthPaymentDate = undefined;
-    }
-
-    this.subscriptionService.reactivateSubscription(this.subscription()!.id, monthPaymentDate)
-      .pipe(
-        switchMap((response) => {
-
-          // Crear suscripción en Flow después de reactivar en backend, 
-          if (reactivateType !== ReactivateType.FROM_TO_CANCEL) {    
-            return this.flowService.createSubscription(flowSubscriptionData)
-              .pipe(
-                map((flowResponse) => ({ backendResponse: response, flowResponse })),
-                catchError((flowError) => {
-                  console.error('Error creando suscripción en Flow:', flowError);
-                  // Continuar con la respuesta del backend aunque falle en Flow
-                  return of({ backendResponse: response, flowResponse: null });
-                })
-              );
-          }
-
-          return of({ backendResponse: response, flowResponse: null });
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
+    // El backend hace TODO de forma atómica:
+    // - calcula next_billing_date a partir del día de facturación original
+    // - decide si recrear la suscripción recurrente en Flow (caso A),
+    //   marcar pendingFlowSync (caso B) o solo cambio local (caso C)
+    // - otorga 10 Magropuntos si venía de CANCELLED
+    // - rollback automático si Flow falla
+    // El frontend solo envía el id; el backend es la fuente de verdad.
+    this.subscriptionService.reactivateSubscription(this.subscription()!.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (combinedResponse) => {
-          const response = combinedResponse.backendResponse;
-
-          // Actualizar el Flow subscription ID si se creó exitosamente
-          if (combinedResponse.flowResponse) {
-            this.flowSubscriptionId.set(combinedResponse.flowResponse.subscriptionId);
-          }
-          const nextBilling = response.data.subscription.next_billing_date;
+        next: (response) => {
+          const sub = response.data.subscription;
+          const nextBilling = sub.next_billing_date;
           this.nextPaymentDate.set(nextBilling ? new Date(nextBilling) : null);
-          let credits = '10'
-          if (response.data.subscription.status === SubscriptionStatusEnum.PAUSED || response.data.subscription.status === SubscriptionStatusEnum.TO_CANCEL ) {
-            credits = this.userCredits()
+
+          let credits = '10';
+          if (sub.status === SubscriptionStatusEnum.PAUSED || sub.status === SubscriptionStatusEnum.TO_CANCEL) {
+            credits = this.userCredits();
           }
           this.userCredits.set(credits);
-          this.subscription.set(response.data.subscription);
+          this.subscription.set(sub);
           this.isLoading.set(false);
 
-          // Calcular los meses de entrega y pago dinámicamente
-          const fechaActual = new Date();
-          const mesActual = fechaActual.getMonth();
-          const diaActual = fechaActual.getDate();
-
-          // Determinar mes de entrega y mes de pago
-          let mesEntrega: number;
-          let mesPago: number;
-
-
-          mesEntrega = (mesActual + 1) % 12;
-          mesPago = mesActual;
-
-
-          // Obtener nombres de los meses en español
-          const nombresMeses = [
-            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-          ];
-
-          const mesEntregaNombre = nombresMeses[mesEntrega];
-          const mesPagoNombre = nombresMeses[mesPago];
-
-          // Mostrar modal de confirmación con los meses calculados
           this.showReactivationModal.set(true);
           this.reactivationMessage.set(
-            `¡Bienvenido de nuevo! A partir de ahora, tu suscripción ` +
-            `está activa nuevamente. `
-            // +`Puedes esperar tu próxima entrega en ${mesEntregaNombre}.`
+            '¡Bienvenido de nuevo! A partir de ahora, tu suscripción está activa nuevamente.'
           );
         },
         error: (err) => {

@@ -1,7 +1,9 @@
 {
   "name": "magrolabs-app",
   "version": "0.0.0",
+  "packageManager": "pnpm@11.2.2",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

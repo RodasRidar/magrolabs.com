@@ -8,7 +8,7 @@ import { Component, input, output } from '@angular/core';
     <div class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <div class="fixed inset-0 bg-fg-subtle bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
         <!-- Panel -->
         <div
@@ -22,7 +22,7 @@ import { Component, input, output } from '@angular/core';
               <button
                 type="button"
                 (click)="closeAction.emit()"
-                class="absolute top-3 right-3 text-gray-400 hover:text-gray-500 focus:outline-none">
+                class="absolute top-3 right-3 text-fg-subtle hover:text-fg-subtle focus:outline-none">
                 <span class="sr-only">Cerrar</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -38,7 +38,7 @@ import { Component, input, output } from '@angular/core';
           </div>
 
           <!-- Footer -->
-          <div class="bg-gray-50 px-4 py-3 sm:px-6">
+          <div class="bg-bg-alt px-4 py-3 sm:px-6">
             <ng-content select="[mlModalFooter]" />
           </div>
 

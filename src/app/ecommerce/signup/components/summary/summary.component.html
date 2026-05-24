@@ -21,16 +21,16 @@
 
     <!-- Plan seleccionado -->
     @if(summary.chosePlan){
-    <div class="mx-4 mb-8" [ngClass]="{'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8" [ngClass]="{'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">
                 <!-- {{summary.chosePlan.quantity}}  -->
                 {{summary.chosePlan.selection}}
             </span>
             @if (!isConfirmation) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a (click)="changeChoose()" (keypress)="changeChoose()" tabindex="0"
-                class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                 Cambiar
             </a>
             }
@@ -52,19 +52,19 @@
         </div>
     </div>
     }
-    <div class="border-b border-gray-200"></div>
+    <div class="border-b border-border"></div>
 
     <!-- Datos -->
     @if(summary.userData){
     <div class="mx-4 mb-8 mt-8"
-        [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+        [ngClass]="{'text-fg-subtle': isUserDataDisable && !isConfirmation , 'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
             @if(!isUserDataDisable) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a>
                 <a (click)="changeUserData()" (keypress)="changeUserData()" tabindex="0"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                    class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
@@ -83,7 +83,7 @@
         </div>
     </div>
     }@else {
-    <div class="mx-4 mb-8 mt-8 text-gray-300">
+    <div class="mx-4 mb-8 mt-8 text-fg-subtle">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
         </div>
@@ -100,19 +100,19 @@
         </div>
     </div>
     }
-    <div class="border-b border-gray-200"></div>
+    <div class="border-b border-border"></div>
 
     <!-- Dirección de entrega -->
     @if(summary.address){
     <div class="mx-4 mb-8 mt-8"
-        [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+        [ngClass]="{'text-fg-subtle': isAddressDisable && !isConfirmation , 'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
             @if(!isAddressDisable) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a>
                 <a (click)="changeAddress()" (keypress)="changeAddress()" tabindex="0"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                    class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
@@ -128,7 +128,7 @@
         </div>
     </div>
     }@else {
-    <div class="mx-4 mb-8 mt-8 text-gray-300">
+    <div class="mx-4 mb-8 mt-8 text-fg-subtle">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
         </div>
@@ -161,16 +161,16 @@
 
     <!-- Plan seleccionado -->
     @if(summary.chosePlan){
-    <div class="mx-4 mb-8" [ngClass]="{'text-gray-700': isConfirmation}">
+    <div class="mx-4 mb-8" [ngClass]="{'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">
                 <!-- {{summary.chosePlan.quantity}}  -->
                 {{summary.chosePlan.selection}}
             </span>
             @if (!isConfirmation) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a (click)="changeChoose()" (keypress)="changeChoose()" tabindex="0"
-                class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                 Cambiar
             </a>
             }
@@ -192,19 +192,19 @@
         </div>
     </div>
     }
-    <div class="border-b border-gray-200"></div>
+    <div class="border-b border-border"></div>
 
     <!-- Datos -->
     @if(summary.userData){
     <div class="mx-4 mb-8 mt-8"
-        [ngClass]="{'text-gray-300': isUserDataDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+        [ngClass]="{'text-fg-subtle': isUserDataDisable && !isConfirmation , 'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
             @if(!isUserDataDisable) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a>
                 <a (click)="changeUserData()" (keypress)="changeUserData()" tabindex="0"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                    class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
@@ -223,7 +223,7 @@
         </div>
     </div>
     }@else {
-    <div class="mx-4 mb-8 mt-8 text-gray-300">
+    <div class="mx-4 mb-8 mt-8 text-fg-subtle">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Datos</span>
         </div>
@@ -240,19 +240,19 @@
         </div>
     </div>
     }
-    <div class="border-b border-gray-200"></div>
+    <div class="border-b border-border"></div>
 
     <!-- Dirección de entrega -->
     @if(summary.address){
     <div class="mx-4 mb-8 mt-8"
-        [ngClass]="{'text-gray-300': isAddressDisable && !isConfirmation , 'text-gray-700': isConfirmation}">
+        [ngClass]="{'text-fg-subtle': isAddressDisable && !isConfirmation , 'text-fg-muted': isConfirmation}">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
             @if(!isAddressDisable) {
-            <span class="inline-block w-1 h-1 rounded-lg bg-black mx-2"></span>
+            <span class="inline-block w-1 h-1 rounded-lg bg-fg mx-2"></span>
             <a>
                 <a (click)="changeAddress()" (keypress)="changeAddress()" tabindex="0"
-                    class="text-gray-500 font-semibold text-sm underline hover:text-gray-400 hover:cursor-pointer ">
+                    class="text-fg-subtle font-semibold text-sm underline hover:text-fg-subtle hover:cursor-pointer ">
                     Cambiar
                 </a>
             </a>
@@ -268,7 +268,7 @@
         </div>
     </div>
     }@else {
-    <div class="mx-4 mb-8 mt-8 text-gray-300">
+    <div class="mx-4 mb-8 mt-8 text-fg-subtle">
         <div class="flex items-center">
             <span class="font-extrabold text-sm">Dirección</span>
         </div>

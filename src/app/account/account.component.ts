@@ -6,6 +6,7 @@ import {
   RouterOutlet,
   RouterLink,
 } from "@angular/router";
+import { IconComponent } from '../shared/ui/icon/icon.component';
 import { AuthService } from "../shared/services/auth.service";
 import { UserService } from "../shared/services/user.service";
 import { UserDetailResponse } from "../shared/interfaces/user.interfaces";
@@ -13,10 +14,11 @@ import { UserDetailResponse } from "../shared/interfaces/user.interfaces";
 import { CreditTransactionService } from "../shared/services/credit-transactions.service";
 import { LoyaltyService } from "../shared/services/loyalty.service";
 import { LoyaltyTierImageRoutes } from "../shared/interfaces/loyalty.interfaces";
+import { LogoComponent } from "../shared/ui/logo/logo.component";
 
 @Component({
   selector: "app-account",
-  imports: [RouterLink, RouterOutlet, RouterLinkActive],
+  imports: [RouterLink, RouterOutlet, RouterLinkActive, LogoComponent, IconComponent],
   templateUrl: "./account.component.html",
 })
 export class AccountComponent implements OnInit {

@@ -45,10 +45,10 @@ export class AlertComponent {
 
   protected readonly containerClass = computed(() => {
     const map: Record<AlertType, string> = {
-      success: 'rounded-lg bg-green-50 border border-green-200 p-4',
-      error:   'rounded-lg bg-red-50 border border-red-200 p-4',
-      warning: 'rounded-lg bg-yellow-50 border border-yellow-200 p-4',
-      info:    'rounded-lg bg-blue-50 border border-blue-200 p-4',
+      success: 'rounded-lg p-4 border bg-green-50 border-green-200 dark:bg-green-950/40 dark:border-green-800',
+      error:   'rounded-lg p-4 border bg-red-50 border-red-200 dark:bg-red-950/40 dark:border-red-800',
+      warning: 'rounded-lg p-4 border bg-yellow-50 border-yellow-200 dark:bg-yellow-950/40 dark:border-yellow-800',
+      info:    'rounded-lg p-4 border bg-blue-50 border-blue-200 dark:bg-blue-950/40 dark:border-blue-800',
     };
     return map[this.type()];
   });

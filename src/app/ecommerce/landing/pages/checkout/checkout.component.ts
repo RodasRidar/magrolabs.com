@@ -37,10 +37,11 @@ import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.
 import { InputComponent } from '../../../../shared/ui/input/input.component';
 import { SelectComponent } from '../../../../shared/ui/select/select.component';
 import { PasswordInputComponent } from '../../../../shared/ui/password-input/password-input.component';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-checkout',
-    imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent],
+    imports: [NavbarComponent, OrderSummaryItemComponent, ReactiveFormsModule, CommonModule, RouterLink, PaymentMethodComponent, ButtonComponent, FormFieldComponent, InputComponent, SelectComponent, PasswordInputComponent, IconComponent],
     templateUrl: './checkout.component.html',
     styleUrl: './checkout.component.css'
 })

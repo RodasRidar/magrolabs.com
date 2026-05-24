@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-envio-entrega',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './envio-entrega.component.html',
     styleUrl: './envio-entrega.component.css'
 })

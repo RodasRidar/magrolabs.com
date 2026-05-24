@@ -4,20 +4,16 @@
         <div
             class="ml-auto relative max-w-xs w-full h-full  shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
             <div class="px-4 flex items-center justify-between">
-                <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+                <h2 class="text-lg font-medium text-fg">Filters</h2>
                 <button type="button"
-                    class="-mr-2 w-10 h-10  p-2 rounded-md flex items-center justify-center text-gray-400">
+                    class="-mr-2 w-10 h-10  p-2 rounded-md flex items-center justify-center text-fg-subtle">
                     <span class="sr-only">Close menu</span>
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <ml-icon name="close" class="h-6 w-6" />
                 </button>
             </div>
-            <form class="mt-4 border-t border-gray-200">
+            <form class="mt-4 border-t border-border">
                 <h3 class="sr-only">Categories</h3>
-                <ul role="list" class="font-medium text-gray-900 px-2 py-3">
+                <ul role="list" class="font-medium text-fg px-2 py-3">
                     <li>
                         <a href="#" class="block px-2 py-3"> Totes </a>
                     </li>
@@ -39,24 +35,15 @@
                     </li>
                 </ul>
 
-                <div class="border-t border-gray-200 px-4 py-6">
+                <div class="border-t border-border px-4 py-6">
                     <h3 class="-mx-2 -my-3 flow-root">
                         <button type="button"
-                            class="px-2 py-3  w-full flex items-center justify-between text-gray-400 hover:text-gray-500"
+                            class="px-2 py-3  w-full flex items-center justify-between text-fg-subtle hover:text-fg-subtle"
                             aria-controls="filter-section-mobile-0" aria-expanded="false">
-                            <span class="font-medium text-gray-900"> Color </span>
+                            <span class="font-medium text-fg"> Color </span>
                             <span class="ml-6 flex items-center">
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                                <ml-icon name="plus" class="h-5 w-5" />
+                                <ml-icon name="minus" class="h-5 w-5" />
                             </span>
                         </button>
                     </h3>
@@ -64,68 +51,59 @@
                         <div class="space-y-6">
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-0" name="color[]" value="white" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-0" class="ml-3 min-w-0 flex-1 text-gray-500"> White
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-0" class="ml-3 min-w-0 flex-1 text-fg-subtle"> White
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-1" name="color[]" value="beige" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-gray-500"> Beige
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-fg-subtle"> Beige
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-2" name="color[]" value="blue" type="checkbox"
                                     checked
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-2" class="ml-3 min-w-0 flex-1 text-gray-500"> Blue
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-2" class="ml-3 min-w-0 flex-1 text-fg-subtle"> Blue
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-3" name="color[]" value="brown" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-3" class="ml-3 min-w-0 flex-1 text-gray-500"> Brown
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-3" class="ml-3 min-w-0 flex-1 text-fg-subtle"> Brown
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-4" name="color[]" value="green" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-4" class="ml-3 min-w-0 flex-1 text-gray-500"> Green
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-4" class="ml-3 min-w-0 flex-1 text-fg-subtle"> Green
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-color-5" name="color[]" value="purple" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-color-5" class="ml-3 min-w-0 flex-1 text-gray-500"> Purple
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-color-5" class="ml-3 min-w-0 flex-1 text-fg-subtle"> Purple
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 px-4 py-6">
+                <div class="border-t border-border px-4 py-6">
                     <h3 class="-mx-2 -my-3 flow-root">
                         <button type="button"
-                            class="px-2 py-3  w-full flex items-center justify-between text-gray-400 hover:text-gray-500"
+                            class="px-2 py-3  w-full flex items-center justify-between text-fg-subtle hover:text-fg-subtle"
                             aria-controls="filter-section-mobile-1" aria-expanded="false">
-                            <span class="font-medium text-gray-900"> Category </span>
+                            <span class="font-medium text-fg"> Category </span>
                             <span class="ml-6 flex items-center">
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                                <ml-icon name="plus" class="h-5 w-5" />
+                                <ml-icon name="minus" class="h-5 w-5" />
                             </span>
                         </button>
                     </h3>
@@ -134,63 +112,54 @@
                             <div class="flex items-center">
                                 <input id="filter-mobile-category-0" name="category[]" value="new-arrivals"
                                     type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-category-0" class="ml-3 min-w-0 flex-1 text-gray-500"> New
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-category-0" class="ml-3 min-w-0 flex-1 text-fg-subtle"> New
                                     Arrivals </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-category-1" name="category[]" value="sale" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-category-1" class="ml-3 min-w-0 flex-1 text-gray-500">
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-category-1" class="ml-3 min-w-0 flex-1 text-fg-subtle">
                                     Sale </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-category-2" name="category[]" value="travel"
                                     type="checkbox" checked
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-category-2" class="ml-3 min-w-0 flex-1 text-gray-500">
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-category-2" class="ml-3 min-w-0 flex-1 text-fg-subtle">
                                     Travel </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-category-3" name="category[]" value="organization"
                                     type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-category-3" class="ml-3 min-w-0 flex-1 text-gray-500">
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-category-3" class="ml-3 min-w-0 flex-1 text-fg-subtle">
                                     Organization </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-category-4" name="category[]" value="accessories"
                                     type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-category-4" class="ml-3 min-w-0 flex-1 text-gray-500">
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-category-4" class="ml-3 min-w-0 flex-1 text-fg-subtle">
                                     Accessories </label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 px-4 py-6">
+                <div class="border-t border-border px-4 py-6">
                     <h3 class="-mx-2 -my-3 flow-root">
                         <button type="button"
-                            class="px-2 py-3  w-full flex items-center justify-between text-gray-400 hover:text-gray-500"
+                            class="px-2 py-3  w-full flex items-center justify-between text-fg-subtle hover:text-fg-subtle"
                             aria-controls="filter-section-mobile-2" aria-expanded="false">
-                            <span class="font-medium text-gray-900"> Size </span>
+                            <span class="font-medium text-fg"> Size </span>
                             <span class="ml-6 flex items-center">
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                                <ml-icon name="plus" class="h-5 w-5" />
+                                <ml-icon name="minus" class="h-5 w-5" />
                             </span>
                         </button>
                     </h3>
@@ -198,43 +167,43 @@
                         <div class="space-y-6">
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-0" name="size[]" value="2l" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-0" class="ml-3 min-w-0 flex-1 text-gray-500"> 2L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-0" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 2L
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-1" name="size[]" value="6l" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-1" class="ml-3 min-w-0 flex-1 text-gray-500"> 6L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-1" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 6L
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-2" name="size[]" value="12l" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-2" class="ml-3 min-w-0 flex-1 text-gray-500"> 12L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-2" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 12L
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-3" name="size[]" value="18l" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-3" class="ml-3 min-w-0 flex-1 text-gray-500"> 18L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-3" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 18L
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-4" name="size[]" value="20l" type="checkbox"
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-4" class="ml-3 min-w-0 flex-1 text-gray-500"> 20L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-4" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 20L
                                 </label>
                             </div>
 
                             <div class="flex items-center">
                                 <input id="filter-mobile-size-5" name="size[]" value="40l" type="checkbox" checked
-                                    class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
-                                <label for="filter-mobile-size-5" class="ml-3 min-w-0 flex-1 text-gray-500"> 40L
+                                    class="h-4 w-4 border-border-strong rounded text-indigo-600 focus:ring-indigo-500">
+                                <label for="filter-mobile-size-5" class="ml-3 min-w-0 flex-1 text-fg-subtle"> 40L
                                 </label>
                             </div>
                         </div>
@@ -248,8 +217,8 @@
         <div
             class="relative z-10 flex items-baseline justify-between pt-4 sm:pt-8 px-6 border-b-4 border-primary-hover -ml-7 sm:-ml-9">
             <div class="flex flex-col justify-start mb-6 sm:mb-8">
-                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Tienda.</h1>
-                <!-- <p class="text-base text-gray-700 my-4 font-light text-pretty">
+                <h1 class="text-4xl font-extrabold tracking-tight text-fg">Tienda.</h1>
+                <!-- <p class="text-base text-fg-muted my-4 font-light text-pretty">
                     Acumular crédito para compras es muy fácil. Cada miembro recibe S/{{ENV.creditoRegaloPorCompraMes}} de crédito al mes. Ahorra para
                     tu artículo favorito en nuestra tienda online. Cada temporada, actualizamos la tienda web con nuevos
                     artículos exclusivos. Mantente siempre atento a la tienda online.
@@ -261,10 +230,10 @@
                 <div class="relative inline-block text-left">
                     <div>
                         <button type="button"
-                            class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                            class="group inline-flex justify-center text-sm font-medium text-fg-muted hover:text-fg"
                             id="menu-button" aria-expanded="false" aria-haspopup="true">
                             Sort
-                            <svg class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                            <svg class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-fg-subtle group-hover:text-fg-subtle"
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 aria-hidden="true">
                                 <path fill-rule="evenodd"
@@ -277,25 +246,25 @@
                     <div class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl  ring-1 ring-Negro ring-opacity-5 focus:outline-none"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                         <div class="py-1" role="none">
-                            <a href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="#" class="font-medium text-fg block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-0"> Most Popular </a>
 
-                            <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                            <a href="#" class="text-fg-subtle block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
                                 id="menu-item-1"> Best Rating </a>
 
-                            <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                            <a href="#" class="text-fg-subtle block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
                                 id="menu-item-2"> Newest </a>
 
-                            <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                            <a href="#" class="text-fg-subtle block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
                                 id="menu-item-3"> Price: Low to High </a>
 
-                            <a href="#" class="text-gray-500 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                            <a href="#" class="text-fg-subtle block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
                                 id="menu-item-4"> Price: High to Low </a>
                         </div>
                     </div>
                 </div>
 
-                <button type="button" class="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
+                <button type="button" class="p-2 -m-2 ml-5 sm:ml-7 text-fg-subtle hover:text-fg-subtle">
                     <span class="sr-only">View grid</span>
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                         fill="currentColor">
@@ -303,7 +272,7 @@
                             d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                 </button>
-                <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden">
+                <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-fg-subtle hover:text-fg-subtle lg:hidden">
                     <span class="sr-only">Filters</span>
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                         fill="currentColor">
@@ -334,15 +303,13 @@
                             [class.border-primary]="activeCategoriesCount > 0"
                             [class.text-primary]="activeCategoriesCount > 0"
                             [class.bg-primary]="false"
-                            [class.border-gray-300]="activeCategoriesCount === 0"
-                            [class.text-gray-600]="activeCategoriesCount === 0">
+                            [class.border-border-strong]="activeCategoriesCount === 0"
+                            [class.text-fg-muted]="activeCategoriesCount === 0">
                             Categorías
                             @if (activeCategoriesCount > 0) {
                             <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeCategoriesCount }}</span>
                             } @else {
-                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <ml-icon name="chevron-down" class="h-3 w-3" />
                             }
                         </button>
 
@@ -351,15 +318,13 @@
                             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors"
                             [class.border-primary]="activeSizesCount > 0"
                             [class.text-primary]="activeSizesCount > 0"
-                            [class.border-gray-300]="activeSizesCount === 0"
-                            [class.text-gray-600]="activeSizesCount === 0">
+                            [class.border-border-strong]="activeSizesCount === 0"
+                            [class.text-fg-muted]="activeSizesCount === 0">
                             Tamaños
                             @if (activeSizesCount > 0) {
                             <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeSizesCount }}</span>
                             } @else {
-                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <ml-icon name="chevron-down" class="h-3 w-3" />
                             }
                         </button>
                     </div>
@@ -373,48 +338,48 @@
                     <div class="sheet-backdrop absolute inset-0 bg-black/40"></div>
 
                     <!-- Panel -->
-                    <div class="sheet-panel relative bg-white rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
+                    <div class="sheet-panel relative bg-bg rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
                         (click)="$event.stopPropagation()">
 
                         <!-- Handle -->
-                        <div class="mx-auto w-10 h-1 rounded-full bg-gray-200 mb-5"></div>
+                        <div class="mx-auto w-10 h-1 rounded-full bg-bg-alt mb-5"></div>
 
                         @if (activeMobileFilter() === 'categories') {
                         <!-- Sheet: Categorías -->
-                        <h3 class="text-base font-semibold text-gray-900 mb-6">Categorías</h3>
+                        <h3 class="text-base font-semibold text-fg mb-6">Categorías</h3>
                         <div class="space-y-5">
                             <label class="flex items-center justify-between cursor-pointer py-1">
-                                <span class="text-sm text-gray-700">Oferta</span>
+                                <span class="text-sm text-fg-muted">Oferta</span>
                                 <input type="checkbox" [checked]="isCategorySelected('sale')"
                                     (change)="toggleCategory('sale')"
-                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                                    class="h-5 w-5 rounded border-border-strong text-primary focus:ring-primary">
                             </label>
-                            <div class="border-t border-gray-100"></div>
+                            <div class="border-t border-border"></div>
                             <label class="flex items-center justify-between cursor-pointer py-1">
-                                <span class="text-sm text-gray-700">Nuevos lanzamientos</span>
+                                <span class="text-sm text-fg-muted">Nuevos lanzamientos</span>
                                 <input type="checkbox" [checked]="isCategorySelected('new-arrivals')"
                                     (change)="toggleCategory('new-arrivals')"
-                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                                    class="h-5 w-5 rounded border-border-strong text-primary focus:ring-primary">
                             </label>
                         </div>
                         }
 
                         @if (activeMobileFilter() === 'sizes') {
                         <!-- Sheet: Tamaños -->
-                        <h3 class="text-base font-semibold text-gray-900 mb-6">Tamaños</h3>
+                        <h3 class="text-base font-semibold text-fg mb-6">Tamaños</h3>
                         <div class="space-y-5">
                             <label class="flex items-center justify-between cursor-pointer py-1">
-                                <span class="text-sm text-gray-700">100 gr</span>
+                                <span class="text-sm text-fg-muted">100 gr</span>
                                 <input type="checkbox" [checked]="isSizeSelected('100gr')"
                                     (change)="toggleSize('100gr')"
-                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                                    class="h-5 w-5 rounded border-border-strong text-primary focus:ring-primary">
                             </label>
-                            <div class="border-t border-gray-100"></div>
+                            <div class="border-t border-border"></div>
                             <label class="flex items-center justify-between cursor-pointer py-1">
-                                <span class="text-sm text-gray-700">250 gr</span>
+                                <span class="text-sm text-fg-muted">250 gr</span>
                                 <input type="checkbox" [checked]="isSizeSelected('250gr')"
                                     (change)="toggleSize('250gr')"
-                                    class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary">
+                                    class="h-5 w-5 rounded border-border-strong text-primary focus:ring-primary">
                             </label>
                         </div>
                         }
@@ -422,13 +387,10 @@
                         <!-- Acciones -->
                         <div class="flex items-center justify-between mt-8">
                             <button type="button" (click)="clearFilters()"
-                                class="text-sm text-gray-500 hover:text-gray-900 underline underline-offset-2">
+                                class="text-sm text-fg-subtle hover:text-fg underline underline-offset-2">
                                 Limpiar filtros
                             </button>
-                            <button type="button" (click)="closeMobileFilter()"
-                                class="px-6 py-2.5 rounded-full bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
-                                Mostrar
-                            </button>
+                            <ml-button (click)="closeMobileFilter()" name="Mostrar" type="primary"></ml-button>
                         </div>
                     </div>
                 </div>
@@ -436,48 +398,48 @@
 
                 <!-- Sidebar filtros desktop (>= lg) -->
                 <aside class="hidden lg:block lg:col-span-1">
-                    <div class="border-b border-gray-200 py-6">
-                        <h3 class="text-sm font-medium text-gray-900 mb-4">Categorías</h3>
+                    <div class="border-b border-border py-6">
+                        <h3 class="text-sm font-medium text-fg mb-4">Categorías</h3>
                         <div class="space-y-3">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" [checked]="isCategorySelected('sale')"
                                     (change)="toggleCategory('sale')"
-                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600">Oferta</span>
+                                    class="h-4 w-4 rounded border-border-strong text-primary focus:ring-primary">
+                                <span class="text-sm text-fg-muted">Oferta</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" [checked]="isCategorySelected('new-arrivals')"
                                     (change)="toggleCategory('new-arrivals')"
-                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600">Nuevos lanzamientos</span>
+                                    class="h-4 w-4 rounded border-border-strong text-primary focus:ring-primary">
+                                <span class="text-sm text-fg-muted">Nuevos lanzamientos</span>
                             </label>
                         </div>
                     </div>
-                    <div class="border-b border-gray-200 py-6">
-                        <h3 class="text-sm font-medium text-gray-900 mb-4">Tamaños</h3>
+                    <div class="border-b border-border py-6">
+                        <h3 class="text-sm font-medium text-fg mb-4">Tamaños</h3>
                         <div class="space-y-3">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" [checked]="isSizeSelected('100gr')"
                                     (change)="toggleSize('100gr')"
-                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600">100 gr</span>
+                                    class="h-4 w-4 rounded border-border-strong text-primary focus:ring-primary">
+                                <span class="text-sm text-fg-muted">100 gr</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" [checked]="isSizeSelected('250gr')"
                                     (change)="toggleSize('250gr')"
-                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600">250 gr</span>
+                                    class="h-4 w-4 rounded border-border-strong text-primary focus:ring-primary">
+                                <span class="text-sm text-fg-muted">250 gr</span>
                             </label>
                             <!-- <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" [checked]="isSizeSelected('3kg')" (change)="toggleSize('3kg')"
-                                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                                <span class="text-sm text-gray-600">3 kg</span>
+                                    class="h-4 w-4 rounded border-border-strong text-primary focus:ring-primary">
+                                <span class="text-sm text-fg-muted">3 kg</span>
                             </label> -->
                         </div>
                     </div>
                     @if (hasActiveFilters) {
                     <button type="button" (click)="clearFilters()"
-                        class="mt-4 text-xs text-gray-500 hover:text-gray-900 underline">
+                        class="mt-4 text-xs text-fg-subtle hover:text-fg underline">
                         Limpiar filtros
                     </button>
                     }
@@ -487,12 +449,12 @@
                 <div class="lg:col-span-3">
                     @if (filteredProducts().length === 0) {
                     <div class="flex flex-col items-center justify-center py-16 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mb-4" fill="none"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-fg-subtle mb-4" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p class="text-gray-500 text-sm">No hay productos que coincidan con los filtros.</p>
+                        <p class="text-fg-subtle text-sm">No hay productos que coincidan con los filtros.</p>
                         <button (click)="clearFilters()" class="mt-3 text-sm text-primary hover:underline">Limpiar
                             filtros</button>
                     </div>
@@ -501,22 +463,22 @@
                         @for (product of filteredProducts(); track product.route) {
                         <a [routerLink]="product.route" class="group text-sm">
                             <div
-                                class="w-full aspect-square rounded-lg overflow-hidden bg-[#eeeae7] group-hover:opacity-75">
+                                class="w-full aspect-square rounded-lg overflow-hidden bg-bg-alt group-hover:opacity-75">
                                 <img [ngSrc]="product.imgSrc" [alt]="product.imgAlt"
                                     class="w-full h-full object-center object-cover" width="1500" height="1500"
                                     priority>
                             </div>
-                            <h3 class="mt-3 font-medium text-gray-900 text-sm leading-snug">{{ product.title }}</h3>
-                            <p class="text-gray-500 text-xs mt-0.5">{{ product.subtitle }}</p>
+                            <h3 class="mt-3 font-medium text-fg text-sm leading-snug">{{ product.title }}</h3>
+                            <p class="text-fg-subtle text-xs mt-0.5">{{ product.subtitle }}</p>
                             @if (product.route.includes('100-gr')) {
                             <div class="flex items-center mt-2 gap-1.5 flex-wrap">
-                                <p class="font-extralight text-gray-900 text-xs line-through">{{ ENV.creatinaFreePrecio
+                                <p class="font-extralight text-fg text-xs line-through">{{ ENV.creatinaFreePrecio
                                     | currency:'S/' }}</p>
                                 <span class="text-primary-hover text-xs font-medium">{{
                                     ENV.campanaPrimeraCreatina.textos.ofertaCorta }}</span>
                             </div>
                             } @else {
-                            <p class="mt-2 font-extralight text-gray-900 text-xs">Desde {{
+                            <p class="mt-2 font-extralight text-fg text-xs">Desde {{
                                 ENV.precioCreatinaSubscription | currency:'S/' }}</p>
                             }
                         </a>

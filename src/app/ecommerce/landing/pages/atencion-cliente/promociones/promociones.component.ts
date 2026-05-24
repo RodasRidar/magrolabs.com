@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-promociones',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './promociones.component.html',
     styleUrl: './promociones.component.css'
 })

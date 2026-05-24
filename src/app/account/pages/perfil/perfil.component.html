@@ -15,7 +15,7 @@
           </div>
         }
         <!-- <h1 class="text-2xl font-bold mb-2">Datos Personales</h1>
-        <p class="text-gray-600 mb-6">Aquí encontrarás tus datos personales</p> -->
+        <p class="text-fg-muted mb-6">Aquí encontrarás tus datos personales</p> -->
 
         <!-- Error en carga de perfil -->
         @if (isProfileError()) {
@@ -35,10 +35,10 @@
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                 />
               </svg>
-              <h2 class="text-xl font-semibold text-gray-800 mb-2">
+              <h2 class="text-xl font-semibold text-fg mb-2">
                 No pudimos cargar tus datos
               </h2>
-              <p class="text-gray-600 mb-4">
+              <p class="text-fg-muted mb-4">
                 Ha ocurrido un error al obtener tu información personal.
               </p>
               <button
@@ -55,18 +55,18 @@
         @if (loadingProfile() && !isProfileError()) {
           <ml-card padding="md" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+              <div class="h-8 bg-bg-alt rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-bg-alt rounded-full animate-pulse"></div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Skeleton campos -->
               @for (item of [1, 2, 3, 4, 5, 6]; track item) {
                 <div class="form-group">
                   <div
-                    class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"
+                    class="h-5 bg-bg-alt rounded w-24 mb-2 animate-pulse"
                   ></div>
                   <div
-                    class="h-10 bg-gray-200 rounded w-full animate-pulse"
+                    class="h-10 bg-bg-alt rounded w-full animate-pulse"
                   ></div>
                 </div>
               }
@@ -192,7 +192,7 @@
                   <button
                     type="button"
                     (click)="toggleProfileEdit()"
-                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    class="px-6 py-2 border border-border-strong rounded-md text-fg-muted hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                   >
                     Cancelar
                   </button>
@@ -240,24 +240,24 @@
 
         <!-- Sección de Dirección -->
         <!-- <h1 class="text-2xl font-bold mb-2">Dirección</h1>
-        <p class="text-gray-600 mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p> -->
+        <p class="text-fg-muted mb-6">Tu dirección de envío es la misma que usamos para tus boletas.</p> -->
 
         <!-- Skeleton para sección de dirección mientras se carga -->
         @if (loadingAddress() && !isProfileError()) {
           <ml-card padding="md" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+              <div class="h-8 bg-bg-alt rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-bg-alt rounded-full animate-pulse"></div>
             </div>
-            <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
+            <div class="h-4 bg-bg-alt rounded w-3/4 mb-8 animate-pulse"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               @for (item of [1, 2, 3, 4, 5, 6]; track item) {
                 <div class="form-group">
                   <div
-                    class="h-5 bg-gray-200 rounded w-24 mb-2 animate-pulse"
+                    class="h-5 bg-bg-alt rounded w-24 mb-2 animate-pulse"
                   ></div>
                   <div
-                    class="h-10 bg-gray-200 rounded w-full animate-pulse"
+                    class="h-10 bg-bg-alt rounded w-full animate-pulse"
                   ></div>
                 </div>
               }
@@ -300,7 +300,7 @@
                   <div class="form-group mb-6">
                     <label
                       for="searchAddress"
-                      class="block text-sm font-medium text-gray-700 mb-1"
+                      class="block text-sm font-medium text-fg-muted mb-1"
                     >
                       Buscar dirección
                     </label>
@@ -317,7 +317,7 @@
                           class="absolute inset-y-0 right-0 pr-3 flex items-center"
                         >
                           <svg
-                            class="animate-spin h-5 w-5 text-gray-500"
+                            class="animate-spin h-5 w-5 text-fg-subtle"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -347,7 +347,7 @@
                         <ul>
                           @for (address of addressList; track address) {
                             <li
-                              class="p-3 border-b hover:bg-gray-50 cursor-pointer"
+                              class="p-3 border-b hover:bg-bg-alt cursor-pointer"
                               (click)="selectAddress(address)"
                             >
                               {{ address.display_name }}
@@ -476,7 +476,7 @@
                   <button
                     type="button"
                     (click)="toggleAddressEdit()"
-                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    class="px-6 py-2 border border-border-strong rounded-md text-fg-muted hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                   >
                     Cancelar
                   </button>
@@ -522,7 +522,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Dirección completa -->
                 <div class="form-group md:col-span-2">
-                  <div class="p-3 bg-gray-50 rounded-md">
+                  <div class="p-3 bg-bg-alt rounded-md">
                     @if (addressForm.get("streetAddress")?.value) {
                       <div>
                         {{ addressForm.get("streetAddress")?.value }}
@@ -560,16 +560,16 @@
 
         <!-- Sección de Contraseña -->
         <!-- <h1 class="text-2xl font-bold mb-2">Contraseña</h1>
-      <p class="text-gray-600 mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p> -->
+      <p class="text-fg-muted mb-6">Si quieres modificar tu contraseña, asegúrate que esta sea segura.</p> -->
 
         <!-- Skeleton para sección de contraseña mientras se carga el perfil -->
         @if (loadingProfile() && !isProfileError()) {
           <ml-card padding="md" class="mb-8">
             <div class="flex justify-between items-center mb-6">
-              <div class="h-8 bg-gray-200 rounded w-56 animate-pulse"></div>
-              <div class="h-8 w-8 bg-gray-200 rounded-full animate-pulse"></div>
+              <div class="h-8 bg-bg-alt rounded w-56 animate-pulse"></div>
+              <div class="h-8 w-8 bg-bg-alt rounded-full animate-pulse"></div>
             </div>
-            <div class="h-4 bg-gray-200 rounded w-3/4 mb-8 animate-pulse"></div>
+            <div class="h-4 bg-bg-alt rounded w-3/4 mb-8 animate-pulse"></div>
           </ml-card>
         }
 
@@ -640,7 +640,7 @@
                   <button
                     type="button"
                     (click)="togglePasswordEdit()"
-                    class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
+                    class="px-6 py-2 border border-border-strong rounded-md text-fg-muted hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-muted"
                   >
                     Cancelar
                   </button>

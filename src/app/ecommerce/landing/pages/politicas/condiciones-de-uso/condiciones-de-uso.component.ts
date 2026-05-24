@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 import { title } from 'process';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-condiciones-de-uso',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './condiciones-de-uso.component.html',
     styleUrl: './condiciones-de-uso.component.css'
 })

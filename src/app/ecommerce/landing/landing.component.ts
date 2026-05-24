@@ -3,6 +3,7 @@ import {
   NavbarComponent,
   NavbarTypeEnum,
 } from "./components/navbar/navbar.component";
+import { IconComponent } from '../../shared/ui/icon/icon.component';
 import { HeroComponent } from "././components/hero/hero.component";
 import { RouterLink } from "@angular/router";
 import { SeoService } from "../../shared/services/seo.service";
@@ -23,6 +24,7 @@ import { AccordionItemComponent } from "../../shared/ui/accordion/accordion-item
     ButtonComponent,
     AccordionGroupComponent,
     AccordionItemComponent,
+    IconComponent,
   ],
   templateUrl: "./landing.component.html",
 })

@@ -1,10 +1,11 @@
 import { Component, input, InputSignal } from '@angular/core';
 import { StepEnum } from '../../../models/step.model';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-step-item',
-    imports: [CommonModule],
+    imports: [CommonModule, IconComponent],
     templateUrl: './step-item.component.html',
     styleUrls: ['./step-item.component.css']
 })
@@ -16,9 +17,6 @@ export class StepItemComponent {
   isCompleted = input.required<boolean>();
 
   get bgColor() : string  {
-    return (this.isCompleted() || this.isCurrent()) ? 'bg-gray-900' : 'bg-gray-300';
-  }
-  get iconColor() : string  {
-    return (this.isCompleted() || this.isCurrent()) ? '#ffffff' : '#828282';
+    return (this.isCompleted() || this.isCurrent()) ? 'bg-fg' : 'bg-border-strong';
   }
 }

@@ -15,11 +15,11 @@ export interface BreadcrumbItem {
         @for (item of items(); track item.label; let last = $last) {
           @if (item.link) {
             <a [routerLink]="item.link"
-               class="text-gray-700 text-sm font-extralight underline hover:no-underline hover:text-gray-900">
+               class="text-fg-muted text-sm font-extralight underline hover:no-underline hover:text-fg">
               {{ item.label }}
             </a>
           } @else {
-            <span class="text-gray-700 text-sm font-extralight max-sm:tracking-tighter">{{ item.label }}</span>
+            <span class="text-fg-muted text-sm font-extralight max-sm:tracking-tighter">{{ item.label }}</span>
           }
 
           @if (!last) {

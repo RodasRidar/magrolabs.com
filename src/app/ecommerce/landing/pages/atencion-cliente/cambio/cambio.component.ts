@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 import { title } from 'process';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-cambio',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './cambio.component.html',
     styleUrl: './cambio.component.css'
 })

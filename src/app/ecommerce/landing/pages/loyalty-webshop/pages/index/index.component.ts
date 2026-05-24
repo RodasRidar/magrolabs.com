@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { environment } from '../../../../../../../environments/env';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
 
 interface Product {
   slug: string;

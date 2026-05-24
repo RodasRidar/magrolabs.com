@@ -63,7 +63,7 @@ export class TooltipComponent {
    * Retorna las clases CSS para la posición del tooltip
    */
   getPositionClasses(): string {
-    const baseClasses = 'absolute px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50';
+    const baseClasses = 'absolute px-3 py-1 bg-fg text-bg text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50';
     
     let positionClasses = '';
     

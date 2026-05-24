@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-programa-loyalty',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './programa-loyalty.component.html',
     styleUrl: './programa-loyalty.component.css'
 })

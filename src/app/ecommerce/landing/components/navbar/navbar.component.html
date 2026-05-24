@@ -1,29 +1,23 @@
 @if (type() === navbarTypeEnum.ECOMMERCE) {
-<div class="relative bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center  max-sm:py-1 py-2 lg:justify-start md:space-x-10">
+<div class="relative bg-bg shadow">
+    <div class="max-w-7xl mx-auto px-1 sm:px-6">
+        <div class="flex justify-between items-center  max-sm:py-4 py-6 lg:justify-start md:space-x-10">
 
             <div class="flex justify-between lg:w-0 lg:flex-1 w-full">
 
                 <div class="flex items-center">
                     <div class="lg:hidden flex items-center">
                         <button type="button" (click)="toggleNavbar()"
-                            class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover"
+                            class="bg-bg rounded-md p-2 inline-flex items-center justify-center text-fg-subtle hover:text-fg-subtle hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover"
                             aria-expanded="false">
                             <span class="sr-only">Open menu</span>
                             <!-- Heroicon name: outline/menu -->
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+                            <ml-icon name="menu" class="h-6 w-6" />
                         </button>
                     </div>
 
                     <a [routerLink]="[ '/' ]" class="flex items-center">
-                        <span class="sr-only">Magrolabs</span>
-                        <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
-                            class="sm:h-12 h-8 w-auto" priority />
+                        <ml-logo class="sm:h-6 h-4 w-auto text-fg ml-2" label="Magrolabs" />
                     </a>
                 </div>
 
@@ -31,66 +25,49 @@
                     <div class="relative lg:hidden block">
                         <div>
                             <button type="button"
-                                class="bg-white m-2 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                class="bg-bg m-2 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                 id="user-menu-button" aria-expanded="false" aria-haspopup="true"
                                 (click)="toggleUserMenu()">
                                 <span class="sr-only">Abrir menú de usuario</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" height="40px" class="h-8 w-8"
-                                    viewBox="0 -960 960 960" width="40px" fill="rgba(0,0,0,1)">
-                                    <path
-                                        d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z" />
-                                </svg>
+                                <ml-icon name="user-circle-outline" class="h-8 w-8" />
                             </button>
                         </div>
 
                         @if (isUserMenuOpen) {
                         @if(isAuthenticated){
-                        <div class="z-50 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        <div class="z-50 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-bg ring-1 ring-black ring-opacity-5 focus:outline-none"
                             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                            <div class="px-4 py-3 border-b border-border">
+                                <div class="text-base font-medium text-fg">{{user?.first_name || 'Usuario'}}
                                     {{user?.last_name || ''}}</div>
-                                <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
+                                <div class="text-xs font-medium text-fg-subtle">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
                             <a routerLink="/cuenta/mi-cuenta"
-                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#000000">
-                                    <path
-                                        d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
-                                </svg>
+                                <ml-icon name="home" class="h-5 w-5" />
                                 &nbsp;Inicio
                             </a>
-                            <a routerLink="/cuenta/perfil"
-                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                tabindex="-1" id="user-menu-item-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#000000">
-                                    <path
-                                        d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
-                                </svg>
+                            <a routerLink="/cuenta/perfil" class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt"
+                                role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                <ml-icon name="profile" class="h-5 w-5" />
                                 &nbsp; Perfil
                             </a>
                             <a (click)="logout()"
-                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
+                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-bg-alt cursor-pointer"
                                 role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#dc2626">
-                                    <path
-                                        d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
-                                </svg>
+                                <ml-icon name="logout" class="h-5 w-5" />
                                 &nbsp;Cerrar sesión
                             </a>
                         </div>
 
                         }@else {
-                        <div class="origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        <div class="origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-bg ring-1 ring-black ring-opacity-5 focus:outline-none"
                             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                             <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
-                                <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
-                                    class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                <a [routerLink]="'/login'" routerLinkActive="text-fg"
+                                    class="whitespace-nowrap text-base font-medium text-fg-subtle hover:text-fg">
                                     Iniciar sesión
                                 </a>
 
@@ -109,9 +86,7 @@
                         (click)="verCarrito()" [ngClass]="{ 'animate-pulse': isLoading }">
                         <div [@cartAnimation]="cartState"
                             class="rounded-full w-[50px] h-[50px] p-2 flex items-center justify-center object-center">
-                            <img src="svg/shopping-cart.svg"
-                                class="h-7 w-auto aspect-square object-center overflow-hidden" height="50" width="50"
-                                alt="search-icon" />
+                            <ml-icon name="shopping-cart" class="h-7 w-7 text-fg" />
                         </div>
                         <div
                             class="bg-black absolute top-0 right-0 flex rounded-full h-[18px] w-[18px] text-white text-center justify-center">
@@ -127,41 +102,37 @@
 
     <div [@fadeInOut]="state" class="lg:hidden fixed inset-0 overflow-hidden z-30" (click)="state = 'inactive'">
         <div class="absolute top-0 inset-x-0 z-10 p-2 origin-top-right lg:hidden">
-            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50" (click)="$event.stopPropagation()">
+            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-bg divide-y-2 divide-bg-alt"
+                (click)="$event.stopPropagation()">
                 <div class="pt-5 pb-6 px-5">
                     <div class="flex items-center justify-between">
 
                         <div class="-mr-2">
                             <button type="button" (click)="toggleNavbar()"
-                                class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover">
+                                class="bg-bg rounded-md p-2 inline-flex items-center justify-center text-fg-subtle hover:text-fg-subtle hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover">
                                 <span class="sr-only">Close menu</span>
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <ml-icon name="close" class="h-6 w-6" />
                             </button>
                         </div>
 
                         <div>
-                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
-                                priority />
+                            <ml-logo class="h-3 w-auto text-fg" label="Magrolabs" />
                         </div>
 
                     </div>
                 </div>
                 <div class="py-6 px-5 space-y-6">
                     <div class="grid grid-cols-1 gap-y-8 gap-x-8">
-                        <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-gray-900"
-                            class="text-base font-medium text-gray-500 hover:text-gray-900">
+                        <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-fg"
+                            class="text-base font-medium text-fg-subtle hover:text-fg">
                             ¿Cómo funciona?
                         </a>
-                        <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-gray-900"
-                            class="text-base font-medium text-gray-500 hover:text-gray-900">
+                        <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-fg"
+                            class="text-base font-medium text-fg-subtle hover:text-fg">
                             Atención al Cliente
                         </a>
-                        <a [routerLink]="[ '/productos' ]" routerLinkActive="text-gray-900"
-                            class="text-base font-medium text-gray-500 hover:text-gray-900">
+                        <a [routerLink]="[ '/productos' ]" routerLinkActive="text-fg"
+                            class="text-base font-medium text-fg-subtle hover:text-fg">
                             Tienda
                         </a>
                     </div>
@@ -181,30 +152,24 @@
 }
 
 <div class="fixed top-[50px] left-0 right-0 z-[60]">
-    <div class="relative bg-white shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="relative bg-bg shadow">
+        <div class="max-w-7xl mx-auto px-1 sm:px-6">
             <div class="flex justify-between items-center max-sm:py-1 py-2 lg:justify-start md:space-x-10">
                 <div class="flex justify-between lg:w-0 lg:flex-1 w-full">
 
                     <div class="flex items-center">
                         <div class="lg:hidden flex items-center">
                             <button type="button" (click)="toggleNavbar()"
-                                class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover"
+                                class="bg-bg rounded-md p-2 inline-flex items-center justify-center text-fg-subtle hover:text-fg-subtle hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover"
                                 aria-expanded="false">
                                 <span class="sr-only">Open menu</span>
                                 <!-- Heroicon name: outline/menu -->
-                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
+                                <ml-icon name="menu" class="h-6 w-6" />
                             </button>
                         </div>
 
                         <a [routerLink]="[ '/' ]" class="flex items-center">
-                            <span class="sr-only">Magrolabs</span>
-                            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority
-                                class="sm:h-12 h-8 w-auto" />
+                            <ml-logo class="sm:h-6 h-4 w-auto text-fg ml-2" label="Magrolabs" />
                         </a>
                     </div>
 
@@ -212,69 +177,53 @@
                         <div class="relative lg:hidden block">
                             <div>
                                 <button type="button"
-                                    class="bg-white m-2 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                    class="bg-bg m-2 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true"
                                     (click)="toggleUserMenu()">
                                     <span class="sr-only">Abrir menú de usuario</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="40px" class="h-8 w-8"
-                                        viewBox="0 -960 960 960" width="40px" fill="rgba(0,0,0,1)">
-                                        <path
-                                            d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z" />
-                                    </svg>
+                                    <ml-icon name="user-circle-outline" class="h-8 w-8" />
                                 </button>
                             </div>
 
                             @if (isUserMenuOpen) {
                             @if(isAuthenticated){
-                            <div class="z-10 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            <div class="z-10 origin-top-right absolute right-0 w-56 rounded-md shadow-lg py-1 bg-bg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                 role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                 tabindex="-1">
-                                <div class="px-4 py-3 border-b border-gray-100">
-                                    <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                                <div class="px-4 py-3 border-b border-border">
+                                    <div class="text-base font-medium text-fg">{{user?.first_name || 'Usuario'}}
                                         {{user?.last_name || ''}}</div>
-                                    <div class="text-xs font-medium text-gray-500">{{user?.email ||
+                                    <div class="text-xs font-medium text-fg-subtle">{{user?.email ||
                                         'usuario@ejemplo.com'}}
                                     </div>
                                 </div>
                                 <a routerLink="/cuenta/mi-cuenta"
-                                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                    class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt" role="menuitem"
                                     tabindex="-1" id="user-menu-item-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                        width="20px" fill="#000000">
-                                        <path
-                                            d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
-                                    </svg>
+                                    <ml-icon name="home" class="h-5 w-5" />
                                     &nbsp;Inicio
                                 </a>
                                 <a routerLink="/cuenta/perfil"
-                                    class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                    class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt" role="menuitem"
                                     tabindex="-1" id="user-menu-item-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                        width="20px" fill="#000000">
-                                        <path
-                                            d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
-                                    </svg>
+                                    <ml-icon name="profile" class="h-5 w-5" />
                                     &nbsp; Perfil
                                 </a>
                                 <a (click)="logout()"
-                                    class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
+                                    class="flex px-4 py-2 text-sm text-red-600 hover:bg-bg-alt cursor-pointer"
                                     role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                        width="20px" fill="#dc2626">
-                                        <path
-                                            d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
-                                    </svg>
+                                    <ml-icon name="logout" class="h-5 w-5" />
                                     &nbsp;Cerrar sesión
                                 </a>
                             </div>
 
                             }@else {
-                            <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-bg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                 role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                 tabindex="-1">
                                 <div class="flex flex-col items-center justify-center px-4 py-3 gap-6">
-                                    <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
-                                        class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                    <a [routerLink]="'/login'" routerLinkActive="text-fg"
+                                        class="whitespace-nowrap text-base font-medium text-fg-subtle hover:text-fg">
                                         Iniciar sesión
                                     </a>
 
@@ -293,9 +242,7 @@
                             (click)="verCarrito()" [ngClass]="{ 'animate-pulse': isLoading }">
                             <div [@cartAnimation]="cartState"
                                 class="rounded-full w-[50px] h-[50px] p-2 flex items-center justify-center object-center">
-                                <img src="svg/shopping-cart.svg"
-                                    class="h-7 w-auto aspect-square object-center overflow-hidden" height="50"
-                                    width="50" alt="search-icon" />
+                                <ml-icon name="shopping-cart" class="h-7 w-7 text-fg" />
                             </div>
                             <div
                                 class="bg-black absolute top-0 right-0 flex rounded-full h-[18px] w-[18px] text-white text-center justify-center">
@@ -308,23 +255,23 @@
                 </div>
 
                 <nav class="hidden lg:flex space-x-10">
-                    <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-gray-900"
-                        class="text-base font-medium text-gray-500 hover:text-gray-900">
+                    <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-fg"
+                        class="text-base font-medium text-fg-subtle hover:text-fg">
                         ¿Cómo funciona?
                     </a>
-                    <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-gray-900"
-                        class="text-base font-medium text-gray-500 hover:text-gray-900">
+                    <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-fg"
+                        class="text-base font-medium text-fg-subtle hover:text-fg">
                         Atención al Cliente
                     </a>
-                    <a [routerLink]="[ '/productos' ]" routerLinkActive="text-gray-900"
-                        class="text-base font-medium text-gray-500 hover:text-gray-900">
+                    <a [routerLink]="[ '/productos' ]" routerLinkActive="text-fg"
+                        class="text-base font-medium text-fg-subtle hover:text-fg">
                         Tienda
                     </a>
                 </nav>
                 <div class="hidden lg:flex items-center justify-end md:flex-1 lg:w-0">
                     @if (!isAuthenticated) {
-                    <a [routerLink]="'/login'" routerLinkActive="text-gray-900"
-                        class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                    <a [routerLink]="'/login'" routerLinkActive="text-fg"
+                        class="whitespace-nowrap text-base font-medium text-fg-subtle hover:text-fg">
                         Iniciar sesión
                     </a>
 
@@ -333,57 +280,40 @@
                     @else {
                     <div class="ml-3 relative">
                         @if (isUserMenuOpen) {
-                        <div class="origin-top-right absolute z-50 right-0 mt-12 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        <div class="origin-top-right absolute z-50 right-0 mt-12 w-56 rounded-md shadow-lg py-1 bg-bg ring-1 ring-black ring-opacity-5 focus:outline-none"
                             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                            <div class="px-4 py-3 border-b border-border">
+                                <div class="text-base font-medium text-fg">{{user?.first_name || 'Usuario'}}
                                     {{user?.last_name || ''}}</div>
-                                <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
+                                <div class="text-xs font-medium text-fg-subtle">{{user?.email || 'usuario@ejemplo.com'}}
                                 </div>
                             </div>
                             <a routerLink="/cuenta/mi-cuenta"
-                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                                class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt" role="menuitem"
                                 tabindex="-1" id="user-menu-item-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#000000">
-                                    <path
-                                        d="M480-431ZM240-144q-40 0-68-28t-28-68v-249q0-20 7.46-37.67Q158.91-544.34 173-558l240-231q14-14 31.55-20.5 17.56-6.5 35.5-6.5 17.95 0 35.34 6.56Q532.77-802.89 547-789l240 231q14.09 13.66 21.54 31.33Q816-509 816-489v249q0 40-28 68t-68 28H240Zm0-72h480q10.2 0 17.1-6.9 6.9-6.9 6.9-17.1v-249q0-5.09-1.5-9.55Q741-503 737-506L587-651l-55 53 140 137v173H288v-173l247-240-38-36q-4.85-4.67-9.39-5.83-4.55-1.17-7.58-1.17-3.03 0-7.6 1.17-4.56 1.16-9.43 5.83L223-506q-3 3-5 7.45-2 4.46-2 9.55v249q0 10.2 6.9 17.1 6.9 6.9 17.1 6.9Zm120-144h240v-71L480-548 360-431v71Z" />
-                                </svg>
+                                <ml-icon name="home" class="h-5 w-5" />
                                 &nbsp;Inicio
                             </a>
-                            <a routerLink="/cuenta/perfil"
-                                class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                                tabindex="-1" id="user-menu-item-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#000000">
-                                    <path
-                                        d="M504-264Zm-312 72v-96q0-23 12.5-43.5T239-366q55-32 116.36-49T480-432q37.68 0 74.34 6Q591-420 626-409l-58 58q-22-5-43.62-7-21.62-2-44.38-2-55 0-107 14t-98 42q-5 4-8 7.72-3 3.73-3 8.28v24h240v72H192Zm384 48v-113l210-209q7.26-7.41 16.13-10.71Q811-480 819.76-480q9.55 0 18.31 3.5Q846.83-473 854-466l44 45q6.59 7.26 10.29 16.13Q912-396 912-387.24t-3.29 17.92q-3.3 9.15-10.71 16.32L689-144H576Zm288-243-45-45 45 45ZM624-192h45l115-115-22-23-22-22-116 115v45Zm138-138-22-22 44 45-22-23ZM378-522q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102t-42 102q-42 42-102 42t-102-42Zm153-51.21q21-21.21 21-51T530.79-675q-21.21-21-51-21T429-674.79q-21 21.21-21 51T429.21-573q21.21 21 51 21T531-573.21ZM480-624Z" />
-                                </svg>
+                            <a routerLink="/cuenta/perfil" class="flex px-4 py-2 text-sm text-fg-muted hover:bg-bg-alt"
+                                role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                <ml-icon name="profile" class="h-5 w-5" />
                                 &nbsp; Perfil
                             </a>
                             <a (click)="logout()"
-                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
+                                class="flex px-4 py-2 text-sm text-red-600 hover:bg-bg-alt cursor-pointer"
                                 role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
-                                    width="20px" fill="#dc2626">
-                                    <path
-                                        d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h264v72H216Zm432-168-51-51 81-81H384v-72h294l-81-81 51-51 168 168-168 168Z" />
-                                </svg>
+                                <ml-icon name="logout" class="h-5 w-5" />
                                 &nbsp;Cerrar sesión
                             </a>
                         </div>
                         }
                         <div>
                             <button type="button"
-                                class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                class="bg-bg flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                 id="user-menu-button" aria-expanded="false" aria-haspopup="true"
                                 (click)="toggleUserMenu()">
                                 <span class="sr-only">Abrir menú de usuario</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
-                                    width="40px" fill="rgba(0,0,0,1)">
-                                    <path
-                                        d="M226-262q59-42.33 121.33-65.5 62.34-23.17 132.67-23.17 70.33 0 133 23.17T734.67-262q41-49.67 59.83-103.67T813.33-480q0-141-96.16-237.17Q621-813.33 480-813.33t-237.17 96.16Q146.67-621 146.67-480q0 60.33 19.16 114.33Q185-311.67 226-262Zm253.88-184.67q-58.21 0-98.05-39.95Q342-526.58 342-584.79t39.96-98.04q39.95-39.84 98.16-39.84 58.21 0 98.05 39.96Q618-642.75 618-584.54t-39.96 98.04q-39.95 39.83-98.16 39.83ZM480.31-80q-82.64 0-155.64-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.51T80-480.18q0-82.82 31.5-155.49 31.5-72.66 85.83-127Q251.67-817 324.51-848.5T480.18-880q82.82 0 155.49 31.5 72.66 31.5 127 85.83Q817-708.33 848.5-635.65 880-562.96 880-480.31q0 82.64-31.5 155.64-31.5 73-85.83 127.34Q708.33-143 635.65-111.5 562.96-80 480.31-80Zm-.31-66.67q54.33 0 105-15.83t97.67-52.17q-47-33.66-98-51.5Q533.67-284 480-284t-104.67 17.83q-51 17.84-98 51.5 47 36.34 97.67 52.17 50.67 15.83 105 15.83Zm0-366.66q31.33 0 51.33-20t20-51.34q0-31.33-20-51.33T480-656q-31.33 0-51.33 20t-20 51.33q0 31.34 20 51.34 20 20 51.33 20Zm0-71.34Zm0 369.34Z" />
-                                </svg>
+                                <ml-icon name="user-circle-outline" class="h-10 w-10" />
                             </button>
                         </div>
                     </div>
@@ -395,11 +325,10 @@
                         (click)="verCarrito()" [ngClass]="{ 'animate-pulse': isLoading }">
                         <div [@cartAnimation]="cartState"
                             class="rounded-full w-[50px] h-[50px] p-2 flex items-center justify-center object-center">
-                            <img src="svg/shopping-cart.svg" class="aspect-square object-center overflow-hidden"
-                                height="50" width="50" alt="search-icon" />
+                            <ml-icon name="shopping-cart" class="h-12 w-12 text-fg" />
                         </div>
                         <div
-                            class="bg-black absolute top-0 right-0 flex rounded-full h-[23px] w-[23px] text-white text-center justify-center">
+                            class="bg-primary absolute top-0 right-0 flex rounded-full h-[23px] w-[23px] text-fg text-center justify-center">
                             <p class="self-center text-center text-xs">{{numItemsCart}}</p>
                         </div>
                     </button>
@@ -410,41 +339,37 @@
 
         <div [@fadeInOut]="state" class="lg:hidden fixed inset-0 overflow-hidden z-30" (click)="state = 'inactive'">
             <div class="absolute top-0 inset-x-0 z-10 p-2 origin-top-right lg:hidden">
-                <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50" (click)="$event.stopPropagation()">
+                <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-bg divide-y-2 divide-bg-alt"
+                    (click)="$event.stopPropagation()">
                     <div class="pt-5 pb-6 px-5">
                         <div class="flex items-center justify-between">
 
                             <div class="-mr-2">
                                 <button type="button" (click)="toggleNavbar()"
-                                    class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover">
+                                    class="bg-bg rounded-md p-2 inline-flex items-center justify-center text-fg-subtle hover:text-fg-subtle hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-hover">
                                     <span class="sr-only">Close menu</span>
-                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
+                                    <ml-icon name="close" class="h-6 w-6" />
                                 </button>
                             </div>
 
                             <div>
-                                <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29"
-                                    priority />
+                                <ml-logo class="h-3 w-auto text-fg" label="Magrolabs" />
                             </div>
 
                         </div>
                     </div>
                     <div class="py-6 px-5 space-y-6">
                         <div class="grid grid-cols-1 gap-y-8 gap-x-8">
-                            <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-gray-900"
-                                class="text-base font-medium text-gray-500 hover:text-gray-900">
+                            <a [routerLink]="[ '/atencion-cliente/como-funciona' ]" routerLinkActive="text-fg"
+                                class="text-base font-medium text-fg-subtle hover:text-fg">
                                 ¿Cómo funciona?
                             </a>
-                            <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-gray-900"
-                                class="text-base font-medium text-gray-500 hover:text-gray-900">
+                            <a [routerLink]="[ '/atencion-cliente' ]" routerLinkActive="text-fg"
+                                class="text-base font-medium text-fg-subtle hover:text-fg">
                                 Atención al Cliente
                             </a>
-                            <a [routerLink]="[ '/productos' ]" routerLinkActive="text-gray-900"
-                                class="text-base font-medium text-gray-500 hover:text-gray-900">
+                            <a [routerLink]="[ '/productos' ]" routerLinkActive="text-fg"
+                                class="text-base font-medium text-fg-subtle hover:text-fg">
                                 Tienda
                             </a>
                         </div>
@@ -460,12 +385,10 @@
 
 }
 @if (type() === navbarTypeEnum.BOLSA) {
-<div class="relative bg-white shadow">
+<div class="relative bg-bg shadow">
     <div class="flex justify-between items-center max-sm:py-1 py-2 lg:justify-start md:space-x-10">
         <a [routerLink]="[ '/' ]" class="flex items-center mx-auto">
-            <span class="sr-only">Magrolabs</span>
-            <img ngSrc='/magrolabs-logotipo-96x508.png' alt="logo" width="192" height="36.29" priority
-                class="sm:h-12 h-8 w-auto" />
+            <ml-logo class="sm:h-6 h-4 w-auto text-fg ml-2" label="Magrolabs" />
         </a>
     </div>
 </div>

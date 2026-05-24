@@ -8,10 +8,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { AccordionGroupComponent } from '../../../../shared/ui/accordion/accordion-group.component';
 import { AccordionItemComponent } from '../../../../shared/ui/accordion/accordion-item.component';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-referido-por-amigo',
-    imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent, AccordionGroupComponent, AccordionItemComponent],
+    imports: [NavbarComponent, ButtonComponent, NgOptimizedImage, RouterLink, FooterComponent, AccordionGroupComponent, AccordionItemComponent, IconComponent],
     templateUrl: './referido-por-amigo.component.html',
     styleUrl: './referido-por-amigo.component.css'
 })

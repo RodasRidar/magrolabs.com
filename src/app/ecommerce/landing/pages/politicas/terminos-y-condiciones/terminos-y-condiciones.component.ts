@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-terminos-y-condiciones',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './terminos-y-condiciones.component.html',
     styleUrl: './terminos-y-condiciones.component.css'
 })

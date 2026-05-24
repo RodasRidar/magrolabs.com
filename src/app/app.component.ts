@@ -2,8 +2,8 @@ import { afterNextRender, Component, DestroyRef, inject, signal } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/env';
-import { CommonModule } from '@angular/common';
 import { CookiesBannerComponent } from './shared/ui/cookies-banner/cookies-banner.component';
+import { WhatsappFabComponent } from './shared/ui/whatsapp-fab/whatsapp-fab.component';
 import { ModuleRetryService } from './shared/services/module-retry.service';
 import { TiktokAnalyticsService } from './shared/services/tiktok-analytics.service';
 import { MetaAnalyticsService } from './shared/services/meta-analytics.service';
@@ -13,7 +13,7 @@ import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, CommonModule, CookiesBannerComponent],
+    imports: [RouterOutlet, CookiesBannerComponent, WhatsappFabComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

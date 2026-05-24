@@ -2,28 +2,28 @@
 <ml-breadcrumb [items]="breadcrumbItems" />
 
 <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
-  <header class="text-center mb-10 pb-8 border-b border-gray-200">
-    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Libro de Reclamaciones</h1>
-    <p class="text-sm text-gray-600 max-w-xl mx-auto">
+  <header class="text-center mb-10 pb-8 border-b border-border">
+    <h1 class="text-3xl sm:text-4xl font-bold text-fg mb-3">Libro de Reclamaciones</h1>
+    <p class="text-sm text-fg-muted max-w-xl mx-auto">
       Conforme a lo dispuesto en el Código de Protección y Defensa del Consumidor. Ley N° 29571
     </p>
   </header>
 
   <ml-card [extraClass]="isSubmitting() ? 'opacity-70 pointer-events-none transition-opacity' : 'transition-opacity'">
-    <form [formGroup]="reclamacionForm" class="divide-y divide-gray-100">
+    <form [formGroup]="reclamacionForm" class="divide-y divide-border">
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           1. Identificación del Consumidor Reclamante
         </h2>
 
         <div class="space-y-5">
           <div>
-            <label for="nombreConsumidor" class="block text-sm font-medium text-gray-700">Nombre y Apellidos *</label>
+            <label for="nombreConsumidor" class="block text-sm font-medium text-fg-muted">Nombre y Apellidos *</label>
             <input id="nombreConsumidor" type="text" formControlName="nombreConsumidor"
               placeholder="Ingrese sus nombres y apellidos completos"
               [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('nombreConsumidor')}"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
             @if (isFieldInvalid('nombreConsumidor')) {
               <p class="mt-1 text-xs text-red-500">El nombre y apellidos son obligatorios</p>
             }
@@ -31,10 +31,10 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="tipoDocumento" class="block text-sm font-medium text-gray-700">Tipo de Documento *</label>
+              <label for="tipoDocumento" class="block text-sm font-medium text-fg-muted">Tipo de Documento *</label>
               <select id="tipoDocumento" formControlName="tipoDocumento"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('tipoDocumento')}"
-                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 block w-full px-3 py-2.5 border border-border-strong bg-bg rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
                 <option value="">Seleccione</option>
                 <option value="dni">DNI</option>
                 <option value="ce">Carné de Extranjería</option>
@@ -46,11 +46,11 @@
             </div>
 
             <div>
-              <label for="documentoConsumidor" class="block text-sm font-medium text-gray-700">Número de Documento *</label>
+              <label for="documentoConsumidor" class="block text-sm font-medium text-fg-muted">Número de Documento *</label>
               <input id="documentoConsumidor" type="text" formControlName="documentoConsumidor"
                 placeholder="Número de documento"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('documentoConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('documentoConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">El número de documento es obligatorio</p>
               }
@@ -58,11 +58,11 @@
           </div>
 
           <div>
-            <label for="direccionConsumidor" class="block text-sm font-medium text-gray-700">Domicilio *</label>
+            <label for="direccionConsumidor" class="block text-sm font-medium text-fg-muted">Domicilio *</label>
             <input id="direccionConsumidor" type="text" formControlName="direccionConsumidor"
               placeholder="Dirección completa"
               [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('direccionConsumidor')}"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
             @if (isFieldInvalid('direccionConsumidor')) {
               <p class="mt-1 text-xs text-red-500">La dirección es obligatoria</p>
             }
@@ -70,33 +70,33 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label for="distritoConsumidor" class="block text-sm font-medium text-gray-700">Distrito *</label>
+              <label for="distritoConsumidor" class="block text-sm font-medium text-fg-muted">Distrito *</label>
               <input id="distritoConsumidor" type="text" formControlName="distritoConsumidor"
                 placeholder="Distrito"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('distritoConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('distritoConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">El distrito es obligatorio</p>
               }
             </div>
 
             <div>
-              <label for="provinciaConsumidor" class="block text-sm font-medium text-gray-700">Provincia *</label>
+              <label for="provinciaConsumidor" class="block text-sm font-medium text-fg-muted">Provincia *</label>
               <input id="provinciaConsumidor" type="text" formControlName="provinciaConsumidor"
                 placeholder="Provincia"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('provinciaConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('provinciaConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">La provincia es obligatoria</p>
               }
             </div>
 
             <div>
-              <label for="departamentoConsumidor" class="block text-sm font-medium text-gray-700">Departamento *</label>
+              <label for="departamentoConsumidor" class="block text-sm font-medium text-fg-muted">Departamento *</label>
               <input id="departamentoConsumidor" type="text" formControlName="departamentoConsumidor"
                 placeholder="Departamento"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('departamentoConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('departamentoConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">El departamento es obligatorio</p>
               }
@@ -105,22 +105,22 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="telefonoConsumidor" class="block text-sm font-medium text-gray-700">Teléfono *</label>
+              <label for="telefonoConsumidor" class="block text-sm font-medium text-fg-muted">Teléfono *</label>
               <input id="telefonoConsumidor" type="tel" formControlName="telefonoConsumidor"
                 placeholder="Número de teléfono"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('telefonoConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('telefonoConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">El teléfono es obligatorio</p>
               }
             </div>
 
             <div>
-              <label for="emailConsumidor" class="block text-sm font-medium text-gray-700">Correo Electrónico *</label>
+              <label for="emailConsumidor" class="block text-sm font-medium text-fg-muted">Correo Electrónico *</label>
               <input id="emailConsumidor" type="email" formControlName="emailConsumidor"
                 placeholder="correo@ejemplo.com"
                 [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('emailConsumidor')}"
-                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+                class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
               @if (isFieldInvalid('emailConsumidor')) {
                 <p class="mt-1 text-xs text-red-500">Ingrese un correo electrónico válido</p>
               }
@@ -130,54 +130,54 @@
       </section>
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           2. Identificación del Proveedor
         </h2>
 
         <div class="space-y-5">
           <div>
-            <label for="nombreProveedor" class="block text-sm font-medium text-gray-700">Razón Social del Proveedor *</label>
+            <label for="nombreProveedor" class="block text-sm font-medium text-fg-muted">Razón Social del Proveedor *</label>
             <input id="nombreProveedor" type="text" formControlName="nombreProveedor" readonly
-              class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+              class="mt-1.5 block w-full px-3 py-2.5 border border-border bg-bg-alt text-fg-muted rounded-md shadow-sm cursor-not-allowed sm:text-sm">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="rucProveedor" class="block text-sm font-medium text-gray-700">RUC *</label>
+              <label for="rucProveedor" class="block text-sm font-medium text-fg-muted">RUC *</label>
               <input id="rucProveedor" type="text" formControlName="rucProveedor" readonly
-                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+                class="mt-1.5 block w-full px-3 py-2.5 border border-border bg-bg-alt text-fg-muted rounded-md shadow-sm cursor-not-allowed sm:text-sm">
             </div>
 
             <div>
-              <label for="direccionProveedor" class="block text-sm font-medium text-gray-700">Dirección *</label>
+              <label for="direccionProveedor" class="block text-sm font-medium text-fg-muted">Dirección *</label>
               <input id="direccionProveedor" type="text" formControlName="direccionProveedor" readonly
-                class="mt-1.5 block w-full px-3 py-2.5 border border-gray-200 bg-gray-50 text-gray-600 rounded-md shadow-sm cursor-not-allowed sm:text-sm">
+                class="mt-1.5 block w-full px-3 py-2.5 border border-border bg-bg-alt text-fg-muted rounded-md shadow-sm cursor-not-allowed sm:text-sm">
             </div>
           </div>
         </div>
       </section>
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           3. Tipo de Reclamación
         </h2>
 
         <div class="space-y-3">
           <label for="reclamo"
-            class="flex items-start gap-3 p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
+            class="flex items-start gap-3 p-4 border border-border rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
             <input id="reclamo" type="radio" formControlName="tipoReclamacion" value="reclamo"
-              class="mt-1 h-4 w-4 text-primary border-gray-300 focus:ring-primary-hover">
-            <span class="text-sm text-gray-700">
-              <strong class="text-gray-900">Reclamo:</strong> Disconformidad relacionada a los productos o servicios.
+              class="mt-1 h-4 w-4 text-primary border-border-strong focus:ring-primary-hover">
+            <span class="text-sm text-fg-muted">
+              <strong class="text-fg">Reclamo:</strong> Disconformidad relacionada a los productos o servicios.
             </span>
           </label>
 
           <label for="queja"
-            class="flex items-start gap-3 p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
+            class="flex items-start gap-3 p-4 border border-border rounded-md hover:border-primary hover:bg-primary-surface-light cursor-pointer transition-colors">
             <input id="queja" type="radio" formControlName="tipoReclamacion" value="queja"
-              class="mt-1 h-4 w-4 text-primary border-gray-300 focus:ring-primary-hover">
-            <span class="text-sm text-gray-700">
-              <strong class="text-gray-900">Queja:</strong> Disconformidad no relacionada a los productos o servicios, o malestar por la atención al público.
+              class="mt-1 h-4 w-4 text-primary border-border-strong focus:ring-primary-hover">
+            <span class="text-sm text-fg-muted">
+              <strong class="text-fg">Queja:</strong> Disconformidad no relacionada a los productos o servicios, o malestar por la atención al público.
             </span>
           </label>
         </div>
@@ -188,54 +188,54 @@
       </section>
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           4. Detalle del Bien Contratado o Servicio Prestado
         </h2>
 
         <div class="space-y-5">
           <div>
-            <label for="descripcionBien" class="block text-sm font-medium text-gray-700">Descripción del Producto o Servicio *</label>
+            <label for="descripcionBien" class="block text-sm font-medium text-fg-muted">Descripción del Producto o Servicio *</label>
             <textarea id="descripcionBien" formControlName="descripcionBien" rows="3"
               placeholder="Describa detalladamente el producto o servicio objeto de su reclamación"
               [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('descripcionBien')}"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
             @if (isFieldInvalid('descripcionBien')) {
               <p class="mt-1 text-xs text-red-500">La descripción del producto/servicio es obligatoria</p>
             }
           </div>
 
           <div>
-            <label for="montoReclamado" class="block text-sm font-medium text-gray-700">Monto Reclamado (opcional)</label>
+            <label for="montoReclamado" class="block text-sm font-medium text-fg-muted">Monto Reclamado (opcional)</label>
             <input id="montoReclamado" type="number" formControlName="montoReclamado" min="0" step="0.01"
               placeholder="S/. 0.00"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm">
           </div>
         </div>
       </section>
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           5. Detalle de la Reclamación y Pedido del Consumidor
         </h2>
 
         <div class="space-y-5">
           <div>
-            <label for="detalleReclamacion" class="block text-sm font-medium text-gray-700">Detalle de la Reclamación *</label>
+            <label for="detalleReclamacion" class="block text-sm font-medium text-fg-muted">Detalle de la Reclamación *</label>
             <textarea id="detalleReclamacion" formControlName="detalleReclamacion" rows="4"
               placeholder="Describa detalladamente el motivo de su reclamación, indicando fechas, lugares y personas involucradas"
               [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('detalleReclamacion')}"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
             @if (isFieldInvalid('detalleReclamacion')) {
               <p class="mt-1 text-xs text-red-500">El detalle de la reclamación es obligatorio</p>
             }
           </div>
 
           <div>
-            <label for="pedidoConsumidor" class="block text-sm font-medium text-gray-700">Pedido del Consumidor *</label>
+            <label for="pedidoConsumidor" class="block text-sm font-medium text-fg-muted">Pedido del Consumidor *</label>
             <textarea id="pedidoConsumidor" formControlName="pedidoConsumidor" rows="3"
               placeholder="Indique claramente qué solicita que haga la empresa para resolver su reclamación"
               [ngClass]="{'ring-2 ring-red-500 border-red-500': isFieldInvalid('pedidoConsumidor')}"
-              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
+              class="mt-1.5 appearance-none block w-full px-3 py-2.5 border border-border-strong rounded-md shadow-sm placeholder-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-primary-hover sm:text-sm"></textarea>
             @if (isFieldInvalid('pedidoConsumidor')) {
               <p class="mt-1 text-xs text-red-500">El pedido del consumidor es obligatorio</p>
             }
@@ -244,21 +244,21 @@
       </section>
 
       <section class="px-6 py-8 sm:px-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b-2 border-primary inline-block">
+        <h2 class="text-lg font-semibold text-fg mb-6 pb-2 border-b-2 border-primary inline-block">
           6. Documentos Adjuntos (opcional)
         </h2>
 
         <div>
-          <label for="archivos" class="block text-sm font-medium text-gray-700">Adjuntar Archivos</label>
+          <label for="archivos" class="block text-sm font-medium text-fg-muted">Adjuntar Archivos</label>
           <input id="archivos" type="file" formControlName="archivos" multiple
             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-            class="mt-1.5 block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-surface file:text-primary-dark hover:file:bg-primary-surface-light cursor-pointer">
-          <p class="mt-2 text-xs text-gray-500">Formatos permitidos: PDF, JPG, PNG, DOC, DOCX. Máximo 5MB por archivo.</p>
+            class="mt-1.5 block w-full text-sm text-fg-muted file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-surface file:text-primary-dark hover:file:bg-primary-surface-light cursor-pointer">
+          <p class="mt-2 text-xs text-fg-subtle">Formatos permitidos: PDF, JPG, PNG, DOC, DOCX. Máximo 5MB por archivo.</p>
         </div>
       </section>
     </form>
 
-    <div class="px-6 py-6 sm:px-8 bg-surface flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-gray-200">
+    <div class="px-6 py-6 sm:px-8 bg-surface flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-border">
       <div class="sm:w-40">
         <ml-button name="Cancelar" type="secondary-outlined" [isDisabled]="isSubmitting()" (click)="goBack()" />
       </div>
@@ -271,8 +271,8 @@
   </ml-card>
 
   <div class="mt-10 bg-primary-surface border border-primary-muted/40 rounded-lg p-6">
-    <h3 class="text-base font-semibold text-gray-900 mb-3">Información Importante</h3>
-    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+    <h3 class="text-base font-semibold text-fg mb-3">Información Importante</h3>
+    <ul class="list-disc pl-5 space-y-2 text-sm text-fg-muted">
       <li>La empresa debe responder a su reclamo en un plazo no mayor a 30 días calendario.</li>
       <li>En caso de queja, la respuesta debe darse en un plazo no mayor a 15 días calendario.</li>
       <li>Conserve una copia de su reclamación para sus registros.</li>

@@ -1,19 +1,18 @@
 <div class="min-h-full">
     <!-- Sidebar desktop: colapsado por defecto, expande con hover -->
     <aside
-        class="hidden sm:flex flex-col fixed inset-y-0 left-0 w-16 hover:w-64 bg-white shadow-sm border-r border-gray-100 transition-[width] duration-300 ease-in-out z-40 group overflow-hidden">
+        class="hidden sm:flex flex-col fixed inset-y-0 left-0 w-16 hover:w-64 bg-bg shadow-sm border-r border-border transition-[width] duration-300 ease-in-out z-40 group overflow-hidden">
         <!-- Logo -->
         <a routerLink="/" aria-label="Ir al inicio"
-            class="flex items-center h-16 pl-4 pr-3 border-b border-gray-100 shrink-0">
-            <img src="/favicon.png" alt="Magrolabs" class="h-8 w-8 shrink-0 select-none group-hover:hidden">
-            <img src="/magrolabs-logotipo-96x508.png" alt="Magrolabs"
-                class="hidden group-hover:block h-8 w-auto select-none">
+            class="flex items-center h-16 pl-4 pr-3 border-b border-border shrink-0">
+            <ml-logo variant="isotipo" class="h-8 w-auto shrink-0 text-fg group-hover:hidden" label="Magrolabs" />
+            <ml-logo class="hidden group-hover:block h-3 w-auto text-fg pl-1" label="Magrolabs" />
         </a>
 
         <!-- Items principales -->
         <nav class="flex flex-col mt-3 space-y-1 shrink-0">
-            <a routerLink="/cuenta/mi-cuenta" title="Inicio" routerLinkActive="bg-primary-surface-light text-gray-900"
-                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+            <a routerLink="/cuenta/mi-cuenta" title="Inicio" routerLinkActive="bg-primary-surface-light text-fg"
+                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                 <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                     fill="currentColor">
                     <path
@@ -23,8 +22,8 @@
                     class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Inicio</span>
             </a>
             <a routerLink="/cuenta/suscripcion" title="Suscripción"
-                routerLinkActive="bg-primary-surface-light text-gray-900"
-                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                routerLinkActive="bg-primary-surface-light text-fg"
+                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                 <span class="w-6 h-6 shrink-0 flex items-center justify-center">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                         fill="currentColor">
@@ -35,8 +34,8 @@
                 <span
                     class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Suscripción</span>
             </a>
-            <a routerLink="/cuenta/pedidos" title="Pedidos" routerLinkActive="bg-primary-surface-light text-gray-900"
-                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+            <a routerLink="/cuenta/pedidos" title="Pedidos" routerLinkActive="bg-primary-surface-light text-fg"
+                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                 <span class="w-6 h-6 shrink-0 flex items-center justify-center">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                         fill="currentColor">
@@ -47,8 +46,8 @@
                 <span
                     class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Pedidos</span>
             </a>
-            <a routerLink="/cuenta/perfil" title="Perfil" routerLinkActive="bg-primary-surface-light text-gray-900"
-                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+            <a routerLink="/cuenta/perfil" title="Perfil" routerLinkActive="bg-primary-surface-light text-fg"
+                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                 <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                     fill="currentColor">
                     <path
@@ -58,8 +57,8 @@
                     class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Perfil</span>
             </a>
             <a routerLink="/cuenta/credito" title="Recompensas"
-                routerLinkActive="bg-primary-surface-light text-gray-900"
-                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                routerLinkActive="bg-primary-surface-light text-fg"
+                class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                 <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                     fill="currentColor">
                     <path
@@ -74,7 +73,7 @@
         <div class="mt-auto flex flex-col shrink-0">
             <!-- Card contador (visible solo cuando el sidebar está expandido) -->
             <a routerLink="/cuenta/credito" [title]="totalCredits + ' Magropuntos'"
-                class="hidden group-hover:flex mx-2 mb-3 items-center bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-2 border border-gray-200 hover:shadow-md transition-shadow">
+                class="hidden group-hover:flex mx-2 mb-3 items-center bg-bg-alt rounded-lg p-2 border border-border hover:shadow-md transition-shadow">
                 @if (isLoadingTier) {
                 <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.svg" [alt]="tierDisplayName"
                     class="w-10 h-10 shrink-0 select-none">
@@ -83,10 +82,10 @@
                     class="w-10 h-10 shrink-0 select-none">
                 }
                 <div class="ml-2 flex flex-col whitespace-nowrap overflow-hidden">
-                    <span class="text-xs text-gray-600 font-medium">Mis Magropuntos</span>
-                    <span class="text-xl font-bold text-gray-900">
+                    <span class="text-xs text-fg-muted font-medium">Mis Magropuntos</span>
+                    <span class="text-xl font-bold text-fg">
                         @if (isLoadingCredits) {
-                        <span class="animate-pulse text-gray-400">0</span>
+                        <span class="animate-pulse text-fg-subtle">0</span>
                         } @else {
                         {{ totalCredits }}
                         }
@@ -97,8 +96,8 @@
             <!-- Items secundarios -->
             <nav class="flex flex-col space-y-1 pb-4">
 
-                <a routerLink="/productos" title="Tienda" routerLinkActive="bg-primary-surface-light text-gray-900"
-                    class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                <a routerLink="/productos" title="Tienda" routerLinkActive="bg-primary-surface-light text-fg"
+                    class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                     <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                         fill="currentColor">
                         <path
@@ -108,8 +107,8 @@
                         class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Tienda</span>
                 </a>
                 <a routerLink="/loyalty-webshop" title="Canjear Magropuntos"
-                    routerLinkActive="bg-primary-surface-light text-gray-900"
-                    class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                    routerLinkActive="bg-primary-surface-light text-fg"
+                    class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                     <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                         fill="currentColor">
                         <path
@@ -134,7 +133,7 @@
         </div>
     </aside>
 
-    <nav class="bg-white shadow-sm sm:hidden">
+    <nav class="bg-bg shadow-sm sm:hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header móvil: magropuntos | logo | usuario -->
             <div class="flex sm:hidden items-center justify-between h-16">
@@ -146,9 +145,9 @@
                     } @else {
                     <img [src]="tierImageRoutes?.pngComprimido" [alt]="tierDisplayName" class="h-9 w-auto select-none">
                     }
-                    <span class="text-base font-bold text-gray-900">
+                    <span class="text-base font-bold text-fg">
                         @if (isLoadingCredits) {
-                        <span class="animate-pulse text-gray-400">0</span>
+                        <span class="animate-pulse text-fg-subtle">0</span>
                         } @else {
                         {{ totalCredits }}
                         }
@@ -175,16 +174,16 @@
 
         <!-- Menú móvil mejorado -->
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 sm:hidden transition-opacity duration-300"
+        <div class="fixed inset-0 bg-fg bg-opacity-50 z-40 sm:hidden transition-opacity duration-300"
             [class.opacity-0]="!isMobileMenuOpen" [class.pointer-events-none]="!isMobileMenuOpen"
             (click)="closeMobileMenu()"></div>
 
         <!-- Panel del menú -->
-        <div class="fixed inset-y-0 right-0 w-[80%] bg-white shadow-xl z-[60] sm:hidden transform transition-transform duration-300 ease-in-out"
+        <div class="fixed inset-y-0 right-0 w-[80%] bg-bg shadow-xl z-[60] sm:hidden transform transition-transform duration-300 ease-in-out"
             [class.translate-x-full]="!isMobileMenuOpen" [class.translate-x-0]="isMobileMenuOpen" id="mobile-menu">
             <div class="h-full overflow-y-auto">
                 <!-- Header del menú con botón cerrar -->
-                <div class="flex items-center justify-between px-4 py-[0.75rem] border-b border-gray-200">
+                <div class="flex items-center justify-between px-4 py-[0.75rem] border-b border-border">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="40px"
@@ -194,28 +193,25 @@
                             </svg>
                         </div>
                         <div class="ml-3 flex-1">
-                            <div class="text-base font-medium text-gray-800">{{user?.first_name || 'Usuario'}}
+                            <div class="text-base font-medium text-fg">{{user?.first_name || 'Usuario'}}
                                 {{user?.last_name || ''}}</div>
-                            <div class="text-xs font-medium text-gray-500">{{user?.email || 'usuario@ejemplo.com'}}
+                            <div class="text-xs font-medium text-fg-subtle">{{user?.email || 'usuario@ejemplo.com'}}
                             </div>
                         </div>
                     </div>
 
                     <button type="button" (click)="closeMobileMenu()"
-                        class="rounded-md p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary">
+                        class="rounded-md p-2 text-fg-subtle hover:text-fg-subtle hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-primary">
                         <span class="sr-only">Cerrar menú</span>
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <ml-icon name="close" class="h-6 w-6" />
                     </button>
                 </div>
 
                 <!-- Enlaces de navegación -->
                 <nav class="pt-2 pb-3 space-y-1">
                     <a routerLink="/cuenta/mi-cuenta" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-primary-surface-light text-gray-900"
-                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200"
+                        routerLinkActive="bg-primary-surface-light text-fg"
+                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200"
                         aria-current="page">
                         <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             fill="currentColor">
@@ -225,8 +221,8 @@
                         Inicio
                     </a>
                     <a routerLink="/cuenta/suscripcion" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-primary-surface-light text-gray-900"
-                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                        routerLinkActive="bg-primary-surface-light text-fg"
+                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                         <span class="w-6 h-6 shrink-0 flex items-center justify-center">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                                 fill="currentColor">
@@ -237,8 +233,8 @@
                         Suscripción
                     </a>
                     <a routerLink="/cuenta/pedidos" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-primary-surface-light text-gray-900"
-                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                        routerLinkActive="bg-primary-surface-light text-fg"
+                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                         <span class="w-6 h-6 shrink-0 flex items-center justify-center">
                             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                                 fill="currentColor">
@@ -249,8 +245,8 @@
                         Pedidos
                     </a>
                     <a routerLink="/cuenta/perfil" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-primary-surface-light text-gray-900"
-                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                        routerLinkActive="bg-primary-surface-light text-fg"
+                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                         <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             fill="currentColor">
                             <path
@@ -259,8 +255,8 @@
                         Perfil
                     </a>
                     <a routerLink="/cuenta/credito" (click)="closeMobileMenu()"
-                        routerLinkActive="bg-primary-surface-light text-gray-900"
-                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                        routerLinkActive="bg-primary-surface-light text-fg"
+                        class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                         <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                             fill="currentColor">
                             <path
@@ -270,12 +266,12 @@
                     </a>
                 </nav>
                 <!-- Información del usuario -->
-                <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="pt-4 pb-3 border-t border-border">
 
                     <!-- Créditos en móvil -->
                     <div class="px-4 mb-3">
                         <div
-                            class="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg px-3 py-3 shadow-sm border border-gray-200">
+                            class="flex items-center bg-bg-alt rounded-lg px-3 py-3 shadow-sm border border-border">
                             @if (isLoadingTier) {
                             <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.svg" alt="tierDisplayName"
                                 class="w-10 h-10 mr-2 select-none">
@@ -284,10 +280,10 @@
                                 class="w-10 h-10 mr-2 select-none">
                             }
                             <div class="flex flex-col">
-                                <span class="text-xs text-gray-600 font-medium">Mis Magropuntos</span>
-                                <span class="text-xl font-bold text-gray-900">
+                                <span class="text-xs text-fg-muted font-medium">Mis Magropuntos</span>
+                                <span class="text-xl font-bold text-fg">
                                     @if (isLoadingCredits) {
-                                    <span class="animate-pulse text-gray-400">0</span>
+                                    <span class="animate-pulse text-fg-subtle">0</span>
                                     } @else {
                                     {{ totalCredits }}
                                     }
@@ -299,8 +295,8 @@
                     <!-- Opciones adicionales -->
                     <nav class="space-y-1">
                         <a routerLink="/productos" (click)="closeMobileMenu()"
-                            routerLinkActive="bg-primary-surface-light text-gray-900"
-                            class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                            routerLinkActive="bg-primary-surface-light text-fg"
+                            class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                             <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                                 fill="currentColor">
                                 <path
@@ -309,8 +305,8 @@
                             Tienda
                         </a>
                         <a routerLink="/loyalty-webshop" (click)="closeMobileMenu()"
-                            routerLinkActive="bg-primary-surface-light text-gray-900"
-                            class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200">
+                            routerLinkActive="bg-primary-surface-light text-fg"
+                            class="flex items-center gap-3 mx-2 px-3 py-3 rounded-lg text-base font-medium text-fg-muted hover:bg-bg-alt transition-colors duration-200">
                             <svg class="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"
                                 fill="currentColor">
                                 <path

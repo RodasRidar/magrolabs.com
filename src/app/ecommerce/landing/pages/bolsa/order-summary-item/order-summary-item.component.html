@@ -1,4 +1,4 @@
-<li class="flex py-1 sm:py-3 border-b border-gray-200 ">
+<li class="flex py-1 sm:py-3 border-b border-border ">
     <!-- imagen -->
     <a class="flex-shrink-0 flex items-center" [routerLink]="['/productos/creatinas',item.product.slug]">
         <img [ngSrc]="
@@ -15,19 +15,19 @@
                 <div class="flex justify-between">
                     <h3 class="text-sm">
                         <a [routerLink]="['/productos/creatinas',item.product.slug]"
-                            class="font-medium text-gray-700 hover:text-primary-hover hover:underline">
+                            class="font-medium text-fg-muted hover:text-primary-hover hover:underline">
                             {{ item.product.name.trim() }}
                         </a>
                     </h3>
                 </div>
                 <!-- detalles del producto -->
                 <div class="mt-1 flex text-sm">
-                    <p class="text-gray-500">{{item.product.description}}</p>
+                    <p class="text-fg-subtle">{{item.product.description}}</p>
                 </div>
                 <!-- precio -->
                 @if (item.product.is_on_sale && item.product.discountPercentage) {
                 <!-- precio con descuento -->
-                <p class="mt-1 text-sm font-medium text-gray-900">
+                <p class="mt-1 text-sm font-medium text-fg">
                     {{
                     item.product.price | discount : item.product.discountPercentage | currency : "S/ "
                     }}
@@ -36,7 +36,7 @@
                 }
                 @else {
                 <!-- Cuando no hay descuento -->
-                <p class="mt-1 text-sm font-medium text-gray-900">{{ item.product.price | currency : "S/ " }}</p>
+                <p class="mt-1 text-sm font-medium text-fg">{{ item.product.price | currency : "S/ " }}</p>
                 }
             </div>
 
@@ -47,25 +47,16 @@
         </div>
 
         <div class="flex justify-between sm:mt-4">
-            <p class="flex justify-center items-center text-sm text-gray-700 space-x-2">
+            <p class="flex justify-center items-center text-sm text-fg-muted space-x-2">
                 <!-- Heroicon name: solid/check -->
-                <svg class="flex-shrink-0 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd" />
-                </svg>
+                <ml-icon name="check-solid" class="flex-shrink-0 h-4 w-4 text-fg-subtle" />
                 <span class="text-xs">En stock</span>
             </p>
             <button (click)="deleteItemFromCart()" type="button"
-            class="rounded-full h-[40px] w-[40px] flex items-center justify-center object-center p-3 hover:bg-[#e1bab0]">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                <!-- [attr.fill]="Color" -->
-                <path
-                    d="M7 6V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7ZM9 4V6H15V4H9Z">
-                </path>
-            </svg>
-        </button>
+                aria-label="Eliminar producto"
+                class="rounded-full h-10 w-10 flex items-center justify-center text-fg-muted hover:text-primary-dark hover:bg-primary-surface transition-colors">
+                <ml-icon name="trash" class="w-5 h-5" />
+            </button>
         </div>
     </div>
 </li>

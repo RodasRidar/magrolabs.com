@@ -34,10 +34,11 @@ import { ProductResponse } from '../../../../shared/interfaces/product.interface
 import { CREATINA_PRODUCT_SLUGS } from '../../../../shared/constants/product-slugs.constants';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
 import { TiktokAnalyticsService } from '../../../../shared/services/tiktok-analytics.service';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-verification-payment',
-    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent],
+    imports: [StepComponent, ButtonComponent, ReactiveFormsModule, CommonModule, FlowWidgetAddCardComponent, AccordionGroupComponent, AccordionItemComponent, FormFieldComponent, IconComponent],
     templateUrl: './verification-payment.component.html'
 })
 export class VerificationPaymentComponent implements OnInit {

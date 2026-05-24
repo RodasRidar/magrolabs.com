@@ -1,6 +1,6 @@
 <app-navbar [isCheckout]="false" [type]="NavbarTypeEnum.LANDING" />
 
-<main class="min-h-screen bg-white">
+<main class="min-h-screen bg-bg">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
     <ml-breadcrumb [items]="breadcrumbItems" />
   </div>
@@ -10,31 +10,31 @@
     <header class="mb-10">
       <div class="mb-5 flex items-center gap-3">
         <ml-badge color="indigo" label="Hidratación" />
-        <span class="text-sm text-gray-500">·</span>
-        <span class="text-sm text-gray-500">4 min de lectura</span>
+        <span class="text-sm text-fg-subtle">·</span>
+        <span class="text-sm text-fg-subtle">4 min de lectura</span>
       </div>
 
-      <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-5 leading-tight">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-fg mb-5 leading-tight">
         Cuánta agua tomar al día si entrenas con creatina
       </h1>
 
-      <p class="text-lg text-gray-600 leading-relaxed">
+      <p class="text-lg text-fg-muted leading-relaxed">
         La creatina monohidratada solo rinde cuando estás bien hidratado. Aquí te explicamos cómo calcular tu ingesta diaria de agua según tu peso, y por qué importa.
       </p>
 
-      <div class="mt-7 flex items-center gap-3 border-b border-gray-200 pb-6">
+      <div class="mt-7 flex items-center gap-3 border-b border-border pb-6">
         <div class="size-10 rounded-full bg-primary-surface text-primary-dark flex items-center justify-center font-semibold">
           M
         </div>
         <div class="text-sm">
-          <p class="font-medium text-gray-900">Equipo Magrolabs</p>
-          <p class="text-gray-500">Nutrición deportiva</p>
+          <p class="font-medium text-fg">Equipo Magrolabs</p>
+          <p class="text-fg-subtle">Nutrición deportiva</p>
         </div>
       </div>
     </header>
 
     <section class="mb-10">
-      <p class="text-base text-gray-700 leading-relaxed">
+      <p class="text-base text-fg-muted leading-relaxed">
         El cuerpo humano es <strong>~60 % agua</strong>. Cuando entrenas con creatina, esa proporción se vuelve crítica: la creatina atrae agua hacia tus células musculares, y si no compensas con suficiente líquido, los efectos se diluyen, literalmente.
       </p>
     </section>
@@ -42,8 +42,8 @@
     <section class="mb-12">
       <ml-card padding="lg" extraClass="border border-primary-surface">
         @if (!mostrarResultado()) {
-          <h2 class="text-xl font-semibold text-gray-900 mb-1">Calcula tu ingesta diaria</h2>
-          <p class="text-sm text-gray-600 mb-6">Ingresa tu peso corporal en kilogramos.</p>
+          <h2 class="text-xl font-semibold text-fg mb-1">Calcula tu ingesta diaria</h2>
+          <p class="text-sm text-fg-muted mb-6">Ingresa tu peso corporal en kilogramos.</p>
 
           <form class="space-y-4" (ngSubmit)="calcular()">
             <ml-input
@@ -56,23 +56,23 @@
             <ml-button name="Calcular hidratación" (click)="calcular()" />
           </form>
 
-          <p class="mt-5 text-xs text-gray-500">
+          <p class="mt-5 text-xs text-fg-subtle">
             Fórmula: <strong>40 ml por cada kg</strong> de peso corporal.
           </p>
         } @else {
           <div class="text-center">
             <p class="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Tu ingesta diaria</p>
-            <p class="text-6xl font-bold text-gray-900 mb-1">{{ aguaMl() }}</p>
-            <p class="text-base text-gray-500 mb-8">mililitros · {{ peso() }} kg</p>
+            <p class="text-6xl font-bold text-fg mb-1">{{ aguaMl() }}</p>
+            <p class="text-base text-fg-subtle mb-8">mililitros · {{ peso() }} kg</p>
 
             <div class="grid grid-cols-2 gap-3 mb-6 text-left">
               <div class="rounded-lg bg-primary-surface/60 p-4">
                 <p class="text-2xl font-semibold text-primary-dark">{{ litros() }} L</p>
-                <p class="text-xs text-gray-600 mt-1">Litros al día</p>
+                <p class="text-xs text-fg-muted mt-1">Litros al día</p>
               </div>
               <div class="rounded-lg bg-primary-surface/60 p-4">
                 <p class="text-2xl font-semibold text-primary-dark">{{ vasos() }}</p>
-                <p class="text-xs text-gray-600 mt-1">Vasos de 250 ml</p>
+                <p class="text-xs text-fg-muted mt-1">Vasos de 250 ml</p>
               </div>
             </div>
 
@@ -89,14 +89,14 @@
     </section>
 
     <section class="mb-8">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">Por qué la hidratación importa con creatina</h2>
-      <p class="text-base text-gray-700 leading-relaxed mb-4">
+      <h2 class="text-2xl font-bold text-fg mb-4">Por qué la hidratación importa con creatina</h2>
+      <p class="text-base text-fg-muted leading-relaxed mb-4">
         La creatina actúa como una esponja celular: arrastra agua hacia el interior de los músculos. Ese efecto, la <em>volumización</em>, es justo lo que sostiene tu fuerza y la apariencia de masa magra. Si el agua disponible es baja, el cuerpo prioriza otras funciones y reduce el almacenamiento muscular.
       </p>
-      <p class="text-base text-gray-700 leading-relaxed mb-4">
+      <p class="text-base text-fg-muted leading-relaxed mb-4">
         Tres efectos dependen directamente de la hidratación:
       </p>
-      <ul class="space-y-3 text-base text-gray-700">
+      <ul class="space-y-3 text-base text-fg-muted">
         <li class="flex gap-3">
           <span class="mt-2 size-1.5 rounded-full bg-primary shrink-0"></span>
           <span><strong>Volumen muscular.</strong> El agua intracelular se mantiene, sosteniendo el efecto estético y funcional.</span>
@@ -119,18 +119,18 @@
     </ml-alert>
 
     <section class="my-10">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">La fórmula: 40 ml por kg</h2>
-      <p class="text-base text-gray-700 leading-relaxed mb-4">
+      <h2 class="text-2xl font-bold text-fg mb-4">La fórmula: 40 ml por kg</h2>
+      <p class="text-base text-fg-muted leading-relaxed mb-4">
         La recomendación general en personas físicamente activas es <strong>40 ml de agua por kilogramo</strong> de peso corporal. Si pesas 70 kg, eso son 2.8 litros, unos 11 vasos de 250 ml repartidos durante el día.
       </p>
-      <p class="text-base text-gray-700 leading-relaxed">
+      <p class="text-base text-fg-muted leading-relaxed">
         En días de entrenamiento intenso o clima cálido, sube esa base un 15 a 20 % adicional.
       </p>
     </section>
 
     <section class="mb-8">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">Cómo combinarlo con la creatina</h2>
-      <p class="text-base text-gray-700 leading-relaxed">
+      <h2 class="text-2xl font-bold text-fg mb-4">Cómo combinarlo con la creatina</h2>
+      <p class="text-base text-fg-muted leading-relaxed">
         La dosis recomendada de Magrolabs es <strong>1 g de creatina por cada 10 kg de peso</strong>, disuelta en 250 a 300 ml de agua. Tomarla después del entrenamiento mejora la sinergia con el resto del día, pero el factor decisivo no es el <em>timing</em>, sino la <strong>constancia</strong>.
       </p>
     </section>
@@ -150,7 +150,7 @@
         </p>
         <a
           routerLink="/productos"
-          class="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold text-sm py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors"
+          class="inline-flex items-center gap-2 bg-bg text-fg font-semibold text-sm py-3 px-6 rounded-lg hover:bg-bg-alt transition-colors"
         >
           Ver el producto
           <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -161,7 +161,7 @@
     </section>
 
     <section class="mb-10">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6">Preguntas frecuentes</h2>
+      <h2 class="text-2xl font-bold text-fg mb-6">Preguntas frecuentes</h2>
       <ml-accordion-group>
         <ml-accordion-item title="¿Qué pasa si no tomo suficiente agua con la creatina?">
           Una hidratación insuficiente puede limitar la efectividad de la creatina y, en algunos casos, causar calambres musculares o malestar digestivo. Mantén una hidratación adecuada para maximizar los beneficios y evitar efectos secundarios.
@@ -178,13 +178,13 @@
       </ml-accordion-group>
     </section>
 
-    <aside class="border-t border-gray-200 pt-8">
-      <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sigue leyendo</p>
+    <aside class="border-t border-border pt-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-fg-subtle mb-3">Sigue leyendo</p>
       <a routerLink="/mi-primera-creatina" class="block group">
-        <p class="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">
+        <p class="text-lg font-semibold text-fg group-hover:text-primary transition-colors">
           ¿Es tu primera vez tomando creatina? →
         </p>
-        <p class="text-sm text-gray-600 mt-1">Guía completa para principiantes: dosis, beneficios y mitos.</p>
+        <p class="text-sm text-fg-muted mt-1">Guía completa para principiantes: dosis, beneficios y mitos.</p>
       </a>
     </aside>
 

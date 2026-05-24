@@ -1,11 +1,11 @@
 <ml-page-header title="Recompensas.">
   @if (tierDisplayName() != "Carbon") {
-    <p class="mt-2 text-lg text-gray-600">
+    <p class="mt-2 text-lg text-fg-muted">
       ¡Felicitaciones eres un miembro <strong>{{ tierDisplayName() }}</strong
       >!
     </p>
   }
-  <p class="mt-2 text-base text-gray-500">
+  <p class="mt-2 text-base text-fg-subtle">
     Has acumulado <strong>{{ totalEarningsCredits }} Magropuntos</strong> a lo
     largo de tu suscripción.
   </p>
@@ -21,10 +21,10 @@
           <img src="assets/images/loyalty-members.png" alt="Miembros del programa de lealtad" class="w-64 h-auto rounded">
         </div>-->
         <div class="flex-1 text-pretty">
-          <h2 class="text-2xl font-bold text-gray-900">
+          <h2 class="text-2xl font-bold text-fg">
             🎉 Estás ahorrando por artículos exclusivos.
           </h2>
-          <p class="mt-4 text-gray-600 text-pretty">
+          <p class="mt-4 text-fg-muted text-pretty">
             Recibes
             <strong>{{ env.creditoRegaloPorCompraMes }} Magropuntos</strong>
             cada <strong>mes</strong> por tu <strong>suscripción</strong>, estos
@@ -42,12 +42,12 @@
           class="px-4 py-4 sm:p-8 flex flex-col md:flex-row justify-between items-center"
         >
           <div class="flex-1">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">
+            <h2 class="text-xl font-bold text-fg mb-6">
               Magropuntos ahorrados:
             </h2>
             <div class="max-sm:justify-center mt-2 flex items-baseline">
               <span
-                class="text-6xl font-extrabold text-gray-900 flex items-center"
+                class="text-6xl font-extrabold text-fg flex items-center"
               >
                 {{ isLoadingCredits ? "0" : totalCredits }}
 
@@ -73,7 +73,7 @@
               </ml-link-button>
               <!-- Enlace para acceder a la sección de ahorro rápido
               <a routerLink="/ahorra-mas"
-                class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 hover:text-gray-900 hover:underline">
+                class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-fg-muted hover:text-fg hover:underline">
                 Ahorra más rápido →
               </a> -->
             </div>
@@ -92,12 +92,12 @@
       @if (showInstagramPromoCard()) {
         <ml-card
           class="hidden sm:block flex-1"
-          extraClass="bg-gradient-to-r from-red-50 to-orange-50 border border-primary"
+          extraClass="bg-primary-surface-light border border-primary"
         >
           <div class="px-6 py-5">
             <!-- Título consolidado -->
             <div class="text-center mb-4">
-              <h2 class="text-xl font-bold text-gray-900 animate-pulse">
+              <h2 class="text-xl font-bold text-fg animate-pulse">
                 ¡Por tiempo limitado!
               </h2>
             </div>
@@ -106,10 +106,10 @@
               <!-- Lado izquierdo: Instrucciones -->
               <div class="flex-1">
                 <div
-                  class="bg-white rounded-lg p-4 shadow-sm border border-red-100"
+                  class="bg-bg rounded-lg p-4 shadow-sm border border-red-100"
                 >
                   <h3
-                    class="text-base font-semibold text-gray-900 mb-2 flex items-center"
+                    class="text-base font-semibold text-fg mb-2 flex items-center"
                   >
                     <span
                       class="bg-red-100 text-primary rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mr-2"
@@ -117,7 +117,7 @@
                     >
                     Comparte tu experiencia en Instagram
                   </h3>
-                  <p class="text-sm text-gray-600 mb-2">
+                  <p class="text-sm text-fg-muted mb-2">
                     Comparte en tus <strong>historias</strong> de Instagram y
                     etiquétanos
                     <span class="font-semibold text-primary"
@@ -130,7 +130,7 @@
               <!-- Lado derecho: Recompensa visual -->
               <div class="flex-shrink-0">
                 <div
-                  class="bg-white rounded-lg p-7 shadow-sm border border-red-100 text-center"
+                  class="bg-bg rounded-lg p-7 shadow-sm border border-red-100 text-center"
                 >
                   <div class="flex items-center justify-center mb-2">
                     <span class="text-2xl font-bold text-green-700">+10</span>
@@ -149,7 +149,7 @@
                       />
                     }
                   </div>
-                  <p class="text-xs text-gray-600">Magropuntos</p>
+                  <p class="text-xs text-fg-muted">Magropuntos</p>
                 </div>
               </div>
             </div>
@@ -177,12 +177,12 @@
 
         <ml-card
           class="md:hidden flex-1"
-          extraClass="bg-gradient-to-r from-red-50 to-orange-50 border border-primary"
+          extraClass="bg-primary-surface-light border border-primary"
         >
           <div class="p-4">
             <!-- Título consolidado -->
             <div class="text-center mb-4">
-              <h2 class="text-xl font-bold text-gray-900 animate-pulse">
+              <h2 class="text-xl font-bold text-fg animate-pulse">
                 ¡Por tiempo limitado!
               </h2>
             </div>
@@ -191,10 +191,10 @@
               <!-- Lado izquierdo: Instrucciones -->
               <div class="flex-1">
                 <div
-                  class="bg-white rounded-lg p-4 shadow-sm border border-red-100"
+                  class="bg-bg rounded-lg p-4 shadow-sm border border-red-100"
                 >
                   <h3
-                    class="text-base font-semibold text-gray-900 mb-2 flex items-center"
+                    class="text-base font-semibold text-fg mb-2 flex items-center"
                   >
                     <span
                       class="bg-red-100 text-primary rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mr-2"
@@ -202,7 +202,7 @@
                     >
                     Comparte tu experiencia en Instagram
                   </h3>
-                  <p class="text-sm text-gray-600 mb-2">
+                  <p class="text-sm text-fg-muted mb-2">
                     Comparte en tus <strong>historias</strong> de Instagram y
                     etiquétanos
                     <span class="font-semibold text-primary"
@@ -213,10 +213,10 @@
               </div>
               <div class="flex-2">
                 <div
-                  class="bg-white rounded-lg p-4 shadow-sm border border-red-100"
+                  class="bg-bg rounded-lg p-4 shadow-sm border border-red-100"
                 >
                   <h3
-                    class="text-base font-semibold text-gray-900 mb-2 flex items-center"
+                    class="text-base font-semibold text-fg mb-2 flex items-center"
                   >
                     <span
                       class="bg-red-100 text-primary rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mr-2"
@@ -224,7 +224,7 @@
                     >
                     Gana automáticamente
                   </h3>
-                  <p class="text-sm text-gray-600 mb-2">
+                  <p class="text-sm text-fg-muted mb-2">
                     Te regalamos
                     <strong class="text-green-700">10 Magropuntos</strong>
                     gratis, los podrás usar en nuestra Webshop.
@@ -261,11 +261,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Historial de transacciones -->
       <ml-card>
-        <div class="px-6 py-5 border-b border-gray-300">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <div class="px-6 py-5 border-b border-border-strong">
+          <h3 class="text-lg leading-6 font-medium text-fg">
             💰 Tu historial de ahorro:
           </h3>
-          <p class="text-gray-600 mt-2">
+          <p class="text-fg-muted mt-2">
             Aquí puedes ver un resumen de tus transacciones.
           </p>
         </div>
@@ -275,13 +275,13 @@
             <div class="animate-pulse space-y-1">
               @for (i of [1, 2, 3, 4]; track i) {
                 <div
-                  class="py-4 flex justify-between border-b border-gray-200 last:border-0"
+                  class="py-4 flex justify-between border-b border-border last:border-0"
                 >
                   <div class="space-y-2 flex-1">
-                    <div class="h-4 bg-gray-300 rounded w-3/4"></div>
-                    <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                    <div class="h-4 bg-border-strong rounded w-3/4"></div>
+                    <div class="h-3 bg-border-strong rounded w-1/2"></div>
                   </div>
-                  <div class="h-4 bg-gray-300 rounded w-16 ml-4"></div>
+                  <div class="h-4 bg-border-strong rounded w-16 ml-4"></div>
                 </div>
               }
             </div>
@@ -289,22 +289,22 @@
 
           @if (!isLoadingTransactions && transactionHistory.length === 0) {
             <div class="text-center py-8">
-              <p class="text-gray-500">Aún no tienes transacciones.</p>
+              <p class="text-fg-subtle">Aún no tienes transacciones.</p>
             </div>
           }
 
           @if (!isLoadingTransactions && transactionHistory.length > 0) {
-            <ul class="divide-y divide-gray-300">
+            <ul class="divide-y divide-border-strong">
               @for (item of transactionHistory; track item) {
                 <li class="py-4">
                   <div class="flex justify-between">
                     <div class="flex flex-col">
                       <div class="font-medium">
-                        <span class="text-gray-700">{{
+                        <span class="text-fg-muted">{{
                           formatDate(item.date)
                         }}</span>
                       </div>
-                      <div class="text-sm text-gray-500 italic">
+                      <div class="text-sm text-fg-subtle italic">
                         {{ item.description }}
                       </div>
                     </div>
@@ -326,11 +326,11 @@
 
       <!-- Invitaciones -->
       <ml-card>
-        <div class="px-6 py-5 border-b border-gray-300">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <div class="px-6 py-5 border-b border-border-strong">
+          <h3 class="text-lg leading-6 font-medium text-fg">
             🔗 Tus invitaciones
           </h3>
-          <p class="text-gray-600 mt-2">
+          <p class="text-fg-muted mt-2">
             {{
               invitationCredits > 0
                 ? "Has ganado " + invitationCredits + " Magropuntos extra."
@@ -342,20 +342,20 @@
         <div class="px-6 pb-5">
           @if (isLoadingInvitations) {
             <div class="animate-pulse py-3 space-y-4">
-              <div class="h-4 bg-gray-300 rounded w-full"></div>
-              <div class="h-4 bg-gray-300 rounded w-5/6"></div>
-              <div class="h-10 bg-gray-300 rounded w-full mt-6"></div>
+              <div class="h-4 bg-border-strong rounded w-full"></div>
+              <div class="h-4 bg-border-strong rounded w-5/6"></div>
+              <div class="h-10 bg-border-strong rounded w-full mt-6"></div>
               <div class="space-y-2 mt-4">
-                <div class="h-3 bg-gray-300 rounded w-full"></div>
-                <div class="h-3 bg-gray-300 rounded w-3/4"></div>
-                <div class="h-3 bg-gray-300 rounded w-5/6"></div>
+                <div class="h-3 bg-border-strong rounded w-full"></div>
+                <div class="h-3 bg-border-strong rounded w-3/4"></div>
+                <div class="h-3 bg-border-strong rounded w-5/6"></div>
               </div>
             </div>
           }
 
           @if (!isLoadingInvitations) {
             <div class="py-3">
-              <p class="mt-2 text-gray-600">
+              <p class="mt-2 text-fg-muted">
                 <strong>Invita</strong> a tus <strong>amigos</strong> a probar
                 nuestra <strong>suscripción de creatina</strong> y gana hasta
                 <strong class="text-green-700"
@@ -366,7 +366,7 @@
               <div class="mt-6">
                 <label
                   for="invitation-link"
-                  class="hidden text-sm font-medium text-gray-700"
+                  class="hidden text-sm font-medium text-fg-muted"
                   >Tu enlace de invitación:</label
                 >
                 <div class="flex rounded-md shadow-sm">
@@ -375,7 +375,7 @@
                     id="invitation-link"
                     readonly
                     [value]="urlShared"
-                    class="focus:ring-black focus:border-black flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
+                    class="focus:ring-primary focus:border-primary flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-border-strong bg-bg text-fg"
                   />
                   <button
                     type="button"
@@ -383,29 +383,29 @@
                     [class]="
                       copiedToClipboard
                         ? 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 animate-pulse'
-                        : 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-black hover:bg-gray-800 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-200'
+                        : 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-bg bg-fg hover:bg-fg-muted hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200'
                     "
                   >
                     {{ copiedToClipboard ? "¡Copiado!" : "Copiar" }}
                   </button>
                 </div>
                 <ul class="mt-6 space-y-2">
-                  <p class="text-gray-800">Así funciona:</p>
-                  <li class="text-sm text-gray-700">
+                  <p class="text-fg">Así funciona:</p>
+                  <li class="text-sm text-fg-muted">
                     • Invita a un amigo(a) a probar nuestra creatina a través de
                     tu enlace.
                   </li>
-                  <li class="text-sm text-gray-700">
+                  <li class="text-sm text-fg-muted">
                     • Tu amigo(a) se suscribe y recibe su creatina Magrolabs.
                   </li>
-                  <li class="text-sm text-gray-700">
+                  <li class="text-sm text-fg-muted">
                     • Finalmente ambos ganan
                     {{ ENV.creditoRegaloPorCompraMes }} Magropuntos.
                   </li>
                 </ul>
               </div>
               <div class="mt-6">
-                <p class="text-xs text-gray-500 italic">
+                <p class="text-xs text-fg-subtle italic">
                   *Para ganar los MP de recompensa, tus amigos deberán
                   suscribirse utilizando tu
                   <strong>enlace de invitación</strong> y deberán pasar su
@@ -420,17 +420,17 @@
 
     <!-- FAQ o información adicional si es necesario -->
     <ml-card class="mt-8">
-      <div class="px-6 py-5 border-b border-gray-300">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
+      <div class="px-6 py-5 border-b border-border-strong">
+        <h3 class="text-lg leading-6 font-medium text-fg">
           ❓ Preguntas frecuentes
         </h3>
       </div>
-      <div class="px-6 py-5 divide-y divide-gray-300">
+      <div class="px-6 py-5 divide-y divide-border-strong">
         <div class="py-4">
-          <h4 class="text-base font-medium text-gray-900">
+          <h4 class="text-base font-medium text-fg">
             ¿Cómo puedo usar mis Magropuntos?
           </h4>
-          <p class="mt-2 text-sm text-gray-600">
+          <p class="mt-2 text-sm text-fg-muted">
             Tus Magropuntos pueden ser usados en la
             <a
               routerLink="/loyalty-webshop"
@@ -441,10 +441,10 @@
           </p>
         </div>
         <div class="py-4">
-          <h4 class="text-base font-medium text-gray-900">
+          <h4 class="text-base font-medium text-fg">
             ¿Cuánto tiempo son válidos mis Magropuntos?
           </h4>
-          <p class="mt-2 text-sm text-gray-600">
+          <p class="mt-2 text-sm text-fg-muted">
             Los Magropuntos no tienen fecha de vencimiento, puedes usarlos
             cuando quieras. Mientras mantengas tu suscripción activa tus MP
             estarán disponibles para usar. Solo si cancelas tu suscripción los
@@ -452,10 +452,10 @@
           </p>
         </div>
         <div class="py-4">
-          <h4 class="text-base font-medium text-gray-900">
+          <h4 class="text-base font-medium text-fg">
             ¿Puedo transferir mis Magropuntos a otra persona?
           </h4>
-          <p class="mt-2 text-sm text-gray-600">
+          <p class="mt-2 text-sm text-fg-muted">
             No, los Magropuntos son personales y no transferibles a otras
             cuentas.
           </p>

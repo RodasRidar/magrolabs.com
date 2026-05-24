@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
 import { SeoService } from '../../../../../shared/services/seo.service';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-como-funciona',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './como-funciona.component.html',
     styleUrl: './como-funciona.component.css'
 })

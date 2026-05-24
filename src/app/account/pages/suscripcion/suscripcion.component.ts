@@ -36,10 +36,11 @@ import { AlertComponent } from '../../../shared/ui/alert/alert.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { getSubscriptionStatusBadge, getChargeStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
 import { PageHeaderComponent } from '../../../shared/ui/page-header/page-header.component';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-suscripcion',
-    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, CardComponent, InlineModalComponent],
+    imports: [CommonModule, FlowWidgetAddCardComponent, RouterLink, ButtonComponent, StarRatingComponent, AlertComponent, BadgeComponent, PageHeaderComponent, CardComponent, InlineModalComponent, IconComponent],
     templateUrl: './suscripcion.component.html',
     styleUrl: './suscripcion.component.css'
 })

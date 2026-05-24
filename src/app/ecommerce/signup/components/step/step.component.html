@@ -1,39 +1,38 @@
 @if (type() === 'signup') {
 <div class="max-w-[40rem] sm:mx-auto mx-5">
-    <h2 class="sr-only bg-gray-900">Paso a paso de registro</h2>
-    <p class="sr-only bg-gray-300">Haz clic en los pasos para continuar</p>
+    <h2 class="sr-only">Paso a paso de registro</h2>
     <div class="relative pb-5">
-        <div class="absolute top-4 left-5 right-5 h-1 rounded-lg bg-gray-300 z-0"></div>
-        <ol class="grid grid-cols-5 text-sm font-medium text-gray-500">
+        <div class="absolute top-4 left-5 right-5 h-1 rounded-lg bg-border-strong z-0"></div>
+        <ol class="grid grid-cols-5 text-sm font-medium text-fg-subtle">
             <!-- Elegir plan -->
             <li class="relative flex justify-start">
                 <app-step-item [step]="stepEnum.CHOSE_PLAN"
-                    [isCompleted]="stepChosePlan && step() !== stepEnum.CHOSE_PLAN"
+                    [isCompleted]="stepChosePlan() && step() !== stepEnum.CHOSE_PLAN"
                     [isCurrent]="step() === stepEnum.CHOSE_PLAN" />
             </li>
             <!-- Tus Datos de registro -->
             <li class="relative flex justify-center">
-                <app-step-item [step]="stepEnum.USER_DATA" [isCompleted]="stepUserData && step() !== stepEnum.USER_DATA"
+                <app-step-item [step]="stepEnum.USER_DATA" [isCompleted]="stepUserData() && step() !== stepEnum.USER_DATA"
                     [isCurrent]="step() === stepEnum.USER_DATA" />
             </li>
 
             <!-- Direccion de envio -->
             <li class="relative flex justify-center">
-                <app-step-item [step]="stepEnum.ADDRESS" [isCompleted]="stepAddress && step() !== stepEnum.ADDRESS"
+                <app-step-item [step]="stepEnum.ADDRESS" [isCompleted]="stepAddress() && step() !== stepEnum.ADDRESS"
                     [isCurrent]="step() === stepEnum.ADDRESS" />
             </li>
 
             <!-- Validar Tarjeta -->
             <li class="relative flex justify-center">
                 <app-step-item [step]="stepEnum.CARD_VALIDATION"
-                    [isCompleted]="stepCardValidation && step() !== stepEnum.CARD_VALIDATION"
+                    [isCompleted]="stepCardValidation() && step() !== stepEnum.CARD_VALIDATION"
                     [isCurrent]="step() === stepEnum.CARD_VALIDATION" />
             </li>
 
             <!-- Confirmación de Pago y detalle de suscripción -->
             <li class="relative flex justify-end">
                 <app-step-item [step]="stepEnum.CONFIRMATION"
-                    [isCompleted]="stepConfirmation && step() !== stepEnum.CONFIRMATION"
+                    [isCompleted]="stepConfirmation() && step() !== stepEnum.CONFIRMATION"
                     [isCurrent]="step() === stepEnum.CONFIRMATION" [flag]="flag()" />
             </li>
         </ol>
@@ -45,88 +44,64 @@
 <div class="relative">
     <!-- Pasos del timeline -->
     <div class="flex items-center justify-between my-10 sm:my-20 relative">
-        <div class="absolute top-5 sm:top-8 left-9 sm:left-12 right-9 sm:right-8 h-1 bg-gray-300 z-0"></div>
+        <div class="absolute top-5 sm:top-8 left-9 sm:left-12 right-9 sm:right-8 h-1 bg-border-strong z-0"></div>
 
         <!-- Paso 1: Recibido -->
         <div class="flex flex-col items-center">
             <div [class]="circleLg(getOrderStepState(1))">
                 @if (getOrderStepState(1) === 'past') {
-                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
+                <ml-icon name="check" class="w-5 h-5 sm:w-8 sm:h-8 text-bg" />
                 } @else {
-                <svg [class]="iconLg(getOrderStepState(1))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
+                <ml-icon name="clipboard-document" [class]="iconLg(getOrderStepState(1))" />
                 }
             </div>
             <h3 [class]="labelLg(getOrderStepState(1))">Recibimos tu pedido</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ getOrderStepDate(1) }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ getOrderStepDate(1) }}</p>
         </div>
 
         <!-- Paso 2: En proceso -->
         <div class="flex flex-col items-center">
             <div [class]="circleLg(getOrderStepState(2))">
                 @if (getOrderStepState(2) === 'past') {
-                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
+                <ml-icon name="check" class="w-5 h-5 sm:w-8 sm:h-8 text-bg" />
                 } @else {
-                <svg [class]="iconLg(getOrderStepState(2))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                </svg>
+                <ml-icon name="box" [class]="iconLg(getOrderStepState(2))" />
                 }
             </div>
             <h3 [class]="labelLg(getOrderStepState(2))">Pedido en proceso</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ getOrderStepDate(2) }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ getOrderStepDate(2) }}</p>
         </div>
 
         <!-- Paso 3: En camino -->
         <div class="flex flex-col items-center">
             <div [class]="circleLg(getOrderStepState(3))">
                 @if (getOrderStepState(3) === 'past') {
-                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
+                <ml-icon name="check" class="w-5 h-5 sm:w-8 sm:h-8 text-bg" />
                 } @else {
-                <svg [class]="iconLg(getOrderStepState(3))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                </svg>
+                <ml-icon name="truck-side" [class]="iconLg(getOrderStepState(3))" />
                 }
             </div>
             <h3 [class]="labelLg(getOrderStepState(3))">Vamos en camino</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ getOrderStepDate(3) }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ getOrderStepDate(3) }}</p>
         </div>
 
         <!-- Paso 4: Entregado -->
         <div class="flex flex-col items-center">
             <div [class]="circleLg(getOrderStepState(4))">
                 @if (getOrderStepState(4) === 'past') {
-                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
+                <ml-icon name="check" class="w-5 h-5 sm:w-8 sm:h-8 text-bg" />
                 } @else {
-                <svg [class]="iconLg(getOrderStepState(4))" viewBox="0 -960 960 960" width="20px" fill="#828282">
-                    <path _ngcontent-ng-c4260790389=""
-                        d="M216-96q-29.7 0-50.85-21.15Q144-138.3 144-168v-480q0-29.7 21.15-50.85Q186.3-720 216-720h72q0-79.68 56.23-135.84 56.22-56.16 136-56.16Q560-912 616-855.84q56 56.16 56 135.84h72q29.7 0 50.85 21.15Q816-677.7 816-648v480q0 29.7-21.15 50.85Q773.7-96 744-96H216Zm0-72h528v-480H216v480Zm264.23-216Q560-384 616-440.16q56-56.16 56-135.84h-72q0 50-35 85t-85 35q-50 0-85-35t-35-85h-72q0 80 56.23 136 56.22 56 136 56ZM360-720h240q0-50-35-85t-85-35q-50 0-85 35t-35 85ZM216-168v-480 480Z">
-                    </path>
-                </svg>
+                <ml-icon name="package-lock" [class]="iconLg(getOrderStepState(4))" />
                 }
             </div>
             <h3 [class]="labelLg(getOrderStepState(4))">Tu pedido llegó</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ getOrderStepDate(4) }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ getOrderStepDate(4) }}</p>
         </div>
     </div>
 
     <!-- Información de entrega -->
-    <div class="flex items-center justify-center mt-8 border-t border-gray-200 pt-6">
-        <svg class="w-8 h-8 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
+    <div class="flex items-center justify-center mt-8 border-t border-border pt-6">
+        <ml-icon name="calendar" class="w-8 h-8 text-fg-muted mr-3" />
         <span class="text-base sm:text-xl font-semibold">
             Entrega a domicilio de {{ deliveryHoursMin() }} a {{ deliveryHoursMax() }} horas.
         </span>
@@ -137,55 +112,39 @@
 @if (type() === 'delivery-preview') {
 <div class="relative">
     <div class="flex items-center justify-between my-2 sm:my-2 relative">
-        <div class="absolute top-4 left-4 right-4 h-0.5 bg-gray-900 z-0"></div>
+        <div class="absolute top-4 left-4 right-4 h-0.5 bg-fg z-0"></div>
 
         <!-- Paso 1: Preparando -->
         <div class="flex flex-col items-center">
             <div [class]="circleSm(getDeliveryStepState(1))">
-
-                <svg [class]="iconSm(getDeliveryStepState(1))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                </svg>
-
+                <ml-icon name="box" [class]="iconSm(getDeliveryStepState(1))" />
             </div>
             <h3 [class]="labelSm(getDeliveryStepState(1))">Preparando</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ preparandoDate() }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ preparandoDate() }}</p>
         </div>
 
         <!-- Paso 2: Enviado -->
         <div class="flex flex-col items-center">
             <div [class]="circleSm(getDeliveryStepState(2))">
-                <svg [class]="iconSm(getDeliveryStepState(2))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                </svg>
+                <ml-icon name="truck-side" [class]="iconSm(getDeliveryStepState(2))" />
             </div>
             <h3 [class]="labelSm(getDeliveryStepState(2))">Enviado</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ enviadoDate() }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ enviadoDate() }}</p>
         </div>
 
         <!-- Paso 3: Entregado -->
         <div class="flex flex-col items-center">
             <div [class]="circleSm(getDeliveryStepState(3))">
-                @if (getDeliveryStepState(3) === 'past') {
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
-                } @else {
-                <svg [class]="iconSm(getDeliveryStepState(3))" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                }
+                <ml-icon name="check" [class]="iconSm(getDeliveryStepState(3))" />
             </div>
             <h3 [class]="labelSm(getDeliveryStepState(3))">Entregado</h3>
-            <p class="text-gray-600 text-center text-xs min-h-[24px]">{{ entregadoDate() }}</p>
+            <p class="text-fg-muted text-center text-xs min-h-[24px]">{{ entregadoDate() }}</p>
         </div>
     </div>
 
     <!-- Disclaimer envío gratis -->
     <div class="flex justify-center items-center mt-3">
-        <p class="text-xs text-gray-500 font-light">Envíos a todo el Perú (Lima Metropolitana gratis).</p>
+        <p class="text-xs text-fg-subtle font-light">Envíos a todo el Perú (Lima Metropolitana gratis).</p>
     </div>
 </div>
 }

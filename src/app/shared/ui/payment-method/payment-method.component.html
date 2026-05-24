@@ -17,9 +17,9 @@
                         [checked]="currentSelection() === 'CARD_ENROLLED'"
                         (change)="selectOption('CARD_ENROLLED')" />
                     <div
-                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-bg shadow-sm transition"
                         [class.ring-2]="currentSelection() === 'CARD_ENROLLED'"
-                        [class.ring-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'">
+                        [class.ring-primary-hover]="currentSelection() === 'CARD_ENROLLED'">
                         <div class="flex-none">
                             @if (card.brand.toUpperCase() === 'VISA') {
                                 <img src="/logo_visa.png" alt="Visa" class="w-6 h-auto" />
@@ -28,23 +28,19 @@
                             } @else if (card.brand.toUpperCase().includes('AME')) {
                                 <img src="/logo_amex.svg" alt="Amex" class="w-6 h-auto" />
                             } @else {
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#434343">
-                                    <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Z" />
-                                </svg>
+                                <ml-icon name="credit-card" class="h-6 w-6 text-fg-subtle" />
                             }
                         </div>
                         <div class="flex-1">
-                            <h3 class="leading-none text-gray-800 font-medium">{{ card.brand }} •••• {{ card.last4 }}</h3>
-                            <p class="mt-1 text-sm text-gray-600">Paga con tu tarjeta guardada.</p>
+                            <h3 class="leading-none text-fg font-medium">{{ card.brand }} •••• {{ card.last4 }}</h3>
+                            <p class="mt-1 text-sm text-fg-muted">Paga con tu tarjeta guardada.</p>
                         </div>
                         <div
                             class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
-                            [class.bg-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'"
-                            [class.border-[#D7816A]]="currentSelection() === 'CARD_ENROLLED'">
+                            [class.bg-primary-hover]="currentSelection() === 'CARD_ENROLLED'"
+                            [class.border-primary-hover]="currentSelection() === 'CARD_ENROLLED'">
                             @if (currentSelection() === 'CARD_ENROLLED') {
-                                <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
-                                    <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
-                                </svg>
+                                <ml-icon name="check" class="w-2.5 h-2.5" />
                             }
                         </div>
                     </div>
@@ -64,26 +60,24 @@
                         [checked]="currentSelection() === 'CARD_PORTAL'"
                         (change)="selectOption('CARD_PORTAL')" />
                     <div
-                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                        class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-bg shadow-sm transition"
                         [class.ring-2]="currentSelection() === 'CARD_PORTAL'"
-                        [class.ring-[#D7816A]]="currentSelection() === 'CARD_PORTAL'">
+                        [class.ring-primary-hover]="currentSelection() === 'CARD_PORTAL'">
                         <div class="flex-none">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#434343">
                                 <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Z" />
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <h3 class="leading-none text-gray-800 font-medium">Paga con tu tarjeta de crédito o débito</h3>
-                            <p class="mt-1 text-sm text-gray-600">Te llevamos al portal seguro de Flow para completar tu pago.</p>
+                            <h3 class="leading-none text-fg font-medium">Paga con tu tarjeta de crédito o débito</h3>
+                            <p class="mt-1 text-sm text-fg-muted">Te llevamos al portal seguro de Flow para completar tu pago.</p>
                         </div>
                         <div
                             class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
-                            [class.bg-[#D7816A]]="currentSelection() === 'CARD_PORTAL'"
-                            [class.border-[#D7816A]]="currentSelection() === 'CARD_PORTAL'">
+                            [class.bg-primary-hover]="currentSelection() === 'CARD_PORTAL'"
+                            [class.border-primary-hover]="currentSelection() === 'CARD_PORTAL'">
                             @if (currentSelection() === 'CARD_PORTAL') {
-                                <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
-                                    <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
-                                </svg>
+                                <ml-icon name="check" class="w-2.5 h-2.5" />
                             }
                         </div>
                     </div>
@@ -103,34 +97,32 @@
                         [checked]="currentSelection() === 'ADD_CARD'"
                         (change)="selectOption('ADD_CARD')" />
                     <div
-                        class="w-full flex gap-x-3 items-start p-4 border bg-white shadow-sm transition"
+                        class="w-full flex gap-x-3 items-start p-4 border bg-bg shadow-sm transition"
                         [class.rounded-lg]="currentSelection() !== 'ADD_CARD'"
                         [class.rounded-t-lg]="currentSelection() === 'ADD_CARD'"
                         [class.rounded-b-none]="currentSelection() === 'ADD_CARD'"
                         [class.border-b-0]="currentSelection() === 'ADD_CARD'"
                         [class.ring-2]="currentSelection() === 'ADD_CARD'"
-                        [class.ring-[#D7816A]]="currentSelection() === 'ADD_CARD'">
+                        [class.ring-primary-hover]="currentSelection() === 'ADD_CARD'">
                         <div class="flex-none">
- <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#434343"><path d="M168-192q-29 0-50.5-21.16T96-264.04v-432.24Q96-726 117.5-747t50.5-21h624q29 0 50.5 21.15T864-696v216H168v216h408v72H168Zm0-432h624v-72H168v72ZM768-96v-120H648v-72h120v-120h72v120h120v72H840v120h-72ZM168-264v-432 432Z"/></svg>
+<ml-icon name="card-add" class="h-5 w-5 text-fg-subtle" />
                         </div>
                         <div class="flex-1">
-                            <h3 class="leading-none text-gray-800 font-medium">
+                            <h3 class="leading-none text-fg font-medium">
                                 @if (enrolledCard()) {
                                     Agregar otra tarjeta
                                 } @else {
                                     Tarjeta
                                 }
                             </h3>
-                            <p class="mt-1 text-sm text-gray-600">Guardaremos esta tarjeta para tu próxima compra.</p>
+                            <p class="mt-1 text-sm text-fg-muted">Guardaremos esta tarjeta para tu próxima compra.</p>
                         </div>
                         <div
                             class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
-                            [class.bg-[#D7816A]]="currentSelection() === 'ADD_CARD'"
-                            [class.border-[#D7816A]]="currentSelection() === 'ADD_CARD'">
+                            [class.bg-primary-hover]="currentSelection() === 'ADD_CARD'"
+                            [class.border-primary-hover]="currentSelection() === 'ADD_CARD'">
                             @if (currentSelection() === 'ADD_CARD') {
-                                <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
-                                    <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
-                                </svg>
+                                <ml-icon name="check" class="w-2.5 h-2.5" />
                             }
                         </div>
                     </div>
@@ -138,14 +130,14 @@
 
                 <!-- Acordeón pegado a la card de arriba (sin mt) — solo visible cuando ADD_CARD está seleccionado -->
                 <div
-                    class="overflow-hidden border-l border-r border-b border-gray-200 bg-gray-50 transition-all duration-300"
+                    class="overflow-hidden border-l border-r border-b border-border bg-bg-alt transition-all duration-300"
                     [class.max-h-0]="currentSelection() !== 'ADD_CARD'"
                     [class.opacity-0]="currentSelection() !== 'ADD_CARD'"
                     [class.max-h-[500px]]="currentSelection() === 'ADD_CARD'"
                     [class.opacity-100]="currentSelection() === 'ADD_CARD'"
                     [class.rounded-b-lg]="currentSelection() === 'ADD_CARD'"
                     [class.ring-2]="currentSelection() === 'ADD_CARD'"
-                    [class.ring-[#D7816A]]="currentSelection() === 'ADD_CARD'">
+                    [class.ring-primary-hover]="currentSelection() === 'ADD_CARD'">
                     @if (currentSelection() === 'ADD_CARD') {
                         @if (flowToken(); as tk) {
                             <div class="p-3 sm:p-4">
@@ -154,8 +146,8 @@
                                     (cardAddedSuccessfully)="onCardEnrolled($event)" />
                             </div>
                         } @else {
-                            <div class="p-6 flex items-center justify-center text-sm text-gray-500">
-                                <svg class="w-4 h-4 mr-2 animate-spin text-[#D7816A]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <div class="p-6 flex items-center justify-center text-sm text-fg-subtle">
+                                <svg class="w-4 h-4 mr-2 animate-spin text-primary-hover" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -178,20 +170,20 @@
                     [checked]="currentSelection() === 'YAPE'"
                     (change)="selectOption('YAPE')" />
                 <div
-                    class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-white shadow-sm transition"
+                    class="w-full flex gap-x-3 items-start p-4 rounded-lg border bg-bg shadow-sm transition"
                     [class.ring-2]="currentSelection() === 'YAPE'"
-                    [class.ring-[#D7816A]]="currentSelection() === 'YAPE'">
+                    [class.ring-primary-hover]="currentSelection() === 'YAPE'">
                     <div class="flex-none">
                         <img src="/logo_yape.png" alt="Yape" class="w-6 h-auto" />
                     </div>
                     <div class="flex-1">
-                        <h3 class="leading-none text-gray-800 font-medium">Yape</h3>
-                        <p class="mt-1 text-sm text-gray-600">Paga con Yape u otras billeteras.</p>
+                        <h3 class="leading-none text-fg font-medium">Yape</h3>
+                        <p class="mt-1 text-sm text-fg-muted">Paga con Yape u otras billeteras.</p>
                     </div>
                     <div
                         class="flex-none flex items-center justify-center w-4 h-4 rounded-full border text-white transition"
-                        [class.bg-[#D7816A]]="currentSelection() === 'YAPE'"
-                        [class.border-[#D7816A]]="currentSelection() === 'YAPE'">
+                        [class.bg-primary-hover]="currentSelection() === 'YAPE'"
+                        [class.border-primary-hover]="currentSelection() === 'YAPE'">
                         @if (currentSelection() === 'YAPE') {
                             <svg class="w-2.5 h-2.5" viewBox="0 0 12 10">
                                 <polyline fill="none" stroke-width="2px" stroke="currentColor" points="1.5 6 4.5 9 10.5 1" />
@@ -202,12 +194,10 @@
             </label>
         </li>
 
-        <p class="flex justify-start text-sm font-medium text-gray-500 mt-6">
-            <svg class="w-5 h-5 text-gray-400 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
+        <p class="flex justify-start text-sm font-medium text-fg-subtle mt-6">
+            <ml-icon name="lock" class="w-5 h-5 text-fg-subtle mr-1.5" />
             Pago seguro con
-            <a href="https://flowpagos.com/" class="ml-1 hover:underline text-gray-800" target="_blank">Flow</a>
+            <a href="https://flowpagos.com/" class="ml-1 hover:underline text-fg" target="_blank">Flow</a>
         </p>
     </ul>
 </div>

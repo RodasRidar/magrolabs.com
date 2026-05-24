@@ -48,7 +48,7 @@ export class PasswordInputComponent implements ControlValueAccessor {
     const level = this.strengthLevel();
     const activeClass =
       level === 1 ? 'bg-red-500' : level === 2 ? 'bg-amber-400' : 'bg-emerald-500';
-    return [1, 2, 3].map((i) => 'h-1 flex-1 rounded-full transition-colors duration-300 ' + (i <= level ? activeClass : 'bg-gray-200'));
+    return [1, 2, 3].map((i) => 'h-1 flex-1 rounded-full transition-colors duration-300 ' + (i <= level ? activeClass : 'bg-bg-alt'));
   });
 
   protected readonly strengthLabel = computed(() => {
@@ -66,15 +66,15 @@ export class PasswordInputComponent implements ControlValueAccessor {
 
   protected readonly inputClass = computed(() => {
     const base =
-      'block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm sm:text-sm placeholder:text-gray-400 transition-shadow focus:outline-none';
+      'block w-full rounded-md border-0 py-1.5 pr-10 text-fg shadow-sm sm:text-sm placeholder:text-fg-subtle transition-shadow focus:outline-none';
 
     const ring = this.hasErrors()
       ? 'ring-2 ring-inset ring-red-500 focus:ring-2 focus:ring-inset focus:ring-red-600'
-      : 'ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary';
+      : 'ring-1 ring-inset ring-border-strong focus:ring-2 focus:ring-inset focus:ring-primary';
 
     const stateClass = this.isDisabled()
-      ? 'bg-gray-100 cursor-not-allowed opacity-60'
-      : 'bg-white';
+      ? 'bg-bg-alt cursor-not-allowed opacity-60'
+      : 'bg-bg';
 
     return `${base} ${ring} ${stateClass}`;
   });

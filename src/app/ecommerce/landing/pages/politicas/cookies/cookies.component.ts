@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../../environments/env';
+import { IconComponent } from '../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-cookies',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './cookies.component.html',
     styleUrl: './cookies.component.css'
 })

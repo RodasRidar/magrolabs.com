@@ -6,26 +6,26 @@ import { Component } from "@angular/core";
   template: `
     <div class="animate-pulse space-y-6">
       @for (item of skeletonItems; track item) {
-        <div class="py-6 px-4 border-b border-gray-100 last:border-b-0">
+        <div class="py-6 px-4 border-b border-border last:border-b-0">
           <div class="flex items-center space-x-4">
             <!-- Avatar skeleton -->
-            <div class="w-14 h-14 bg-gray-200 rounded-full"></div>
+            <div class="w-14 h-14 bg-bg-alt rounded-full"></div>
             <div class="flex-1 space-y-2">
               <!-- Name skeleton -->
-              <div class="h-4 bg-gray-200 rounded w-32"></div>
+              <div class="h-4 bg-bg-alt rounded w-32"></div>
               <!-- Stars skeleton -->
               <div class="flex space-x-1">
                 @for (star of [1, 2, 3, 4, 5]; track star) {
-                  <div class="w-5 h-5 bg-gray-200 rounded"></div>
+                  <div class="w-5 h-5 bg-bg-alt rounded"></div>
                 }
               </div>
             </div>
           </div>
           <!-- Comment skeleton -->
           <div class="mt-4 space-y-2">
-            <div class="h-3 bg-gray-200 rounded w-full"></div>
-            <div class="h-3 bg-gray-200 rounded w-4/5"></div>
-            <div class="h-3 bg-gray-200 rounded w-3/5"></div>
+            <div class="h-3 bg-bg-alt rounded w-full"></div>
+            <div class="h-3 bg-bg-alt rounded w-4/5"></div>
+            <div class="h-3 bg-bg-alt rounded w-3/5"></div>
           </div>
         </div>
       }

@@ -38,7 +38,7 @@ require('@tailwindcss/aspect-ratio'),
             <button
               id="tabs-2-tab-1"
               (click)="selectTap(1)"
-              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-fg cursor-pointer focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
               [class.ring-primary]="tapSelected === 1"
               aria-controls="tabs-2-panel-1"
               role="tab"
@@ -66,7 +66,7 @@ require('@tailwindcss/aspect-ratio'),
             <button
               id="tabs-2-tab-2"
               (click)="selectTap(2)"
-              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+              class="relative h-24 w-24 rounded-md flex items-center justify-center text-sm font-medium uppercase text-fg cursor-pointer hover:bg-bg-alt focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
               [class.ring-primary]="tapSelected === 2"
               aria-controls="tabs-2-panel-2"
               role="tab"
@@ -92,7 +92,7 @@ require('@tailwindcss/aspect-ratio'),
             </button>
 
             <!-- <button id="tabs-2-tab-3" (click)="selectTap(3)"
-            class="relative h-24 w-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+            class="relative h-24 w-24 bg-bg rounded-md flex items-center justify-center text-sm font-medium uppercase text-fg cursor-pointer hover:bg-bg-alt focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
             [class.ring-primary]="tapSelected === 3"
             aria-controls="tabs-2-panel-3" role="tab" type="button">
             <span class="sr-only">Modelo 3D</span>
@@ -150,7 +150,7 @@ require('@tailwindcss/aspect-ratio'),
               <button
                 (click)="scrollToImage(i)"
                 [class.bg-primary]="currentImageIndex === i"
-                [class.bg-gray-300]="currentImageIndex !== i"
+                [class.bg-border-strong]="currentImageIndex !== i"
                 class="w-2 h-2 rounded-full transition-colors duration-200"
                 [attr.aria-label]="'Ver imagen ' + (i + 1)"
               ></button>
@@ -252,7 +252,7 @@ require('@tailwindcss/aspect-ratio'),
                   class="flex items-center justify-center w-full h-full rounded sm:w-96"
                 >
                   <svg
-                    class="w-10 h-10 text-gray-200 dark:text-gray-600"
+                    class="w-10 h-10 text-fg dark:text-fg-muted"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -314,7 +314,7 @@ require('@tailwindcss/aspect-ratio'),
                   <a
                     [routerLink]="'/productos/creatinas/' + slug"
                     [fragment]="'reviews'"
-                    class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline"
+                    class="ml-2 text-sm font-light text-fg-subtle hover:text-primary-hover w-fit hover:underline"
                   >
                     ({{ reviewStats.totalReviews }} reseñas)</a
                   >
@@ -323,7 +323,7 @@ require('@tailwindcss/aspect-ratio'),
 
               <div class="mt-1">
                 <h1
-                  class="text-3xl font-thin sm:font-light tracking-tighter sm:tracking-normal text-gray-900 sm:text-3xl product-name"
+                  class="text-3xl font-thin sm:font-light tracking-tighter sm:tracking-normal text-fg sm:text-3xl product-name"
                 >
                   {{ productName }}
                 </h1>
@@ -339,7 +339,7 @@ require('@tailwindcss/aspect-ratio'),
                     <div class="flex flex-col gap-2">
                       <div class="flex items-center font-extralight">
                         <p
-                          class="text-base text-gray-500 sm:text-lg line-through"
+                          class="text-base text-fg-subtle sm:text-lg line-through"
                         >
                           {{ ENV.creatinaFreePrecio | currency: "S/" }}
                         </p>
@@ -352,9 +352,9 @@ require('@tailwindcss/aspect-ratio'),
                         >
                       </div>
                       <div
-                        class="mt-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-3 max-w-md"
+                        class="mt-4 bg-primary-surface-light border border-primary-muted rounded-lg p-3 max-w-md"
                       >
-                        <p class="text-sm text-gray-700 leading-relaxed">
+                        <p class="text-sm text-fg-muted leading-relaxed">
                           <span class="font-semibold text-primary"
                             >Creatina {{ ENV.campanaPrimeraCreatina.gramos }}gr
                             para tus
@@ -365,7 +365,7 @@ require('@tailwindcss/aspect-ratio'),
                           >
                           Luego continúa automáticamente con tu suscripción
                           mensual de
-                          <span class="font-semibold text-gray-900">{{
+                          <span class="font-semibold text-fg">{{
                             ENV.precioCreatinaSubscription | currency: "S/"
                           }}</span>
                           y recibe {{ ENV.creatinaSubscription250 }}gr cada mes.
@@ -378,11 +378,11 @@ require('@tailwindcss/aspect-ratio'),
                         class="flex justify-center items-center font-extralight price"
                       >
                         <p
-                          class="text-base text-gray-500 sm:text-lg line-through"
+                          class="text-base text-fg-subtle sm:text-lg line-through"
                         >
                           {{ productPriceOnePurchase | currency: "S/" }}
                         </p>
-                        <p class="text-lg text-gray-900 sm:text-xl ml-2">
+                        <p class="text-lg text-fg sm:text-xl ml-2">
                           {{ productPriceSubscription | currency: "S/" }}
                         </p>
                         <span
@@ -395,7 +395,7 @@ require('@tailwindcss/aspect-ratio'),
                       <div
                         class="flex justify-center items-center font-extralight price"
                       >
-                        <p class="text-lg text-gray-900 sm:text-xl ml-2">
+                        <p class="text-lg text-fg sm:text-xl ml-2">
                           {{ productPriceOnePurchase | currency: "S/" }}
                         </p>
                       </div>
@@ -411,115 +411,43 @@ require('@tailwindcss/aspect-ratio'),
               <section aria-labelledby="options-heading">
                 <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Monohidratada al 100%.
                     </p>
                   </div>
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Mejora la recuperación muscular.
                     </p>
                   </div>
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Certificado de alta pureza.
                     </p>
                   </div>
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Sin sabor y fácil digestión.
                     </p>
                   </div>
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Mejora la fuerza y resistencia.
                     </p>
                   </div>
                   <div class="flex items-center">
-                    <svg
-                      class="flex-shrink-0 w-4 h-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p class="ml-1 text-sm text-gray-700 font-light">
+                    <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                    <p class="ml-1 text-sm text-fg-muted font-light">
                       Aumenta la densidad ósea.
                     </p>
                   </div>
                 </div>
-                <h2 class="text-gray-500 text-[12px] font-extralight">
+                <h2 class="text-fg-subtle text-[12px] font-extralight">
                   {{ productServicesAndWeight }}
                 </h2>
                 @if (!isFreeCreatine) {
@@ -634,27 +562,15 @@ require('@tailwindcss/aspect-ratio'),
                 </div>
 
                 <!-- Sección de pago seguro -->
-                <div class="mt-6 sm:pt-4 border-t border-gray-200">
+                <div class="mt-6 sm:pt-4 border-t border-border">
                   <p
-                    class="flex justify-center text-sm font-medium text-gray-500 my-4"
+                    class="flex justify-center text-sm font-medium text-fg-subtle my-4"
                   >
-                    <svg
-                      class="w-5 h-5 text-gray-400 mr-1.5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
+                    <ml-icon name="lock" class="w-5 h-5 text-fg-subtle mr-1.5" />
                     Pago seguro con
                     <a
                       href="https://flowpagos.com/"
-                      class="ml-1 hover:underline text-gray-800"
+                      class="ml-1 hover:underline text-fg"
                       target="_blank"
                       >Flow</a
                     >
@@ -695,7 +611,7 @@ require('@tailwindcss/aspect-ratio'),
 
           <ml-accordion-group>
             <ml-accordion-item title="Descripción">
-              <p class="leading-relaxed text-gray-500 text-xs">
+              <p class="leading-relaxed text-fg-subtle text-xs">
                 El monohidrato de creatina es uno de los ingredientes más
                 estudiados e investigados para mejorar el rendimiento deportivo.
                 Se ha demostrado que la creatina aumenta la resistencia, la masa
@@ -706,10 +622,10 @@ require('@tailwindcss/aspect-ratio'),
 
             <ml-accordion-item title="Objetivos">
               <ul class="list-disc list-outside space-y-1">
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Incrementa la fuerza
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Contribuye al aumento de la masa muscular cuando se usa
                   conjuntamente con el entrenamiento.
                 </li>
@@ -718,25 +634,25 @@ require('@tailwindcss/aspect-ratio'),
 
             <ml-accordion-item title="Modo de empleo">
               <ul class="list-disc list-outside space-y-1">
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Incrementa la fuerza.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Como suplemento dietético, tomar 6gr una veces al día con el
                   desayuno.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Su consumo es diario. Si va a entrenar 15 minutos antes de los
                   ejercicios. Los días que no, tomarlo con el desayuno.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   Mezclar y tomar con agua 350ml.
                 </li>
               </ul>
             </ml-accordion-item>
 
             <ml-accordion-item title="Advertencia y precauciones">
-              <p class="leading-relaxed text-gray-500 text-xs">
+              <p class="leading-relaxed text-fg-subtle text-xs">
                 Creatine Monohydrate (DE-1868) Suplemento Nutricional. No
                 superar la dosis diaria recomendada para suplementos dietéticos.
                 No debe utilizarse como sustituto de una dieta equilibrada. No
@@ -748,13 +664,13 @@ require('@tailwindcss/aspect-ratio'),
             </ml-accordion-item>
 
             <ml-accordion-item title="Sostenibilidad">
-              <p class="leading-relaxed text-gray-500 text-xs">
+              <p class="leading-relaxed text-fg-subtle text-xs">
                 Además de hacer fácil la suplementación en Magrolabs también
                 trabajamos duro por la sostenibilidad. Nos enfocamos en varias
                 áreas.
               </p>
               <ul class="list-disc list-outside space-y-1 mt-2">
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   <strong>Proceso de producción:</strong>
                   Minimizamos los residuos, compramos el material justo para el
                   número de miembros que recibirán nuestras creatinas. Esto
@@ -762,13 +678,13 @@ require('@tailwindcss/aspect-ratio'),
                   nuestro envases disponen de certificados de sostenibilidad,
                   como el certificado FSC.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   <strong>Transporte:</strong>
                   Optimizamos los envíos de las creatinas, usando envíos
                   programados, gracias a tu suscripción, para reducir las
                   emisiones de CO2.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   <strong>Embalaje:</strong>
                   Nuestro embalaje consiste en una caja de cartón asegurada por
                   una cinta de papel. Además, la caja de cartón es reciclable.
@@ -777,18 +693,18 @@ require('@tailwindcss/aspect-ratio'),
             </ml-accordion-item>
 
             <ml-accordion-item title="Origen y Calidad">
-              <p class="leading-relaxed text-gray-500 text-xs">
+              <p class="leading-relaxed text-fg-subtle text-xs">
                 Nuestra creatina es 100% monohidratada y proviene de fabricantes
                 internacionales especializados en alta pureza. Trabajamos con
                 uno de los principales importadores del Perú, asegurando
                 abastecimiento constante y control de calidad.
               </p>
               <ul class="list-disc list-outside space-y-1 mt-2">
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   <strong>Alta pureza:</strong> Creatina 100% monohidratada
                   seleccionada bajo estándares estrictos.
                 </li>
-                <li class="leading-relaxed text-gray-500 text-xs">
+                <li class="leading-relaxed text-fg-subtle text-xs">
                   <strong>Control:</strong> Envasado y distribución gestionados
                   por Magrolabs en Perú.
                 </li>
@@ -800,12 +716,12 @@ require('@tailwindcss/aspect-ratio'),
     </div>
 
     <!-- Reviews -->
-    <div class="border-t border-gray-200 mt-4" id="reviews">
+    <div class="border-t border-border mt-4" id="reviews">
       <div
         class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8"
       >
         <div class="lg:col-span-4">
-          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">
+          <h2 class="text-2xl font-extrabold tracking-tight text-fg">
             Reseñas de nuestros clientes
           </h2>
 
@@ -818,7 +734,7 @@ require('@tailwindcss/aspect-ratio'),
                 {{ reviewStats.averageRating }} out of 5 stars
               </p>
             </div>
-            <p class="ml-2 text-sm text-gray-900">
+            <p class="ml-2 text-sm text-fg">
               Basado en {{ reviewStats.totalReviews }} reseñas
             </p>
           </div>
@@ -829,26 +745,16 @@ require('@tailwindcss/aspect-ratio'),
             <dl class="space-y-3">
               <div class="flex items-center text-sm">
                 <dt class="flex-1 flex items-center">
-                  <p class="w-3 font-medium text-gray-900">
+                  <p class="w-3 font-medium text-fg">
                     5<span class="sr-only"> star reviews</span>
                   </p>
                   <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
                     <!-- Heroicon name: solid/star -->
-                    <svg
-                      class="flex-shrink-0 h-5 w-5 text-black"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
+                    <ml-icon name="star" class="flex-shrink-0 h-5 w-5 text-fg" />
 
                     <div class="ml-3 relative flex-1">
                       <div
-                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                        class="h-3 bg-bg-alt border border-border rounded-full"
                       ></div>
 
                       <div
@@ -859,7 +765,7 @@ require('@tailwindcss/aspect-ratio'),
                   </div>
                 </dt>
                 <dd
-                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-fg"
                 >
                   {{ reviewStats.percentages[5] }}%
                 </dd>
@@ -867,26 +773,16 @@ require('@tailwindcss/aspect-ratio'),
 
               <div class="flex items-center text-sm">
                 <dt class="flex-1 flex items-center">
-                  <p class="w-3 font-medium text-gray-900">
+                  <p class="w-3 font-medium text-fg">
                     4<span class="sr-only"> star reviews</span>
                   </p>
                   <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
                     <!-- Heroicon name: solid/star -->
-                    <svg
-                      class="flex-shrink-0 h-5 w-5 text-black"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
+                    <ml-icon name="star" class="flex-shrink-0 h-5 w-5 text-fg" />
 
                     <div class="ml-3 relative flex-1">
                       <div
-                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                        class="h-3 bg-bg-alt border border-border rounded-full"
                       ></div>
 
                       <div
@@ -897,7 +793,7 @@ require('@tailwindcss/aspect-ratio'),
                   </div>
                 </dt>
                 <dd
-                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-fg"
                 >
                   {{ reviewStats.percentages[4] }}%
                 </dd>
@@ -905,25 +801,15 @@ require('@tailwindcss/aspect-ratio'),
 
               <div class="flex items-center text-sm">
                 <dt class="flex-1 flex items-center">
-                  <p class="w-3 font-medium text-gray-900">
+                  <p class="w-3 font-medium text-fg">
                     3<span class="sr-only"> star reviews</span>
                   </p>
                   <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                    <svg
-                      class="flex-shrink-0 h-5 w-5 text-black"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
+                    <ml-icon name="star" class="flex-shrink-0 h-5 w-5 text-fg" />
 
                     <div class="ml-3 relative flex-1">
                       <div
-                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                        class="h-3 bg-bg-alt border border-border rounded-full"
                       ></div>
 
                       <div
@@ -934,7 +820,7 @@ require('@tailwindcss/aspect-ratio'),
                   </div>
                 </dt>
                 <dd
-                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-fg"
                 >
                   {{ reviewStats.percentages[3] }}%
                 </dd>
@@ -942,25 +828,15 @@ require('@tailwindcss/aspect-ratio'),
 
               <div class="flex items-center text-sm">
                 <dt class="flex-1 flex items-center">
-                  <p class="w-3 font-medium text-gray-900">
+                  <p class="w-3 font-medium text-fg">
                     2<span class="sr-only"> star reviews</span>
                   </p>
                   <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                    <svg
-                      class="flex-shrink-0 h-5 w-5 text-black"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
+                    <ml-icon name="star" class="flex-shrink-0 h-5 w-5 text-fg" />
 
                     <div class="ml-3 relative flex-1">
                       <div
-                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                        class="h-3 bg-bg-alt border border-border rounded-full"
                       ></div>
 
                       <div
@@ -971,7 +847,7 @@ require('@tailwindcss/aspect-ratio'),
                   </div>
                 </dt>
                 <dd
-                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-fg"
                 >
                   {{ reviewStats.percentages[2] }}%
                 </dd>
@@ -979,25 +855,15 @@ require('@tailwindcss/aspect-ratio'),
 
               <div class="flex items-center text-sm">
                 <dt class="flex-1 flex items-center">
-                  <p class="w-3 font-medium text-gray-900">
+                  <p class="w-3 font-medium text-fg">
                     1<span class="sr-only"> star reviews</span>
                   </p>
                   <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
-                    <svg
-                      class="flex-shrink-0 h-5 w-5 text-black"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
+                    <ml-icon name="star" class="flex-shrink-0 h-5 w-5 text-fg" />
 
                     <div class="ml-3 relative flex-1">
                       <div
-                        class="h-3 bg-gray-100 border border-gray-200 rounded-full"
+                        class="h-3 bg-bg-alt border border-border rounded-full"
                       ></div>
 
                       <div
@@ -1008,7 +874,7 @@ require('@tailwindcss/aspect-ratio'),
                   </div>
                 </dt>
                 <dd
-                  class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900"
+                  class="ml-3 w-10 text-right tabular-nums text-sm text-fg"
                 >
                   {{ reviewStats.percentages[1] }}%
                 </dd>
@@ -1043,11 +909,11 @@ require('@tailwindcss/aspect-ratio'),
                 (click)="writeReview()"
                 [disabled]="isCheckingReviewPermission || (isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED')"
                 [title]="isLogged && reviewPermission()?.reason === 'ORDER_NOT_DELIVERED' ? reviewPermission()?.message : null"
-                class="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                class="mt-6 inline-flex w-full bg-bg border border-border-strong rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-fg hover:bg-bg-alt sm:w-auto lg:w-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 @if (isCheckingReviewPermission) {
                   <svg
-                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-900"
+                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-fg"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -1093,7 +959,7 @@ require('@tailwindcss/aspect-ratio'),
               <app-review-skeleton></app-review-skeleton>
             } @placeholder {
               <div
-                class="divide-y divide-gray-200 max-h-[34.5rem] overflow-y-scroll bg-white rounded-lg"
+                class="divide-y divide-border max-h-[34.5rem] overflow-y-scroll bg-bg rounded-lg"
               >
                 <div class="py-6 px-4 text-center text-red-500">
                   <p class="text-sm">Cargando reseñas...</p>
@@ -1111,7 +977,7 @@ require('@tailwindcss/aspect-ratio'),
 @if (isReviewModalOpen) {
   <ml-modal [closable]="true" (closeAction)="closeReviewModal()">
     <div mlModalHeader>
-      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+      <h3 class="text-lg leading-6 font-medium text-fg mb-4">
         Escribir reseña
       </h3>
       <div class="flex items-center mb-4">
@@ -1119,11 +985,11 @@ require('@tailwindcss/aspect-ratio'),
           [src]="principalImgFront"
           [alt]="productName"
           draggable="false"
-          class="h-12 w-12 object-cover rounded-lg bg-gray-100 select-none"
+          class="h-12 w-12 object-cover rounded-lg bg-bg-alt select-none"
         />
         <div class="ml-3">
-          <p class="text-sm font-medium text-gray-900">{{ productName }}</p>
-          <p class="text-sm text-gray-500">Magrolabs</p>
+          <p class="text-sm font-medium text-fg">{{ productName }}</p>
+          <p class="text-sm text-fg-subtle">Magrolabs</p>
         </div>
       </div>
     </div>
@@ -1131,7 +997,7 @@ require('@tailwindcss/aspect-ratio'),
     <form [formGroup]="reviewForm">
       <!-- Rating selection -->
       <div class="mb-6">
-        <label for="calification" class="block text-sm font-medium text-gray-700 mb-3"
+        <label for="calification" class="block text-sm font-medium text-fg-muted mb-3"
           >Calificación *</label
         >
         <div class="flex items-center space-x-1">
@@ -1146,7 +1012,7 @@ require('@tailwindcss/aspect-ratio'),
               <svg
                 class="h-8 w-8 transition-colors duration-150"
                 [class.text-yellow-400]="star <= getRatingDisplay(star)"
-                [class.text-gray-300]="star > getRatingDisplay(star)"
+                [class.text-fg-subtle]="star > getRatingDisplay(star)"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -1168,14 +1034,14 @@ require('@tailwindcss/aspect-ratio'),
       <div class="mb-4">
         <label
           for="review-comment"
-          class="block text-sm font-medium text-gray-700 mb-2"
+          class="block text-sm font-medium text-fg-muted mb-2"
           >Tu reseña *</label
         >
         <textarea
           id="review-comment"
           formControlName="comment"
           rows="4"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
+          class="mt-1 block w-full border border-border-strong rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-hover focus:border-primary-hover sm:text-sm resize-none"
           [class.border-red-500]="
             !isCommentValid && reviewForm.get('comment')?.touched
           "
@@ -1189,7 +1055,7 @@ require('@tailwindcss/aspect-ratio'),
               remainingCharacters < 0 ||
               (reviewForm.get('comment')?.value?.length || 0) < 10
             "
-            [class.text-gray-500]="
+            [class.text-fg-subtle]="
               remainingCharacters >= 0 &&
               (reviewForm.get('comment')?.value?.length || 0) >= 10
             "

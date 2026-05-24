@@ -2,7 +2,7 @@
 @if (modalService.isOpen()) {
 <ml-modal [closable]="true" (closeAction)="closeModal()">
     <!-- Cantidad de puntos -->
-    <div class="bg-white rounded-xl shadow-inner border-2 border-gray-100 p-6 mb-6">
+    <div class="bg-bg rounded-xl shadow-inner border-2 border-border p-6 mb-6">
         <div class="flex items-center justify-center space-x-3">
             <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.svg" alt="Magropuntos"
                 class="w-12 h-12 select-none">
@@ -11,19 +11,19 @@
                     class="text-5xl font-extrabold bg-gradient-to-r from-[#1f1b19] to-primary bg-clip-text text-transparent">
                     +{{ modalService.rewardData()?.points || ENV.creditoRegaloPorCompraMes }}
                 </p>
-                <p class="text-sm text-gray-600 font-medium mt-1">Magropuntos</p>
+                <p class="text-sm text-fg-muted font-medium mt-1">Magropuntos</p>
             </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-gray-200">
-            <p class="text-sm text-gray-600 text-center">Ya están disponibles en tu cuenta</p>
+        <div class="mt-4 pt-4 border-t border-border">
+            <p class="text-sm text-fg-muted text-center">Ya están disponibles en tu cuenta</p>
         </div>
     </div>
 
     <div mlModalHeader>
         <div class="text-center mb-4">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">¡Tu recompensa mensual!</h3>
-            <p class="text-base text-gray-600 leading-relaxed">Gracias por seguir entrenando con nosotros</p>
+            <h3 class="text-2xl font-bold text-fg mb-2">¡Tu recompensa mensual!</h3>
+            <p class="text-base text-fg-muted leading-relaxed">Gracias por seguir entrenando con nosotros</p>
         </div>
     </div>
 
@@ -37,8 +37,8 @@
                     clip-rule="evenodd" />
             </svg>
             <div>
-                <p class="text-sm text-gray-700 font-medium mb-1">¿Qué puedes hacer con tus Magropuntos?</p>
-                <p class="text-xs text-gray-600">Canjéalos por productos exclusivos en nuestra <span
+                <p class="text-sm text-fg-muted font-medium mb-1">¿Qué puedes hacer con tus Magropuntos?</p>
+                <p class="text-xs text-fg-muted">Canjéalos por productos exclusivos en nuestra <span
                         class="font-semibold">Webshop</span></p>
                 <div class="text-left">
                     <button type="button" (click)="navigateToCredits()"

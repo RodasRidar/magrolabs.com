@@ -26,10 +26,11 @@ import { AccordionGroupComponent } from '../../../../../../shared/ui/accordion/a
 import { AccordionItemComponent } from '../../../../../../shared/ui/accordion/accordion-item.component';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
 import { ProductQuantityComponent } from '../../../../../../shared/ui/product-quantity/product-quantity.component';
+import { IconComponent } from '../../../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-creatinas',
-    imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent, ProductQuantityComponent],
+    imports: [CurrencyPipe, ButtonComponent, InlineModalComponent, NgOptimizedImage, RouterLink, CommonModule, ReactiveFormsModule, ReviewsListComponent, ReviewSkeletonComponent, StarRatingComponent, StepComponent, AccordionGroupComponent, AccordionItemComponent, PurchaseOptionComponent, BreadcrumbComponent, ProductQuantityComponent, IconComponent],
     templateUrl: './creatinas.component.html',
     styleUrl: './creatinas.component.css'
 })

@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, input, OnInit, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { ShoppingCartService } from '../../../../shared/services/cart-service.service';
@@ -10,11 +10,13 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { UserResponse } from '../../../../shared/interfaces/auth.interfaces';
 import { UrgencyBarComponent } from '../../../../shared/ui/urgency-bar/urgency-bar.component';
 import { BlackFridayBarComponent } from '../../../../shared/ui/black-friday-bar/black-friday-bar.component';
+import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
 import { environment } from '../../../../../environments/env';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-navbar',
-    imports: [CommonModule, ButtonComponent, RouterLink, NgOptimizedImage, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent],
+    imports: [CommonModule, ButtonComponent, RouterLink, CartComponent, RouterLinkActive, BlackFridayBarComponent, UrgencyBarComponent, LogoComponent, IconComponent],
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css'],
     animations: [

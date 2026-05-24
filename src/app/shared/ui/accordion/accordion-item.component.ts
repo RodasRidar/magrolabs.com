@@ -1,9 +1,10 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { AccordionGroupComponent } from './accordion-group.component';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
     selector: 'ml-accordion-item',
-    imports: [],
+    imports: [IconComponent],
     styles: [`
     .accordion-body {
       display: grid;
@@ -18,36 +19,32 @@ import { AccordionGroupComponent } from './accordion-group.component';
     }
   `],
     template: `
-    <div class="rounded-lg bg-gray-50 p-6 mb-4">
+    <div class="rounded-lg bg-bg-alt p-6 mb-4">
       <button
         type="button"
         (click)="toggle()"
         [attr.aria-expanded]="isOpen()"
         class="flex w-full cursor-pointer items-center justify-between gap-4 text-left"
       >
-        <span class="font-semibold text-gray-900">{{ title() }}</span>
-        <span class="relative size-5 shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg"
+        <span class="font-semibold text-fg">{{ title() }}</span>
+        <span class="relative size-5 shrink-0 text-fg-muted">
+          <ml-icon
+            name="plus-circle"
             class="absolute inset-0 size-5 transition-opacity duration-200"
             [class.opacity-100]="!isOpen()"
             [class.opacity-0]="isOpen()"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg"
+          />
+          <ml-icon
+            name="minus-circle"
             class="absolute inset-0 size-5 transition-opacity duration-200"
             [class.opacity-0]="!isOpen()"
             [class.opacity-100]="isOpen()"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          />
         </span>
       </button>
       <div class="accordion-body" [class.open]="isOpen()">
         <div>
-          <div class="pt-4 text-sm leading-relaxed text-gray-700">
+          <div class="pt-4 text-sm leading-relaxed text-fg-muted">
             <ng-content />
           </div>
         </div>

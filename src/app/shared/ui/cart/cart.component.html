@@ -1,18 +1,18 @@
-<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[60]"
+<div class="fixed inset-0 bg-fg-subtle bg-opacity-75 transition-opacity z-[60]"
   [ngClass]="{'hidden': state === 'inactive'}">
 </div>
 <div [@fadeInOut]="state" class="fixed inset-0 overflow-hidden z-[60]">
   <div class="absolute inset-0 overflow-hidden">
     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
       <div class="pointer-events-auto w-screen max-w-md">
-        <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+        <div class="flex h-full flex-col overflow-y-scroll bg-bg shadow-xl">
           <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
 
             @if(shoppingCart.totalItems > 0) {
-            <div class="flex items-start justify-between border-b border-gray-200">
-              <h2 class="text-lg font-medium text-gray-900">Carrito de compras.</h2>
+            <div class="flex items-start justify-between border-b border-border">
+              <h2 class="text-lg font-medium text-fg">Carrito de compras.</h2>
               <div class="ml-3 flex h-7 items-center mb-4">
-                <button type="button" class="relative text-gray-400 hover:text-gray-500" (click)="toggle()">
+                <button type="button" class="relative text-fg-subtle hover:text-fg-subtle" (click)="toggle()">
                   <span class="absolute inset-0.5"></span>
                   <span class="sr-only">Close panel</span>
                   <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -26,10 +26,10 @@
 
             <div class="mt-8">
               <div class="flow-root">
-                <ul role="list" class="-my-6 divide-y divide-gray-200">
+                <ul role="list" class="-my-6 divide-y divide-border">
                   @for (item of shoppingCart.items; track $index) {
                   <li class="flex py-6">
-                    <a class="h-25 sm:w-25 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-[#eeeae7]"
+                    <a class="h-25 sm:w-25 w-20 flex-shrink-0 overflow-hidden rounded-md border border-border bg-bg-alt"
                       [routerLink]="['/productos/creatinas',item.product.slug]">
                       <img [ngSrc]="
                         item.product.imageUrl === ''
@@ -41,7 +41,7 @@
 
                     <div class="ml-3 flex flex-1 flex-col">
                       <div>
-                        <div class="flex justify-between font-light text-sm text-gray-900 text-pretty mb-2">
+                        <div class="flex justify-between font-light text-sm text-fg text-pretty mb-2">
 
                           <a [routerLink]="['/productos/creatinas',item.product.slug]"
                             routerLinkActive="router-link-active"
@@ -84,9 +84,9 @@
             }
             @else {
             <div class="flex items-start justify-between">
-              <h2 class="text-lg font-medium text-gray-900"></h2>
+              <h2 class="text-lg font-medium text-fg"></h2>
               <div class="ml-3 flex h-7 items-center">
-                <button type="button" class="relative text-gray-400 hover:text-gray-500" (click)="toggle()">
+                <button type="button" class="relative text-fg-subtle hover:text-fg-subtle" (click)="toggle()">
                   <span class="absolute inset-0.5"></span>
                   <span class="sr-only">Close panel</span>
                   <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -98,21 +98,20 @@
               </div>
             </div>
             <div class="flex flex-col gap-5 h-full justify-center items-center">
-              <img src="svg/shopping-cart.svg" class="aspect-square object-center overflow-hidden" height="64"
-                width="64" alt="cart-icon" />
+              <ml-icon name="shopping-cart" class="h-16 w-16 text-fg-subtle" />
               <p class="font-medium">Tu carro está vacío.</p>
             </div>
             }
 
           </div>
 
-          <div class="border-t border-gray-200 px-2 py-2 sm:px-6 sm:py-6">
+          <div class="border-t border-border px-2 py-2 sm:px-6 sm:py-6">
             @if(shoppingCart.totalItems > 0) {
-            <div class="flex justify-between text-base font-medium text-gray-900">
+            <div class="flex justify-between text-base font-medium text-fg">
               <p>Subtotal ({{shoppingCart.totalItems}})</p>
               <p>{{ shoppingCart.subTotal | currency : "S/ " }}</p>
             </div>
-            <!-- <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> -->
+            <!-- <p class="mt-0.5 text-sm text-fg-subtle">Shipping and taxes calculated at checkout.</p> -->
             <div class="mt-6 flex flex-col gap-2">
               <!-- <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                   Ir al carro

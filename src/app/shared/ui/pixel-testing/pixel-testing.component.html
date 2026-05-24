@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-gray-100 py-8 px-4">
+<div class="min-h-screen bg-bg-alt py-8 px-4">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+    <div class="bg-bg shadow rounded-lg p-6 mb-6">
+      <h1 class="text-3xl font-bold text-fg mb-2">
         🧪 Panel de Testing de Pixels
       </h1>
-      <p class="text-gray-600">
+      <p class="text-fg-muted">
         Prueba todos los eventos de TikTok y Meta Analytics
       </p>
 
@@ -48,7 +48,7 @@
             {{ metaStatus.initialized ? "Inicializado" : "No inicializado" }} |
             {{ metaStatus.enabled ? "Habilitado" : "Deshabilitado" }}
           </p>
-          <p class="text-xs text-gray-500 mt-1">ID: {{ metaStatus.pixelId }}</p>
+          <p class="text-xs text-fg-subtle mt-1">ID: {{ metaStatus.pixelId }}</p>
         </div>
       </div>
 
@@ -62,82 +62,82 @@
     </div>
 
     <!-- Formulario de datos de prueba -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">📝 Datos de Prueba</h2>
+    <div class="bg-bg shadow rounded-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold text-fg mb-4">📝 Datos de Prueba</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Email</label
           >
           <input
             type="email"
             [(ngModel)]="testData.email"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Teléfono</label
           >
           <input
             type="tel"
             [(ngModel)]="testData.phone"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >External ID</label
           >
           <input
             type="text"
             [(ngModel)]="testData.externalId"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Product ID</label
           >
           <input
             type="text"
             [(ngModel)]="testData.productId"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Product Name</label
           >
           <input
             type="text"
             [(ngModel)]="testData.productName"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Value</label
           >
           <input
             type="number"
             [(ngModel)]="testData.value"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-fg-muted mb-1"
             >Currency</label
           >
           <select
             [(ngModel)]="testData.currency"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-border-strong rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="PEN">PEN</option>
             <option value="USD">USD</option>
@@ -149,9 +149,9 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <!-- TikTok Events -->
-      <div class="bg-white shadow rounded-lg p-6">
+      <div class="bg-bg shadow rounded-lg p-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-2xl font-bold text-gray-900">🎵 TikTok Events</h2>
+          <h2 class="text-2xl font-bold text-fg">🎵 TikTok Events</h2>
           <button
             (click)="testAllTikTokEvents()"
             class="px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600"
@@ -226,9 +226,9 @@
       </div>
 
       <!-- Meta Events -->
-      <div class="bg-white shadow rounded-lg p-6">
+      <div class="bg-bg shadow rounded-lg p-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-2xl font-bold text-gray-900">📘 Meta Events</h2>
+          <h2 class="text-2xl font-bold text-fg">📘 Meta Events</h2>
           <button
             (click)="testAllMetaEvents()"
             class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
@@ -297,9 +297,9 @@
     </div>
 
     <!-- Event Logs -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-bg shadow rounded-lg p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">📋 Event Logs</h2>
+        <h2 class="text-2xl font-bold text-fg">📋 Event Logs</h2>
         <button
           (click)="clearLogs()"
           class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
@@ -309,13 +309,13 @@
       </div>
 
       <div
-        class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto"
+        class="bg-fg text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto"
       >
         @for (log of eventLogs; track log) {
           <div class="mb-1">{{ log }}</div>
         }
         @if (eventLogs.length === 0) {
-          <div class="text-gray-500 italic">
+          <div class="text-fg-subtle italic">
             No hay eventos registrados aún. Presiona un botón para enviar
             eventos...
           </div>

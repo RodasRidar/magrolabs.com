@@ -14,6 +14,7 @@ import { SinceDatePipe } from "../../pipes/since-date.pipe";
 import { ToastService } from "../../services/toast.service";
 import { Review } from "../../interfaces/review.interfaces";
 import { ReviewSkeletonComponent } from "../review-skeleton/review-skeleton.component";
+import { IconComponent } from "../icon/icon.component";
 
 interface ReviewStats {
   totalReviews: number;
@@ -36,50 +37,31 @@ interface ReviewStats {
 
 @Component({
   selector: "app-reviews-list",
-  imports: [SinceDatePipe, ReviewSkeletonComponent],
+  imports: [SinceDatePipe, ReviewSkeletonComponent, IconComponent],
   template: `
     <div
-      class="divide-y divide-gray-200 max-h-[34.5rem] overflow-y-scroll bg-white rounded-lg"
+      class="divide-y divide-border max-h-[34.5rem] overflow-y-scroll bg-bg rounded-lg"
     >
       @if (onLoadReviews()) {
         @for (review of allReviews; track review.id) {
           <div class="py-6 px-4">
             <div class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="size-14 rounded-full object-cover"
-                height="56px"
-                viewBox="0 -960 960 960"
-                width="56px"
-                fill="#434343"
-              >
-                <path
-                  d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"
-                />
-              </svg>
+              <ml-icon name="user-circle" class="size-14 rounded-full text-fg-subtle" />
               <div class="ml-4">
-                <h4 class="text-sm font-semibold text-gray-900">
+                <h4 class="text-sm font-semibold text-fg">
                   {{ review.user?.first_name }} {{ review.user?.last_name }}
-                  <span class="text-gray-600 font-light text-xs">
+                  <span class="text-fg-muted font-light text-xs">
                     ({{ review.created_at | sinceDate }})
                   </span>
                 </h4>
                 <div class="mt-1 flex items-center">
                   @for (star of getStarsArray(review.stars); track star.index) {
-                    <div class="flex items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        class="flex-shrink-0 h-5 w-5"
-                        [class.text-yellow-400]="star.filled"
-                        [class.text-gray-300]="!star.filled"
-                      >
-                        <path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        />
-                      </svg>
-                    </div>
+                    <ml-icon
+                      name="star"
+                      class="flex-shrink-0 h-5 w-5"
+                      [class.text-yellow-400]="star.filled"
+                      [class.text-fg-subtle]="!star.filled"
+                    />
                   }
                 </div>
               </div>
@@ -87,7 +69,7 @@ interface ReviewStats {
 
             @if (review.review) {
               <div class="mt-4 space-y-6 text-base italic">
-                <p class="mt-4 text-gray-700 text italic">
+                <p class="mt-4 text-fg-muted text italic">
                   {{ review.review }}
                 </p>
               </div>

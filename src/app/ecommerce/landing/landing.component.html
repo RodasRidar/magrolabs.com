@@ -5,62 +5,46 @@
 <app-hero />
 
 <!-- Lo que necesitas cada mes. -->
-<section class="overflow-hidden bg-white py-10 sm:py-10" id="beneficios">
+<section class="overflow-hidden bg-bg py-10 sm:py-10" id="beneficios">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-4 gap-y-4 sm:gap-y-4 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div class="lg:pr-8 lg:pt-4">
                 <div class="lg:max-w-lg">
-                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:text-left text-center">
+                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-fg sm:text-4xl sm:text-left text-center">
                         Lo que necesitas cada mes.
                     </h2>
-                    <p class="mt-4 text-lg text-gray-600 sm:text-left text-center">
+                    <p class="mt-4 text-lg text-fg-muted sm:text-left text-center">
                         La creatina más pura y eco amigable del mercado peruano, con envío gratis y la mejor relación calidad precio.
                     </p>
-                    <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-gray-600 lg:max-w-none">
+                    <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-fg-muted lg:max-w-none">
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Siempre envío gratis a tu casa*.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Alta calidad y 100% monohidratada.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     {{ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula}}.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Cancela cuando quieras.
                                 </p>
                             </dt>
@@ -68,11 +52,8 @@
                     </dl>
                 </div>
                 <div class="mt-10 w-fit pl-2 sm:justify-self-start justify-self-center">
-                    <button type="button" [routerLink]="'/registro'"
-                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
-                        Regístrate ahora
-                    </button>
-                    <p class="mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+                    <ml-button [routerLink]="'/registro'" name="Regístrate ahora" type="secondary"></ml-button>
+                    <p class="mt-4 max-w-md mx-auto text-fg-subtle text-xs md:max-w-3xl">
                         * Envío gratis solo para {{ENV.envioGratisA.LIMA_METRO}}.
                       </p>
                 </div>
@@ -83,7 +64,7 @@
                 loop 
                 playsinline
                 preload="metadata"
-                class="w-full max-sm:h-96 sm:w-[26rem] lg:w-[30rem] max-h-[500px] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 md:-ml-4 lg:-ml-0 object-cover brightness-75"
+                class="w-full max-sm:h-96 sm:w-[26rem] lg:w-[30rem] max-h-[500px] max-w-none rounded-xl shadow-xl ring-1 ring-border-strong/10 md:-ml-4 lg:-ml-0 object-cover brightness-75"
                 onloadedmetadata="this.currentTime = 0.5; this.muted = true; this.volume = 0;">
                 <source src="/magrovideo.mp4" type="video/mp4">
                 Tu navegador no soporta el elemento de video.
@@ -94,13 +75,13 @@
 
 <!-- Programa de Lealtad - Recibe crédito cada mes  -->
 @defer (on viewport) {
-<section class="bg-white sm:py-10" id="programa-lealtad">
+<section class="bg-bg sm:py-10" id="programa-lealtad">
     <div class="mx-auto text-center max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-3xl lg:text-center">
-            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-fg sm:text-4xl">
                 Recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos cada mes.
             </h2>
-            <p class="text-center mt-10 text-lg leading-6 text-gray-600">
+            <p class="text-center mt-10 text-lg leading-6 text-fg-muted">
                 Como miembro, eres automáticamente parte de nuestro Programa de Lealtad.
                 Cada mes recibes {{ENV.creditoRegaloPorCompraMes}} Magropuntos, con el que acumulas para artículos
                 exclusivos de Magrolabs. ¿Quieres saber qué tenemos para ti? Mira
@@ -111,43 +92,30 @@
             <dl class="mx-auto grid w-fit grid-cols-1 gap-x-4 gap-y-4">
                 <div class="relative pl-2">
                     <dt>
-                        <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                        <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                        <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                             Recibe {{ENV.creditoRegaloPorCompraMes}} Magropuntos cada mes.
                         </p>
                     </dt>
                 </div>
                 <div class="relative pl-2">
                     <dt>
-                        <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                        <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                        <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                             Acumula automáticamente, sin costo adicional.
                         </p>
                     </dt>
                 </div>
                 <div class="relative pl-2">
                     <dt>
-                        <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                        <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                        <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                             Canjea tus Magropuntos por artículos exclusivos.
                         </p>
                     </dt>
                 </div>
             </dl>
             <div class="mx-auto mt-10 w-fit pl-2 text-center">
-                <!-- <button type="button" [routerLink]="'/registro'"
-                    class="mt-5 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
-                    Obtenlo ya!
-                </button> -->
                 <ml-button [routerLink]="'/registro'" name="Obtenlo ya!" type="secondary-outlined"></ml-button>
             </div>
         </div>
@@ -162,8 +130,8 @@
                             class="w-full h-full object-center object-cover" />
                     </div>
                     <div class="relative mt-4 text-center">
-                        <h3 class="text-lg font-medium text-gray-900">Bolsa deportiva</h3>
-                        <p class="mt-1 text-base text-gray-500">
+                        <h3 class="text-lg font-medium text-fg">Bolsa deportiva</h3>
+                        <p class="mt-1 text-base text-fg-subtle">
                             Nuestra bolsa negra deportiva es ideal para llevar tus cosas al gimnasio o al trabajo, con un diseño único y exclusivo.
                         </p>
                     </div>
@@ -185,8 +153,8 @@
                             class="w-full h-full object-center object-cover" />
                     </div>
                     <div class="relative mt-4 text-center">
-                        <h3 class="text-lg font-medium text-gray-900">Guantes para gimnasio</h3>
-                        <p class="mt-1 text-base text-gray-500">
+                        <h3 class="text-lg font-medium text-fg">Guantes para gimnasio</h3>
+                        <p class="mt-1 text-base text-fg-subtle">
                             Nuestros guantes deportivos de alta calidad los puedes utilizar
                             para levantar pesas o hacer crossfit, tienen una correa de soporte que ayuda a prevenir lesiones.
                         </p>
@@ -209,8 +177,8 @@
                             class="w-full h-full object-center object-cover" />
                     </div>
                     <div class="relative mt-4 text-center">
-                        <h3 class="text-lg font-medium text-gray-900">Polera Magrolabs</h3>
-                        <p class="mt-1 text-base text-gray-500">
+                        <h3 class="text-lg font-medium text-fg">Polera Magrolabs</h3>
+                        <p class="mt-1 text-base text-fg-subtle">
                             Nuestra polera minimalista y exclusiva hecha de algodón 100% orgánico con materiales de alta calidad y prelavado.
                         </p>
                     </div>
@@ -232,8 +200,8 @@
                             class="w-full h-full object-center object-cover" />
                     </div>
                     <div class="relative mt-4 text-center">
-                        <h3 class="text-lg font-medium text-gray-900">Botella Magrolabs</h3>
-                        <p class="mt-1 text-base text-gray-500">
+                        <h3 class="text-lg font-medium text-fg">Botella Magrolabs</h3>
+                        <p class="mt-1 text-base text-fg-subtle">
                             Nuestra botella es ideal para mezclar proteina, creatina y llevarlo a donde quieras. Hecho de materiales de alta calidad.
                         </p>
                     </div>
@@ -252,13 +220,13 @@
     </div>
 </section>
 } @placeholder {
-    <div class="bg-white sm:py-10 animate-pulse">
+    <div class="bg-bg sm:py-10 animate-pulse">
         <div class="mx-auto text-center max-w-7xl px-6 lg:px-8">
-            <div class="h-10 bg-gray-200 rounded w-2/3 mx-auto mb-6"></div>
-            <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-10"></div>
+            <div class="h-10 bg-bg-alt rounded w-2/3 mx-auto mb-6"></div>
+            <div class="h-4 bg-bg-alt rounded w-3/4 mx-auto mb-10"></div>
             <div class="mt-2 mb-10 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
                 @for (_ of [1,2,3,4]; track $index) {
-                    <div class="h-72 bg-gray-200 rounded-lg"></div>
+                    <div class="h-72 bg-bg-alt rounded-lg"></div>
                 }
             </div>
         </div>
@@ -267,147 +235,81 @@
 
 <!-- Testimonios -->
 @defer (on viewport) {
-<section class="bg-white" id="testimonios">
+<section class="bg-bg" id="testimonios">
     <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <h2 class="text-center text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h2 class="text-center text-4xl font-bold tracking-tight text-fg sm:text-5xl">
             Reseñas de nuestros clientes
         </h2>
-        <p class="text-center mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+        <p class="text-center mt-4 text-lg text-fg-muted max-w-3xl mx-auto">
             Nuestros clientes satisfechos han transformado sus entrenamientos con nuestra creatina monohidratada de alta calidad.
         </p>
         <div class="mt-8 mb-8 text-pretty grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
             <!-- Testimonio 1 -->
-            <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
+            <blockquote class="rounded-lg bg-bg-alt p-6 shadow-sm sm:p-8">
                 <div class="flex items-center gap-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
-                            <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
-                        </svg>
+                        <ml-icon name="user-circle" class="size-14 rounded-full object-cover" />
                     <div>
-                        <div class="flex justify-center gap-0.5 text-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
+                        <div class="flex justify-center gap-0.5 text-fg">
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
                         </div>
 
-                        <p class="mt-0.5 text-lg font-medium text-gray-900">Hugo Cortez L.</p>
+                        <p class="mt-0.5 text-lg font-medium text-fg">Hugo Cortez L.</p>
                     </div>
                 </div>
 
-                <p class="mt-4 text-gray-700 text italic">
+                <p class="mt-4 text-fg-muted text italic">
                     “Buen producto, buen precio”
                 </p>
             </blockquote>
             <!-- Testimonio 2 -->
-            <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
+            <blockquote class="rounded-lg bg-bg-alt p-6 shadow-sm sm:p-8">
                 <div class="flex items-center gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
-                        <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
-                    </svg>
+                    <ml-icon name="user-circle" class="size-14 rounded-full object-cover" />
 
                     <div>
-                        <div class="flex justify-center gap-0.5 text-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
+                        <div class="flex justify-center gap-0.5 text-fg">
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
                         </div>
 
-                        <p class="mt-0.5 text-lg font-medium text-gray-900">
+                        <p class="mt-0.5 text-lg font-medium text-fg">
                             Richard Rodas
                         </p>
                     </div>
                 </div>
 
-                <p class="mt-4 text-gray-700 text italic">
+                <p class="mt-4 text-fg-muted text italic">
                     “Me encanta su diseño, no tiene sabor raro y se mezcla facil”
                 </p>
             </blockquote>
             <!-- Testimonio 3 -->
-            <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
+            <blockquote class="rounded-lg bg-bg-alt p-6 shadow-sm sm:p-8">
                 <div class="flex items-center gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-14 rounded-full object-cover" height="56px" viewBox="0 -960 960 960" width="56px" fill="#434343">
-                        <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"/>
-                    </svg>
+                    <ml-icon name="user-circle" class="size-14 rounded-full object-cover" />
 
                     <div>
-                        <div class="flex justify-center gap-0.5 text-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
+                        <div class="flex justify-center gap-0.5 text-fg">
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
                         </div>
 
-                        <p class="mt-0.5 text-lg font-medium text-gray-900">
+                        <p class="mt-0.5 text-lg font-medium text-fg">
                             Luis Fernandez
                         </p>
                     </div>
                 </div>
 
-                <p class="mt-4 text-gray-700 text italic">
+                <p class="mt-4 text-fg-muted text italic">
                     “Es una excelente creatina, no me ha traído efectos secundarios ni nada.”
                 </p>
             </blockquote>
@@ -420,14 +322,14 @@
     </div>
 </section>
 } @placeholder {
-    <div class="bg-white animate-pulse">
+    <div class="bg-bg animate-pulse">
         <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-            <div class="h-10 bg-gray-200 rounded w-1/2 mx-auto mb-8"></div>
+            <div class="h-10 bg-bg-alt rounded w-1/2 mx-auto mb-8"></div>
             <div class="mt-8 mb-8 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
                 @for (_ of [1,2,3]; track $index) {
-                    <div class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
-                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                        <div class="h-20 bg-gray-200 rounded"></div>
+                    <div class="rounded-lg bg-bg-alt p-6 shadow-sm sm:p-8">
+                        <div class="h-4 bg-bg-alt rounded w-3/4 mb-4"></div>
+                        <div class="h-20 bg-bg-alt rounded"></div>
                     </div>
                 }
             </div>
@@ -437,25 +339,23 @@
 
 <!-- Compromiso Ambiental -->
 @defer (on viewport) {
-<section class="bg-gray-50 py-16 sm:py-14" id="compromiso-ambiental">
+<section class="bg-bg-alt py-16 sm:py-14" id="compromiso-ambiental">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
             <!-- Contenido -->
             <div class="lg:pr-4 lg:pt-4">
                 <div class="lg:max-w-lg">
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    <p class="mt-2 text-3xl font-bold tracking-tight text-fg sm:text-4xl">
                         Nuestro compromiso con el <span class="text-[#27954e]">medio ambiente</span>
                     </p>
-                    <p class="mt-6 text-lg leading-8 text-gray-600">
+                    <p class="mt-6 text-lg leading-8 text-fg-muted">
                         En <span class="text-primary-hover">Magrolabs</span>, creemos que la calidad de nuestros productos debe ir de la mano con el cuidado del planeta.
                     </p>
                     
-                    <dl class="mt-5 max-w-xl space-y-6 text-base leading-7 text-gray-600 lg:max-w-none">
+                    <dl class="mt-5 max-w-xl space-y-6 text-base leading-7 text-fg-muted lg:max-w-none">
                         <div class="relative pl-9">
-                            <dt class="inline font-semibold text-gray-900">
-                                <svg class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                </svg>
+                            <dt class="inline font-semibold text-fg">
+                                <ml-icon name="check-circle" class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" />
                                 Packaging 100% eco amigable.
                             </dt>
                             <dd class="inline ml-1">
@@ -464,10 +364,8 @@
                         </div>
 
                         <div class="relative pl-9">
-                            <dt class="inline font-semibold text-gray-900">
-                                <svg class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                </svg>
+                            <dt class="inline font-semibold text-fg">
+                                <ml-icon name="check-circle" class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" />
                                 Cajas de envío recicladas.
                             </dt>
                             <dd class="inline ml-1">
@@ -476,10 +374,8 @@
                         </div>
 
                         <div class="relative pl-9">
-                            <dt class="inline font-semibold text-gray-900">
-                                <svg class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                </svg>
+                            <dt class="inline font-semibold text-fg">
+                                <ml-icon name="check-circle" class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" />
                                 Eliminación de plásticos innecesarios.
                             </dt>
                             <dd class="inline ml-1">
@@ -488,10 +384,8 @@
                         </div>
 
                         <div class="relative pl-9">
-                            <dt class="inline font-semibold text-gray-900">
-                                <svg class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                </svg>
+                            <dt class="inline font-semibold text-fg">
+                                <ml-icon name="check-circle" class="absolute left-1 top-1 h-5 w-5 text-[#27954e]" />
                                 Producción responsable.
                             </dt>
                             <dd class="inline ml-1">
@@ -502,7 +396,7 @@
 
                     <!-- <div class="mt-10">
                         <a href="/politicas/sostenibilidad" 
-                           class="inline-flex items-center justify-center rounded-md bg-gray-900 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-colors duration-200">
+                           class="inline-flex items-center justify-center rounded-md bg-fg px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-colors duration-200">
                             Conoce más
                             <svg class="ml-2 -mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
@@ -527,19 +421,19 @@
     </div>
 </section>
 } @placeholder {
-    <div class="bg-gray-50 py-16 sm:py-14 animate-pulse">
+    <div class="bg-bg-alt py-16 sm:py-14 animate-pulse">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <div class="lg:pr-4 lg:pt-4">
-                    <div class="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
-                    <div class="h-4 bg-gray-200 rounded w-full mb-4"></div>
+                    <div class="h-8 bg-bg-alt rounded w-3/4 mb-6"></div>
+                    <div class="h-4 bg-bg-alt rounded w-full mb-4"></div>
                     <div class="space-y-3">
                         @for (_ of [1,2,3,4]; track $index) {
-                            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                            <div class="h-4 bg-bg-alt rounded w-5/6"></div>
                         }
                     </div>
                 </div>
-                <div class="h-64 bg-gray-200 rounded-xl"></div>
+                <div class="h-64 bg-bg-alt rounded-xl"></div>
             </div>
         </div>
     </div>
@@ -547,68 +441,52 @@
 
 <!-- Por que Magrolabs. -->
 @defer (on viewport) {
-<section class="overflow-hidden bg-white py-10 sm:py-10" id="por-que-magrolabs">
+<section class="overflow-hidden bg-bg py-10 sm:py-10" id="por-que-magrolabs">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div
             class="mx-auto items-center grid max-w-2xl grid-cols-1 gap-x-16 gap-y-4 sm:gap-y-4 lg:mx-2 lg:max-w-none lg:grid-cols-2">
             <img src="beneficios-creatina.webp"
                 alt="Beneficios de la Creatina Monohidratada Magrolabs para el rendimiento deportivo" 
                 loading="lazy"
-                class="w-full rounded-xl shadow-xl left-1 ring-gray-400/10 sm:w-[57rem]"
+                class="w-full rounded-xl shadow-xl left-1 ring-border-strong/10 sm:w-[57rem]"
                 width="1440" height="1440" />
             <div class="lg:pr-8 lg:pt-4">
                 <div class="lg:max-w-lg">
-                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center sm:text-left">
+                    <h2 class="mt-6 text-3xl font-bold tracking-tight text-fg sm:text-4xl text-center sm:text-left">
                         ¿Por qué elegir Magrolabs?
                     </h2>
-                    <p class="mt-4 text-lg text-gray-600 max-sm:text-center">
+                    <p class="mt-4 text-lg text-fg-muted max-sm:text-center">
                         Somos la marca de creatina eco amigable del Perú, nuestros clientes están satisfechos y los resultados son comprobados.
                     </p>
-                    <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-gray-600 lg:max-w-none">
+                    <dl class="mt-10 max-w-xl space-y-4 text-base leading-7 text-fg-muted lg:max-w-none">
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     {{ENV.campanaPrimeraCreatina.textos.heroOfertaMayuscula}}.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Alta calidad y 100% monohidratada.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Fácil absorción y de gran solubilidad.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700 flex items-center">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted flex items-center">
                                     Te regalamos {{ENV.creditoRegaloPorCompraMes}}
                                     <img src="/Magropoints/CARBON/magropoints_carbon_cc_254x254.png" alt="Magro Puntos" loading="lazy" class="w-8 h-8 mx-1 select-none">
                                     cada mes.
@@ -617,36 +495,24 @@
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Packaging compostable y eco amigable.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Cancela cuando quieras.
                                 </p>
                             </dt>
                         </div>
                         <div class="relative pl-2">
                             <dt>
-                                <svg class="absolute h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="ml-9 text-lg leading-6 font-medium text-gray-700">
+                                <ml-icon name="check" class="absolute h-6 w-6 text-fg" />
+                                <p class="ml-9 text-lg leading-6 font-medium text-fg-muted">
                                     Siempre envío gratis a tu casa*.
                                 </p>
                             </dt>
@@ -654,11 +520,8 @@
                     </dl>
                 </div>
                 <div class="mt-10 w-fit pl-2 sm:justify-self-start justify-self-center">
-                    <button type="button" [routerLink]="['/registro']"
-                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-800 hover:bg-gray-700">
-                        Lo quiero!
-                    </button>
-                    <p class="mt-4 max-w-md mx-auto text-gray-400 text-xs md:max-w-3xl">
+                    <ml-button [routerLink]="'/registro'" name="Lo quiero!" type="secondary"></ml-button>
+                    <p class="mt-4 max-w-md mx-auto text-fg-subtle text-xs md:max-w-3xl">
                         * Envío gratis solo para {{ENV.envioGratisA.LIMA_METRO}}.
                       </p>
                 </div>
@@ -667,15 +530,15 @@
     </div>
 </section>
 } @placeholder {
-    <div class="overflow-hidden bg-white py-10 sm:py-10 animate-pulse">
+    <div class="overflow-hidden bg-bg py-10 sm:py-10 animate-pulse">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-16 gap-y-4 lg:mx-2 lg:max-w-none lg:grid-cols-2">
-                <div class="h-96 bg-gray-200 rounded-xl"></div>
+                <div class="h-96 bg-bg-alt rounded-xl"></div>
                 <div class="lg:pr-8 lg:pt-4">
-                    <div class="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
+                    <div class="h-8 bg-bg-alt rounded w-3/4 mb-6"></div>
                     <div class="space-y-3">
                         @for (_ of [1,2,3,4,5]; track $index) {
-                            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                            <div class="h-4 bg-bg-alt rounded w-5/6"></div>
                         }
                     </div>
                 </div>
@@ -689,17 +552,17 @@
 <div class="overflow-hidden bg-surface py-16 sm:py-20">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 class="text-3xl font-bold tracking-tight text-fg sm:text-4xl">
                 ¡Energízate con Magrolabs!
             </h2>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
+            <p class="mt-6 text-lg leading-8 text-fg-muted">
                 Completa tu entrenamiento con nuestra playlist oficial. La música perfecta para tus entrenamientos más intensos.
             </p>
         </div>
         
         <div class="mx-auto mt-10 max-w-4xl">
             <!-- Spotify Playlist Embed -->
-            <div class="rounded-xl shadow-xl ring-1 ring-gray-900/10 overflow-hidden">
+            <div class="rounded-xl shadow-xl ring-1 ring-fg/10 overflow-hidden">
                 <iframe 
                     style="border-radius:12px" 
                     src="https://open.spotify.com/embed/playlist/4bSpgmYGV3OqCKAEnrDM3i?utm_source=generator&theme=0" 
@@ -715,10 +578,10 @@
             <!-- Call to Action for Community Engagement -->
             <div class="mt-10 text-center">
                 <div class="mx-auto max-w-2xl">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                    <h3 class="text-xl font-semibold text-fg mb-4">
                         ¿Tienes una canción que te motiva?
                     </h3>
-                    <p class="text-gray-600 mb-6">
+                    <p class="text-fg-muted mb-6">
                         Ayúdanos a crear la playlist perfecta. Sube una historia en Instagram etiquetando a Magrolabs con la música que quieres que agreguemos. Las mejores canciones serán parte de nuestra próxima actualización.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -738,10 +601,10 @@
 } @placeholder {
     <div class="overflow-hidden bg-surface py-16 sm:py-20 animate-pulse">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="h-10 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
-            <div class="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-10"></div>
+            <div class="h-10 bg-bg-alt rounded w-1/2 mx-auto mb-6"></div>
+            <div class="h-4 bg-bg-alt rounded w-2/3 mx-auto mb-10"></div>
             <div class="mx-auto mt-10 max-w-4xl">
-                <div class="h-[352px] bg-gray-200 rounded-xl"></div>
+                <div class="h-[352px] bg-bg-alt rounded-xl"></div>
             </div>
         </div>
     </div>
@@ -749,28 +612,28 @@
 
 <!-- FAQs -->
 @defer (on viewport) {
-<section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-white" id="preguntas-frecuentes">
+<section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-bg" id="preguntas-frecuentes">
     <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 class="text-3xl font-bold tracking-tight text-fg sm:text-4xl">
             Preguntas Frecuentes
         </h2>
-        <p class="mt-4 text-lg text-gray-600">
+        <p class="mt-4 text-lg text-fg-muted">
             Resolvemos todas tus dudas sobre la creatina monohidratada y nuestro servicio de suscripción.
         </p>
     </div>
     <ml-accordion-group>
         <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloOferta">
-            <p class="leading-relaxed text-gray-700">{{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}</p>
+            <p class="leading-relaxed text-fg-muted">{{ENV.campanaPrimeraCreatina.textos.faqRespuestaOferta}}</p>
         </ml-accordion-item>
 
         <ml-accordion-item [title]="ENV.campanaPrimeraCreatina.textos.faqTituloRecepcion">
-            <p class="leading-relaxed text-gray-700">
+            <p class="leading-relaxed text-fg-muted">
                 {{ENV.campanaPrimeraCreatina.textos.faqRespuestaRecepcion(ENV.plazoDeEntregaHorasCreatinaFree.min, ENV.plazoDeEntregaHorasCreatinaFree.max)}}
             </p>
         </ml-accordion-item>
 
         <ml-accordion-item title="¿Qué hace diferente a la creatina de Magrolabs?">
-            <p class="leading-relaxed text-gray-700">
+            <p class="leading-relaxed text-fg-muted">
                 Nuestra creatina es 100% monohidratada pura, sin rellenos ni aditivos. Tiene una solubilidad superior,
                 no deja sabor residual y es más fácil de absorber por el organismo. Además, nuestro empaque es eco amigable
                 y cada lote está certificado por laboratorios independientes.
@@ -778,7 +641,7 @@
         </ml-accordion-item>
 
         <ml-accordion-item title="¿Hay un periodo de cancelación o compromiso mínimo?">
-            <p class="leading-relaxed text-gray-700">
+            <p class="leading-relaxed text-fg-muted">
                 <strong>No hay compromiso mínimo.</strong> Después de recibir tu {{ENV.campanaPrimeraCreatina.textos.heroOferta}}, tienes {{ENV.diasNormalesDePruebaOperiodoDeReflexion}} días para probarla sin costo adicional.
                 @if (ENV.campanaPrimeraCreatina.tipo === 'gratis') {
                     Si cancelas durante este período de prueba, no pagas nada.
@@ -790,7 +653,7 @@
         </ml-accordion-item>
 
         <ml-accordion-item title="¿Cuántos gramos debo tomar al día y cuánto dura un paquete?">
-            <p class="leading-relaxed text-gray-700">
+            <p class="leading-relaxed text-fg-muted">
                 La dosis recomendada es de 5 gramos diarios (aproximadamente una cucharada) o si eres más avanzado
                 1 gramo por cada kilogramo de peso.
                 Nuestro paquete de 250gr te durará aproximadamente 1 mes, dependiendo de tu dosis.
@@ -799,7 +662,7 @@
         </ml-accordion-item>
 
         <ml-accordion-item title="¿El envío es realmente gratis y a qué zonas llegan?">
-            <p class="leading-relaxed text-gray-700">
+            <p class="leading-relaxed text-fg-muted">
                 Sí, el envío es completamente gratis para {{ENV.envioGratisA.LIMA_METRO}}.
                 Realizamos envíos a todo el Perú con un costo adicional que se calcula según la zona.
                 Trabajamos con couriers confiables y tu pedido siempre viene con código de seguimiento.
@@ -808,16 +671,16 @@
     </ml-accordion-group>
 </section>
 } @placeholder {
-    <section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-white animate-pulse">
+    <section class="mx-auto max-w-3xl px-6 lg:px-8 py-16 sm:py-20 bg-bg animate-pulse">
         <div class="text-center mb-12">
-            <div class="h-10 bg-gray-200 rounded w-1/2 mx-auto mb-4"></div>
-            <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+            <div class="h-10 bg-bg-alt rounded w-1/2 mx-auto mb-4"></div>
+            <div class="h-4 bg-bg-alt rounded w-3/4 mx-auto"></div>
         </div>
         <div class="space-y-4">
             @for (_ of [1,2,3,4,5,6]; track $index) {
-                <div class="rounded-lg bg-gray-50 p-6">
-                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                    <div class="h-3 bg-gray-200 rounded w-full"></div>
+                <div class="rounded-lg bg-bg-alt p-6">
+                    <div class="h-4 bg-bg-alt rounded w-3/4 mb-4"></div>
+                    <div class="h-3 bg-bg-alt rounded w-full"></div>
                 </div>
             }
         </div>
@@ -828,15 +691,15 @@
 @defer (on viewport) {
 <app-footer/>
 } @placeholder {
-    <div class="bg-gray-900 py-12 animate-pulse">
+    <div class="bg-fg py-12 animate-pulse">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="h-8 bg-gray-700 rounded w-1/4 mb-8"></div>
+            <div class="h-8 bg-fg-muted rounded w-1/4 mb-8"></div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 @for (_ of [1,2,3,4]; track $index) {
                     <div class="space-y-3">
-                        <div class="h-4 bg-gray-700 rounded w-3/4"></div>
-                        <div class="h-3 bg-gray-700 rounded w-1/2"></div>
-                        <div class="h-3 bg-gray-700 rounded w-2/3"></div>
+                        <div class="h-4 bg-fg-muted rounded w-3/4"></div>
+                        <div class="h-3 bg-fg-muted rounded w-1/2"></div>
+                        <div class="h-3 bg-fg-muted rounded w-2/3"></div>
                     </div>
                 }
             </div>

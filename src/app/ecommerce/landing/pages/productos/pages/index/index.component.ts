@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { environment } from '../../../../../../../environments/env';
 import { SeoService } from '../../../../../../shared/services/seo.service';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../../../shared/ui/breadcrumb/breadcrumb.component';
+import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
+import { IconComponent } from '../../../../../../shared/ui/icon/icon.component';
 
 type FilterCategory = 'sale' | 'new-arrivals';
 type FilterSize = '100gr' | '250gr' | '3kg';
@@ -20,7 +22,7 @@ interface Product {
 
 @Component({
     selector: 'app-index',
-    imports: [RouterLink, CurrencyPipe, NgOptimizedImage, BreadcrumbComponent],
+    imports: [RouterLink, CurrencyPipe, NgOptimizedImage, BreadcrumbComponent, ButtonComponent, IconComponent],
     templateUrl: './index.component.html',
     styleUrl: './index.component.css'
 })
@@ -120,7 +122,7 @@ export class IndexComponent implements OnInit {
   }
 
   private loadSEO(): void {
-    const title = 'Tienda Magrolabs - Suplementos de Alta Calidad';
+    const title = 'Tienda Magrolabs';
     const description = 'Descubre nuestra línea completa de suplementos de alta calidad. Creatina monohidratada, proteínas y más productos para potenciar tu rendimiento físico.';
     const URL = 'https://magrolabs.com/productos';
     const image = 'https://magrolabs.com/articulos-fit.png';
@@ -172,7 +174,7 @@ export class IndexComponent implements OnInit {
       'twitter:title': title,
       'twitter:description': description,
       'twitter:image': image,
-      'twitter:image:alt': 'Tienda Magrolabs - Suplementos de Alta Calidad',
+      'twitter:image:alt': 'Tienda Magrolabs',
     });
 
     // Breadcrumbs para mejor contexto de navegación en IA

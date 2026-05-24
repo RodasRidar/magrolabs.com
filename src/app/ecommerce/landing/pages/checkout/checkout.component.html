@@ -11,10 +11,10 @@
                     <section aria-labelledby="order-heading" class="px-4 py-4 sm:px-6 lg:hidden">
                         <div class="max-w-lg mx-auto">
                             <!-- <div class="flex items-center justify-between mb-2">
-                                <h2 id="order-heading" class="text-4xl font-extrabold tracking-tight text-gray-900">Tu Orden.</h2>
+                                <h2 id="order-heading" class="text-4xl font-extrabold tracking-tight text-fg">Tu Orden.</h2>
                             </div> -->
                             <button [routerLink]="'/bolsa'"
-                                class="sm:hidden col-span-6 py-1 flex items-center gap-1 text-gray-500 hover:text-gray-800 focus:outline-none transition-colors">
+                                class="sm:hidden col-span-6 py-1 flex items-center gap-1 text-fg-subtle hover:text-fg focus:outline-none transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -22,7 +22,7 @@
                                 <span class="text-sm">Volver</span>
                             </button>
                             <div id="disclosure-1">
-                                <ul role="list" class="divide-y divide-gray-200">
+                                <ul role="list" class="divide-y divide-border">
                                     @for (item of shoppingCart.items; track $index) {
                                     <app-order-summary-item [item]="item" (deleteItem)="deleteItem($event)"
                                         (quantityValueChanged)="quantityValueChanged($event,item)" />
@@ -36,7 +36,7 @@
                                             <input type="text" id="discount-code-mobile" name="discount-code-mobile"
                                                 [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9"
                                                 autocomplete="off"
-                                                class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                                class="uppercase block w-full bg-bg text-fg placeholder:text-fg-subtle border-border-strong rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-bg-alt disabled:cursor-not-allowed">
                                             @if (!isDiscountApplied()) {
                                             <ml-button [name]="isApplyingDiscount() ? 'Aplicando...' : 'Aplicar'"
                                                 type="secondary" [isDisabled]="isApplyingDiscount()"
@@ -49,11 +49,7 @@
                                         </div>
                                         @if (isDiscountApplied()) {
                                         <p class="mt-2 text-xs text-green-600 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
+                                            <ml-icon name="x-circle" class="w-4 h-4 mr-1" />
                                             Código aplicado exitosamente
                                         </p>
                                         }
@@ -66,10 +62,10 @@
                     </section>
 
                     <dl
-                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-gray-500 space-y-3 sticky top-0 bg-white shadow-md ">
+                        class="px-4 py-2 sm:px-6 lg:hidden z-50 text-sm font-medium text-fg-subtle space-y-3 sticky top-0 bg-bg shadow-md ">
                         <div class="flex justify-between">
                             <dt>Subtotal</dt>
-                            <dd class="text-gray-900">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>
+                            <dd class="text-fg">{{this.shoppingCart.subTotal | currency : 'S/'}}</dd>
                         </div>
                         @if (isDiscountApplied()) {
                         <div class="flex justify-between text-primary">
@@ -83,11 +79,11 @@
                         }
                         <div class="flex justify-between">
                             <dt>Envío</dt>
-                            <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+
+                            <dd class="text-fg">{{isOutsideLimaMetropolitana() ? 'S/'+
                                 precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                         </div>
                         <p
-                            class="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-3 mt-3">
+                            class="flex items-center justify-between text-sm font-medium text-fg border-t border-border pt-3 mt-3">
                             <span class="text-base">Total</span>
                             <span class="text-base">{{this.shoppingCart.total | currency : 'S/'}}</span>
                         </p>
@@ -95,17 +91,17 @@
 
                     <!-- Order summary -->
                     <section aria-labelledby="summary-heading"
-                        class="hidden bg-gray-50 w-full max-w-md flex-col lg:flex h-full sticky top-[0]">
+                        class="hidden bg-bg-alt w-full max-w-md flex-col lg:flex h-full sticky top-[0]">
                         <h2 id="summary-heading" class="sr-only">Order summary</h2>
 
-                        <ul role="list" class="divide-y divide-gray-200 ">
+                        <ul role="list" class="divide-y divide-border ">
                             @for (item of shoppingCart.items; track $index) {
                             <app-order-summary-item [item]="item" (deleteItem)="deleteItem($event)"
                                 (quantityValueChanged)="quantityValueChanged($event,item)" />
                             }
                         </ul>
 
-                        <div class="sticky bottom-0 flex-none bg-gray-50 p-6">
+                        <div class="sticky bottom-0 flex-none bg-bg-alt p-6">
                             <form class="mb-6">
                                 <ml-form-field label="Código de descuento" inputId="discount-code"
                                     [errors]="discountError() ? [discountError()] : []">
@@ -113,7 +109,7 @@
                                         <input type="text" id="discount-code" name="discount-code"
                                             [formControl]="form.controls.discountCodeInput" placeholder="MAGRO9"
                                             autocomplete="off"
-                                            class="uppercase block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                            class="uppercase block w-full bg-bg text-fg placeholder:text-fg-subtle border-border-strong rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:bg-bg-alt disabled:cursor-not-allowed">
                                         @if (!isDiscountApplied()) {
                                         <button type="button" (click)="applyDiscountCode()"
                                             [disabled]="isApplyingDiscount()"
@@ -129,21 +125,17 @@
                                     </div>
                                     @if (isDiscountApplied()) {
                                     <p class="mt-2 text-xs text-green-600 flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clip-rule="evenodd" />
-                                        </svg>
+                                        <ml-icon name="x-circle" class="w-4 h-4 mr-1" />
                                         Código aplicado exitosamente
                                     </p>
                                     }
                                 </ml-form-field>
                             </form>
 
-                            <dl class="text-sm font-medium text-gray-500 space-y-6">
+                            <dl class="text-sm font-medium text-fg-subtle space-y-6">
                                 <div class="flex justify-between">
                                     <dt>Subtotal</dt>
-                                    <dd class="text-gray-900">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
+                                    <dd class="text-fg">{{shoppingCart.subTotal | currency : 'S/'}}</dd>
                                 </div>
                                 @if (isDiscountApplied()) {
                                 <div class="flex justify-between text-primary">
@@ -157,11 +149,11 @@
                                 }
                                 <div class="flex justify-between">
                                     <dt>Envío</dt>
-                                    <dd class="text-gray-900">{{isOutsideLimaMetropolitana() ? 'S/'+
+                                    <dd class="text-fg">{{isOutsideLimaMetropolitana() ? 'S/'+
                                         precioEnvioFueraLimaMetropolitana() : 'Gratis'}}</dd>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6 text-base">
+                                    class="flex items-center justify-between border-t border-border text-fg pt-6 text-base">
                                     <dt>Total</dt>
                                     <dd>{{shoppingCart.total | currency : 'S/'}}</dd>
                                 </div>
@@ -179,7 +171,7 @@
                                     <div class="pb-4">
                                         <div class="mt-5 grid grid-cols-6 gap-x-6 gap-y-2 lg:grid-cols-6">
                                             <button [routerLink]="'/bolsa'"
-                                                class="max-sm:hidden col-span-6 py-1 flex items-center gap-1 text-gray-500 hover:text-gray-800 focus:outline-none transition-colors">
+                                                class="max-sm:hidden col-span-6 py-1 flex items-center gap-1 text-fg-subtle hover:text-fg focus:outline-none transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -190,7 +182,7 @@
                                             <!-- REGISTRO -->
                                             <div class="col-span-6 flex justify-between mb-3 items-end">
                                                 <h2
-                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                                                    class="text-2xl font-extrabold tracking-tight text-fg sm:text-3xl">
                                                     Información.</h2>
                                                 @if (!isAuthUser) {
                                                 <a class="text-sm underline font-normal antialiased hover:text-primary"
@@ -215,15 +207,15 @@
                                             <div class="sm:col-span-3 col-span-6">
                                                 <ml-form-field label="Celular" inputId="cellphone" [required]="true"
                                                     [errors]="cellphoneErrors">
-                                                    <div class="flex items-center text-gray-400">
+                                                    <div class="flex items-center text-fg-subtle">
                                                         <div
-                                                            class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300">
+                                                            class="p-2.5 py-1.5 rounded-l-md border-y border-l border-border-strong bg-bg-alt">
                                                             +51
                                                         </div>
                                                         <input type="number" id="cellphone" placeholder="987654321"
                                                             (input)="limitDigits(9, 'cellphone')" autocomplete="tel"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
-                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-border-strong bg-bg text-fg placeholder:text-fg-subtle border-border-strong focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-bg-alt disabled:cursor-not-allowed disabled:opacity-60"
                                                             formControlName="cellphone" />
                                                     </div>
                                                 </ml-form-field>
@@ -234,7 +226,7 @@
                                                     [required]="true" [errors]="nroDocumentErrors">
                                                     <div class="flex items-center">
                                                         <select formControlName="typeDocument"
-                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-primary disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60">
+                                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-border-strong h-full text-xs bg-bg text-fg focus:ring-2 focus:ring-inset focus:ring-primary disabled:bg-bg-alt disabled:cursor-not-allowed disabled:opacity-60">
                                                             <option value="DNI">DNI</option>
                                                             <option value="CE">Carnet Ext.</option>
                                                             <option value="PASSPORT">Pasaporte</option>
@@ -243,7 +235,7 @@
                                                             [type]="form.get('typeDocument')?.value === 'DNI' ? 'number' : 'text'"
                                                             placeholder="87654321" autocomplete="identity-card-number"
                                                             (input)="limitDigits(form.get('typeDocument')?.value === 'DNI' ? 8 : 12, 'nroDocument')"
-                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-border-strong bg-bg text-fg placeholder:text-fg-subtle border-border-strong focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:bg-bg-alt disabled:cursor-not-allowed disabled:opacity-60"
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
                                                             formControlName="nroDocument" />
                                                     </div>
@@ -273,12 +265,12 @@
                                                         [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('isSignUpAcepted') || hasValidatorError('isSignUpAcepted')}"
                                                         class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
                                                     <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted'), 'opacity-60': form.get('isSignUpAcepted')?.disabled}"
-                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                        class="relative w-9 h-5 bg-bg-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
 
                                                     <span
                                                         [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('isSignUpAcepted')  || hasValidatorError('isSignUpAcepted')}"
-                                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme
+                                                        class="ms-3 text-sm font-medium text-fg dark:text-fg">Registrarme
                                                         y rastrear mi pedido {{hasRequiredError('isSignUpAcepted') ||
                                                         hasValidatorError('isSignUpAcepted')? '*' : ''}}</span>
                                                 </label>
@@ -301,7 +293,7 @@
 
                                             <div class="col-span-6 my-3">
                                                 <h2
-                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl mt-4">
+                                                    class="text-2xl font-extrabold tracking-tight text-fg sm:text-3xl mt-4">
                                                     Envío.</h2>
                                             </div>
 
@@ -309,7 +301,7 @@
                                                 <div class="relative">
                                                     <div
                                                         class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3.5">
-                                                        <svg class="shrink-0 size-4 text-gray-400"
+                                                        <svg class="shrink-0 size-4 text-fg-subtle"
                                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                             stroke-width="2" stroke-linecap="round"
@@ -320,7 +312,7 @@
                                                     </div>
                                                     <div class="relative">
                                                         <input
-                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-gray-300 border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
+                                                            class="py-3 ps-10 pe-4 block w-full ring-1 ring-border-strong border-0 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6 disabled:bg-bg-alt disabled:text-fg-subtle disabled:cursor-not-allowed"
                                                             type="text" role="combobox" aria-expanded="false"
                                                             placeholder="Busca tu dirección de entrega" value=""
                                                             formControlName="searchAddress" autocomplete="off">
@@ -328,7 +320,7 @@
                                                         <div role="status" class="absolute top-3 right-2"
                                                             [hidden]="!isSearchingAddress">
                                                             <svg aria-hidden="true"
-                                                                class="w-6 h-6 text-gray-200 animate-spin fill-primary"
+                                                                class="w-6 h-6 text-fg animate-spin fill-primary"
                                                                 viewBox="0 0 100 101" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <path
@@ -345,11 +337,11 @@
 
                                                 @if (addressList.length > 0) {
                                                 <div
-                                                    class="relative z-30 w-full bg-white border ring-1 ring-gray-300 rounded-lg max-h-48 overflow-auto overflow-y-scroll focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6">
+                                                    class="relative z-30 w-full bg-bg border ring-1 ring-border-strong rounded-lg max-h-48 overflow-auto overflow-y-scroll focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm/6">
                                                     <ul>
                                                         @for (item of addressList; track $index) {
                                                         <li (click)="selectAddress(item)"
-                                                            class="font-normal py-2 px-3 cursor-pointer bg-white hover:bg-gray-100 text-pretty text-xs">
+                                                            class="font-normal py-2 px-3 cursor-pointer bg-bg hover:bg-bg-alt text-pretty text-xs">
                                                             {{item.display_name}}.
                                                         </li>
                                                         }
@@ -440,19 +432,19 @@
                                             <!-- PAGO -->
                                             <div class="col-span-6 my-3">
                                                 <h2
-                                                    class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl mt-4">
+                                                    class="text-2xl font-extrabold tracking-tight text-fg sm:text-3xl mt-4">
                                                     Pago.</h2>
 
                                                 <!-- @if (cartHas250Creatine) {
                                                 <label class="inline-flex items-center mb-2 cursor-pointer mt-4 ml-2">
                                                     <input type="checkbox" value="" class="sr-only peer">
                                                     <span
-                                                        class="text-sm font-medium text-gray-900 dark:text-gray-900 mr-3">Ahorrar
+                                                        class="text-sm font-medium text-fg dark:text-fg mr-3">Ahorrar
                                                         S/{{ENV.precioCreatinaOnePurchase -
                                                         ENV.precioCreatinaSubscription}} con la suscripción
                                                         mensual de 250 gr</span>
                                                     <div
-                                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                        class="relative w-9 h-5 bg-bg-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                     </div>
                                                 </label>
                                                 } -->
@@ -475,11 +467,11 @@
                                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
                                                             class="sr-only peer disabled:cursor-not-allowed disabled:opacity-60">
                                                         <div [ngClass]="{'peer-focus:ring-red-400': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted'), 'opacity-60': form.get('termsAccepted')?.disabled}"
-                                                            class="relative shrink-0 w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                                            class="relative shrink-0 w-9 h-5 bg-bg-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                                         </div>
                                                         <span
                                                             [ngClass]="{'text-red-500 dark:text-red-500': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
-                                                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Acepto
+                                                            class="ms-3 text-sm font-medium text-fg dark:text-fg">Acepto
                                                             los
                                                             <a href="https://magrolabs.com/politicas/terminos-y-condiciones"
                                                                 target="_blank"

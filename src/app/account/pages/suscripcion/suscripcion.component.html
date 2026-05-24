@@ -5,32 +5,32 @@
       <!-- Skeleton de carga -->
       @if (isLoading()) {
         <div class="animate-pulse">
-          <ml-card extraClass="divide-y divide-gray-200">
+          <ml-card extraClass="divide-y divide-border">
             <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
               <div class="space-y-2">
-                <div class="h-6 bg-gray-300 rounded w-48"></div>
-                <div class="h-4 bg-gray-300 rounded w-32"></div>
+                <div class="h-6 bg-border-strong rounded w-48"></div>
+                <div class="h-4 bg-border-strong rounded w-32"></div>
               </div>
-              <div class="h-6 bg-gray-300 rounded w-20"></div>
+              <div class="h-6 bg-border-strong rounded w-20"></div>
             </div>
             <div class="px-4 py-5 sm:p-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-4">
-                  <div class="h-4 bg-gray-300 rounded w-3/4"></div>
-                  <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-                  <div class="h-4 bg-gray-300 rounded w-2/3"></div>
-                  <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div class="h-4 bg-border-strong rounded w-3/4"></div>
+                  <div class="h-4 bg-border-strong rounded w-1/2"></div>
+                  <div class="h-4 bg-border-strong rounded w-2/3"></div>
+                  <div class="h-4 bg-border-strong rounded w-1/2"></div>
                 </div>
                 <div class="space-y-4">
-                  <div class="h-4 bg-gray-300 rounded w-3/4"></div>
-                  <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-                  <div class="h-4 bg-gray-300 rounded w-2/3"></div>
-                  <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div class="h-4 bg-border-strong rounded w-3/4"></div>
+                  <div class="h-4 bg-border-strong rounded w-1/2"></div>
+                  <div class="h-4 bg-border-strong rounded w-2/3"></div>
+                  <div class="h-4 bg-border-strong rounded w-1/2"></div>
                 </div>
               </div>
             </div>
             <div class="px-4 py-5 sm:px-6">
-              <div class="h-10 bg-gray-300 rounded w-40"></div>
+              <div class="h-10 bg-border-strong rounded w-40"></div>
             </div>
           </ml-card>
         </div>
@@ -56,7 +56,7 @@
                     <a
                       href="https://magrolabs.com/productos/creatinas/creatina-monohidratada-250-gr#reviews"
                       target="_blank"
-                      class="ml-2 text-sm font-light text-gray-500 hover:text-primary-hover w-fit hover:underline"
+                      class="ml-2 text-sm font-light text-fg-subtle hover:text-primary-hover w-fit hover:underline"
                     >
                       ({{ reviewStats.totalReviews }} reseñas)
                     </a>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="mt-1">
                   <h1
-                    class="text-3xl sm:font-light font-thin tracking-tighter text-gray-900 sm:text-3xl"
+                    class="text-3xl sm:font-light font-thin tracking-tighter text-fg sm:text-3xl"
                   >
                     {{ subscriptionProduct()?.name || 'Creatina Monohidratada 250 gr' }}
                   </h1>
@@ -78,11 +78,11 @@
                       class="flex justify-center items-center font-extralight"
                     >
                       <p
-                        class="text-base text-gray-500 sm:text-lg line-through"
+                        class="text-base text-fg-subtle sm:text-lg line-through"
                       >
                         {{ ENV.precioCreatinaOnePurchase | currency: "S/" }}
                       </p>
-                      <p class="text-lg text-gray-900 sm:text-xl ml-2">
+                      <p class="text-lg text-fg sm:text-xl ml-2">
                         {{ (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription) | currency: "S/" }}
                       </p>
                       <span
@@ -97,115 +97,43 @@
                 <section aria-labelledby="options-heading">
                   <div class="my-4 grid grid-cols-2 gap-x-2 gap-y-2">
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Monohidratada al 100%.
                       </p>
                     </div>
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Mejora la recuperación muscular.
                       </p>
                     </div>
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Certificado de alta pureza.
                       </p>
                     </div>
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Sin sabor y fácil digestión.
                       </p>
                     </div>
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Mejora la fuerza y resistencia.
                       </p>
                     </div>
                     <div class="flex items-center">
-                      <svg
-                        class="flex-shrink-0 w-4 h-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                      <p class="ml-1 text-sm text-gray-700 font-light">
+                      <ml-icon name="check-solid" class="flex-shrink-0 w-4 h-4 text-fg-subtle" />
+                      <p class="ml-1 text-sm text-fg-muted font-light">
                         Aumenta la densidad ósea.
                       </p>
                     </div>
                   </div>
-                  <h2 class="text-gray-500 text-[12px] font-extralight">
+                  <h2 class="text-fg-subtle text-[12px] font-extralight">
                     {{ ENV.creatinaSubscription250 }}g.
                     {{ ENV.nroServicios250g }} servicios.
                   </h2>
@@ -216,13 +144,12 @@
                         #Subscription
                         class="rounded-lg overflow-hidden group border"
                         [ngClass]="{
-                          'border-gray-800': true,
-                          'border-gray-900': true,
+                          'border-fg': true,
                         }"
                         open
                       >
                         <summary
-                          class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900 p-3"
+                          class="flex cursor-pointer items-center justify-between gap-1.5 text-fg p-3"
                         >
                           <div class="flex items-center">
                             <span class="relative size-5 shrink-0 mr-2">
@@ -267,12 +194,12 @@
                             <div
                               class="flex justify-center items-center font-extralight"
                             >
-                              <p class="text-xs text-gray-500 line-through">
+                              <p class="text-xs text-fg-subtle line-through">
                                 {{
                                   ENV.precioCreatinaOnePurchase | currency: "S/"
                                 }}
                               </p>
-                              <p class="text-sm text-gray-900 ml-2">
+                              <p class="text-sm text-fg ml-2">
                                 {{
                                   (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription)
                                     | currency: "S/"
@@ -286,7 +213,7 @@
                             class="grid rounded-md grid-cols-1 gap-x-2 gap-y-2"
                           >
                             <span
-                              class="text-sm mb-1 text-left text-gray-900 font-light"
+                              class="text-sm mb-1 text-left text-fg font-light"
                             >
                               Así es como funciona la suscripción:
                             </span>
@@ -303,7 +230,7 @@
                                 />
                               </svg>
                               <p
-                                class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3"
+                                class="text-pretty text-xs text-fg-subtle ml-2 sm:ml-3"
                               >
                                 Enviaremos tu creatina 250g cada mes por {{
                                   (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription)
@@ -324,7 +251,7 @@
                                 />
                               </svg>
                               <p
-                                class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3"
+                                class="text-pretty text-xs text-fg-subtle ml-2 sm:ml-3"
                               >
                                 Con envio gratis para siempre.
                               </p>
@@ -342,7 +269,7 @@
                                 />
                               </svg>
                               <p
-                                class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3"
+                                class="text-pretty text-xs text-fg-subtle ml-2 sm:ml-3"
                               >
                                 +10 MP cada mes (canjealo por articulos
                                 exclusivos).
@@ -361,7 +288,7 @@
                                 />
                               </svg>
                               <p
-                                class="text-pretty text-xs text-gray-500 ml-2 sm:ml-3"
+                                class="text-pretty text-xs text-fg-subtle ml-2 sm:ml-3"
                               >
                                 Cancela o pausa tu suscripción cuando quieras.
                               </p>
@@ -375,15 +302,13 @@
                     <div class="my-4">
                       @if (isPaymentVerified()) {
                         <!-- Estado: ya registró tarjeta pero cerró el modal sin confirmar. -->
-                        <div class="flex items-center gap-2 mb-3 text-sm text-gray-700">
-                          <svg class="w-5 h-5 text-green-600 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                          </svg>
+                        <div class="flex items-center gap-2 mb-3 text-sm text-fg-muted">
+                          <ml-icon name="x-circle" class="w-5 h-5 text-green-600 flex-shrink-0" />
                           <span>Tarjeta verificada: <span class="font-mono">{{ labelCardRegisted }}</span></span>
                         </div>
-                        <p class="text-sm text-gray-600 mb-6">
+                        <p class="text-sm text-fg-muted mb-6">
                           Confirma para cobrar hoy
-                          <span class="font-bold text-gray-900">
+                          <span class="font-bold text-fg">
                             {{ (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription) | currency: 'S/' }}
                           </span>
                           y activar tu suscripción mensual.
@@ -397,9 +322,9 @@
                           ></ml-button>
                         </div>
                       } @else {
-                        <p class="text-sm text-gray-600 mb-6">
+                        <p class="text-sm text-fg-muted mb-6">
                           Te pediremos una tarjeta de crédito para activar tu suscripción. Hoy pagas
-                          <span class="font-bold text-gray-900">
+                          <span class="font-bold text-fg">
                             {{ (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription) | currency: 'S/' }}
                           </span>.
                         </p>
@@ -412,32 +337,20 @@
                         </div>
                       }
                       @if (!subscriptionProduct()) {
-                        <p class="text-xs text-gray-500 mt-2">Cargando catálogo…</p>
+                        <p class="text-xs text-fg-subtle mt-2">Cargando catálogo…</p>
                       }
                     </div>
                   }
                   <!-- Sección de pago seguro -->
-                  <div class="my-6 sm:py-4 border-t border-gray-200">
+                  <div class="my-6 sm:py-4 border-t border-border">
                     <p
-                      class="flex justify-center text-sm font-medium text-gray-500 my-4"
+                      class="flex justify-center text-sm font-medium text-fg-subtle my-4"
                     >
-                      <svg
-                        class="w-5 h-5 text-gray-400 mr-1.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                      <ml-icon name="lock" class="w-5 h-5 text-fg-subtle mr-1.5" />
                       Pago seguro con
                       <a
                         href="https://flowpagos.com/"
-                        class="ml-1 hover:underline text-gray-800"
+                        class="ml-1 hover:underline text-fg"
                         target="_blank"
                         >Flow</a
                       >
@@ -476,13 +389,13 @@
                   (closeAction)="closeSubscriptionModal()"
                 >
                   <div mlModalHeader class="mb-4">
-                    <h3 class="text-lg font-bold text-gray-900">Activa tu suscripción</h3>
+                    <h3 class="text-lg font-bold text-fg">Activa tu suscripción</h3>
                   </div>
 
-                  <div class="border border-gray-200 rounded-lg overflow-hidden mb-4">
+                  <div class="border border-border rounded-lg overflow-hidden mb-4">
                     <!-- Header con marcas aceptadas -->
                     <div class="bg-surface-alt px-4 py-3 flex items-center gap-3 flex-wrap">
-                      <span class="font-semibold text-sm text-gray-900">Tarjeta de crédito</span>
+                      <span class="font-semibold text-sm text-fg">Tarjeta de crédito</span>
                       <div class="flex items-center gap-2 ml-auto">
                         <img class="h-4 w-auto" src="/logo_visa.png" alt="Visa" />
                         <img class="h-4 w-auto" src="/logo_mastercard.svg" alt="Mastercard" />
@@ -491,28 +404,24 @@
                     </div>
 
                     @if (isPaymentVerified()) {
-                      <div class="p-4 bg-white flex items-center gap-2 text-sm">
-                        <svg class="w-5 h-5 text-green-600 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="text-gray-700">Tarjeta verificada: <span class="font-mono">{{ labelCardRegisted }}</span></span>
+                      <div class="p-4 bg-bg flex items-center gap-2 text-sm">
+                        <ml-icon name="x-circle" class="w-5 h-5 text-green-600 flex-shrink-0" />
+                        <span class="text-fg-muted">Tarjeta verificada: <span class="font-mono">{{ labelCardRegisted }}</span></span>
                       </div>
                     } @else if (flowToken !== '') {
-                      <form class="p-4 bg-white">
+                      <form class="p-4 bg-bg">
                         <app-flow-widget-add-card
                           [token]="flowToken"
                           (cardAddedSuccessfully)="cardAddedSuccessfully($event)"
                         ></app-flow-widget-add-card>
-                        <p class="flex justify-center items-center gap-1.5 text-xs text-gray-500 mt-4">
-                          <svg class="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                          </svg>
+                        <p class="flex justify-center items-center gap-1.5 text-xs text-fg-subtle mt-4">
+                          <ml-icon name="lock" class="w-4 h-4 text-fg-subtle" />
                           Pago seguro con
-                          <a href="https://flowpagos.com/" target="_blank" class="ml-0.5 underline hover:text-gray-800">Flow</a>
+                          <a href="https://flowpagos.com/" target="_blank" class="ml-0.5 underline hover:text-fg">Flow</a>
                         </p>
                       </form>
                     } @else {
-                      <div class="p-6 bg-white flex items-center justify-center gap-2 text-sm text-gray-500">
+                      <div class="p-6 bg-bg flex items-center justify-center gap-2 text-sm text-fg-subtle">
                         <svg class="w-5 h-5 animate-spin text-accent" viewBox="0 0 24 24" fill="none">
                           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -525,14 +434,14 @@
                   <!-- Resumen de cobro -->
                   <div class="rounded-lg bg-primary-surface p-4 flex items-center justify-between">
                     <div>
-                      <p class="text-xs text-gray-600 uppercase tracking-wide">Hoy pagas</p>
-                      <p class="text-2xl font-extrabold text-gray-900">
+                      <p class="text-xs text-fg-muted uppercase tracking-wide">Hoy pagas</p>
+                      <p class="text-2xl font-extrabold text-fg">
                         {{ (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription) | currency: 'S/' }}
                       </p>
                     </div>
                     <div class="text-right">
-                      <p class="text-xs text-gray-600">Suscripción mensual</p>
-                      <p class="text-xs text-gray-500">Cancela cuando quieras</p>
+                      <p class="text-xs text-fg-muted">Suscripción mensual</p>
+                      <p class="text-xs text-fg-subtle">Cancela cuando quieras</p>
                     </div>
                   </div>
 
@@ -551,7 +460,7 @@
               <div class="text-pretty">
                 <ul class="list-disc list-outside text-sm mb-7">
                   <li class="mb-1">
-                    <span class="text-gray-600"
+                    <span class="text-fg-muted"
                       >Al completar tu pedido, declaras que eres mayor de 18
                       años y aceptas las
                       <a
@@ -580,8 +489,8 @@
                 </ul>
               </div>
               <div class="bg-surface-alt py-5 px-6 sm:px-10 mb-7 rounded-xl">
-                <p class="mb-2 font-semibold text-gray-900">¿Cómo funciona la suscripción?</p>
-                <p class="text-pretty text-sm text-gray-700">
+                <p class="mb-2 font-semibold text-fg">¿Cómo funciona la suscripción?</p>
+                <p class="text-pretty text-sm text-fg-muted">
                   Después de verificar tu tarjeta, te cobraremos
                   {{ (subscriptionProduct()?.price ?? ENV.precioCreatinaSubscription) | currency: 'S/' }}
                   hoy y enviaremos tu creatina de inmediato. Cada mes recibirás
@@ -592,7 +501,7 @@
               <section>
                 <div class="">
                   <h2
-                    class="text-left text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl"
+                    class="text-left text-2xl font-bold tracking-tight text-fg sm:text-3xl"
                   >
                     Reseñas
                   </h2>
@@ -604,77 +513,21 @@
                       class="rounded-lg bg-surface-alt p-4 shadow-sm sm:p-6"
                     >
                       <div class="flex items-center gap-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="size-14 rounded-full object-cover"
-                          height="56px"
-                          viewBox="0 -960 960 960"
-                          width="56px"
-                          fill="#434343"
-                        >
-                          <path
-                            d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"
-                          />
-                        </svg>
+                        <ml-icon name="user-circle" class="size-14 rounded-full object-cover" />
                         <div>
-                          <div class="flex justify-center gap-0.5 text-black">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
+                          <div class="flex justify-center gap-0.5 text-fg">
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
                           </div>
-                          <p class="mt-0.5 text-lg font-medium text-gray-900">
+                          <p class="mt-0.5 text-lg font-medium text-fg">
                             Hugo Cortez L.
                           </p>
                         </div>
                       </div>
-                      <p class="mt-4 text-gray-700 text italic">
+                      <p class="mt-4 text-fg-muted text italic">
                         “Buen producto, buen precio”
                       </p>
                     </blockquote>
@@ -683,77 +536,21 @@
                       class="rounded-lg bg-surface-alt p-4 shadow-sm sm:p-6"
                     >
                       <div class="flex items-center gap-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="size-14 rounded-full object-cover"
-                          height="56px"
-                          viewBox="0 -960 960 960"
-                          width="56px"
-                          fill="#434343"
-                        >
-                          <path
-                            d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-160v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5t127.92 44.69q31.3 14.13 50.19 40.97Q800-292 800-254v94H160Zm60-60h520v-34q0-16-9.5-30.5T707-306q-64-31-117-42.5T480-360q-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34Zm260-321q39 0 64.5-25.5T570-631q0-39-25.5-64.5T480-721q-39 0-64.5 25.5T390-631q0 39 25.5 64.5T480-541Zm0-90Zm0 411Z"
-                          />
-                        </svg>
+                        <ml-icon name="user-circle" class="size-14 rounded-full object-cover" />
                         <div>
-                          <div class="flex justify-center gap-0.5 text-black">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="size-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                              />
-                            </svg>
+                          <div class="flex justify-center gap-0.5 text-fg">
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
+                            <ml-icon name="star" class="size-5" />
                           </div>
-                          <p class="mt-0.5 text-lg font-medium text-gray-900">
+                          <p class="mt-0.5 text-lg font-medium text-fg">
                             Richard Rodas
                           </p>
                         </div>
                       </div>
-                      <p class="mt-4 text-gray-700 text italic">
+                      <p class="mt-4 text-fg-muted text italic">
                         “Me encanta su diseño, no tiene sabor raro y se mezcla
                         facil”
                       </p>
@@ -777,43 +574,17 @@
                     class="group rounded-lg bg-surface-alt p-6 [&_summary::-webkit-details-marker]:hidden"
                   >
                     <summary
-                      class="flex cursor-pointer items-center justify-between gap-1.5 text-gray-900"
+                      class="flex cursor-pointer items-center justify-between gap-1.5 text-fg"
                     >
                       <h2 class="font-semibold">
                         ¿Hay un periodo de cancelación?
                       </h2>
                       <span class="relative size-5 shrink-0">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="absolute inset-0 opacity-100 group-open:opacity-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="absolute inset-0 opacity-0 group-open:opacity-100"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
+                        <ml-icon name="plus-circle" class="absolute inset-0 opacity-100 group-open:opacity-0" />
+                        <ml-icon name="minus-circle" class="absolute inset-0 opacity-0 group-open:opacity-100" />
                       </span>
                     </summary>
-                    <p class="mt-4 leading-relaxed text-gray-700">
+                    <p class="mt-4 leading-relaxed text-fg-muted">
                       Al suscribirte aceptas nuestro período de cancelación
                       mensual. ¿Cancelas antes de
                       {{ ENV.diasAntesDeSiguienteCobroSubscripcion }} días de tu
@@ -829,14 +600,14 @@
 
       <!-- Información de la suscripción -->
       @if (!isLoading() && subscription()) {
-        <ml-card extraClass="divide-y divide-gray-200">
+        <ml-card extraClass="divide-y divide-border">
           <!-- Cabecera con estado -->
           <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
             <div>
-              <h3 class="hidden sm:block text-xl font-bold text-gray-900">
+              <h3 class="hidden sm:block text-xl font-bold text-fg">
                 📋 Detalles de tu suscripción
               </h3>
-              <h3 class="sm:hidden text-xl font-bold text-gray-900">
+              <h3 class="sm:hidden text-xl font-bold text-fg">
                 📋 Estado:
               </h3>
             </div>
@@ -859,16 +630,16 @@
                   class="grid grid-cols-1 gap-y-2 sm:gap-x-4 sm:gap-y-6 sm:grid-cols-2"
                 >
                   <div class="sm:col-span-2">
-                    <dt class="text-sm font-medium text-gray-500">Plan</dt>
+                    <dt class="text-sm font-medium text-fg-subtle">Plan</dt>
                     @if (subscriptionPlan()?.description) {
-                      <dd class="mt-1 text-lg font-medium text-gray-900">
+                      <dd class="mt-1 text-lg font-medium text-fg">
                         {{ subscriptionPlan()?.description }}
                       </dd>
                     }
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-gray-500">Precio</dt>
-                    <dd class="mt-1 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-fg-subtle">Precio</dt>
+                    <dd class="mt-1 text-sm text-fg">
                       {{
                         (subscriptionPlan()?.price ?? 0) *
                           (1 - (subscription()?.discount ?? 0) / 100)
@@ -882,8 +653,8 @@
                       subscription()?.discount ? 'block' : 'hidden sm:block'
                     "
                   >
-                    <dt class="text-sm font-medium text-gray-500">Descuento</dt>
-                    <dd class="mt-1 text-sm text-gray-900">
+                    <dt class="text-sm font-medium text-fg-subtle">Descuento</dt>
+                    <dd class="mt-1 text-sm text-fg">
                       {{
                         subscription()?.discount
                           ? subscription()?.discount + "%"
@@ -892,24 +663,24 @@
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-gray-500">
+                    <dt class="text-sm font-medium text-fg-subtle">
                       Fecha de inicio
                     </dt>
                     @if (subscription()!.status !== statusEnum.TRIAL) {
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ formatDate(subscription()!.start_date) }}
                       </dd>
                     } @else {
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ nextBillingDateFreeCreatine }}
                       </dd>
                     }
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-gray-500">
+                    <dt class="text-sm font-medium text-fg-subtle">
                       Magropuntos
                     </dt>
-                    <dd class="mt-1 text-sm text-gray-900">
+                    <dd class="mt-1 text-sm text-fg">
                       @if (isLoadingCredits()) {
                         <span>Cargando...</span>
                       }
@@ -921,7 +692,7 @@
                           {{ userCredits() }}
                           @if (isLoadingTier) {
                             <div
-                              class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"
+                              class="w-6 h-6 mx-1 bg-bg-alt animate-pulse rounded-full"
                             ></div>
                           } @else {
                             <img
@@ -936,20 +707,20 @@
                   </div>
                   @if (subscription()!.next_shipment) {
                     <div>
-                      <dt class="text-sm font-medium text-gray-500">
+                      <dt class="text-sm font-medium text-fg-subtle">
                         Próximo envío
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ formatDate(subscription()!.next_shipment) }}
                       </dd>
                     </div>
                   }
                   @if (subscription()!.end_date) {
                     <div>
-                      <dt class="text-sm font-medium text-gray-500">
+                      <dt class="text-sm font-medium text-fg-subtle">
                         Fecha de finalización
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ formatDate(subscription()!.end_date) }}
                       </dd>
                     </div>
@@ -959,10 +730,10 @@
                     subscription()!.status == statusEnum.CANCELLED
                   ) {
                     <div>
-                      <dt class="text-sm font-medium text-gray-500">
+                      <dt class="text-sm font-medium text-fg-subtle">
                         Próximo pago
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ formatDate(subscription()!.next_billing_date) }}
                       </dd>
                     </div>
@@ -972,20 +743,20 @@
                     subscription()!.status == statusEnum.PAUSED
                   ) {
                     <div>
-                      <dt class="text-sm font-medium text-gray-500">
+                      <dt class="text-sm font-medium text-fg-subtle">
                         Pausado hasta
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{ formatDate(subscription()!.paused_until) }}
                       </dd>
                     </div>
                   }
                   @if (subscription()!.next_shipment) {
                     <div>
-                      <dt class="text-sm font-medium text-gray-500">
+                      <dt class="text-sm font-medium text-fg-subtle">
                         Próximo envío
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900">
+                      <dd class="mt-1 text-sm text-fg">
                         {{
                           formatDate(subscription()!.next_shipment) ||
                             "No disponible"
@@ -1088,19 +859,19 @@
                   subscription()!.status === statusEnum.CANCELLED ||
                   subscription()!.status === statusEnum.EXPIRED
                 ) {
-                  <div class="bg-gray-50 border border-gray-300 p-5 rounded-lg">
-                    <h4 class="text-base font-semibold text-gray-900 mb-3">
+                  <div class="bg-bg-alt border border-border-strong p-5 rounded-lg">
+                    <h4 class="text-base font-semibold text-fg mb-3">
                       ¿Pensando en volver?
                     </h4>
                     <!-- Información del precio -->
                     <div
-                      class="bg-white border border-gray-200 rounded-md p-4 mb-4"
+                      class="bg-bg border border-border rounded-md p-4 mb-4"
                     >
                       <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-medium text-gray-600"
+                        <span class="text-sm font-medium text-fg-muted"
                           >Precio de suscripción:</span
                         >
-                        <span class="text-2xl font-bold text-gray-900">
+                        <span class="text-2xl font-bold text-fg">
                           {{
                             ENV.precioCreatinaSubscription
                               | currency: "S/" : "symbol" : "1.0-0"
@@ -1110,7 +881,7 @@
                     </div>
                     <!-- Nota informativa -->
                     <div
-                      class="flex items-start gap-2 mb-4 p-3 bg-[#f8f6f3] border-l-4 border-primary-hover rounded"
+                      class="flex items-start gap-2 mb-4 p-3 bg-bg-alt border-l-4 border-primary-hover rounded"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1124,7 +895,7 @@
                           clip-rule="evenodd"
                         />
                       </svg>
-                      <p class="text-sm text-gray-700">
+                      <p class="text-sm text-fg-muted">
                         Recibes {{ ENV.creditoRegaloPorCompraMes }} Magropuntos
                         de bienvenida al reactivar tu suscripción y envío
                         gratis.
@@ -1152,8 +923,8 @@
                     </button>
                   </div>
                 } @else if (subscription()!.status === statusEnum.TO_CANCEL) {
-                  <div class="bg-gray-200 p-4 rounded-md">
-                    <p class="text-sm text-gray-700">
+                  <div class="bg-bg-alt p-4 rounded-md">
+                    <p class="text-sm text-fg-muted">
                       Tu suscripción aún no ha sido cancelada, se cancelará
                       inmediatamente después de tu último pago. ¿Quieres
                       continuar con tu suscripción?
@@ -1173,10 +944,10 @@
           </div>
           <!-- Historial o información adicional si es necesario -->
           <!-- <div class="px-4 py-5 sm:px-6">
-<h3 class="text-lg leading-6 font-medium text-gray-900">Historial de pagos</h3>
-<p class="mt-1 max-w-2xl text-sm text-gray-500">Últimos pagos realizados.</p>
+<h3 class="text-lg leading-6 font-medium text-fg">Historial de pagos</h3>
+<p class="mt-1 max-w-2xl text-sm text-fg-subtle">Últimos pagos realizados.</p>
 <div class="mt-4">
-  <p class="text-sm text-gray-500">No hay pagos registrados.</p>
+  <p class="text-sm text-fg-subtle">No hay pagos registrados.</p>
 </div>
 </div> -->
         </ml-card>
@@ -1191,11 +962,11 @@
       ) {
         <ml-card class="mt-8">
           <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-xl font-bold text-gray-900">
+            <h3 class="text-xl font-bold text-fg">
               💳 Información de pago
             </h3>
           </div>
-          <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+          <div class="border-t border-border px-4 py-5 sm:p-6">
             <!-- Alert para pago rechazado -->
             @if (isPorActivar()) {
               @if (isCardModifiedToReprocessPayment()) {
@@ -1222,7 +993,7 @@
                     <button
                       (click)="changePaymentMethod()"
                       type="button"
-                      class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      class="inline-flex items-center px-3 py-2 border border-red-300 text-sm leading-4 font-medium rounded-md text-red-700 bg-bg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
                       <svg
                         class="h-4 w-4 mr-2"
@@ -1247,17 +1018,17 @@
             <div class="mb-6">
               <!-- Próximo pago-->
               @if (subscription()!.status === statusEnum.TRIAL) {
-                <h4 class="text-lg font-bold text-gray-700 mb-2">
+                <h4 class="text-lg font-bold text-fg-muted mb-2">
                   Próximo pago
                 </h4>
-                <p class="text-lg text-gray-700">
+                <p class="text-lg text-fg-muted">
                   {{ nextBillingDateFreeCreatine }}
                 </p>
               } @else {
-                <h4 class="text-lg font-bold text-gray-700 mb-2">
+                <h4 class="text-lg font-bold text-fg-muted mb-2">
                   Próximo pago
                 </h4>
-                <p class="text-lg text-gray-700">
+                <p class="text-lg text-fg-muted">
                   {{
                     nextPaymentDate()
                       ? (nextPaymentDate() | date: "dd/MM/yyyy")
@@ -1274,7 +1045,7 @@
                         class="flex-shrink-0"
                       ></span>
                     }
-                    <span class="ml-2 text-gray-700"
+                    <span class="ml-2 text-fg-muted"
                       >•••• •••• •••• {{ cardLastFour() || "1234" }}</span
                     >
                   </div>
@@ -1282,7 +1053,7 @@
                 <button
                   (click)="openCardRegistration.set(true)"
                   type="button"
-                  class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-surface hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  class="inline-flex items-center px-3 py-2 border border-border-strong shadow-sm text-sm leading-4 font-medium rounded-md text-fg-muted bg-surface hover:bg-bg-alt focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1305,32 +1076,20 @@
                 (flowToken !== "" && cardLastFour() === "") ||
                 openCardRegistration()
               ) {
-                <div class="lg:w-2/3 border border-gray-300 rounded-sm my-8">
-                  <form class="p-4 bg-[#f8f9fa] rounded-xl">
+                <div class="lg:w-2/3 border border-border-strong rounded-sm my-8">
+                  <form class="p-4 bg-bg-alt rounded-xl">
                     <app-flow-widget-add-card
                       [token]="flowToken"
                       (cardAddedSuccessfully)="cardAddedSuccessfully($event)"
                     ></app-flow-widget-add-card>
                     <p
-                      class="flex justify-center text-sm font-medium text-gray-500 mt-6"
+                      class="flex justify-center text-sm font-medium text-fg-subtle mt-6"
                     >
-                      <svg
-                        class="w-5 h-5 text-gray-400 mr-1.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                      <ml-icon name="lock" class="w-5 h-5 text-fg-subtle mr-1.5" />
                       Pago seguro con
                       <a
                         href="https://flowpagos.com/"
-                        class="ml-1 hover:underline text-gray-800"
+                        class="ml-1 hover:underline text-fg"
                         target="_blank"
                       >
                         Flow</a
@@ -1340,10 +1099,10 @@
                 </div>
               }
             </div>
-            <div class="border-t border-gray-200 pt-4">
+            <div class="border-t border-border pt-4">
               <button
                 (click)="toggleChargesHistory()"
-                class="flex items-center justify-between w-full py-3 text-gray-700 hover:text-gray-900"
+                class="flex items-center justify-between w-full py-3 text-fg-muted hover:text-fg"
               >
                 <span class="font-medium">
                   {{
@@ -1368,33 +1127,33 @@
               </button>
               <!-- Historial de pagos desplegable -->
               @if (showChargesHistory()) {
-                <div class="mt-4 border-t border-gray-200 pt-4">
+                <div class="mt-4 border-t border-border pt-4">
                   <!-- Skeleton de carga -->
                   @if (isLoadingCharges()) {
                     <div class="animate-pulse">
-                      <div class="grid grid-cols-6 gap-4 pb-3 border-b border-gray-200">
-                        <div class="h-3 bg-gray-300 rounded w-3/4"></div>
-                        <div class="h-3 bg-gray-300 rounded w-1/2"></div>
-                        <div class="h-3 bg-gray-300 rounded w-3/4"></div>
-                        <div class="h-3 bg-gray-300 rounded w-1/2"></div>
-                        <div class="h-3 bg-gray-300 rounded w-3/4"></div>
-                        <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                      <div class="grid grid-cols-6 gap-4 pb-3 border-b border-border">
+                        <div class="h-3 bg-border-strong rounded w-3/4"></div>
+                        <div class="h-3 bg-border-strong rounded w-1/2"></div>
+                        <div class="h-3 bg-border-strong rounded w-3/4"></div>
+                        <div class="h-3 bg-border-strong rounded w-1/2"></div>
+                        <div class="h-3 bg-border-strong rounded w-3/4"></div>
+                        <div class="h-3 bg-border-strong rounded w-1/2"></div>
                       </div>
                       @for (i of [1, 2, 3, 4, 5]; track i) {
-                        <div class="grid grid-cols-6 gap-4 py-3 border-b border-gray-100">
-                          <div class="h-4 bg-gray-200 rounded w-full"></div>
-                          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-                          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                          <div class="h-4 bg-gray-200 rounded w-full"></div>
-                          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-                          <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div class="grid grid-cols-6 gap-4 py-3 border-b border-border">
+                          <div class="h-4 bg-bg-alt rounded w-full"></div>
+                          <div class="h-4 bg-bg-alt rounded w-2/3"></div>
+                          <div class="h-4 bg-bg-alt rounded w-3/4"></div>
+                          <div class="h-4 bg-bg-alt rounded w-full"></div>
+                          <div class="h-4 bg-bg-alt rounded w-2/3"></div>
+                          <div class="h-4 bg-bg-alt rounded w-1/2"></div>
                         </div>
                       }
                     </div>
                   }
                   <!-- Sin historial -->
                   @if (!isLoadingCharges() && charges().length === 0) {
-                    <p class="py-4 text-sm text-gray-500 text-center">
+                    <p class="py-4 text-sm text-fg-subtle text-center">
                       No hay historial de pagos disponible.
                     </p>
                   }
@@ -1404,12 +1163,12 @@
                       <div class="overflow-x-auto">
                         <table class="min-w-full">
                           <thead>
-                            <tr class="border-b border-gray-200">
+                            <tr class="border-b border-border">
                               <!-- Producto -->
                               <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('subject')"
-                                  class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
+                                  class="flex items-center gap-1 text-xs font-medium text-fg-subtle uppercase tracking-wider hover:text-fg transition-colors"
                                 >
                                   Producto
                                   <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'subject'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1423,17 +1182,17 @@
                               </th>
                               <!-- Plan -->
                               <th scope="col" class="pb-3 pr-6 text-left">
-                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</span>
+                                <span class="text-xs font-medium text-fg-subtle uppercase tracking-wider">Plan</span>
                               </th>
                               <!-- Período -->
                               <th scope="col" class="pb-3 pr-6 text-left">
-                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Período</span>
+                                <span class="text-xs font-medium text-fg-subtle uppercase tracking-wider">Período</span>
                               </th>
                               <!-- Total -->
                               <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('amount')"
-                                  class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
+                                  class="flex items-center gap-1 text-xs font-medium text-fg-subtle uppercase tracking-wider hover:text-fg transition-colors"
                                 >
                                   Total
                                   <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'amount'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1449,7 +1208,7 @@
                               <th scope="col" class="pb-3 pr-6 text-left">
                                 <button
                                   (click)="sortChargesBy('requestDate')"
-                                  class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
+                                  class="flex items-center gap-1 text-xs font-medium text-fg-subtle uppercase tracking-wider hover:text-fg transition-colors"
                                 >
                                   Fecha
                                   <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'requestDate'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1465,7 +1224,7 @@
                               <th scope="col" class="pb-3 text-left">
                                 <button
                                   (click)="sortChargesBy('status')"
-                                  class="flex items-center gap-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-900 transition-colors"
+                                  class="flex items-center gap-1 text-xs font-medium text-fg-subtle uppercase tracking-wider hover:text-fg transition-colors"
                                 >
                                   Estado
                                   <svg class="w-3 h-3 shrink-0" [class.opacity-30]="chargesSortCol() !== 'status'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1479,31 +1238,31 @@
                               </th>
                             </tr>
                           </thead>
-                          <tbody class="divide-y divide-gray-100">
+                          <tbody class="divide-y divide-border">
                             @for (
                               charge of pagedCharges();
                               track charge.flowOrder
                             ) {
-                              <tr class="hover:bg-gray-50 transition-colors">
+                              <tr class="hover:bg-bg-alt transition-colors">
                                 @let s = parseChargeSubject(charge.subject);
                                 <!-- Producto -->
-                                <td class="py-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                <td class="py-3 pr-6 text-sm font-medium text-fg whitespace-nowrap">
                                   {{ s.product }}
                                 </td>
                                 <!-- Plan -->
-                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
+                                <td class="py-3 pr-6 text-sm text-fg-muted whitespace-nowrap">
                                   {{ s.plan || '—' }}
                                 </td>
                                 <!-- Período -->
-                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
+                                <td class="py-3 pr-6 text-sm text-fg-muted whitespace-nowrap">
                                   {{ s.period || '—' }}
                                 </td>
                                 <!-- Total -->
-                                <td class="py-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                <td class="py-3 pr-6 text-sm font-medium text-fg whitespace-nowrap">
                                   {{ charge.amount | currency: "S/" : "symbol" : "1.1-2" }}
                                 </td>
                                 <!-- Fecha -->
-                                <td class="py-3 pr-6 text-sm text-gray-600 whitespace-nowrap">
+                                <td class="py-3 pr-6 text-sm text-fg-muted whitespace-nowrap">
                                   {{ formatChargeDate(charge.requestDate) }}
                                 </td>
                                 <td class="py-3">
@@ -1520,16 +1279,16 @@
                       <!-- Paginación -->
                       @if (chargesTotalPages() > 1) {
                         <div
-                          class="block sm:flex items-center justify-between mt-4 pt-3 border-t border-gray-100"
+                          class="block sm:flex items-center justify-between mt-4 pt-3 border-t border-border"
                         >
-                          <p class="text-xs text-gray-500 text-center mb-2">
+                          <p class="text-xs text-fg-subtle text-center mb-2">
                             {{ chargesPageInfo() }}
                           </p>
                           <div class="flex items-center gap-1">
                             <button
                               (click)="chargesPage.set(chargesPage() - 1)"
                               [disabled]="chargesPage() === 1"
-                              class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              class="p-1.5 rounded text-fg-subtle hover:text-fg hover:bg-bg-alt disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                             >
                               <svg
                                 class="w-4 h-4"
@@ -1549,11 +1308,11 @@
                               <button
                                 (click)="chargesPage.set(p)"
                                 class="w-7 h-7 text-xs rounded transition-colors"
-                                [class.bg-gray-900]="chargesPage() === p"
-                                [class.text-white]="chargesPage() === p"
+                                [class.bg-fg]="chargesPage() === p"
+                                [class.text-bg]="chargesPage() === p"
                                 [class.font-medium]="chargesPage() === p"
-                                [class.text-gray-600]="chargesPage() !== p"
-                                [class.hover:bg-gray-100]="chargesPage() !== p"
+                                [class.text-fg-muted]="chargesPage() !== p"
+                                [class.hover:bg-bg-alt]="chargesPage() !== p"
                               >
                                 {{ p }}
                               </button>
@@ -1561,7 +1320,7 @@
                             <button
                               (click)="chargesPage.set(chargesPage() + 1)"
                               [disabled]="chargesPage() === chargesTotalPages()"
-                              class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                              class="p-1.5 rounded text-fg-subtle hover:text-fg hover:bg-bg-alt disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                             >
                               <svg
                                 class="w-4 h-4"
@@ -1596,14 +1355,14 @@
     <ml-modal [closable]="true" (closeAction)="closeCancellationModal()">
       <div mlModalHeader>
         <h3
-          class="text-2xl leading-6 font-bold text-gray-900 mb-4"
+          class="text-2xl leading-6 font-bold text-fg mb-4"
           id="modal-title"
         >
           ¡{{ userName() }}, qué pena que te vayas!
         </h3>
       </div>
       <div class="mt-2">
-        <p class="text-base sm:text-lg text-gray-700 mb-4">
+        <p class="text-base sm:text-lg text-fg-muted mb-4">
           Cuéntanos por qué quieres cancelar tu suscripción:
         </p>
 
@@ -1621,7 +1380,7 @@
             />
             <label
               for="reason1"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Ya no quiero consumir creatina
             </label>
@@ -1640,7 +1399,7 @@
             />
             <label
               for="reason2"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Estoy experimentando problemas con la entrega
             </label>
@@ -1655,7 +1414,7 @@
             />
             <label
               for="reason3"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               No quiero una suscripción
             </label>
@@ -1672,7 +1431,7 @@
             />
             <label
               for="reason4"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               No me gusta el sabor de la creatina
             </label>
@@ -1689,7 +1448,7 @@
             />
             <label
               for="reason5"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               No estoy satisfecho/a con la calidad
             </label>
@@ -1708,7 +1467,7 @@
             />
             <label
               for="reason6"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Tengo suficientes creatina por ahora.
             </label>
@@ -1738,7 +1497,7 @@
     <ml-modal [closable]="true" (closeAction)="closePauseModal()">
       <div mlModalHeader>
         <h3
-          class="text-2xl leading-6 font-bold text-gray-900 my-6"
+          class="text-2xl leading-6 font-bold text-fg my-6"
           id="modal-title"
         >
           ¿Qué te parece tomar una pausa?
@@ -1746,7 +1505,7 @@
       </div>
 
       @if (directPauseFlow()) {
-        <p class="text-base sm:text-lg text-gray-700 mb-4">
+        <p class="text-base sm:text-lg text-fg-muted mb-4">
           Cuéntanos por qué quieres pausar tu suscripción:
         </p>
         <div class="mt-2 mb-6 space-y-3">
@@ -1761,7 +1520,7 @@
             />
             <label
               for="pauseReason1"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Estoy de viaje
             </label>
@@ -1777,7 +1536,7 @@
             />
             <label
               for="pauseReason2"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Se me acumuló creatina
             </label>
@@ -1793,7 +1552,7 @@
             />
             <label
               for="pauseReason3"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Por temas económicos
             </label>
@@ -1809,7 +1568,7 @@
             />
             <label
               for="pauseReason4"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Voy a dejar de entrenar por un tiempo
             </label>
@@ -1825,7 +1584,7 @@
             />
             <label
               for="pauseReason5"
-              class="ml-3 block text-sm font-medium text-gray-700"
+              class="ml-3 block text-sm font-medium text-fg-muted"
             >
               Otro motivo
             </label>
@@ -1833,7 +1592,7 @@
         </div>
       }
 
-      <p class="text-lg text-gray-700 mb-6">
+      <p class="text-lg text-fg-muted mb-6">
         ¿Por cuántos meses quieres pausar tu suscripción?
       </p>
 
@@ -1850,25 +1609,25 @@
             step="1"
             [value]="pauseDurationMonths()"
             (input)="updatePauseDuration($event)"
-            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-hover"
+            class="w-full h-2 bg-bg-alt rounded-lg appearance-none cursor-pointer accent-primary-hover"
           />
         </div>
-        <div class="flex justify-between text-xs text-gray-500">
+        <div class="flex justify-between text-xs text-fg-subtle">
           <span>1 mes</span>
           <span>3 meses</span>
         </div>
       </div>
 
-      <div class="bg-gray-50 p-4 rounded-md mb-6">
-        <h4 class="font-semibold text-gray-800 mb-2">Período de pausa:</h4>
-        <p class="font-medium text-gray-700">
+      <div class="bg-bg-alt p-4 rounded-md mb-6">
+        <h4 class="font-semibold text-fg mb-2">Período de pausa:</h4>
+        <p class="font-medium text-fg-muted">
           {{ pauseStartDate() }} al {{ pauseEndDateString() }}
         </p>
-        <h4 class="font-semibold text-gray-800 mt-4 mb-2">Próximo pago:</h4>
-        <p class="font-medium text-gray-700">{{ nextPaymentDateString() }}</p>
+        <h4 class="font-semibold text-fg mt-4 mb-2">Próximo pago:</h4>
+        <p class="font-medium text-fg-muted">{{ nextPaymentDateString() }}</p>
       </div>
 
-      <ul class="space-y-3 text-sm text-gray-700 list-disc pl-5">
+      <ul class="space-y-3 text-sm text-fg-muted list-disc pl-5">
         <li>
           Durante el período de pausa, tu credito se congelará. Puedes reactivar
           tu suscripción en cualquier momento.
@@ -1902,13 +1661,13 @@
     <ml-modal [closable]="true" (closeAction)="closeReactivationModal()">
       <div mlModalHeader>
         <h3
-          class="text-2xl leading-6 font-bold text-gray-900 mb-4"
+          class="text-2xl leading-6 font-bold text-fg mb-4"
           id="modal-title"
         >
           ¡Excelente decisión!
         </h3>
       </div>
-      <p class="text-lg text-gray-700">{{ reactivationMessage() }}</p>
+      <p class="text-lg text-fg-muted">{{ reactivationMessage() }}</p>
       <div mlModalFooter class="flex flex-row-reverse">
         <ml-button name="Cerrar" (click)="closeReactivationModal()"></ml-button>
       </div>
@@ -1919,7 +1678,7 @@
   @if (showFinalCancelModal()) {
     <ml-modal [closable]="true" (closeAction)="closeFinalCancelModal()">
       <div class="text-center">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+        <h3 class="text-2xl font-bold text-fg mb-4">
           ¡Oh no! Estás a punto de perder tus Magropuntos ahorrados...
         </h3>
 
@@ -1931,7 +1690,7 @@
             {{ userCredits() }}
             @if (isLoadingTier) {
               <div
-                class="w-6 h-6 mx-1 bg-gray-200 animate-pulse rounded-full"
+                class="w-6 h-6 mx-1 bg-bg-alt animate-pulse rounded-full"
               ></div>
             } @else {
               <img
@@ -1943,13 +1702,13 @@
           </p>
         </div>
 
-        <div class="bg-gray-50 p-4 rounded-md sm:mb-4 mx-auto max-w-md">
+        <div class="bg-bg-alt p-4 rounded-md sm:mb-4 mx-auto max-w-md">
           <p class="text-xl font-bold mb-2">Estás cerca de conseguirlo.</p>
-          <p class="text-sm text-gray-700">
+          <p class="text-sm text-fg-muted">
             Hay un producto exclusivo en la
             <a
               routerLink="/loyalty-webshop"
-              class="text-primary-hover hover:text-[#b76a5a] underline"
+              class="text-primary-hover hover:text-primary-dark underline"
               >Webshop →</a
             >
             esperándote...
@@ -1980,7 +1739,7 @@
   @if (showDiscountModal()) {
     <ml-modal [closable]="true" (closeAction)="closeDiscountModal()">
       <div class="text-center">
-        <h3 class="text-2xl font-bold text-gray-900 mb-6">
+        <h3 class="text-2xl font-bold text-fg mb-6">
           ¡Obtén un de descuento extra, en tu próxima creatina!
         </h3>
 
@@ -2005,7 +1764,7 @@
         </div>
 
         <div class="mb-6">
-          <p class="text-lg font-semibold text-gray-900 mb-2">
+          <p class="text-lg font-semibold text-fg mb-2">
             No pagarás
             {{
               subscription()?.subscriptionPlan?.price
@@ -2020,7 +1779,7 @@
             }}
             .
           </p>
-          <p class="text-gray-700 leading-relaxed">
+          <p class="text-fg-muted leading-relaxed">
             ¡Nos entristecería que te vayas! Por eso, tenemos una
             <strong>oferta especial</strong> para ti: Conserva tu suscripción y
             obtén un <strong>{{ ENV.cancelDiscout }}%</strong> de descuento
@@ -2053,27 +1812,27 @@
       bodyPadding="lg"
     >
       <div class="text-center">
-        <h3 class="text-xl font-bold text-gray-900 mb-6">
+        <h3 class="text-xl font-bold text-fg mb-6">
           Información importante
         </h3>
 
         <div
-          class="bg-gray-50 rounded-lg p-6 mx-auto max-w-md my-6 border-2 border-gray-300"
+          class="bg-bg-alt rounded-lg p-6 mx-auto max-w-md my-6 border-2 border-border-strong"
         >
           <div class="space-y-4">
-            <div class="bg-white rounded-lg p-4 border border-gray-200">
-              <p class="text-sm text-gray-600 mb-1">Tu precio actual</p>
+            <div class="bg-bg rounded-lg p-4 border border-border">
+              <p class="text-sm text-fg-muted mb-1">Tu precio actual</p>
               <div class="flex items-center justify-center gap-2">
-                <p class="text-3xl font-bold text-gray-900">
+                <p class="text-3xl font-bold text-fg">
                   {{ this.subscriptionPlan()?.price | currency: "S/" }}
                 </p>
-                <p class="text-sm text-gray-600">/mes</p>
+                <p class="text-sm text-fg-muted">/mes</p>
               </div>
             </div>
             <div class="flex justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-gray-400"
+                class="h-8 w-8 text-fg-subtle"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -2086,27 +1845,27 @@
                 />
               </svg>
             </div>
-            <div class="bg-white rounded-lg p-4 border-2 border-gray-900">
-              <p class="text-sm text-gray-600 mb-1">Precio al resuscribirte</p>
+            <div class="bg-bg rounded-lg p-4 border-2 border-fg">
+              <p class="text-sm text-fg-muted mb-1">Precio al resuscribirte</p>
               <div class="flex items-center justify-center gap-2">
-                <p class="text-3xl font-bold text-gray-900">
+                <p class="text-3xl font-bold text-fg">
                   {{ ENV.precioCreatinaSubscription | currency: "S/" }}
                 </p>
-                <p class="text-sm text-gray-600">/mes</p>
+                <p class="text-sm text-fg-muted">/mes</p>
               </div>
             </div>
           </div>
         </div>
 
         <div class="text-left mb-6 space-y-3">
-          <p class="text-gray-700 leading-relaxed">
+          <p class="text-fg-muted leading-relaxed">
             Si cancelas tu suscripción ahora y decides volver más adelante,
             <span class="font-semibold"
               >el precio de tu suscripción será de
               {{ ENV.precioCreatinaSubscription | currency: "S/" }} al mes</span
             >.
           </p>
-          <p class="text-gray-700 leading-relaxed">
+          <p class="text-fg-muted leading-relaxed">
             Este es el precio regular actual para nuevos suscriptores. Tu precio
             especial de
             {{ this.subscriptionPlan()?.price | currency: "S/" }} solo está
@@ -2114,7 +1873,7 @@
           </p>
         </div>
 
-        <div class="bg-white border-l-4 border-primary-hover p-4 rounded">
+        <div class="bg-bg border-l-4 border-primary-hover p-4 rounded">
           <div class="flex gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -2128,7 +1887,7 @@
                 clip-rule="evenodd"
               />
             </svg>
-            <p class="text-xs text-gray-700 leading-relaxed">
+            <p class="text-xs text-fg-muted leading-relaxed">
               <span class="font-semibold"
                 >¿Prefieres mantener tu precio especial?</span
               >
@@ -2160,7 +1919,7 @@
       bodyPadding="lg"
     >
       <div class="text-center">
-        <h3 class="text-xl font-bold text-gray-900 mb-6">
+        <h3 class="text-xl font-bold text-fg mb-6">
           ¿Estás seguro de que quieres cancelar tu suscripción?
         </h3>
 
@@ -2184,12 +1943,12 @@
         </div>
 
         <div class="text-left mb-6">
-          <h4 class="font-semibold text-gray-900 mb-3">
+          <h4 class="font-semibold text-fg mb-3">
             No queremos que pierdas:
           </h4>
-          <ul class="space-y-1 text-sm sm:text-base sm:space-y-2 text-gray-700">
+          <ul class="space-y-1 text-sm sm:text-base sm:space-y-2 text-fg-muted">
             <li class="flex items-center">
-              <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+              <span class="w-2 h-2 bg-border-strong rounded-full mr-3"></span>
               <span
                 >Tus
                 <strong>{{ userCredits() }} Magropuntos</strong>
@@ -2198,7 +1957,7 @@
             </li>
             @if (!subscription()?.discount) {
               <li class="flex items-center">
-                <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+                <span class="w-2 h-2 bg-border-strong rounded-full mr-3"></span>
                 <span>
                   El <strong>{{ ENV.cancelDiscout }}% de descuento</strong> en
                   tu próxima creatina.</span
@@ -2206,13 +1965,13 @@
               </li>
             }
             <li class="flex items-center">
-              <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+              <span class="w-2 h-2 bg-border-strong rounded-full mr-3"></span>
               <span
                 >Tu <strong>precio especial</strong> con el que empezaste.</span
               >
             </li>
             <li class="flex items-center">
-              <span class="w-2 h-2 bg-gray-400 rounded-full mr-3"></span>
+              <span class="w-2 h-2 bg-border-strong rounded-full mr-3"></span>
               <span
                 >El acceso a nuestros
                 <strong>productos exclusivos</strong>.</span
@@ -2223,11 +1982,11 @@
 
         @if (lastPaymentDate() !== "") {
           <div class="text-left mb-6 space-y-4">
-            <p class="text-gray-700">
+            <p class="text-fg-muted">
               Tu suscripción se cancelara después del último pago.
             </p>
             <div class="space-y-2">
-              <p class="text-gray-900 font-semibold">
+              <p class="text-fg font-semibold">
                 Último pago: {{ lastPaymentDate() }}
               </p>
             </div>
@@ -2235,12 +1994,12 @@
         }
         <div class="text-left mb-6">
           @if (subscription()!.status === statusEnum.TRIAL) {
-            <p class="text-gray-700 text-sm leading-relaxed">
+            <p class="text-fg-muted text-sm leading-relaxed">
               Aún estás en período de prueba y tu suscripción será cancelada
               inmediatamente.
             </p>
           } @else {
-            <p class="text-gray-700 text-sm leading-relaxed">
+            <p class="text-fg-muted text-sm leading-relaxed">
               Puedes volver a activar tu suscripción en cualquier momento desde
               tu cuenta.
             </p>
@@ -2268,38 +2027,25 @@
   @if (showSuccessCancellationModal()) {
     <ml-modal>
       <div class="text-center">
-        <h3 class="text-2xl font-bold text-gray-900 mb-8">
+        <h3 class="text-2xl font-bold text-fg mb-8">
           Membresía cancelada
         </h3>
 
         <div class="mx-auto max-w-xs my-6 flex items-center justify-center">
           <div class="bg-green-500 rounded-full p-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-12 w-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="3"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <ml-icon name="check" class="h-12 w-12 text-white" />
           </div>
         </div>
 
         <div class="text-center mb-6">
           @if (lastPaymentDate() !== "") {
-            <p class="text-gray-700 text-sm leading-relaxed mb-6">
+            <p class="text-fg-muted text-sm leading-relaxed mb-6">
               Tu suscripción se cancelará inmediatamente después de tu último
               pago. Gracias por haber sido miembro de Magrolabs. ¡Esperamos que
               hayas disfrutado de nuestros productos!
             </p>
           } @else {
-            <p class="text-gray-700 text-sm leading-relaxed mb-6">
+            <p class="text-fg-muted text-sm leading-relaxed mb-6">
               Tu suscripción se cancelará inmediatamente. Gracias por haber sido
               miembro de Magrolabs. ¡Esperamos que hayas disfrutado de nuestros
               productos!
@@ -2308,16 +2054,16 @@
         </div>
 
         <div class="text-left mb-6 space-y-4">
-          <p class="text-gray-900 font-bold text-lg">{{ userName() }}</p>
+          <p class="text-fg font-bold text-lg">{{ userName() }}</p>
           <div class="space-y-1">
-            <p class="text-gray-900 font-bold text-lg">
+            <p class="text-fg font-bold text-lg">
               {{
                 subscriptionPlan()?.description ||
                   "Plan de
             Suscripción"
               }}
             </p>
-            <p class="text-gray-600 text-sm">
+            <p class="text-fg-muted text-sm">
               Suscripción {{ getPeriodText(subscriptionPlan()?.period) }}
             </p>
           </div>
@@ -2325,8 +2071,8 @@
         @if (lastPaymentDate() !== "") {
           <div class="text-left mb-6 space-y-3">
             <div>
-              <p class="text-gray-700 font-medium">Último pago:</p>
-              <p class="text-gray-900 font-bold">{{ lastPaymentDate() }}</p>
+              <p class="text-fg-muted font-medium">Último pago:</p>
+              <p class="text-fg font-bold">{{ lastPaymentDate() }}</p>
             </div>
           </div>
         }
@@ -2361,26 +2107,26 @@
 
       <div mlModalHeader>
         <h3
-          class="text-2xl leading-6 font-bold text-gray-900 mb-4"
+          class="text-2xl leading-6 font-bold text-fg mb-4"
           id="modal-title"
         >
           ¿Quieres pausar tu suscripción?
         </h3>
       </div>
 
-      <p class="text-base sm:text-lg text-gray-700 mb-4">
+      <p class="text-base sm:text-lg text-fg-muted mb-4">
         Para pausar tu suscripción y no perder todos tus beneficios como:
         Magropuntos o precios especiales, contáctanos por WhatsApp y te
         ayudaremos con el proceso de forma rápida y sencilla.
       </p>
 
-      <div class="bg-gray-50 p-4 rounded-md mb-4 text-left">
-        <p class="text-sm text-gray-600 mb-2">
+      <div class="bg-bg-alt p-4 rounded-md mb-4 text-left">
+        <p class="text-sm text-fg-muted mb-2">
           <span class="font-semibold"
             >Nuestro equipo está disponible para:</span
           >
         </p>
-        <ul class="space-y-2 text-sm text-gray-700 list-disc pl-5">
+        <ul class="space-y-2 text-sm text-fg-muted list-disc pl-5">
           <li>Pausar tu suscripción por el tiempo que necesites</li>
           <li>Resolver cualquier duda sobre tu cuenta</li>
           <li>Ayudarte a encontrar la mejor opción para ti</li>

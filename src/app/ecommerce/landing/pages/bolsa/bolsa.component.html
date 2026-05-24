@@ -4,10 +4,10 @@
   <div class="sm:px-2 sm:py-4 py-3 justify-center self-center flex sm:flex-nowrap flex-wrap">
     <div class=" shadow-xl mx-auto sm:rounded-3xl bg-surface overflow-hidden flex items-end justify-center relative">
       <div class="w-full h-full">
-        <div class="bg-white">
+        <div class="bg-bg">
           <div class="max-w-2xl mx-auto pt-4 sm:pt-8 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:w-[80vw] lg:px-8">
             <h1
-              class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl pb-8 border-b-4 border-primary-hover w-full pl-16 -ml-16">
+              class="text-3xl font-extrabold tracking-tight text-fg sm:text-4xl pb-8 border-b-4 border-primary-hover w-full pl-16 -ml-16">
               Carrito de compras.</h1>
             <div class="mt-4">
               <ml-breadcrumb [items]="breadcrumbItems" />
@@ -29,21 +29,21 @@
                 <div class="px-4 py-6 sm:p-6 lg:p-8">
                   @if ($shoppingCart | async ; as cart) {
                   @if(cart.totalItems > 0) {
-                  <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Resumen de orden</h2>
+                  <h2 id="summary-heading" class="text-lg font-medium text-fg">Resumen de orden</h2>
 
                   <dl class="mt-6 space-y-4">
                     <div class="flex items-center justify-between">
-                      <dt class="text-sm text-gray-600">Subtotal</dt>
-                      <dd class="text-sm font-medium text-gray-900">
+                      <dt class="text-sm text-fg-muted">Subtotal</dt>
+                      <dd class="text-sm font-medium text-fg">
                         {{ shoppingCart.subTotal | currency : "S/ " }}
                       </dd>
                     </div>
                     <!-- cuando se implemente envio e impuesto -->
                     @if (false) {
-                    <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt class="flex items-center text-sm text-gray-600">
+                    <div class="border-t border-border pt-4 flex items-center justify-between">
+                      <dt class="flex items-center text-sm text-fg-muted">
                         <span>Shipping estimate</span>
-                        <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
+                        <a href="#" class="ml-2 flex-shrink-0 text-fg-subtle hover:text-fg-subtle">
                           <span class="sr-only">Learn more about how shipping is calculated</span>
                           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
@@ -53,12 +53,12 @@
                           </svg>
                         </a>
                       </dt>
-                      <dd class="text-sm font-medium text-gray-900">$5.00</dd>
+                      <dd class="text-sm font-medium text-fg">$5.00</dd>
                     </div>
-                    <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt class="flex text-sm text-gray-600">
+                    <div class="border-t border-border pt-4 flex items-center justify-between">
+                      <dt class="flex text-sm text-fg-muted">
                         <span>Tax estimate</span>
-                        <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
+                        <a href="#" class="ml-2 flex-shrink-0 text-fg-subtle hover:text-fg-subtle">
                           <span class="sr-only">Learn more about how tax is calculated</span>
                           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
@@ -68,20 +68,20 @@
                           </svg>
                         </a>
                       </dt>
-                      <dd class="text-sm font-medium text-gray-900">$8.32</dd>
+                      <dd class="text-sm font-medium text-fg">$8.32</dd>
                     </div>
                     }
 
-                    <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt class="text-base font-medium text-gray-900">Orden total</dt>
-                      <dd class="text-base font-medium text-gray-900">
+                    <div class="border-t border-border pt-4 flex items-center justify-between">
+                      <dt class="text-base font-medium text-fg">Orden total</dt>
+                      <dd class="text-base font-medium text-fg">
                         {{ shoppingCart.subTotal | currency : "S/ " }}
                       </dd>
                     </div>
                   </dl>
                   }
                   @else{
-                  <h2 class="text-md font-medium text-gray-800">Tu carrito esta vacio.</h2>
+                  <h2 class="text-md font-medium text-fg">Tu carrito esta vacio.</h2>
                   }
                   }
                   <div class="flex flex-col mt-6">

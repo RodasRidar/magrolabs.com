@@ -8,11 +8,11 @@
     Si no, cae al fallback minimalista de abajo.
 -->
 @if (order(); as ord) {
-<div class="max-w-3xl sm:mx-auto px-1 sm:px-4 max-sm:-mt-14 sm:pt-6 pb-16 text-gray-800">
+<div class="max-w-3xl sm:mx-auto px-1 sm:px-4 max-sm:-mt-14 sm:pt-6 pb-16 text-fg">
     <!-- Hero de confirmación -->
     <ml-alert type="success" class="my-6 sm:mb-6 ">
         <div class="flex flex-col gap-2">
-            <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
+            <h1 class="text-2xl sm:text-3xl font-black text-fg">
                 ¡Pedido confirmado{{ clientName ? ', ' + clientName : '' }}!
             </h1>
         </div>
@@ -20,16 +20,16 @@
 
     <!-- Resumen de items -->
     <ml-card padding="md" extraClass="mb-5">
-        <h2 class="text-lg font-bold mb-4 text-gray-900">Resumen de tu pedido</h2>
-        <ul class="divide-y divide-gray-200">
+        <h2 class="text-lg font-bold mb-4 text-fg">Resumen de tu pedido</h2>
+        <ul class="divide-y divide-border">
             @for (item of ord.orderItems; track item.id) {
             <li class="flex items-center gap-2 sm:gap-4 py-3">
                 @if (productImage(item)) {
                 <img [src]="productImage(item)" [alt]="item.product?.name"
-                    class="w-16 h-16 rounded-lg object-cover bg-white shrink-0" />
+                    class="w-16 h-16 rounded-lg object-cover bg-bg shrink-0" />
                 } @else {
-                <div class="w-16 h-16 rounded-lg bg-white flex items-center justify-center shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-400" fill="none"
+                <div class="w-16 h-16 rounded-lg bg-bg flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-fg-subtle" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -37,8 +37,8 @@
                 </div>
                 }
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-gray-900">{{ item.product?.name ?? 'Producto' }}</p>
-                    <p class="text-xs mt-2 text-gray-600">Cantidad: {{ item.quantity }}</p>
+                    <p class="text-sm font-semibold text-fg">{{ item.product?.name ?? 'Producto' }}</p>
+                    <p class="text-xs mt-2 text-fg-muted">Cantidad: {{ item.quantity }}</p>
                 </div>
                 <div class="text-right">
                     <p class="text-sm font-semibold">S/ {{ ((item.unit_price || item.price || 0) * item.quantity) | number:
@@ -48,9 +48,9 @@
             }
         </ul>
 
-        <div class="border-t border-gray-200 mt-4 pt-4 space-y-1.5 text-sm">
+        <div class="border-t border-border mt-4 pt-4 space-y-1.5 text-sm">
             <div class="flex justify-between">
-                <span class="text-gray-600">Subtotal</span>
+                <span class="text-fg-muted">Subtotal</span>
                 <span class="font-medium">S/ {{ subtotal() | number: '1.2-2' }}</span>
             </div>
             @if (discountAmount() > 0) {
@@ -62,7 +62,7 @@
             </div>
             }
             <div class="flex justify-between">
-                <span class="text-gray-600">Envío</span>
+                <span class="text-fg-muted">Envío</span>
                 <span class="font-medium">
                     @if (ord.shipping_cost && ord.shipping_cost > 0) {
                     S/ {{ ord.shipping_cost | number: '1.2-2' }}
@@ -71,7 +71,7 @@
                     }
                 </span>
             </div>
-            <div class="flex justify-between text-base font-bold pt-2 border-t border-gray-200 mt-2">
+            <div class="flex justify-between text-base font-bold pt-2 border-t border-border mt-2">
                 <span>Total pagado</span>
                 <span>S/ {{ ord.total_amount | number: '1.2-2' }}</span>
             </div>
@@ -81,26 +81,26 @@
     <!-- Dirección + Método de pago -->
     <div class="grid sm:grid-cols-2 gap-4 mb-5">
         <ml-card padding="md" extraClass="h-full">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dirección de envío</h3>
+            <h3 class="text-sm font-semibold text-fg-subtle uppercase tracking-wide mb-2">Dirección de envío</h3>
             @if (ord.address; as addr) {
-            <p class="text-sm text-gray-700 mt-1">
+            <p class="text-sm text-fg-muted mt-1">
                 {{ addr.avenue }}@if (addr.number) { {{ ' ' + addr.number }} }
             </p>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-fg-muted">
                 {{ addr.district }}, {{ addr.province }}, {{ addr.department }}
             </p>
             @if (addr.reference) {
-            <p class="text-xs text-gray-500 mt-2 italic">"{{ addr.reference }}"</p>
+            <p class="text-xs text-fg-subtle mt-2 italic">"{{ addr.reference }}"</p>
             }
             } @else {
-            <p class="text-sm text-gray-500">Te contactaremos para confirmar la dirección.</p>
+            <p class="text-sm text-fg-subtle">Te contactaremos para confirmar la dirección.</p>
             }
         </ml-card>
 
         <ml-card padding="md" extraClass="h-full">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Método de pago</h3>
-            <p class="text-sm text-gray-700">{{ paymentMethodLabel(ord.payment_method) }}</p>
-            <p class="text-sm text-gray-700 mt-1">
+            <h3 class="text-sm font-semibold text-fg-subtle uppercase tracking-wide mb-2">Método de pago</h3>
+            <p class="text-sm text-fg-muted">{{ paymentMethodLabel(ord.payment_method) }}</p>
+            <p class="text-sm text-fg-muted mt-1">
                 Pagado el {{ ord.order_date | date: 'longDate' }}
             </p>
         </ml-card>
@@ -123,11 +123,11 @@
 -->
 @if (!order() && !loadingOrder()) {
 <div class="px-4 pt-4 mx-auto ">
-    <div class="text-gray-700  md:mb-0">
+    <div class="text-fg-muted  md:mb-0">
         <div class="relative mt-7 mb-2 lg:mt-9">
 
             @if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoExito.parrafo1}}</p>
@@ -136,7 +136,7 @@
             <p class="text-base mt-5">{{parrafoExito.parrafo3}}</p>
             }
             @else if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Hola {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoError.parrafo1}}</p>
@@ -144,7 +144,7 @@
 
             <p class="text-base mt-5">{{parrafoError.parrafo3}}</p>
             }@else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITH_REGISTRATION) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
 
@@ -154,7 +154,7 @@
             <p class="text-base mt-5">{{parrafoCompraConRegistroExito.parrafo3}}</p>
             }
             @else if (status === confirmationStatusEnum.ONE_PURCHASE_SUCCESS_WITHOUT_REGISTRATION) {
-            <h1 class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
+            <h1 class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12 px-1 sm:px-4 max-sm:-mt-14 sm:pt-6">
                 ¡Felicidades {{clientName}}!
             </h1>
             <p class="text-xl font-extrabold mt-5">{{parrafoCompraSinRegistroExito.parrafo1}}</p>
@@ -169,21 +169,21 @@
 <app-information [information]="informationExitoList" class="mt-5" />
 
 <!-- ¡Ahora eres miembro de Magrolabs!: centralizado desde el modal -->
-<div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
-    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Ahora eres miembro de Magrolabs!</h2>
-    <div class="border-b border-gray-300 mb-4"></div>
-    <p class="text-sm text-gray-600 mb-5 text-pretty">
+<div class="bg-bg-alt rounded-xl p-5 mt-6 mx-4">
+    <h2 class="text-base font-extrabold text-fg mb-1">¡Ahora eres miembro de Magrolabs!</h2>
+    <div class="border-b border-border-strong mb-4"></div>
+    <p class="text-sm text-fg-muted mb-5 text-pretty">
          Desde hoy, recibirás {{ENV.creditoRegaloPorCompraMes}} MP (Magropuntos) con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
         No tienes que hacer nada más. 
     </p>
-    <p class="text-sm font-extrabold text-gray-900 mb-3">Refiere y gana MP extra:</p>
+    <p class="text-sm font-extrabold text-fg mb-3">Refiere y gana MP extra:</p>
     <div class="space-y-3 mb-5">
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
                 class="shrink-0">
                 <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
             </svg>
-            <p class="text-xs text-gray-600">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
+            <p class="text-xs text-fg-muted">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
         </div>
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -191,7 +191,7 @@
                 <path
                     d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
             </svg>
-            <p class="text-xs text-gray-600">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
+            <p class="text-xs text-fg-muted">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
         </div>
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -199,13 +199,13 @@
                 <path
                     d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
             </svg>
-                    <p class="text-xs text-gray-600">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} MP.</p>
+                    <p class="text-xs text-fg-muted">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} MP.</p>
         </div>
     </div>
     <div class="grid grid-cols-10">
         <div class="col-span-8">
             <input type="text" [value]="urlShared" readonly disabled
-                class="text-sm block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" />
+                class="text-sm block w-full rounded-e-none rounded-md border-0 text-fg shadow-sm ring-1 ring-inset ring-border-strong" />
         </div>
         <div class="col-span-2">
             <button type="button" (click)="copyShareUrl()"
@@ -228,21 +228,21 @@
 @else if (status === confirmationStatusEnum.SUBSCRIPTION_SUCCESS_OUTSIDE_LIMA) {
 <app-information [information]="informationErrorList" class="mt-5" />
 <!-- ¡Ahora eres miembro de Magrolabs!: centralizado desde el modal -->
-<div class="bg-[#e9e9e9] rounded-xl p-5 mt-6 mx-4">
-    <h2 class="text-base font-extrabold text-gray-900 mb-1">¡Ahora eres miembro de Magrolabs!</h2>
-    <div class="border-b border-gray-300 mb-4"></div>
-    <p class="text-sm text-gray-600 mb-5 text-pretty">
+<div class="bg-bg-alt rounded-xl p-5 mt-6 mx-4">
+    <h2 class="text-base font-extrabold text-fg mb-1">¡Ahora eres miembro de Magrolabs!</h2>
+    <div class="border-b border-border-strong mb-4"></div>
+    <p class="text-sm text-fg-muted mb-5 text-pretty">
          Desde hoy, recibirás {{ENV.creditoRegaloPorCompraMes}} MP (Magropuntos) con cada entrega mensual. Con esto, ahorras para artículos exclusivos de nuestra Webshop.
         No tienes que hacer nada más. 
     </p>
-    <p class="text-sm font-extrabold text-gray-900 mb-3">Refiere y gana MP extra:</p>
+    <p class="text-sm font-extrabold text-fg mb-3">Refiere y gana MP extra:</p>
     <div class="space-y-3 mb-5">
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
                 class="shrink-0">
                 <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
             </svg>
-            <p class="text-xs text-gray-600">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
+            <p class="text-xs text-fg-muted">Invita a un amigo(a) a probar nuestra creatina a través de tu enlace.</p>
         </div>
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -250,7 +250,7 @@
                 <path
                     d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
             </svg>
-            <p class="text-xs text-gray-600">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
+            <p class="text-xs text-fg-muted">Tu amigo(a) se suscribe y recibe su creatina Magrolabs.</p>
         </div>
         <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"
@@ -258,13 +258,13 @@
                 <path
                     d="M160-80v-440H80v-240h208q-5-9-6.5-19t-1.5-21q0-50 35-85t85-35q23 0 43 8.5t37 23.5q17-16 37-24t43-8q50 0 85 35t35 85q0 11-2 20.5t-6 19.5h208v240h-80v440H160Zm400-760q-17 0-28.5 11.5T520-800q0 17 11.5 28.5T560-760q17 0 28.5-11.5T600-800q0-17-11.5-28.5T560-840Zm-200 40q0 17 11.5 28.5T400-760q17 0 28.5-11.5T440-800q0-17-11.5-28.5T400-840q-17 0-28.5 11.5T360-800ZM160-680v80h280v-80H160Zm280 520v-360H240v360h200Zm80 0h200v-360H520v360Zm280-440v-80H520v80h280Z" />
             </svg>
-            <p class="text-xs text-gray-600">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} MP.</p>
+            <p class="text-xs text-fg-muted">Finalmente ambos ganan {{ENV.creditoRegaloPorCompraMes}} MP.</p>
         </div>
     </div>
     <div class="grid grid-cols-10">
         <div class="col-span-8">
             <input type="text" [value]="urlShared" readonly disabled
-                class="text-sm block w-full rounded-e-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" />
+                class="text-sm block w-full rounded-e-none rounded-md border-0 text-fg shadow-sm ring-1 ring-inset ring-border-strong" />
         </div>
         <div class="col-span-2">
             <button type="button" (click)="copyShareUrl()"

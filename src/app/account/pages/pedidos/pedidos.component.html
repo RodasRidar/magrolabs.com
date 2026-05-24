@@ -1,50 +1,50 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="mb-6">
-    <h1 class="text-3xl font-bold leading-tight text-gray-900">Pedidos.</h1>
+    <h1 class="text-3xl font-bold leading-tight text-fg">Pedidos.</h1>
   </div>
 
   <!-- Filtros desktop (≥ lg) -->
   @if (!isLoading() && pedidos().length > 0) {
-    <div class="hidden lg:block bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div class="hidden lg:block bg-bg border border-border rounded-lg p-4 mb-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div>
-          <label for="filtroEstado" class="block text-xs font-medium text-gray-600 mb-1">Estado</label>
+          <label for="filtroEstado" class="block text-xs font-medium text-fg-muted mb-1">Estado</label>
           <select
             id="filtroEstado"
             [ngModel]="filterStatus()"
             (ngModelChange)="filterStatus.set($event)"
-            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+            class="w-full border border-border-strong rounded-md px-2 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
             @for (option of statusOptions(); track option.value) {
               <option [ngValue]="option.value">{{ option.label }}</option>
             }
           </select>
         </div>
         <div>
-          <label for="filtroFechaDesde" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+          <label for="filtroFechaDesde" class="block text-xs font-medium text-fg-muted mb-1">Desde</label>
           <input
             id="filtroFechaDesde"
             type="date"
             [ngModel]="filterDateFrom()"
             (ngModelChange)="filterDateFrom.set($event)"
-            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+            class="w-full border border-border-strong rounded-md px-2 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
         <div>
-          <label for="filtroFechaHasta" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+          <label for="filtroFechaHasta" class="block text-xs font-medium text-fg-muted mb-1">Hasta</label>
           <input
             id="filtroFechaHasta"
             type="date"
             [ngModel]="filterDateTo()"
             (ngModelChange)="filterDateTo.set($event)"
-            class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+            class="w-full border border-border-strong rounded-md px-2 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
         @if (showProductFilter()) {
           <div>
-            <label for="filtroProducto" class="block text-xs font-medium text-gray-600 mb-1">Producto</label>
+            <label for="filtroProducto" class="block text-xs font-medium text-fg-muted mb-1">Producto</label>
             <select
               id="filtroProducto"
               [ngModel]="filterProductId()"
               (ngModelChange)="filterProductId.set($event)"
-              class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+              class="w-full border border-border-strong rounded-md px-2 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Todos</option>
               @for (option of productOptions(); track option.id) {
                 <option [value]="option.id">{{ option.name }}</option>
@@ -54,8 +54,8 @@
         }
       </div>
       @if (hasActiveFilters()) {
-        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-          <span class="text-xs text-gray-500">
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-border">
+          <span class="text-xs text-fg-subtle">
             {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
           </span>
           <button
@@ -76,15 +76,13 @@
           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
           [class.border-primary]="activeStatusCount() > 0"
           [class.text-primary]="activeStatusCount() > 0"
-          [class.border-gray-300]="activeStatusCount() === 0"
-          [class.text-gray-600]="activeStatusCount() === 0">
+          [class.border-border-strong]="activeStatusCount() === 0"
+          [class.text-fg-muted]="activeStatusCount() === 0">
           Estado
           @if (activeStatusCount() > 0) {
             <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeStatusCount() }}</span>
           } @else {
-            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            <ml-icon name="chevron-down" class="h-3 w-3" />
           }
         </button>
 
@@ -93,15 +91,13 @@
           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
           [class.border-primary]="activeDateCount() > 0"
           [class.text-primary]="activeDateCount() > 0"
-          [class.border-gray-300]="activeDateCount() === 0"
-          [class.text-gray-600]="activeDateCount() === 0">
+          [class.border-border-strong]="activeDateCount() === 0"
+          [class.text-fg-muted]="activeDateCount() === 0">
           Fecha
           @if (activeDateCount() > 0) {
             <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeDateCount() }}</span>
           } @else {
-            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            <ml-icon name="chevron-down" class="h-3 w-3" />
           }
         </button>
 
@@ -111,15 +107,13 @@
             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm transition-colors whitespace-nowrap"
             [class.border-primary]="activeProductCount() > 0"
             [class.text-primary]="activeProductCount() > 0"
-            [class.border-gray-300]="activeProductCount() === 0"
-            [class.text-gray-600]="activeProductCount() === 0">
+            [class.border-border-strong]="activeProductCount() === 0"
+            [class.text-fg-muted]="activeProductCount() === 0">
             Producto
             @if (activeProductCount() > 0) {
               <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold">{{ activeProductCount() }}</span>
             } @else {
-              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
+              <ml-icon name="chevron-down" class="h-3 w-3" />
             }
           </button>
         }
@@ -127,7 +121,7 @@
 
       @if (hasActiveFilters()) {
         <div class="flex items-center justify-between text-xs px-1">
-          <span class="text-gray-500">
+          <span class="text-fg-subtle">
             {{ pedidosFiltrados().length }} de {{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }}
           </span>
           <button type="button" (click)="limpiarFiltros()"
@@ -146,64 +140,64 @@
         <div class="sheet-backdrop absolute inset-0 bg-black/40"></div>
 
         <!-- Panel -->
-        <div class="sheet-panel relative bg-white rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
+        <div class="sheet-panel relative bg-bg rounded-t-2xl px-6 pt-5 pb-10 shadow-xl"
           (click)="$event.stopPropagation()">
 
           <!-- Handle -->
-          <div class="mx-auto w-10 h-1 rounded-full bg-gray-200 mb-5"></div>
+          <div class="mx-auto w-10 h-1 rounded-full bg-bg-alt mb-5"></div>
 
           @if (activeMobileFilter() === 'status') {
-            <h3 class="text-base font-semibold text-gray-900 mb-6">Estado</h3>
+            <h3 class="text-base font-semibold text-fg mb-6">Estado</h3>
             <div class="space-y-1 max-h-[60vh] overflow-y-auto">
               @for (option of statusOptions(); track option.value) {
-                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
-                  <span class="text-sm text-gray-700">{{ option.label }}</span>
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-border last:border-0">
+                  <span class="text-sm text-fg-muted">{{ option.label }}</span>
                   <input type="radio" name="filterStatus" [value]="option.value"
                     [checked]="filterStatus() === option.value"
                     (change)="filterStatus.set(option.value)"
-                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                    class="h-5 w-5 border-border-strong text-primary focus:ring-primary">
                 </label>
               }
             </div>
           }
 
           @if (activeMobileFilter() === 'date') {
-            <h3 class="text-base font-semibold text-gray-900 mb-6">Fecha</h3>
+            <h3 class="text-base font-semibold text-fg mb-6">Fecha</h3>
             <div class="space-y-4">
               <div>
-                <label for="filtroFechaDesdeMobile" class="block text-xs font-medium text-gray-600 mb-1">Desde</label>
+                <label for="filtroFechaDesdeMobile" class="block text-xs font-medium text-fg-muted mb-1">Desde</label>
                 <input id="filtroFechaDesdeMobile" type="date"
                   [ngModel]="filterDateFrom()"
                   (ngModelChange)="filterDateFrom.set($event)"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                  class="w-full border border-border-strong rounded-md px-3 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
               </div>
               <div>
-                <label for="filtroFechaHastaMobile" class="block text-xs font-medium text-gray-600 mb-1">Hasta</label>
+                <label for="filtroFechaHastaMobile" class="block text-xs font-medium text-fg-muted mb-1">Hasta</label>
                 <input id="filtroFechaHastaMobile" type="date"
                   [ngModel]="filterDateTo()"
                   (ngModelChange)="filterDateTo.set($event)"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                  class="w-full border border-border-strong rounded-md px-3 py-2 text-sm bg-bg focus:outline-none focus:ring-2 focus:ring-primary">
               </div>
             </div>
           }
 
           @if (activeMobileFilter() === 'product') {
-            <h3 class="text-base font-semibold text-gray-900 mb-6">Producto</h3>
+            <h3 class="text-base font-semibold text-fg mb-6">Producto</h3>
             <div class="space-y-1 max-h-[60vh] overflow-y-auto">
-              <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100">
-                <span class="text-sm text-gray-700">Todos</span>
+              <label class="flex items-center justify-between cursor-pointer py-3 border-b border-border">
+                <span class="text-sm text-fg-muted">Todos</span>
                 <input type="radio" name="filterProduct" value=""
                   [checked]="filterProductId() === ''"
                   (change)="filterProductId.set('')"
-                  class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                  class="h-5 w-5 border-border-strong text-primary focus:ring-primary">
               </label>
               @for (option of productOptions(); track option.id) {
-                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-100 last:border-0">
-                  <span class="text-sm text-gray-700">{{ option.name }}</span>
+                <label class="flex items-center justify-between cursor-pointer py-3 border-b border-border last:border-0">
+                  <span class="text-sm text-fg-muted">{{ option.name }}</span>
                   <input type="radio" name="filterProduct" [value]="option.id"
                     [checked]="filterProductId() === option.id"
                     (change)="filterProductId.set(option.id)"
-                    class="h-5 w-5 border-gray-300 text-primary focus:ring-primary">
+                    class="h-5 w-5 border-border-strong text-primary focus:ring-primary">
                 </label>
               }
             </div>
@@ -212,13 +206,10 @@
           <!-- Acciones -->
           <div class="flex items-center justify-between mt-8">
             <button type="button" (click)="limpiarFiltros()"
-              class="text-sm text-gray-500 hover:text-gray-900 underline underline-offset-2">
+              class="text-sm text-fg-subtle hover:text-fg underline underline-offset-2">
               Limpiar filtros
             </button>
-            <button type="button" (click)="closeMobileFilter()"
-              class="px-6 py-2.5 rounded-full bg-gray-800 text-white text-sm font-medium hover:bg-gray-700 transition-colors">
-              Mostrar
-            </button>
+            <ml-button (click)="closeMobileFilter()" name="Mostrar" type="primary"></ml-button>
           </div>
         </div>
       </div>
@@ -230,26 +221,26 @@
   <div class="space-y-6 animate-pulse">
     @for (i of [1, 2, 3]; track i) {
     <ml-card>
-      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <div class="h-5 bg-gray-300 rounded w-40"></div>
-        <div class="h-5 bg-gray-300 rounded w-24"></div>
+      <div class="bg-bg-alt px-6 py-4 border-b border-border flex justify-between items-center">
+        <div class="h-5 bg-border-strong rounded w-40"></div>
+        <div class="h-5 bg-border-strong rounded w-24"></div>
       </div>
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="h-4 bg-gray-300 rounded w-20 mb-3"></div>
+      <div class="px-6 py-4 border-b border-border">
+        <div class="h-4 bg-border-strong rounded w-20 mb-3"></div>
         <div class="flex items-center gap-4">
-          <div class="w-16 h-16 bg-gray-300 rounded-md flex-shrink-0"></div>
+          <div class="w-16 h-16 bg-border-strong rounded-md flex-shrink-0"></div>
           <div class="flex-1 space-y-2">
-            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-            <div class="h-3 bg-gray-300 rounded w-1/4"></div>
+            <div class="h-4 bg-border-strong rounded w-1/2"></div>
+            <div class="h-3 bg-border-strong rounded w-1/4"></div>
           </div>
         </div>
       </div>
       <div class="px-6 py-4 flex justify-between items-center">
         <div class="space-y-2">
-          <div class="h-4 bg-gray-300 rounded w-24"></div>
-          <div class="h-6 bg-gray-300 rounded w-32"></div>
+          <div class="h-4 bg-border-strong rounded w-24"></div>
+          <div class="h-6 bg-border-strong rounded w-32"></div>
         </div>
-        <div class="h-10 bg-gray-300 rounded w-32"></div>
+        <div class="h-10 bg-border-strong rounded w-32"></div>
       </div>
     </ml-card>
     }
@@ -274,15 +265,15 @@
 
   <!-- Sin pedidos -->
   @if (!isLoading() && !error() && pedidos().length === 0) {
-    <div class="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-lg my-8">
-      <div class="w-20 h-20 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex flex-col items-center justify-center p-12 text-center bg-bg-alt rounded-lg my-8">
+      <div class="w-20 h-20 bg-bg-alt rounded-full mb-4 flex items-center justify-center">
+        <svg class="w-10 h-10 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
       </div>
-      <h2 class="text-xl font-semibold text-gray-700 mb-2">No tienes pedidos</h2>
-      <p class="text-gray-600 max-w-md mb-6">
+      <h2 class="text-xl font-semibold text-fg-muted mb-2">No tienes pedidos</h2>
+      <p class="text-fg-muted max-w-md mb-6">
         Aún no has realizado ningún pedido. ¡Explora nuestros productos y realiza tu primera compra!
       </p>
       <a routerLink="/productos"
@@ -292,9 +283,9 @@
 
   <!-- Filtros activos pero sin resultados -->
   @if (!isLoading() && !error() && pedidos().length > 0 && pedidosFiltrados().length === 0) {
-    <div class="flex flex-col items-center justify-center p-10 text-center bg-gray-50 rounded-lg my-8">
-      <h2 class="text-lg font-semibold text-gray-700 mb-2">Sin resultados</h2>
-      <p class="text-gray-600 mb-4">Ningún pedido coincide con los filtros aplicados.</p>
+    <div class="flex flex-col items-center justify-center p-10 text-center bg-bg-alt rounded-lg my-8">
+      <h2 class="text-lg font-semibold text-fg-muted mb-2">Sin resultados</h2>
+      <p class="text-fg-muted mb-4">Ningún pedido coincide con los filtros aplicados.</p>
       <button
         type="button"
         (click)="limpiarFiltros()"
@@ -310,9 +301,9 @@
     @for (pedido of pedidosFiltrados(); track pedido.id) {
     <ml-card class="transform transition hover:-translate-y-1">
       <!-- Cabecera del pedido -->
-      <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-row justify-between">
+      <div class="bg-bg-alt px-6 py-4 border-b border-border flex flex-row justify-between">
         <div class="mb-0">
-          <span class="block font-semibold text-gray-800">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase()
+          <span class="block font-semibold text-fg">📦 Pedido #{{ pedido.id.substring(0, 8).toUpperCase()
             }}</span>
         </div>
         <div class="flex items-center gap-2">
@@ -322,14 +313,14 @@
       </div>
 
       <!-- Productos del pedido -->
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-sm font-semibold text-gray-700 mb-3">Productos</h3>
+      <div class="px-6 py-4 border-b border-border">
+        <h3 class="text-sm font-semibold text-fg-muted mb-3">Productos</h3>
         @if (pedido.orderItems.length) {
         <div class="space-y-4">
           @for (item of pedido.orderItems; track item.id) {
           <!-- Cabecera de producto (siempre visible) -->
-          <div class="border border-gray-200 rounded-lg overflow-hidden">
-            <div class="flex justify-between items-center p-2 bg-gray-50 cursor-pointer"
+          <div class="border border-border rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center p-2 bg-bg-alt cursor-pointer"
               (click)="toggleProductExpand(item.id)" (keypress)="toggleProductExpand(item.id)" tabindex="0">
               <div class="flex items-center gap-4">
                 <div class="flex-shrink-0 w-16 h-16 overflow-hidden rounded-md">
@@ -337,29 +328,25 @@
                     class="w-full h-full object-cover" onerror="this.src = '/product-img-not-found.png'" />
                 </div>
                 <div>
-                  <p class="text-sm font-medium text-gray-800">
+                  <p class="text-sm font-medium text-fg">
                     {{ item.product?.name || "Producto" }}
                   </p>
                   @if (pedido.total_amount > 0) {
-                  <p class="text-sm text-gray-500">
+                  <p class="text-sm text-fg-subtle">
                     {{
                     item.unit_price
                     | currency: "S/" : "symbol" : "1.2-2"
                     }}
                   </p>
                   } @else {
-                  <p class="text-sm text-gray-500">Gratis</p>
+                  <p class="text-sm text-fg-subtle">Gratis</p>
                   }
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded p-1.5"
+                <span class="inline-flex items-center justify-center bg-bg-alt text-fg rounded p-1.5"
                   [attr.aria-label]="isProductExpanded(item.id) ? 'Ocultar detalles' : 'Mostrar detalles'">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200"
-                    [class.rotate-180]="isProductExpanded(item.id)"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                  </svg>
+                  <ml-icon name="chevron-down" class="h-4 w-4 transition-transform duration-200" />
                 </span>
               </div>
             </div>
@@ -368,26 +355,26 @@
             <div class="grid transition-[grid-template-rows] duration-300 ease-out"
               [class]="isProductExpanded(item.id) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
               <div class="overflow-hidden">
-                <div class="p-4 border-t border-gray-200 bg-white">
+                <div class="p-4 border-t border-border bg-bg">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p class="text-sm text-gray-600 mb-1">Nº de compra:</p>
-                      <p class="font-medium text-gray-800">
+                      <p class="text-sm text-fg-muted mb-1">Nº de compra:</p>
+                      <p class="font-medium text-fg">
                         {{ item.id.substring(0, 8).toUpperCase() }}
                       </p>
 
-                      <p class="text-sm text-gray-600 mt-3 mb-1">Fecha de compra:</p>
-                      <p class="font-medium text-gray-800">
+                      <p class="text-sm text-fg-muted mt-3 mb-1">Fecha de compra:</p>
+                      <p class="font-medium text-fg">
                         {{ formatearFecha(pedido.created_at) }}
                       </p>
                     </div>
 
                     <div>
-                      <p class="text-sm text-gray-600 mb-1">Cantidad:</p>
-                      <p class="font-medium text-gray-800">{{ item.quantity }}</p>
+                      <p class="text-sm text-fg-muted mb-1">Cantidad:</p>
+                      <p class="font-medium text-fg">{{ item.quantity }}</p>
                       @if (pedido.status === "DELIVERED") {
                         <div class="mt-6 flex flex-col gap-2 w-fit">
-                          <a class="text-sm text-gray-600 underline hover:cursor-pointer hover:text-gray-900"
+                          <a class="text-sm text-fg-muted underline hover:cursor-pointer hover:text-fg"
                             (click)="escribirResena(item.product?.slug);$event.stopPropagation()"
                             (keypress)="escribirResena(item.product?.slug);$event.stopPropagation()" tabindex="0">
                             Escribir reseña →</a>
@@ -402,7 +389,7 @@
           }
         </div>
         } @else {
-        <p class="text-center text-gray-500 italic">
+        <p class="text-center text-fg-subtle italic">
           No hay información de productos disponible
         </p>
         }
@@ -417,8 +404,8 @@
             pedido.shipping_cost !== null
             ) {
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-600">Costo de envío:</span>
-              <span class="text-sm font-medium text-gray-800">
+              <span class="text-sm text-fg-muted">Costo de envío:</span>
+              <span class="text-sm font-medium text-fg">
                 {{
                 pedido.shipping_cost === 0
                 ? "Gratis"
@@ -428,9 +415,17 @@
               </span>
             </div>
             }
+            @if (discountAmount(pedido) > 0) {
             <div class="flex items-center gap-2">
-              <span class="font-semibold text-gray-700">Total:</span>
-              <span class="font-bold text-gray-900 text-lg">{{
+              <span class="text-sm text-fg-muted">{{ discountLabel(pedido) }}:</span>
+              <span class="text-sm font-medium text-primary">
+                − {{ discountAmount(pedido) | currency: "S/" : "symbol" : "1.2-2" }}
+              </span>
+            </div>
+            }
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-fg-muted">Total:</span>
+              <span class="font-bold text-fg text-lg">{{
                 pedido.total_amount | currency: "S/" : "symbol" : "1.2-2"
                 }}</span>
             </div>
@@ -486,7 +481,7 @@
   <div class="flex justify-center mt-8">
     <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
       <button
-        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-border-strong bg-bg text-sm font-medium text-fg-subtle hover:bg-bg-alt disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="currentPage() === 1" (click)="cambiarPagina(currentPage() - 1)">
         <span class="sr-only">Anterior</span>
         &laquo;
@@ -494,16 +489,16 @@
 
       @for (pagina of generarArrayPaginas(); track pagina) {
       <button
-        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50"
+        class="relative inline-flex items-center px-4 py-2 border border-border-strong bg-bg text-sm font-medium hover:bg-bg-alt"
         [class.bg-blue-50]="currentPage() === pagina" [class.text-blue-600]="currentPage() === pagina"
-        [class.border-blue-500]="currentPage() === pagina" [class.text-gray-700]="currentPage() !== pagina"
+        [class.border-blue-500]="currentPage() === pagina" [class.text-fg-muted]="currentPage() !== pagina"
         (click)="cambiarPagina(pagina)">
         {{ pagina }}
       </button>
       }
 
       <button
-        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-border-strong bg-bg text-sm font-medium text-fg-subtle hover:bg-bg-alt disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="currentPage() === totalPages()" (click)="cambiarPagina(currentPage() + 1)">
         <span class="sr-only">Siguiente</span>
         &raquo;
@@ -517,13 +512,11 @@
 <!-- Modal de Seguimiento de compra -->
 @if (mostrarSeguimiento()) {
 <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
+  <div class="bg-bg rounded-lg shadow-xl w-full max-w-4xl">
     <div class="flex justify-between items-center p-6 border-b">
-      <h2 class="text-2xl font-bold text-gray-800">Seguimiento de compra</h2>
-      <button (click)="cerrarSeguimiento()" class="text-gray-500 hover:text-gray-700">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+      <h2 class="text-2xl font-bold text-fg">Seguimiento de compra</h2>
+      <button (click)="cerrarSeguimiento()" class="text-fg-subtle hover:text-fg-muted">
+        <ml-icon name="close" class="h-6 w-6" />
       </button>
     </div>
 
@@ -538,9 +531,9 @@
 
         <!-- Seguimiento en tiempo real con Olva Courier -->
         @if (pedidoSeleccionado()?.trackingNumber) {
-        <div class="mt-8 pt-6 border-t border-gray-100">
+        <div class="mt-8 pt-6 border-t border-border">
           <div
-            class="bg-white border border-gray-200 rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
+            class="bg-bg border border-border rounded-xl p-6 hover:border-[#f9b52f] transition-colors duration-300">
             <div class="flex flex-col gap-4">
               <!-- Título y número de tracking -->
               <div class="flex items-center gap-3">
@@ -553,10 +546,10 @@
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-base font-semibold text-gray-900">
+                  <h3 class="text-base font-semibold text-fg">
                     Seguimiento en tiempo real
                   </h3>
-                  <p class="text-xs text-gray-500 mt-0.5">
+                  <p class="text-xs text-fg-subtle mt-0.5">
                     <span class="font-mono">Nro Tracking:
                       {{ pedidoSeleccionado()?.trackingNumber }}</span>
                   </p>
@@ -565,7 +558,7 @@
 
               <!-- Botón de rastreo -->
               <button (click)="abrirSeguimientoOlva()"
-                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-gray-900 text-sm font-medium rounded-lg transition-all duration-200">
+                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#f9b52f] hover:bg-[#f9b52f]/90 text-fg text-sm font-medium rounded-lg transition-all duration-200">
                 <span>Rastrear con Olva Courier</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

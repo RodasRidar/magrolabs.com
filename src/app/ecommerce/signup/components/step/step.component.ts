@@ -1,36 +1,40 @@
-import { Component, DestroyRef, computed, inject, input, OnInit } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { StepItemComponent } from './step-item/step-item.component';
 import { StepEnum } from '../../models/step.model';
 import { SummaryService } from '../../../../shared/services/summary-service.service';
 import { SummaryEnum } from '../../../../shared/models/summary.model';
 import { environment } from '../../../../../environments/env';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 export type StepType = 'signup' | 'order-tracking' | 'delivery-preview';
 export type StepState = 'past' | 'current' | 'future';
 
 @Component({
     selector: 'app-step',
-    imports: [StepItemComponent],
+    imports: [StepItemComponent, IconComponent],
     templateUrl: './step.component.html'
 })
-export class StepComponent implements OnInit {
+export class StepComponent {
   private _summaryService = inject(SummaryService);
-  private destroyRef = inject(DestroyRef);
 
   stepEnum = StepEnum;
 
   // ── type discriminator ───────────────────────────────────────────────────
   type = input<StepType>('signup');
 
-  // ── signup inputs (unchanged behavior) ───────────────────────────────────
+  // ── signup inputs ────────────────────────────────────────────────────────
   step = input<StepEnum | undefined>(undefined);
   totalToPay = input<number | null>(null);
-  stepChosePlan = false;
-  stepUserData = false;
-  stepAddress = false;
-  stepCardValidation = false;
-  stepConfirmation = false;
+
+  // Una sola fuente de verdad: el paso actual. Cada `stepX` indica si el
+  // usuario alcanzó o superó ese paso (comparación numérica con el enum).
+  private readonly currentStep = computed(() => this.step() ?? 0);
+  readonly stepChosePlan       = computed(() => this.currentStep() >= StepEnum.CHOSE_PLAN);
+  readonly stepUserData        = computed(() => this.currentStep() >= StepEnum.USER_DATA);
+  readonly stepAddress         = computed(() => this.currentStep() >= StepEnum.ADDRESS);
+  readonly stepCardValidation  = computed(() => this.currentStep() >= StepEnum.CARD_VALIDATION);
+  readonly stepConfirmation    = computed(() => this.currentStep() >= StepEnum.CONFIRMATION);
 
   private summaryState = toSignal(this._summaryService.summaryState$);
 
@@ -62,41 +66,6 @@ export class StepComponent implements OnInit {
   preparandoDate = input<string>('');
   enviadoDate    = input<string>('');
   entregadoDate  = input<string>('');
-
-  // ── lifecycle ─────────────────────────────────────────────────────────────
-  ngOnInit(): void {
-    this._summaryService.summaryState$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-      switch (this.step()) {
-        case StepEnum.CHOSE_PLAN:
-          this.stepChosePlan = true;
-          break;
-        case StepEnum.USER_DATA:
-          this.stepChosePlan = true;
-          this.stepUserData = true;
-          break;
-        case StepEnum.ADDRESS:
-          this.stepChosePlan = true;
-          this.stepUserData = true;
-          this.stepAddress = true;
-          break;
-        case StepEnum.CARD_VALIDATION:
-          this.stepChosePlan = true;
-          this.stepUserData = true;
-          this.stepAddress = true;
-          this.stepCardValidation = true;
-          break;
-        case StepEnum.CONFIRMATION:
-          this.stepChosePlan = true;
-          this.stepUserData = true;
-          this.stepAddress = true;
-          this.stepCardValidation = true;
-          this.stepConfirmation = true;
-          break;
-      }
-    });
-  }
 
   // ── order-tracking state ──────────────────────────────────────────────────
   getOrderStepState(stepIndex: 1 | 2 | 3 | 4): StepState {
@@ -146,33 +115,33 @@ export class StepComponent implements OnInit {
   // ── style helpers ─────────────────────────────────────────────────────────
   circleLg(state: StepState): string {
     const style = state === 'future'
-      ? 'bg-gray-300 border-gray-300'
-      : 'bg-gray-900 border-gray-900';
+      ? 'bg-border-strong border-border-strong'
+      : 'bg-fg border-fg';
     return `rounded-full h-10 w-10 sm:h-16 sm:w-16 flex items-center justify-center border-2 sm:border-4 z-10 ${style}`;
   }
 
   circleSm(state: StepState): string {
     const style = state === 'future'
-      ? 'bg-gray-300 border-gray-300'
-      : 'bg-gray-900 border-gray-900';
+      ? 'bg-border-strong border-border-strong'
+      : 'bg-fg border-fg';
     return `rounded-full h-8 w-8 flex items-center justify-center border-2 z-10 ${style}`;
   }
 
   iconLg(state: StepState): string {
-    return state === 'future' ? 'w-5 h-5 sm:w-8 sm:h-8 text-[#828282]' : 'w-5 h-5 sm:w-8 sm:h-8 text-white';
+    return state === 'future' ? 'w-5 h-5 sm:w-8 sm:h-8 text-fg-subtle' : 'w-5 h-5 sm:w-8 sm:h-8 text-bg';
   }
 
   iconSm(state: StepState): string {
-    return state === 'future' ? 'w-4 h-4 text-[#828282]' : 'w-4 h-4 text-white';
+    return state === 'future' ? 'w-4 h-4 text-fg-subtle' : 'w-4 h-4 text-bg';
   }
 
   labelLg(state: StepState): string {
-    const color = state !== 'future' ? 'text-gray-800' : 'text-gray-400';
+    const color = state !== 'future' ? 'text-fg' : 'text-fg-subtle';
     return `mt-4 text-center font-bold text-sm sm:text-base ${color}`;
   }
 
   labelSm(state: StepState): string {
-    const color = state !== 'future' ? 'text-gray-800' : 'text-gray-400';
+    const color = state !== 'future' ? 'text-fg' : 'text-fg-subtle';
     return `mt-2 text-center font-bold text-xs ${color}`;
   }
 

@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
     selector: 'app-product-quantity',
-    imports: [],
+    imports: [IconComponent],
     templateUrl: './product-quantity.component.html'
 })
 export class ProductQuantityComponent {
@@ -11,13 +12,6 @@ export class ProductQuantityComponent {
   @Output() quantityValue = new EventEmitter<number>();
   @Input() predeterminedQuantity = 1;
   currentQuantity = 0;
-  // ngOnInit() {
-  //   if (this.predeterminedQuantity === 0) {
-  //     this.currentQuantity = 1
-  //   } else {
-  //     this.currentQuantity = this.predeterminedQuantity
-  //   }
-  // }
 
   ngOnChanges() {
     this.currentQuantity = this.predeterminedQuantity

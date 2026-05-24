@@ -14,10 +14,11 @@ import { ReviewService } from "../../../../shared/services/review.service";
 import { environment } from "../../../../../environments/env";
 import { CommonModule, CurrencyPipe, isPlatformBrowser, isPlatformServer } from "@angular/common";
 import { PurchaseBenefit, PurchaseOptionComponent } from '../../../../shared/ui/purchase-option/purchase-option.component';
+import { IconComponent } from '../../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-plans',
-    imports: [StepComponent, ButtonComponent, StarRatingComponent, CurrencyPipe, CommonModule, PurchaseOptionComponent],
+    imports: [StepComponent, ButtonComponent, StarRatingComponent, CurrencyPipe, CommonModule, PurchaseOptionComponent, IconComponent],
     templateUrl: './plans.component.html'
 })
 

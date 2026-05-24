@@ -1,6 +1,6 @@
 <ml-page-header [title]="greetingMessage().title">
     @if (greetingMessage().title && !isLoadingDashboard()) {
-    <p class="mt-2 text-lg text-gray-600 font-medium">{{ greetingMessage().description }}</p>
+    <p class="mt-2 text-lg text-fg-muted font-medium">{{ greetingMessage().description }}</p>
     }
 </ml-page-header>
 
@@ -31,40 +31,40 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Skeleton Card 1 -->
                 <ml-card padding="md" class="animate-pulse">
-                    <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
+                    <div class="h-6 bg-border-strong rounded w-2/3 mb-4"></div>
                     <div class="space-y-3">
-                        <div class="h-4 bg-gray-300 rounded w-full"></div>
-                        <div class="h-4 bg-gray-300 rounded w-5/6"></div>
-                        <div class="h-4 bg-gray-300 rounded w-4/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-full"></div>
+                        <div class="h-4 bg-border-strong rounded w-5/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-4/6"></div>
                     </div>
                     <div class="mt-5">
-                        <div class="h-10 bg-gray-300 rounded w-32"></div>
+                        <div class="h-10 bg-border-strong rounded w-32"></div>
                     </div>
                 </ml-card>
 
                 <!-- Skeleton Card 2 -->
                 <ml-card padding="md" class="animate-pulse">
-                    <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
+                    <div class="h-6 bg-border-strong rounded w-2/3 mb-4"></div>
                     <div class="space-y-3">
-                        <div class="h-4 bg-gray-300 rounded w-full"></div>
-                        <div class="h-4 bg-gray-300 rounded w-5/6"></div>
-                        <div class="h-4 bg-gray-300 rounded w-4/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-full"></div>
+                        <div class="h-4 bg-border-strong rounded w-5/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-4/6"></div>
                     </div>
                     <div class="mt-5">
-                        <div class="h-10 bg-gray-300 rounded w-32"></div>
+                        <div class="h-10 bg-border-strong rounded w-32"></div>
                     </div>
                 </ml-card>
 
                 <!-- Skeleton Card 3 -->
                 <ml-card padding="md" class="animate-pulse">
-                    <div class="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
+                    <div class="h-6 bg-border-strong rounded w-2/3 mb-4"></div>
                     <div class="space-y-3">
-                        <div class="h-4 bg-gray-300 rounded w-full"></div>
-                        <div class="h-4 bg-gray-300 rounded w-5/6"></div>
-                        <div class="h-4 bg-gray-300 rounded w-4/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-full"></div>
+                        <div class="h-4 bg-border-strong rounded w-5/6"></div>
+                        <div class="h-4 bg-border-strong rounded w-4/6"></div>
                     </div>
                     <div class="mt-5">
-                        <div class="h-10 bg-gray-300 rounded w-32"></div>
+                        <div class="h-10 bg-border-strong rounded w-32"></div>
                     </div>
                 </ml-card>
             </div>
@@ -82,8 +82,8 @@
                         <div class="flex-1">
                             <h3 class="text-xl font-bold mb-2">{{ profileCompletionService.completionMessage() }}</h3>
                             <div class="mt-3 flex items-center space-x-2">
-                                <div class="flex-1 bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-white h-full rounded-full transition-all duration-500 animate-pulse"
+                                <div class="flex-1 bg-bg bg-opacity-20 rounded-full h-2 overflow-hidden">
+                                    <div class="bg-bg h-full rounded-full transition-all duration-500 animate-pulse"
                                         [style.width.%]="profileCompletionService.completionPercentage()"></div>
                                 </div>
                                 <span class="text-sm font-semibold">{{ profileCompletionService.completionPercentage()
@@ -124,16 +124,12 @@
                 @if ((profileCompletionService.isProfileComplete() || profileCompletionService.hasSubscription())) {
                 <ml-action-card [accent]="needsSubscription() && !lastOrder()">
                     <span accent class="text-white text-sm font-semibold flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
+                        <ml-icon name="star" class="h-4 w-4 mr-1" />
                         ¡Prueba {{ ENV.campanaPrimeraCreatina.textos.ofertaMedia }} disponible!
                     </span>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">💳 Suscripción.</h3>
+                            <h3 class="text-lg font-medium leading-6 text-fg">💳 Suscripción.</h3>
                             @if (hasDiscount()) {
                             <span
                                 class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-hover text-white">
@@ -146,7 +142,7 @@
                             [label]="subscriptionBadge(subscription()?.status).label"
                             [pulse]="subscriptionBadge(subscription()?.status).pulse" />
                     </div>
-                    <div class="mt-2 max-w-xl text-sm text-gray-500">
+                    <div class="mt-2 max-w-xl text-sm text-fg-subtle">
 
                         @if (subscription()?.status) {
                         <div class="mt-3 space-y-2">
@@ -154,7 +150,7 @@
                             @if (hasDiscount()) {
                             <p class="flex items-center gap-2">
                                 <strong>Inversión:</strong>
-                                <span class="line-through text-gray-500 text-sm">S/{{ originalPrice() }}.00</span>
+                                <span class="line-through text-fg-subtle text-sm">S/{{ originalPrice() }}.00</span>
                                 <span class="text-primary-hover font-semibold">{{ subscriptionPrice() }}</span>
                             </p>
                             } @else {
@@ -188,8 +184,8 @@
                 <!-- Último Pedido -->
                 @if (shouldShowLastOrderCard()) {
                 <ml-action-card>
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">📦 Último Pedido.</h3>
-                    <div class="mt-2 max-w-xl text-sm text-gray-500">
+                    <h3 class="text-lg font-medium leading-6 text-fg">📦 Último Pedido.</h3>
+                    <div class="mt-2 max-w-xl text-sm text-fg-subtle">
                         @if (lastOrder()) {
                         <p><strong>Producto:</strong> {{ lastOrderProductName() }}</p>
                         <p class="mt-1"><strong>Estado:</strong> {{ orderBadge(lastOrder()!.status).label }}</p>
@@ -220,7 +216,7 @@
                         </svg>
                         Acción requerida
                     </span>
-                    <h3 class="text-lg font-medium leading-6 text-gray-900 flex items-center">
+                    <h3 class="text-lg font-medium leading-6 text-fg flex items-center">
                         👤 Perfil.
                         @if (needsBasicInfo()) {
                         <span
@@ -229,17 +225,17 @@
                         </span>
                         }
                     </h3>
-                    <div class="mt-2 max-w-xl text-sm text-gray-500">
+                    <div class="mt-2 max-w-xl text-sm text-fg-subtle">
                         @if (!user()) {
                         <div role="status" class="space-y-2.5 animate-pulse">
                             <div class="flex items-center w-full">
-                                <div class="h-2.5 bg-gray-300 rounded-full w-48 mb-2"></div>
+                                <div class="h-2.5 bg-border-strong rounded-full w-48 mb-2"></div>
                             </div>
                             <div class="flex items-center w-full max-w-[440px]">
-                                <div class="h-2.5 bg-gray-300 rounded-full w-full"></div>
+                                <div class="h-2.5 bg-border-strong rounded-full w-full"></div>
                             </div>
                             <div class="flex items-center w-full max-w-[400px]">
-                                <div class="h-2.5 bg-gray-300 rounded-full w-full"></div>
+                                <div class="h-2.5 bg-border-strong rounded-full w-full"></div>
                             </div>
                             <span class="sr-only">Cargando información personal...</span>
                         </div>
@@ -250,20 +246,20 @@
                         <p><strong>Teléfono:</strong> {{user()!.phone || 'No disponible'}}</p>
 
                         @if (user()!.address) {
-                        <div class="mt-3 pt-3 border-t border-gray-300">
-                            <p class="font-medium text-gray-700 mb-1">Dirección:</p>
-                            <p class="text-gray-600">
+                        <div class="mt-3 pt-3 border-t border-border-strong">
+                            <p class="font-medium text-fg-muted mb-1">Dirección:</p>
+                            <p class="text-fg-muted">
                                 {{user()!.address?.avenue || ''}}
                                 @if (user()!.address?.number) {
                                 <span> N° {{user()!.address?.number}}</span>
                                 }
                             </p>
-                            <p class="text-gray-600">
+                            <p class="text-fg-muted">
                                 {{user()!.address?.district || ''}}, {{user()!.address?.province || ''}},
                                 {{user()!.address?.department || ''}}
                             </p>
                             @if (user()!.address?.reference) {
-                            <p class="text-gray-500 text-xs mt-1"><em>Ref: {{user()!.address?.reference}}</em></p>
+                            <p class="text-fg-subtle text-xs mt-1"><em>Ref: {{user()!.address?.reference}}</em></p>
                             }
                         </div>
                         }

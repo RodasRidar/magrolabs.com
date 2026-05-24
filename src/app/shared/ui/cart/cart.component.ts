@@ -8,11 +8,12 @@ import { ProductQuantityComponent } from '../product-quantity/product-quantity.c
 import { DiscountPipe } from '../../pipes/discount.pipe';
 import { ShoppingCart, ItemShoppingCart } from '../../models/item-cart.model';
 import { ShoppingCartService } from '../../services/cart-service.service';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
     selector: 'app-cart',
     templateUrl: './cart.component.html',
-    imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage],
+    imports: [CommonModule, ButtonComponent, RouterLink, ProductQuantityComponent, DiscountPipe, NgOptimizedImage, IconComponent],
     animations: [
         trigger('fadeInOut', [
             state('inactive', style({
@@ -99,7 +100,7 @@ export class CartComponent {
   get TextColorClass() {
     const colorsList: { [key: string]: string } = {
       indigo: 'text-indigo-500',
-      gray: 'text-gray-500',
+      gray: 'text-fg-subtle',
       red: 'text-red-500',
       yellow: 'text-yellow-500',
       green: 'text-green-500',
@@ -111,7 +112,7 @@ export class CartComponent {
       teal: 'text-teal-500',
       lime: 'text-lime-500',
       fuchsia: 'text-fuchsia-500',
-      black: 'text-black',
+      black: 'text-fg',
     };
     return colorsList[this.businessColor];
   }
@@ -119,7 +120,7 @@ export class CartComponent {
   get TextHoverClass() {
     const colorsList: { [key: string]: string } = {
       indigo: 'hover:text-indigo-300',
-      gray: 'hover:text-gray-300',
+      gray: 'hover:text-fg-subtle',
       red: 'hover:text-red-300',
       yellow: 'hover:text-yellow-300',
       green: 'hover:text-green-300',

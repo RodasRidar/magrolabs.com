@@ -17,6 +17,8 @@ import { CardComponent } from '../../../shared/ui/card/card.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { getOrderStatusBadge, StatusBadge } from '../../../shared/utils/status-badge';
 import { StepComponent } from '../../../ecommerce/signup/components/step/step.component';
+import { LinkButtonComponent } from '../../../shared/ui/link-button/link-button.component';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
 
 interface ProductOption {
   id: string;
@@ -25,7 +27,7 @@ interface ProductOption {
 
 @Component({
     selector: 'app-pedidos',
-    imports: [CommonModule, FormsModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, StepComponent],
+    imports: [CommonModule, FormsModule, RouterModule, CurrencyPipe, ButtonComponent, CardComponent, BadgeComponent, StepComponent, IconComponent],
     templateUrl: './pedidos.component.html',
     styleUrl: './pedidos.component.css'
 })
@@ -248,6 +250,25 @@ export class PedidosComponent implements OnInit {
 
   orderBadge(status: string | undefined): StatusBadge {
     return getOrderStatusBadge(status);
+  }
+
+  // Monto efectivamente descontado en el pedido. Soporta órdenes nuevas
+  // (`discount_amount`) y legacy (`discount` como porcentaje sobre subtotal).
+  discountAmount(pedido: OrderResponse): number {
+    if (pedido.discount_amount != null) return Number(pedido.discount_amount);
+    const legacyPct = Number((pedido as { discount?: number }).discount ?? 0);
+    if (!legacyPct) return 0;
+    const subtotal = pedido.subtotal_amount != null
+      ? Number(pedido.subtotal_amount)
+      : pedido.orderItems.reduce((sum, it) => {
+          const unit = it.unit_price ?? it.price ?? 0;
+          return sum + Number(unit) * Number(it.quantity);
+        }, 0);
+    return Math.round((subtotal * legacyPct) / 100);
+  }
+
+  discountLabel(pedido: OrderResponse): string {
+    return pedido.code_discount ? `Cupón (${pedido.code_discount})` : 'Descuento';
   }
 
   generarArrayPaginas(): number[] {

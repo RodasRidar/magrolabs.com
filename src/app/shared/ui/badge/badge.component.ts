@@ -23,7 +23,7 @@ export class BadgeComponent {
 
   protected readonly badgeClass = computed(() => {
     const colorMap: Record<BadgeColor, string> = {
-      gray:   'bg-gray-600/10 text-gray-600 ring-1 ring-inset ring-gray-600/20',
+      gray:   'bg-fg-muted/10 text-fg-muted ring-1 ring-inset ring-fg-muted/20',
       red:    'bg-red-600/10 text-red-600 ring-1 ring-inset ring-red-600/20',
       yellow: 'bg-yellow-600/10 text-yellow-500 ring-1 ring-inset ring-yellow-600/20',
       green:  'bg-green-600/10 text-green-600 ring-1 ring-inset ring-green-500/20',
@@ -41,7 +41,7 @@ export class BadgeComponent {
 
   protected readonly dotClass = computed(() => {
     const colorMap: Record<BadgeColor, string> = {
-      gray:   'bg-gray-500',
+      gray:   'bg-fg-subtle',
       red:    'bg-red-500',
       yellow: 'bg-yellow-500',
       green:  'bg-green-500',

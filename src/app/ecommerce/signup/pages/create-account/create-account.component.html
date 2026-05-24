@@ -8,18 +8,18 @@
     </div>
     }
     <div class="relative z-10 mx-auto ">
-        <div class="text-gray-600 mb-10 md:mb-0">
+        <div class="text-fg-muted mb-10 md:mb-0">
             <div class="relative mt-7 lg:mt-9" show-back-button="true">
                 @if (isCreatinaGratis) {
                 <h1 data-qa="signup-step-3-title"
-                    class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                    class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12">
                     <!-- Regístrate para recibir tu creatina de prueba. -->
                      Registrate.
                 </h1>
                 }
                 @else {
                 <h1 data-qa="signup-step-3-title"
-                    class="text-5xl max-lg:text-4xl font-black text-gray-800 text-left lg:text-left lg:mt-12">
+                    class="text-5xl max-lg:text-4xl font-black text-fg text-left lg:text-left lg:mt-12">
                     Regístrate.</h1>
                 }
 
@@ -59,14 +59,14 @@
 
                             <div class="sm:col-span-3">
                                 <ml-form-field label="Celular" inputId="cellphone" [required]="true" [errors]="cellphoneErrors">
-                                    <div class="flex items-center text-gray-400">
-                                        <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-gray-300">
+                                    <div class="flex items-center text-fg-subtle">
+                                        <div class="p-2.5 py-1.5 rounded-l-md border-y border-l border-border-strong bg-bg-alt">
                                             +51
                                         </div>
                                         <input type="number" id="cellphone" placeholder="987654321" (input)="limitDigits(9, 'cellphone')"
                                             autocomplete="tel"
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('cellphone') || hasExistCellphone() || hasValidatorError('cellphone')}"
-                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l-1 py-1.5 ring-border-strong bg-bg text-fg placeholder:text-fg-subtle border-border-strong focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                                             formControlName="cellphone" />
                                     </div>
                                 </ml-form-field>
@@ -76,7 +76,7 @@
                                 <ml-form-field label="N° de Documento" inputId="nroDocument" [required]="true" [errors]="nroDocumentErrors">
                                     <div class="flex items-center">
                                         <select formControlName="typeDocument"
-                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-gray-300 h-full text-xs focus:ring-2 focus:ring-inset focus:ring-primary">
+                                            class="px-4.5 py-2.5 rounded-l-md border-x border-r border-l border-border-strong h-full text-xs bg-bg text-fg focus:ring-2 focus:ring-inset focus:ring-primary">
                                             <option value="DNI">DNI</option>
                                             <option value="CE">Carnet Ext.</option>
                                             <option value="PASSPORT">Pasaporte</option>
@@ -84,7 +84,7 @@
                                         <input id="nroDocument" [type]="form.get('typeDocument')?.value == 'DNI' ? 'number' : 'text'"
                                             placeholder="87654321" autocomplete="identity-card-number"
                                             (input)="limitDigits(form.get('typeDocument')?.value == 'DNI' ? 8 : 12, 'nroDocument')"
-                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-gray-300 text-gray-900 placeholder:text-gray-400 border-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                                            class="appearance-none w-full p-2.5 outline-none focus:border-primary block rounded-r-md border-x border-r border-l py-1.5 ring-border-strong bg-bg text-fg placeholder:text-fg-subtle border-border-strong focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('nroDocument') || hasExistDocument() || hasValidatorError('nroDocument')}"
                                             formControlName="nroDocument" />
                                     </div>
@@ -126,9 +126,9 @@
                                 <label class="inline-flex items-center my-2 cursor-pointer">
                                     <input type="checkbox" formControlName="isSignUpAcepted" class="sr-only peer" (change)="isSignUpAceptedChange()">
                                     <div
-                                        class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                        class="relative w-9 h-5 bg-bg-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                     </div>
-                                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900">Registrarme
+                                    <span class="ms-3 text-sm font-medium text-fg dark:text-fg">Registrarme
                                         y rastrear mi pedido</span>
                                 </label>
                             </div>
@@ -142,10 +142,10 @@
                                             [ngClass]="{'ring-red-500 ring-2 ': hasRequiredError('termsAccepted') || hasValidatorError('termsAccepted')}"
                                             class="sr-only peer">
                                         <div [ngClass]="{'peer-focus:ring-red-400':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
-                                            class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
+                                            class="relative w-9 h-5 bg-bg-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600">
                                         </div>
                                         <span [ngClass]="{'text-red-500 dark:text-red-500':hasRequiredError('termsAccepted')  || hasValidatorError('termsAccepted')}"
-                                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-900 w-fit">Acepto los 
+                                            class="ms-3 text-sm font-medium text-fg dark:text-fg w-fit">Acepto los 
                                             <a href="https://magrolabs.com/politicas/terminos-y-condiciones" target="_blank" 
                                             class="underline cursor-pointer hover:text-primary">Términos y condiciones</a>, 
                                             <a href="https://magrolabs.com/politicas/condiciones-de-uso" target="_blank" 

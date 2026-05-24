@@ -7,6 +7,7 @@ import {
   output,
   signal, OnInit,
 } from "@angular/core";
+import { IconComponent } from '../icon/icon.component';
 
 import { SummaryService } from "../../services/summary-service.service";
 import { FlowPaymentMethod } from "../../models/flow.model";
@@ -46,7 +47,7 @@ export interface EnrolledCardInfo {
 
 @Component({
   selector: "app-payment-method",
-  imports: [FlowWidgetAddCardComponent],
+  imports: [FlowWidgetAddCardComponent, IconComponent],
   templateUrl: "./payment-method.component.html",
   styleUrl: "./payment-method.component.css",
 })

@@ -29,10 +29,11 @@ import { ActionCardComponent } from '../../../shared/ui/action-card/action-card.
 import { LoyaltyMeterComponent } from '../../../shared/ui/loyalty-meter/loyalty-meter.component';
 import { describe } from 'node:test';
 import { title } from 'process';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
 
 @Component({
     selector: 'app-cuenta',
-    imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent],
+    imports: [CommonModule, RouterLink, VerificationPaymentModalComponent, MonthlyRewardModalComponent, ButtonComponent, CardComponent, BadgeComponent, PageHeaderComponent, ActionCardComponent, LoyaltyMeterComponent, IconComponent],
     templateUrl: './cuenta.component.html',
     styleUrl: './cuenta.component.css'
 })
